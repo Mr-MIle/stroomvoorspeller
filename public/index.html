@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Stroomvoorspeller — actuele en voorspelde stroomprijzen voor Nederland</title>
+  <meta name="description" content="Bekijk de day-ahead stroomprijzen voor vandaag en morgen, plus een eigen voorspelling voor de komende dagen. Voor mensen met een dynamisch energiecontract." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">⚡</span>
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="#prijzen">Prijzen</a>
+        <a href="#voorspelling">Voorspelling</a>
+        <a href="#tips">Tips</a>
+        <a href="#uitleg">Uitleg</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Now-card -->
+    <section id="prijzen" class="hero">
+      <div class="container">
+        <div class="now-card" data-status="loading">
+          <div class="now-status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="status-label">Stroom is nu</span>
+            <span class="status-value">— laden —</span>
+          </div>
+          <div class="now-price">
+            <span class="now-price-value" data-field="now-cents">—</span>
+            <span class="now-price-unit">ct/kWh</span>
+          </div>
+          <p class="now-meta">
+            <span data-field="now-time">—</span>
+            <span class="dot-sep" aria-hidden="true">·</span>
+            <span class="now-meta-allin">incl. belasting &amp; btw: <span data-field="now-allin">—</span> ct/kWh</span>
+          </p>
+        </div>
+
+        <div class="quick-summary">
+          <div class="summary-item">
+            <span class="summary-label">Goedkoopste uur vandaag</span>
+            <span class="summary-value" data-field="cheapest-today">—</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Duurste uur vandaag</span>
+            <span class="summary-value" data-field="priciest-today">—</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Gemiddelde vandaag</span>
+            <span class="summary-value" data-field="avg-today">—</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chart -->
+    <section class="chart-section container">
+      <div class="section-head">
+        <h2>Vandaag &amp; morgen, per uur</h2>
+        <p class="section-sub">Day-ahead prijzen van EPEX Spot (EUR/MWh, omgerekend naar cent/kWh).</p>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="dayChart" aria-label="Lijngrafiek met stroomprijzen per uur voor vandaag en morgen"></canvas>
+      </div>
+      <p class="chart-legend">
+        <span class="legend-item legend-cheap">Goedkoop</span>
+        <span class="legend-item legend-normal">Normaal</span>
+        <span class="legend-item legend-pricey">Duur</span>
+        <span class="legend-item legend-current">Nu</span>
+      </p>
+    </section>
+
+    <!-- Forecast (placeholder for fase 3) -->
+    <section id="voorspelling" class="forecast-section container">
+      <div class="section-head">
+        <h2>Voorspelling 5–7 dagen vooruit</h2>
+        <p class="section-sub">Komt eraan in de volgende fase. Voor nu tonen we alleen de officiële day-ahead prijzen, die rond 13:00 uur worden gepubliceerd voor de volgende dag.</p>
+      </div>
+      <div class="forecast-placeholder" role="note">
+        <strong>In ontwikkeling.</strong>
+        <p>De voorspelling combineert weersvoorspellingen (zon en wind), gasprijs-futures en historische patronen. We zijn transparant over de onzekerheid: de grafiek krijgt een betrouwbaarheidsbandbreedte. Disclaimer: dit blijft een schatting, geen financieel advies.</p>
+      </div>
+    </section>
+
+    <!-- Best moments -->
+    <section id="tips" class="moments-section container">
+      <div class="section-head">
+        <h2>Slimste momenten</h2>
+        <p class="section-sub">Goedkoopste vensters van twee uur, handig voor wasmachine, droger, EV laden of warmtepomp.</p>
+      </div>
+      <ul class="moments-list" data-field="best-moments">
+        <li class="moment-loading">Berekenen…</li>
+      </ul>
+    </section>
+
+    <!-- Explanation -->
+    <section id="uitleg" class="explain-section container">
+      <div class="section-head">
+        <h2>Hoe werkt het?</h2>
+      </div>
+      <div class="explain-grid">
+        <article>
+          <h3>Day-ahead prijzen</h3>
+          <p>Elke werkdag rond 13:00 publiceert de Europese stroombeurs EPEX de prijzen voor elk uur van de volgende dag. Mensen met een dynamisch contract betalen die uurprijs (plus belastingen en een opslag van hun leverancier).</p>
+        </article>
+        <article>
+          <h3>Wanneer is stroom goedkoop?</h3>
+          <p>Vooral midden op de dag (veel zon), 's nachts (weinig vraag) en in het weekend. Duur is het rond het ochtend- en avondspits, en op koude windstille werkdagen.</p>
+        </article>
+        <article>
+          <h3>Negatieve prijzen</h3>
+          <p>Als er te veel zonne- of windstroom op het net staat kan de prijs onder nul duiken. Dan krijg je in theorie betaald om stroom te gebruiken — al draait dat in praktijk meestal op een lagere of zelfs negatieve teruglevering. Tips daarover komen in een later artikel.</p>
+        </article>
+        <article>
+          <h3>Geen advies</h3>
+          <p>Deze site geeft informatie, geen financieel of energieadvies. Voorspellingen zijn schattingen en kunnen afwijken. Beslissingen over je energiecontract neem je zelf, op basis van eigen onderzoek.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          Bron: <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E Transparency</a> ·
+          Bijgewerkt: <span data-field="generated-at">—</span>
+        </p>
+        <p class="footer-meta-small">
+          <span data-field="source-note"></span>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,233 @@
+"""
+fetch_prices.py — Haalt day-ahead elektriciteitsprijzen op van ENTSO-E.
+
+Gebruik:
+    ENTSOE_TOKEN=xxx python scripts/fetch_prices.py
+
+Zonder ENTSOE_TOKEN: genereert realistische sample-data zodat de frontend
+ook zonder live API-key getest kan worden.
+
+Output: public/data/prices.json, met de structuur:
+    {
+        "generated_at": ISO-timestamp UTC,
+        "currency": "EUR",
+        "unit": "EUR/MWh",
+        "tz": "Europe/Amsterdam",
+        "source": "entsoe" | "sample",
+        "prices": [
+            {"time": "2026-04-27T00:00:00+02:00", "price": 42.31},
+            ...
+        ]
+    }
+
+Prijzen zijn in EUR per MWh (zoals ENTSO-E rapporteert). De frontend rekent
+om naar consumenten-eurocenten per kWh inclusief schattingsopslag.
+"""
+
+from __future__ import annotations
+
+import json
+import math
+import os
+import random
+import sys
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+# Nederland EIC-code (zie ENTSO-E EIC list)
+NL_EIC = "10YNL----------L"
+
+# Day-ahead prices document type
+DOC_TYPE_DAY_AHEAD = "A44"
+
+ENTSOE_BASE = "https://web-api.tp.entsoe.eu/api"
+
+# Output locatie t.o.v. project root
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+OUTPUT_FILE = PROJECT_ROOT / "public" / "data" / "prices.json"
+
+# Amsterdam tijdzone (statisch want we draaien in UTC op CI)
+AMS_OFFSET_WINTER = timedelta(hours=1)
+AMS_OFFSET_SUMMER = timedelta(hours=2)
+
+
+def amsterdam_now() -> datetime:
+    """Huidige tijd in Amsterdam, simpele DST-benadering."""
+    now_utc = datetime.now(timezone.utc)
+    # DST: laatste zondag maart 01:00 UTC tot laatste zondag oktober 01:00 UTC
+    year = now_utc.year
+    march = datetime(year, 3, 31, 1, 0, tzinfo=timezone.utc)
+    while march.weekday() != 6:
+        march -= timedelta(days=1)
+    october = datetime(year, 10, 31, 1, 0, tzinfo=timezone.utc)
+    while october.weekday() != 6:
+        october -= timedelta(days=1)
+    is_dst = march <= now_utc < october
+    offset = AMS_OFFSET_SUMMER if is_dst else AMS_OFFSET_WINTER
+    return (now_utc + offset).replace(tzinfo=timezone(offset))
+
+
+def entsoe_period(dt: datetime) -> str:
+    """Format als YYYYMMDDHHMM in UTC, zoals ENTSO-E vereist."""
+    if dt.tzinfo is not None:
+        dt = dt.astimezone(timezone.utc)
+    return dt.strftime("%Y%m%d%H%M")
+
+
+def fetch_entsoe(token: str, start_utc: datetime, end_utc: datetime) -> list[dict]:
+    """Haal day-ahead prijzen op bij ENTSO-E voor de gegeven UTC-periode."""
+    params = {
+        "documentType": DOC_TYPE_DAY_AHEAD,
+        "in_Domain": NL_EIC,
+        "out_Domain": NL_EIC,
+        "periodStart": entsoe_period(start_utc),
+        "periodEnd": entsoe_period(end_utc),
+        "securityToken": token,
+    }
+    url = f"{ENTSOE_BASE}?{urllib.parse.urlencode(params)}"
+    req = urllib.request.Request(url, headers={"User-Agent": "stroomvoorspeller/0.1"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        body = resp.read().decode("utf-8")
+
+    return parse_entsoe_xml(body, start_utc)
+
+
+def parse_entsoe_xml(xml_text: str, default_start_utc: datetime) -> list[dict]:
+    """Parseer ENTSO-E day-ahead prices XML naar een lijst van prijzen.
+
+    Resultaat is een lijst met dicts {time: ISO-string Amsterdam, price: float}.
+    """
+    # Strip namespace voor minder gedoe
+    cleaned = xml_text
+    # Bereken default namespace en remove (eenvoudige aanpak)
+    tree = ET.fromstring(cleaned)
+    ns = ""
+    if tree.tag.startswith("{"):
+        ns = tree.tag.split("}", 1)[0] + "}"
+
+    results: list[dict] = []
+    for ts in tree.findall(f"{ns}TimeSeries"):
+        period = ts.find(f"{ns}Period")
+        if period is None:
+            continue
+        start_text = period.find(f"{ns}timeInterval/{ns}start").text
+        # ENTSO-E gebruikt 2026-04-27T22:00Z formaat
+        period_start_utc = datetime.fromisoformat(start_text.replace("Z", "+00:00"))
+        resolution = period.find(f"{ns}resolution").text  # bv. PT60M
+
+        # Resolutie in minuten
+        if resolution.endswith("M"):
+            res_minutes = int(resolution.replace("PT", "").replace("M", ""))
+        elif resolution.endswith("H"):
+            res_minutes = int(resolution.replace("PT", "").replace("H", "")) * 60
+        else:
+            res_minutes = 60
+
+        for point in period.findall(f"{ns}Point"):
+            position = int(point.find(f"{ns}position").text)
+            price_text = point.find(f"{ns}price.amount").text
+            price = float(price_text)
+            point_utc = period_start_utc + timedelta(minutes=res_minutes * (position - 1))
+            point_ams = utc_to_amsterdam(point_utc)
+            results.append({"time": point_ams.isoformat(), "price": round(price, 2)})
+
+    # Sorteer op tijd
+    results.sort(key=lambda x: x["time"])
+    return results
+
+
+def utc_to_amsterdam(dt_utc: datetime) -> datetime:
+    """Converteer UTC tijdstip naar Amsterdam met simpele DST-benadering."""
+    if dt_utc.tzinfo is None:
+        dt_utc = dt_utc.replace(tzinfo=timezone.utc)
+    dt_utc = dt_utc.astimezone(timezone.utc)
+    year = dt_utc.year
+    march = datetime(year, 3, 31, 1, 0, tzinfo=timezone.utc)
+    while march.weekday() != 6:
+        march -= timedelta(days=1)
+    october = datetime(year, 10, 31, 1, 0, tzinfo=timezone.utc)
+    while october.weekday() != 6:
+        october -= timedelta(days=1)
+    offset = AMS_OFFSET_SUMMER if march <= dt_utc < october else AMS_OFFSET_WINTER
+    return (dt_utc + offset).replace(tzinfo=timezone(offset))
+
+
+def generate_sample_prices(now_ams: datetime) -> list[dict]:
+    """Genereer realistische sample-data voor 48 uur (vandaag + morgen)."""
+    rng = random.Random(42)
+    start = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
+    prices = []
+    for hour in range(48):
+        t = start + timedelta(hours=hour)
+        h = t.hour
+        # Basisprijs naar tijd-van-dag patroon
+        if 0 <= h <= 5:
+            base = 35 + rng.uniform(-8, 8)
+        elif 6 <= h <= 8:
+            base = 95 + rng.uniform(-15, 15)
+        elif 9 <= h <= 14:
+            # Kan lager zijn door zonneproductie, soms negatief
+            base = 30 + rng.uniform(-40, 25)
+        elif 15 <= h <= 16:
+            base = 65 + rng.uniform(-15, 15)
+        elif 17 <= h <= 20:
+            base = 130 + rng.uniform(-20, 30)
+        else:  # 21-23
+            base = 70 + rng.uniform(-15, 15)
+        # Weekend -10%
+        if t.weekday() >= 5:
+            base *= 0.9
+        prices.append({"time": t.isoformat(), "price": round(base, 2)})
+    return prices
+
+
+def main() -> int:
+    token = os.environ.get("ENTSOE_TOKEN", "").strip()
+    now_ams = amsterdam_now()
+
+    # Vraag data op voor "vandaag 00:00" tot "overmorgen 00:00" Amsterdam
+    today_start_ams = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_ams = today_start_ams + timedelta(days=2)
+    start_utc = today_start_ams.astimezone(timezone.utc)
+    end_utc = end_ams.astimezone(timezone.utc)
+
+    source = "sample"
+    prices: list[dict] = []
+    error_msg = None
+
+    if token:
+        try:
+            prices = fetch_entsoe(token, start_utc, end_utc)
+            source = "entsoe"
+            print(f"[ok] {len(prices)} prijspunten opgehaald van ENTSO-E.", file=sys.stderr)
+        except Exception as exc:  # noqa: BLE001
+            error_msg = f"ENTSO-E fout: {exc}"
+            print(f"[warn] {error_msg} — terugval naar sample-data.", file=sys.stderr)
+
+    if not prices:
+        prices = generate_sample_prices(now_ams)
+        source = "sample"
+        print(f"[ok] {len(prices)} sample-prijzen gegenereerd.", file=sys.stderr)
+
+    payload = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "currency": "EUR",
+        "unit": "EUR/MWh",
+        "tz": "Europe/Amsterdam",
+        "source": source,
+        "prices": prices,
+    }
+    if error_msg:
+        payload["last_error"] = error_msg
+
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_FILE.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
+    print(f"[ok] Geschreven: {OUTPUT_FILE}", file=sys.stderr)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
