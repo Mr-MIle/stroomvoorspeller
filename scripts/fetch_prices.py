@@ -155,6 +155,33 @@ def utc_to_amsterdam(dt_utc: datetime) -> datetime:
     return (dt_utc + offset).replace(tzinfo=timezone(offset))
 
 
+def aggregate_to_hourly(prices: list[dict]) -> list[dict]:
+    """Aggregeer sub-uurlijke prijzen (bv. ENTSO-E PT15M kwartieren) naar uurgemiddelden.
+
+    EPEX/ENTSO-E publiceren voor NL day-ahead sinds 2025 in 15-minuten-resolutie.
+    Voor de site willen we uurgemiddelden tonen zodat de grafiek niet over-druk wordt.
+    Punten met dezelfde (jaar, maand, dag, uur) in Amsterdam-lokale tijd worden samen
+    genomen als simpel rekenkundig gemiddelde. Als er al exact één punt per uur is,
+    is deze functie idempotent.
+    """
+    if not prices:
+        return prices
+    buckets: dict[str, list[float]] = {}
+    times: dict[str, str] = {}  # bucket_key -> iso-tijd op vol uur
+    for p in prices:
+        dt = datetime.fromisoformat(p["time"])
+        bucket_dt = dt.replace(minute=0, second=0, microsecond=0)
+        key = bucket_dt.isoformat()
+        buckets.setdefault(key, []).append(float(p["price"]))
+        times.setdefault(key, key)
+    out = []
+    for key in sorted(buckets.keys()):
+        vals = buckets[key]
+        avg = sum(vals) / len(vals)
+        out.append({"time": times[key], "price": round(avg, 2)})
+    return out
+
+
 def generate_sample_prices(now_ams: datetime) -> list[dict]:
     """Genereer realistische sample-data voor 48 uur (vandaag + morgen)."""
     rng = random.Random(42)
@@ -202,7 +229,13 @@ def main() -> int:
         try:
             prices = fetch_entsoe(token, start_utc, end_utc)
             source = "entsoe"
-            print(f"[ok] {len(prices)} prijspunten opgehaald van ENTSO-E.", file=sys.stderr)
+            print(f"[ok] {len(prices)} ruwe prijspunten opgehaald van ENTSO-E.", file=sys.stderr)
+            # ENTSO-E levert sinds 2025 voor NL kwartierprijzen (PT15M).
+            # Aggregeer naar uurgemiddelden zodat de grafiek leesbaar blijft.
+            before = len(prices)
+            prices = aggregate_to_hourly(prices)
+            if len(prices) != before:
+                print(f"[ok] Geaggregeerd van {before} sub-uurpunten naar {len(prices)} uurpunten.", file=sys.stderr)
         except Exception as exc:  # noqa: BLE001
             error_msg = f"ENTSO-E fout: {exc}"
             print(f"[warn] {error_msg} — terugval naar sample-data.", file=sys.stderr)
