@@ -1,0 +1,49 @@
+name: Update prijzen
+
+# Wanneer draait deze workflow?
+#  - elke 3 uur, op het hele uur (UTC)
+#  - na elke push naar main (handig om de cache te verversen)
+#  - handmatig, via 'Run workflow' in de GitHub UI
+on:
+  schedule:
+    - cron: "5 */3 * * *"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # nodig om data terug te committen
+
+concurrency:
+  group: update-prices
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Haal prijzen op
+        env:
+          ENTSOE_TOKEN: ${{ secrets.ENTSOE_TOKEN }}
+        run: |
+          python scripts/fetch_prices.py
+
+      - name: Commit & push als er iets veranderd is
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          if [[ -n "$(git status --porcelain public/data/prices.json)" ]]; then
+            git add public/data/prices.json
+            git commit -m "auto: update prijzen $(date -u +'%Y-%m-%dT%H:%MZ')"
+            git push
+          else
+            echo "Geen wijzigingen in prices.json — niets te committen."
+          fi
