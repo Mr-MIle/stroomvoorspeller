@@ -24,13 +24,50 @@
         <a href="#tips">Tips</a>
         <a href="#uitleg">Uitleg</a>
       </nav>
+      <button id="settings-toggle" class="settings-toggle" type="button" aria-expanded="false" aria-controls="settings-panel" title="Instellingen">
+        <span aria-hidden="true">⚙</span>
+        <span class="settings-toggle-label">Instellingen</span>
+      </button>
     </div>
   </header>
 
   <main>
+    <!-- Settings panel -->
+    <section id="settings-panel" class="settings-panel container" hidden aria-label="Instellingen">
+      <div class="settings-grid">
+        <div class="settings-block">
+          <label for="supplier-select"><strong>Mijn energieleverancier</strong></label>
+          <p class="settings-help">Bepaalt de opslag die bij de kale EPEX-prijs wordt opgeteld. Heb je een ander tarief of geen dynamisch contract? Kies <em>Eigen waarde invullen</em>.</p>
+          <select id="supplier-select" class="settings-input"></select>
+          <div id="custom-markup-wrap" class="settings-row" hidden>
+            <label for="custom-markup-input">Eigen opslag (€ per kWh)</label>
+            <input id="custom-markup-input" class="settings-input" type="number" step="0.0001" min="0" inputmode="decimal" />
+          </div>
+          <p class="settings-current">Actuele opslag: <span data-field="current-markup">—</span></p>
+        </div>
+        <div class="settings-block">
+          <strong>Aannames in de berekening</strong>
+          <ul class="settings-meta">
+            <li>Energiebelasting <span data-field="config-year">—</span>: <span data-field="config-energiebelasting">—</span></li>
+            <li>BTW: <span data-field="config-btw">—</span></li>
+            <li>De all-in formule: (EPEX + opslag + energiebelasting) × btw</li>
+          </ul>
+          <p class="settings-help">Tarieven zijn schattingen die jaarlijks worden bijgewerkt. Controleer altijd je eigen jaaroverzicht voor exacte cijfers.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- Now-card -->
     <section id="prijzen" class="hero">
       <div class="container">
+        <div class="mode-toggle" role="group" aria-label="Prijsweergave kiezen">
+          <span class="mode-toggle-label">Toon prijzen</span>
+          <div class="mode-toggle-buttons">
+            <button type="button" class="mode-btn is-active" data-mode-btn="inclusive" aria-pressed="true">Incl. belasting</button>
+            <button type="button" class="mode-btn" data-mode-btn="exclusive" aria-pressed="false">Excl. belasting</button>
+          </div>
+        </div>
+
         <div class="now-card" data-status="loading">
           <div class="now-status">
             <span class="status-dot" aria-hidden="true"></span>
@@ -40,11 +77,14 @@
           <div class="now-price">
             <span class="now-price-value" data-field="now-cents">—</span>
             <span class="now-price-unit">ct/kWh</span>
+            <span class="now-price-mode" data-field="mode-label">incl. belasting</span>
           </div>
           <p class="now-meta">
             <span data-field="now-time">—</span>
             <span class="dot-sep" aria-hidden="true">·</span>
-            <span class="now-meta-allin">incl. belasting &amp; btw: <span data-field="now-allin">—</span> ct/kWh</span>
+            <span data-field="now-secondary">—</span>
+            <span class="dot-sep" aria-hidden="true">·</span>
+            <span class="now-meta-soft" data-field="now-epex">—</span>
           </p>
         </div>
 
@@ -69,7 +109,7 @@
     <section class="chart-section container">
       <div class="section-head">
         <h2>Vandaag &amp; morgen, per uur</h2>
-        <p class="section-sub">Day-ahead prijzen van EPEX Spot (EUR/MWh, omgerekend naar cent/kWh).</p>
+        <p class="section-sub">Day-ahead prijzen van EPEX Spot, weergegeven als <span data-field="mode-label">incl. belasting</span>. Tooltip toont alle drie de varianten.</p>
       </div>
       <div class="chart-wrapper">
         <canvas id="dayChart" aria-label="Lijngrafiek met stroomprijzen per uur voor vandaag en morgen"></canvas>
@@ -98,7 +138,7 @@
     <section id="tips" class="moments-section container">
       <div class="section-head">
         <h2>Slimste momenten</h2>
-        <p class="section-sub">Goedkoopste vensters van twee uur, handig voor wasmachine, droger, EV laden of warmtepomp.</p>
+        <p class="section-sub">Goedkoopste vensters van twee uur, handig voor wasmachine, droger, EV laden of warmtepomp. Prijzen weergegeven als <span data-field="mode-label">incl. belasting</span>.</p>
       </div>
       <ul class="moments-list" data-field="best-moments">
         <li class="moment-loading">Berekenen…</li>
@@ -111,6 +151,10 @@
         <h2>Hoe werkt het?</h2>
       </div>
       <div class="explain-grid">
+        <article>
+          <h3>Wat zie ik hier?</h3>
+          <p>Standaard tonen we de prijs die je écht betaalt: kale EPEX-prijs + opslag van je leverancier + energiebelasting + 21% btw. Met de schakelaar bovenaan switch je naar excl. belasting (zonder energiebelasting en btw, wel mét leveranciersopslag) — dan zie je wat je leverancier rekent vóór de overheid haar deel pakt.</p>
+        </article>
         <article>
           <h3>Day-ahead prijzen</h3>
           <p>Elke werkdag rond 13:00 publiceert de Europese stroombeurs EPEX de prijzen voor elk uur van de volgende dag. Mensen met een dynamisch contract betalen die uurprijs (plus belastingen en een opslag van hun leverancier).</p>
