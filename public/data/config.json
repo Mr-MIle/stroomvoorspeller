@@ -1,37 +1,32 @@
 {
-  "_comment": "Centrale configuratie. Hier kun je jaarlijks belastingtarieven en standaard-opslagen aanpassen zonder de code aan te raken. Bedragen zijn in EUR per kWh, drempels in EUR per MWh (zoals ENTSO-E rapporteert).",
-  "version": 1,
-  "updated": "2026-04-27",
-
+  "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in EUR per MWh (zoals ENTSO-E rapporteert).",
+  "version": 2,
+  "updated": "2026-04-28",
   "taxes": {
-    "energiebelasting_per_kwh": 0.1316,
+    "energiebelasting_per_kwh": 0.0916,
     "btw_factor": 1.21,
     "year": 2026,
-    "_note": "Energiebelasting 2026 schatting; controleer jaarlijks bij Belastingdienst. BTW 21% wordt vermenigvuldigd over (EPEX + opslag + energiebelasting)."
+    "_note": "Tarief 2026 voor verbruik tot 10.000 kWh per jaar, EXCL. btw. Incl. btw is dit €0,1108/kWh (zoals leveranciers het in hun specificatie tonen). Verifieer jaarlijks per 1 januari."
   },
-
   "thresholds_eur_per_mwh": {
     "very_cheap": 0,
     "cheap": 50,
     "pricey": 110,
     "very_pricey": 200,
-    "_note": "Onder very_cheap = negatief (uitstekend). Boven very_pricey = extreem duur. Drempels op kale EPEX-basis, niet beïnvloed door belastingen."
+    "_note": "Onder very_cheap = negatief. Drempels op kale EPEX-basis."
   },
-
   "view": {
     "default_mode": "inclusive",
-    "_note": "'inclusive' = wat je werkelijk betaalt (EPEX + opslag + energiebelasting + btw). 'exclusive' = kale beursprijs zonder opslag/belasting."
+    "_note": "'inclusive' = (EPEX + opslag + energiebelasting) × btw. 'exclusive' = EPEX + opslag, geen belasting."
   },
-
   "default_supplier": "average",
-
   "suppliers": [
     {
       "id": "average",
       "name": "Algemeen gemiddelde",
-      "markup_per_kwh": 0.025,
+      "markup_per_kwh": 0.02,
       "fixed_per_month": 0,
-      "note": "Gemiddelde van Nederlandse aanbieders met dynamisch contract; gebruik dit als je je eigen aanbieder niet kent."
+      "note": "Schatting van een gemiddelde NL aanbieder met dynamisch contract."
     },
     {
       "id": "tibber",
@@ -43,51 +38,51 @@
     {
       "id": "frank",
       "name": "Frank Energie",
-      "markup_per_kwh": 0.0181,
+      "markup_per_kwh": 0.0146,
       "fixed_per_month": 6.95,
-      "note": "Schatting; check actuele tarieven bij Frank."
+      "note": "Inkoopvergoeding excl. btw, geverifieerd 28 april 2026 via Frank-app. Incl. btw is dit ~€0,0177/kWh."
     },
     {
       "id": "energyzero",
       "name": "EnergyZero",
       "markup_per_kwh": 0.0151,
       "fixed_per_month": 5.95,
-      "note": "Schatting; check actuele tarieven bij EnergyZero."
+      "note": "Schatting (excl. btw); nog te verifieren."
     },
     {
       "id": "anwb",
       "name": "ANWB Energie",
-      "markup_per_kwh": 0.020,
-      "fixed_per_month": 6.50,
-      "note": "Schatting; check actuele tarieven bij ANWB."
+      "markup_per_kwh": 0.02,
+      "fixed_per_month": 6.5,
+      "note": "Schatting (excl. btw); nog te verifieren."
     },
     {
       "id": "vandebron",
       "name": "Vandebron Dynamisch",
-      "markup_per_kwh": 0.020,
-      "fixed_per_month": 7.50,
-      "note": "Schatting; check actuele tarieven bij Vandebron."
+      "markup_per_kwh": 0.02,
+      "fixed_per_month": 7.5,
+      "note": "Schatting (excl. btw); nog te verifieren."
     },
     {
       "id": "zonneplan",
       "name": "Zonneplan Dynamic",
       "markup_per_kwh": 0.025,
-      "fixed_per_month": 6.50,
-      "note": "Schatting; check actuele tarieven bij Zonneplan."
+      "fixed_per_month": 6.5,
+      "note": "Schatting (excl. btw); nog te verifieren."
     },
     {
       "id": "easy",
       "name": "Easy Energy Dynamisch",
-      "markup_per_kwh": 0.0150,
-      "fixed_per_month": 5.50,
-      "note": "Schatting; check actuele tarieven bij Easy Energy."
+      "markup_per_kwh": 0.015,
+      "fixed_per_month": 5.5,
+      "note": "Schatting (excl. btw); nog te verifieren."
     },
     {
       "id": "custom",
       "name": "Eigen waarde invullen",
-      "markup_per_kwh": 0.025,
+      "markup_per_kwh": 0.02,
       "fixed_per_month": 0,
-      "note": "Vul zelf de opslag in die je leverancier rekent. Vaste maandkosten worden in deze weergave niet meegeteld omdat ze niet per kWh werken."
+      "note": "Vul zelf je opslag in (excl. btw)."
     }
   ]
 }

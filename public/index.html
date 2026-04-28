@@ -37,10 +37,10 @@
       <div class="settings-grid">
         <div class="settings-block">
           <label for="supplier-select"><strong>Mijn energieleverancier</strong></label>
-          <p class="settings-help">Bepaalt de opslag die bij de kale EPEX-prijs wordt opgeteld. Heb je een ander tarief of geen dynamisch contract? Kies <em>Eigen waarde invullen</em>.</p>
+          <p class="settings-help">Bepaalt de opslag (inkoopvergoeding) die bij de kale EPEX-prijs wordt opgeteld. Bedragen zijn <strong>excl. btw</strong>; vergelijk met je leverancier-app waar het soms incl. btw staat. Heb je een ander tarief? Kies <em>Eigen waarde invullen</em>.</p>
           <select id="supplier-select" class="settings-input"></select>
           <div id="custom-markup-wrap" class="settings-row" hidden>
-            <label for="custom-markup-input">Eigen opslag (€ per kWh)</label>
+            <label for="custom-markup-input">Eigen opslag (€ per kWh, excl. btw)</label>
             <input id="custom-markup-input" class="settings-input" type="number" step="0.0001" min="0" inputmode="decimal" />
           </div>
           <p class="settings-current">Actuele opslag: <span data-field="current-markup">—</span></p>

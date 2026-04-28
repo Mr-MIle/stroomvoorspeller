@@ -264,7 +264,7 @@
         opt.value = s.id;
         opt.textContent = s.id === "custom"
           ? s.name
-          : `${s.name} (€${fmtNum(s.markup_per_kwh, 4)}/kWh opslag)`;
+          : `${s.name} (€${fmtNum(s.markup_per_kwh, 4)}/kWh opslag, excl. btw)`;
         select.appendChild(opt);
       });
       select.dataset.populated = "1";
@@ -279,12 +279,16 @@
     if (customInput) customInput.value = state.customMarkup;
 
     const t = state.config.taxes;
-    setText("config-energiebelasting", `€${fmtNum(t.energiebelasting_per_kwh, 4)}/kWh`);
+    const eb_incl = (t.energiebelasting_per_kwh || 0) * (t.btw_factor || 1);
+    // Toon incl-btw tarief — dat is wat leveranciers in hun app/tariefblad laten zien
+    setText("config-energiebelasting", `€${fmtNum(eb_incl, 4)}/kWh (incl. btw)`);
     setText("config-btw", `${Math.round((t.btw_factor - 1) * 100)}%`);
     setText("config-year", String(t.year));
 
-    // Toon huidige effectieve opslag boven de dropdown
-    setText("current-markup", `€${fmtNum(effectiveMarkup(), 4)}/kWh`);
+    // Toon huidige effectieve opslag boven de dropdown — beide varianten
+    const m = effectiveMarkup();
+    const m_incl = m * (t.btw_factor || 1);
+    setText("current-markup", `€${fmtNum(m, 4)}/kWh excl. btw  (= €${fmtNum(m_incl, 4)} incl. btw)`);
   }
 
   function renderChart() {
