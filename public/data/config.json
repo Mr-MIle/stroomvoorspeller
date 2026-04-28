@@ -1,12 +1,12 @@
 {
   "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in EUR per MWh (zoals ENTSO-E rapporteert).",
-  "version": 2,
+  "version": 3,
   "updated": "2026-04-28",
   "taxes": {
     "energiebelasting_per_kwh": 0.0916,
     "btw_factor": 1.21,
     "year": 2026,
-    "_note": "Tarief 2026 voor verbruik tot 10.000 kWh per jaar, EXCL. btw. Incl. btw is dit €0,1108/kWh (zoals leveranciers het in hun specificatie tonen). Verifieer jaarlijks per 1 januari."
+    "_note": "Tarief 2026 voor verbruik tot 10.000 kWh per jaar, EXCL. btw. Incl. btw is dit €0,1108/kWh. Verifieer jaarlijks per 1 januari."
   },
   "thresholds_eur_per_mwh": {
     "very_cheap": 0,
@@ -24,58 +24,74 @@
     {
       "id": "average",
       "name": "Algemeen gemiddelde",
-      "markup_per_kwh": 0.02,
+      "markup_per_kwh": 0.021,
       "fixed_per_month": 0,
-      "note": "Schatting van een gemiddelde NL aanbieder met dynamisch contract."
+      "verified": "2026-04-28",
+      "source": "Berekend gemiddelde van de zeven onderstaande aanbieders",
+      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan = 0.020, gemiddelde = 0.0213."
     },
     {
       "id": "tibber",
       "name": "Tibber",
-      "markup_per_kwh": 0.0,
+      "markup_per_kwh": 0.0205,
       "fixed_per_month": 6.99,
-      "note": "Tibber rekent 0 ct/kWh opslag, maar wel een vast abonnement per maand."
+      "verified": "2026-04-28",
+      "source": "tibber.com tarievenpagina",
+      "note": "Inkoopvergoeding excl. btw. Daarnaast vast maandbedrag."
     },
     {
       "id": "frank",
       "name": "Frank Energie",
       "markup_per_kwh": 0.0146,
       "fixed_per_month": 6.95,
-      "note": "Inkoopvergoeding excl. btw, geverifieerd 28 april 2026 via Frank-app. Incl. btw is dit ~€0,0177/kWh."
+      "verified": "2026-04-28",
+      "source": "Frank-app, terugberekend van datapunt",
+      "note": "Inkoopvergoeding excl. btw. Incl. btw is dit ~€0,0177/kWh."
     },
     {
       "id": "energyzero",
       "name": "EnergyZero",
-      "markup_per_kwh": 0.0151,
+      "markup_per_kwh": 0.0339,
       "fixed_per_month": 5.95,
-      "note": "Schatting (excl. btw); nog te verifieren."
+      "verified": "2026-04-28",
+      "source": "energyzero.nl tarievenpagina",
+      "note": "Inkoopvergoeding excl. btw. Hoogste van de zeven gecontroleerde aanbieders."
     },
     {
       "id": "anwb",
       "name": "ANWB Energie",
-      "markup_per_kwh": 0.02,
+      "markup_per_kwh": 0.018,
       "fixed_per_month": 6.5,
-      "note": "Schatting (excl. btw); nog te verifieren."
+      "verified": "2026-04-28",
+      "source": "anwb.nl/energie tarievenblad",
+      "note": "Inkoopvergoeding excl. btw."
     },
     {
       "id": "vandebron",
       "name": "Vandebron Dynamisch",
       "markup_per_kwh": 0.02,
       "fixed_per_month": 7.5,
-      "note": "Schatting (excl. btw); nog te verifieren."
+      "verified": "2026-04-28",
+      "source": "vandebron.nl tarievenpagina",
+      "note": "Inkoopvergoeding excl. btw."
     },
     {
       "id": "zonneplan",
       "name": "Zonneplan Dynamic",
-      "markup_per_kwh": 0.025,
+      "markup_per_kwh": 0.02,
       "fixed_per_month": 6.5,
-      "note": "Schatting (excl. btw); nog te verifieren."
+      "verified": "2026-04-28",
+      "source": "zonneplan.nl tarievenpagina",
+      "note": "Inkoopvergoeding excl. btw."
     },
     {
       "id": "easy",
       "name": "Easy Energy Dynamisch",
-      "markup_per_kwh": 0.015,
+      "markup_per_kwh": 0.0218,
       "fixed_per_month": 5.5,
-      "note": "Schatting (excl. btw); nog te verifieren."
+      "verified": "2026-04-28",
+      "source": "easyenergy.com tarievenpagina",
+      "note": "Inkoopvergoeding excl. btw."
     },
     {
       "id": "custom",
