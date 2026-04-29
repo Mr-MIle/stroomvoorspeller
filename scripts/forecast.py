@@ -33,6 +33,15 @@ NL_FEESTDAGEN = {
 # Zie 01-documenten/backtest-resultaat-v1.md.
 POINT_WEIGHT = 0.02
 
+# Welke factoren tellen mee in de som (v1.5).
+# Backtest v1-v3 toonden dat het volledige 6-factorenmodel een MAE-verbetering van
+# slechts 1,5-2% en een richting-hit rond 51% bereikt - nauwelijks beter dan
+# random. v1.5 test of een radicaal simpeler model (alleen de twee dominante
+# weervariabelen: zon en wind) evenveel of meer waarde levert. De andere vier
+# factoren worden nog wel berekend en in de Forecast-resultaten getoond voor
+# transparantie, maar tellen niet mee in de prijsvoorspelling.
+ENABLED_FACTORS = {"zon", "wind"}
+
 
 @dataclass
 class FactorScore:
@@ -269,7 +278,9 @@ def forecast_one(
         factor_dagtype(target_dt),
         factor_uurpatroon(target_dt),
     ]
-    total = sum(f.points for f in factors)
+    # v1.5: alleen ENABLED_FACTORS tellen mee in totaal-score; andere factoren
+    # blijven voor transparantie zichtbaar in `factors`-lijst maar dragen niet bij.
+    total = sum(f.points for f in factors if f.name in ENABLED_FACTORS)
     predicted = baseline * (1 + total * POINT_WEIGHT)
     unc = uncertainty(days_ahead, abs(total))
 
@@ -327,7 +338,8 @@ if __name__ == "__main__":
     print(f"Onzekerheid: ±{f.uncertainty_pct*100:.0f}%  (band {f.lower:.2f} - {f.upper:.2f})")
 
     assert abs(f.baseline - 25.40) < 0.01, f"Verwachtte baseline 25.40, kreeg {f.baseline}"
-    assert f.total_points == 7, f"Verwachtte 7 punten (v1.3), kreeg {f.total_points}"
-    assert abs(f.predicted - 28.96) < 0.1, f"Verwachtte ~28.96 (v1.3), kreeg {f.predicted}"
-    assert abs(f.uncertainty_pct - 0.25) < 0.001, f"Verwachtte ±25%, kreeg ±{f.uncertainty_pct*100:.0f}%"
-    print("\n[ok] Self-test geslaagd; voorspelling matcht v1.3-model uit methodologie sectie 5.")
+    # v1.5: alleen zon (+3) + wind (+1) tellen mee = +4 totaal
+    assert f.total_points == 4, f"Verwachtte 4 punten (v1.5: alleen zon+wind), kreeg {f.total_points}"
+    assert abs(f.predicted - 27.43) < 0.1, f"Verwachtte ~27.43 (v1.5), kreeg {f.predicted}"
+    assert abs(f.uncertainty_pct - 0.22) < 0.001, f"Verwachtte ±22%, kreeg ±{f.uncertainty_pct*100:.0f}%"
+    print("\n[ok] Self-test geslaagd; voorspelling matcht v1.5-model (zon+wind only).")
