@@ -215,10 +215,14 @@ def main() -> int:
     token = os.environ.get("ENTSOE_TOKEN", "").strip()
     now_ams = amsterdam_now()
 
-    # Vraag data op voor "vandaag 00:00" tot "overmorgen 00:00" Amsterdam
+    # Vraag data op voor "vandaag − 14 dagen" tot "overmorgen 00:00" Amsterdam.
+    # Historie van 14 dagen is nodig zodat run_forecast.py voldoende baseline-data
+    # heeft voor werkdag (7d), weekend (14d) en feestdag (7d). De frontend
+    # filtert op "vandaag + morgen" voor weergave, dus de extra historie schaadt niet.
     today_start_ams = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
+    history_start_ams = today_start_ams - timedelta(days=14)
     end_ams = today_start_ams + timedelta(days=2)
-    start_utc = today_start_ams.astimezone(timezone.utc)
+    start_utc = history_start_ams.astimezone(timezone.utc)
     end_utc = end_ams.astimezone(timezone.utc)
 
     source = "sample"
@@ -254,6 +258,17 @@ def main() -> int:
         "prices": prices,
     }
     if error_msg:
+        payload["last_error"] = error_msg
+
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_FILE.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
+    print(f"[ok] Geschreven: {OUTPUT_FILE}", file=sys.stderr)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+sg:
         payload["last_error"] = error_msg
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
