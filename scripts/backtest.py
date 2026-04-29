@@ -730,7 +730,9 @@ def main() -> int:
     # Weer/TTF: het Open-Meteo archive endpoint geeft HTTP 400 bij toekomstige datums en loopt
     # typisch 2-5 dagen achter op realtime. We cappen daarom op test_end_day. Forecast-targets
     # voorbij test_end_day worden later toch al overgeslagen via lookup_actual().
-    fetch_prices_from = test_start_day - timedelta(days=7)
+    # 14 dagen pre-history zodat de v1.4 weekend-baseline (14d window) genoeg
+    # datapunten heeft voor de eerste forecast-dagen in de testperiode.
+    fetch_prices_from = test_start_day - timedelta(days=14)
     fetch_prices_to = test_end_day + timedelta(days=2)
     weather_end_day = test_end_day
     ttf_end_day = test_end_day
