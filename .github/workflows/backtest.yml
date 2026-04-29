@@ -1,0 +1,73 @@
+name: Backtest voorspellingsmodel
+
+# Wanneer draait deze workflow?
+#  - alleen handmatig via 'Run workflow' in de GitHub UI
+#  - geen schedule: backtest is een diagnose-tool, niet een continue taak
+#
+# Output: een artifact 'backtest-resultaat-<run_id>' dat je kunt downloaden
+# vanuit de Actions-pagina. Bevat het markdown-rapport en de ruwe JSON-data.
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Aantal dagen testperiode"
+        required: false
+        default: "30"
+        type: string
+      horizons:
+        description: "Comma-gescheiden horizonten in dagen"
+        required: false
+        default: "1,3,5,7"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backtest
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run backtest
+        env:
+          ENTSOE_TOKEN: ${{ secrets.ENTSOE_TOKEN }}
+        run: |
+          mkdir -p backtest-output
+          python scripts/backtest.py \
+            --days "${{ github.event.inputs.days }}" \
+            --horizons "${{ github.event.inputs.horizons }}" \
+            --output-dir backtest-output
+
+      - name: Print rapport in de logs
+        run: |
+          echo "::group::Backtest-rapport (markdown)"
+          cat backtest-output/backtest-resultaat-v1.md
+          echo "::endgroup::"
+
+      - name: Upload backtest-resultaat als artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backtest-resultaat-${{ github.run_id }}
+          path: backtest-output/
+          retention-days: 90
+
+      - name: Genereer job summary
+        if: always()
+        run: |
+          if [ -f backtest-output/backtest-resultaat-v1.md ]; then
+            cat backtest-output/backtest-resultaat-v1.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Geen rapport gegenereerd." >> "$GITHUB_STEP_SUMMARY"
+          fi
