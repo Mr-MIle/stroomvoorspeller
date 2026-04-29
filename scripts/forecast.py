@@ -84,14 +84,22 @@ def is_zomer(dt: datetime) -> bool:
 
 def compute_baseline(target_dt: datetime, history: list[dict]) -> Optional[float]:
     """
-    Gemiddelde EPEX-prijs van de laatste 7 dagen voor hetzelfde uur en hetzelfde dagtype.
+    Gemiddelde EPEX-prijs voor hetzelfde uur en hetzelfde dagtype.
+
+    Window-keuze:
+    - werkdag/feestdag: laatste 7 dagen (typisch 5 werkdag-datapunten of 1-2 feestdag).
+    - weekend: laatste 14 dagen (v1.4) — een 7d-window levert maar 1 datapunt per
+      uur op (vorige zaterdag of vorige zondag), wat zeer ruisig is en in backtest
+      v2 een bias-piek van +27 EUR/MWh op zondag opleverde. 14 dagen geeft 2
+      datapunten per hour-of-week, een acceptabele middenweg.
 
     history: lijst van {time: ISO-string, price: float in EUR/MWh}
     Return: baseline in EUR/MWh, of None als er geen data is.
     """
     target_hour = target_dt.hour
     target_type = dagtype(target_dt)
-    cutoff_start = target_dt - timedelta(days=7)
+    window_days = 14 if target_type == "weekend" else 7
+    cutoff_start = target_dt - timedelta(days=window_days)
     cutoff_end = target_dt
 
     matches = []
