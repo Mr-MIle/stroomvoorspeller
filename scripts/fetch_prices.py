@@ -268,7 +268,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-sg:
+if error_msg:
         payload["last_error"] = error_msg
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
