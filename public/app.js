@@ -15,8 +15,11 @@
   const state = {
     config: null,
     payload: null,
-    prices: [],
-    nowIdx: -1,
+    forecastPayload: null,
+    prices: [],          // alle prijzen uit prices.json (14d historie + 2d toekomst)
+    dayPrices: [],       // gefilterd: alleen vandaag + morgen voor now-card/grafiek
+    forecasts: [],       // overmorgen t/m +7d uit forecast.json
+    nowIdx: -1,          // index in dayPrices
     mode: "inclusive",
     supplierId: "average",
     customMarkup: 0.025,
@@ -124,6 +127,18 @@
     return idx;
   }
 
+  function filterTodayTomorrow(prices, now) {
+    // Knip alle prijzen weg vóór "vandaag 00:00" en na "overmorgen 00:00".
+    // De volledige prices.json bevat 14d historie + 2d toekomst sinds v1.6;
+    // de UI toont alleen de relevante 48 uur.
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const dayAfterTomorrow = new Date(todayStart.getTime() + 48 * 3600 * 1000);
+    return prices.filter((p) => {
+      const t = new Date(p.time);
+      return t >= todayStart && t < dayAfterTomorrow;
+    });
+  }
+
   function findBestMoments(prices, fromIdx, count = 3, windowHours = 2) {
     const candidates = [];
     for (let i = fromIdx; i <= prices.length - windowHours; i++) {
@@ -162,7 +177,7 @@
 
   // ---- Rendering ----
   function renderAll() {
-    if (!state.config || !state.prices.length) return;
+    if (!state.config || !state.dayPrices.length) return;
     renderSettingsPanel();
     renderModeBadges();
     renderNowCard();
@@ -182,7 +197,7 @@
   }
 
   function renderNowCard() {
-    const prices = state.prices;
+    const prices = state.dayPrices;
     const nowIdx = state.nowIdx;
     const current = nowIdx >= 0 ? prices[nowIdx] : prices[0];
 
@@ -200,7 +215,7 @@
   }
 
   function renderSummary() {
-    const prices = state.prices;
+    const prices = state.dayPrices;
     const nowIdx = state.nowIdx;
     const current = nowIdx >= 0 ? prices[nowIdx] : prices[0];
     const today = prices.filter((p) => isSameLocalDay(p.time, current.time));
@@ -214,7 +229,7 @@
   }
 
   function renderMoments() {
-    const prices = state.prices;
+    const prices = state.dayPrices;
     const fromIdx = state.nowIdx >= 0 ? state.nowIdx : 0;
     const moments = findBestMoments(prices, fromIdx, 3, 2);
     const list = document.querySelector('[data-field="best-moments"]');
@@ -291,44 +306,115 @@
     setText("current-markup", `€${fmtNum(m, 4)}/kWh excl. btw  (= €${fmtNum(m_incl, 4)} incl. btw)`);
   }
 
+  function fmtChartLabel(iso) {
+    // Voor de chart x-axis: korte labels. Voor "vandaag/morgen" alleen HH:MM,
+    // voor verdere voorspelling-uren een weekdag-prefix om te onderscheiden.
+    const d = new Date(iso);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dayDiff = Math.floor((d - today) / 86400000);
+    if (dayDiff <= 1) {
+      return fmtTime(iso);
+    }
+    const wd = d.toLocaleDateString("nl-NL", { weekday: "short" });
+    return `${wd} ${fmtTime(iso)}`;
+  }
+
   function renderChart() {
     const canvas = document.getElementById("dayChart");
     if (!canvas || typeof Chart === "undefined") return;
     if (state.chart) { state.chart.destroy(); state.chart = null; }
 
-    const prices = state.prices;
-    const labels = prices.map((p) => fmtTime(p.time));
-    const data = prices.map((p) => priceCents(p.price));
-    const colors = prices.map((p, i) => i === state.nowIdx ? "#0f6cbd" : pointColor(p.price));
-    const radii  = prices.map((_, i) => i === state.nowIdx ? 6 : 3);
+    const dayPrices = state.dayPrices;
+    const forecasts = state.forecasts;
 
-    const firstDay = new Date(prices[0].time).getDate();
-    const tomorrowStart = prices.findIndex((p) => new Date(p.time).getDate() !== firstDay);
+    // Bouw één gecombineerde tijdlijn: dayPrices + forecasts. dayPrices komen
+    // eerst (vandaag + morgen), forecasts daarna (overmorgen t/m +7d).
+    const timeline = [
+      ...dayPrices.map((p) => ({ kind: "actual", time: p.time, price: p.price })),
+      ...forecasts.map((f) => ({ kind: "forecast", time: f.time, forecast: f })),
+    ];
+    const labels = timeline.map((t) => fmtChartLabel(t.time));
+
+    // Dataset 1: actuele prijzen (solid line, gekleurde punten)
+    const actualData = timeline.map((t) => t.kind === "actual" ? priceCents(t.price) : null);
+    const actualColors = timeline.map((t, i) => {
+      if (t.kind !== "actual") return "transparent";
+      return i === state.nowIdx ? "#0f6cbd" : pointColor(t.price);
+    });
+    const actualRadii = timeline.map((t, i) => {
+      if (t.kind !== "actual") return 0;
+      return i === state.nowIdx ? 6 : 3;
+    });
+
+    // Datasets 2 & 3: voorspellingsband. We tekenen lower met fill naar upper
+    // (Chart.js: fill: '+1' = vul tot volgend dataset). Beide linkers transparant.
+    const forecastLower = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.lower) : null);
+    const forecastUpper = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.upper) : null);
+
+    // Dataset 4: voorspelde lijn (gestippeld)
+    const forecastPredicted = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.predicted) : null);
 
     state.chart = new Chart(canvas, {
       type: "line",
       data: {
         labels,
-        datasets: [{
-          label: `ct/kWh (${modeLabel()})`,
-          data,
-          tension: 0.25,
-          borderColor: "#2e75b6",
-          borderWidth: 2,
-          pointBackgroundColor: colors,
-          pointBorderColor: colors,
-          pointRadius: radii,
-          pointHoverRadius: (ctx) => (ctx.dataIndex === state.nowIdx ? 7 : 5),
-          fill: { target: "origin", above: "rgba(46,117,182,0.08)" },
-        }],
+        datasets: [
+          {
+            label: `ct/kWh (${modeLabel()})`,
+            data: actualData,
+            tension: 0.25,
+            borderColor: "#2e75b6",
+            borderWidth: 2,
+            pointBackgroundColor: actualColors,
+            pointBorderColor: actualColors,
+            pointRadius: actualRadii,
+            pointHoverRadius: (ctx) => (ctx.dataIndex === state.nowIdx ? 7 : 5),
+            fill: { target: "origin", above: "rgba(46,117,182,0.08)" },
+            spanGaps: false,
+          },
+          {
+            label: "_forecast_lower",
+            data: forecastLower,
+            borderColor: "transparent",
+            backgroundColor: "rgba(46,117,182,0.12)",
+            pointRadius: 0,
+            fill: "+1",
+            tension: 0.25,
+            spanGaps: false,
+          },
+          {
+            label: "_forecast_upper",
+            data: forecastUpper,
+            borderColor: "transparent",
+            pointRadius: 0,
+            fill: false,
+            tension: 0.25,
+            spanGaps: false,
+          },
+          {
+            label: "voorspelling",
+            data: forecastPredicted,
+            borderColor: "#0f6cbd",
+            borderDash: [4, 4],
+            borderWidth: 2,
+            tension: 0.25,
+            pointRadius: 2,
+            pointBackgroundColor: "#0f6cbd",
+            pointHoverRadius: 5,
+            fill: false,
+            spanGaps: false,
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         animation: { duration: 250 },
+        interaction: { mode: "index", intersect: false },
         scales: {
           x: {
-            ticks: { autoSkip: true, maxTicksLimit: 12, color: "#7c8a99", font: { size: 11 } },
+            ticks: { autoSkip: true, maxTicksLimit: 14, color: "#7c8a99", font: { size: 11 } },
             grid: { color: "rgba(0,0,0,0.04)" },
           },
           y: {
@@ -337,18 +423,39 @@
           },
         },
         plugins: {
-          legend: { display: false },
+          legend: {
+            display: true,
+            labels: {
+              filter: (item) => !item.text.startsWith("_"),
+              boxWidth: 18, boxHeight: 2, font: { size: 11 },
+            },
+          },
           tooltip: {
+            filter: (item) => !item.dataset.label || !item.dataset.label.startsWith("_"),
             callbacks: {
-              title: (items) => fmtDateTime(prices[items[0].dataIndex].time),
+              title: (items) => fmtDateTime(timeline[items[0].dataIndex].time),
               label: (item) => {
                 const idx = item.dataIndex;
-                const eurMwh = prices[idx].price;
-                return [
-                  `Kale EPEX: ${fmtNum(priceCentsRaw(eurMwh), 2)} ct/kWh`,
-                  `Excl. belasting: ${fmtNum(priceCents(eurMwh, "exclusive"), 2)} ct/kWh`,
-                  `Incl. belasting: ${fmtNum(priceCents(eurMwh, "inclusive"), 2)} ct/kWh`,
+                const t = timeline[idx];
+                if (t.kind === "actual") {
+                  const eurMwh = t.price;
+                  return [
+                    `Kale EPEX: ${fmtNum(priceCentsRaw(eurMwh), 2)} ct/kWh`,
+                    `Excl. belasting: ${fmtNum(priceCents(eurMwh, "exclusive"), 2)} ct/kWh`,
+                    `Incl. belasting: ${fmtNum(priceCents(eurMwh, "inclusive"), 2)} ct/kWh`,
+                  ];
+                }
+                // Forecast: toon voorspelling, band en factor-bijdrage
+                const f = t.forecast;
+                const lines = [
+                  `Voorspeld: ${fmtNum(priceCents(f.predicted), 2)} ct/kWh`,
+                  `Band: ${fmtNum(priceCents(f.lower), 2)} – ${fmtNum(priceCents(f.upper), 2)} ct/kWh`,
+                  `Baseline: ${fmtNum(priceCents(f.baseline), 2)} ct/kWh; ${f.total_points >= 0 ? "+" : ""}${f.total_points} punten`,
                 ];
+                (f.factors || []).forEach((fact) => {
+                  lines.push(`  ${fact.name}: ${fact.points >= 0 ? "+" : ""}${fact.points} (${fact.reason})`);
+                });
+                return lines;
               },
             },
           },
@@ -428,16 +535,23 @@
 
   loadInitialState();
 
+  // forecast.json mag falen (recent toegevoegd; oude deploys hebben hem niet) —
+  // de site werkt dan zonder voorspellingslijn maar prijzen blijven wel zichtbaar.
   Promise.all([
     fetch("data/config.json", { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error("config HTTP " + r.status); return r.json(); }),
     fetch("data/prices.json", { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error("prices HTTP " + r.status); return r.json(); }),
+    fetch("data/forecast.json", { cache: "no-store" }).then((r) => r.ok ? r.json() : null).catch(() => null),
   ])
-    .then(([config, payload]) => {
+    .then(([config, payload, forecastPayload]) => {
       state.config = config;
       state.payload = payload;
+      state.forecastPayload = forecastPayload;
       state.prices = payload.prices || [];
+      state.forecasts = (forecastPayload && forecastPayload.forecasts) || [];
+      const now = new Date();
+      state.dayPrices = filterTodayTomorrow(state.prices, now);
+      state.nowIdx = findCurrentIndex(state.dayPrices, now);
       applyConfigDefaults();
-      state.nowIdx = findCurrentIndex(state.prices, new Date());
       wireUI();
       renderAll();
     })
