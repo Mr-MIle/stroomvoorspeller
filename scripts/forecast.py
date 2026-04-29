@@ -33,14 +33,25 @@ NL_FEESTDAGEN = {
 # Zie 01-documenten/backtest-resultaat-v1.md.
 POINT_WEIGHT = 0.02
 
-# Welke factoren tellen mee in de som (v1.5).
-# Backtest v1-v3 toonden dat het volledige 6-factorenmodel een MAE-verbetering van
-# slechts 1,5-2% en een richting-hit rond 51% bereikt - nauwelijks beter dan
-# random. v1.5 test of een radicaal simpeler model (alleen de twee dominante
-# weervariabelen: zon en wind) evenveel of meer waarde levert. De andere vier
-# factoren worden nog wel berekend en in de Forecast-resultaten getoond voor
-# transparantie, maar tellen niet mee in de prijsvoorspelling.
-ENABLED_FACTORS = {"zon", "wind"}
+# Welke factoren tellen mee in de som. Default: alle 6. Via deze set is het
+# mogelijk individuele factoren uit te schakelen voor experimenten zonder de
+# code zelf te wijzigen.
+#
+# Backtest v4 (v1.5) testte een simpel model met {"zon", "wind"} alleen — dat
+# liet richting-hit zakken van 51% naar 42% op 1d (onder random). Conclusie:
+# de gecombineerde factoren capteren wél subtiele richtingsignalen die individueel
+# weinig lijken bij te dragen, en het volledige model blijft de productiekeuze.
+ENABLED_FACTORS = {"zon", "wind", "temperatuur", "gas", "dagtype", "uurpatroon"}
+
+# v1.6: zondag-boost voor weersfactoren.
+# Backtest v3 toonde een hardnekkige bias van +27 EUR/MWh op zondag-uren die niet
+# door de v1.4 weekend-baseline-fix werd opgelost. Op zondag is de basale stroomvraag
+# lager (geen industrie, weinig commercieel) dus dezelfde MWh aan zon- en
+# windproductie drukt de prijs sterker. Een zonnige+winderige zondag laat prijzen
+# diep zakken; een bewolkte+windstille zondag piekt de prijs juist. v1.6 versterkt
+# alleen op zondag de zon- en wind-factoren met deze multiplier; andere dagen
+# ongewijzigd. Andere factoren (temperatuur, gas, dagtype, uurpatroon) blijven 1x.
+ZONDAG_BOOST = 2
 
 
 @dataclass
@@ -278,7 +289,25 @@ def forecast_one(
         factor_dagtype(target_dt),
         factor_uurpatroon(target_dt),
     ]
-    # v1.5: alleen ENABLED_FACTORS tellen mee in totaal-score; andere factoren
+
+    # v1.6: zondag-boost. Op zondag tellen zon en wind ZWAARDER (×ZONDAG_BOOST)
+    # omdat de basisvraag laag is en weersinvloed de prijs sterker beweegt.
+    # We vervangen de FactorScore-objects zodat de boost zichtbaar blijft in
+    # de uitleg (×N erbij in `reason`-string).
+    if target_dt.weekday() == 6:  # zondag
+        boosted = []
+        for f in factors:
+            if f.name in ("zon", "wind"):
+                boosted.append(FactorScore(
+                    name=f.name,
+                    points=f.points * ZONDAG_BOOST,
+                    reason=f"{f.reason} ×{ZONDAG_BOOST} (zondag)",
+                ))
+            else:
+                boosted.append(f)
+        factors = boosted
+
+    # Alleen ENABLED_FACTORS tellen mee in totaal-score; andere factoren
     # blijven voor transparantie zichtbaar in `factors`-lijst maar dragen niet bij.
     total = sum(f.points for f in factors if f.name in ENABLED_FACTORS)
     predicted = baseline * (1 + total * POINT_WEIGHT)
@@ -338,8 +367,9 @@ if __name__ == "__main__":
     print(f"Onzekerheid: ±{f.uncertainty_pct*100:.0f}%  (band {f.lower:.2f} - {f.upper:.2f})")
 
     assert abs(f.baseline - 25.40) < 0.01, f"Verwachtte baseline 25.40, kreeg {f.baseline}"
-    # v1.5: alleen zon (+3) + wind (+1) tellen mee = +4 totaal
-    assert f.total_points == 4, f"Verwachtte 4 punten (v1.5: alleen zon+wind), kreeg {f.total_points}"
-    assert abs(f.predicted - 27.43) < 0.1, f"Verwachtte ~27.43 (v1.5), kreeg {f.predicted}"
-    assert abs(f.uncertainty_pct - 0.22) < 0.001, f"Verwachtte ±22%, kreeg ±{f.uncertainty_pct*100:.0f}%"
-    print("\n[ok] Self-test geslaagd; voorspelling matcht v1.5-model (zon+wind only).")
+    # v1.6: alle 6 factoren weer aan; donderdag werkdag = geen zondag-boost.
+    # Zelfde getallen als v1.4: +7 punten, voorspelling 28.96, onzekerheid ±25%.
+    assert f.total_points == 7, f"Verwachtte 7 punten (v1.6 werkdag), kreeg {f.total_points}"
+    assert abs(f.predicted - 28.96) < 0.1, f"Verwachtte ~28.96 (v1.6 werkdag), kreeg {f.predicted}"
+    assert abs(f.uncertainty_pct - 0.25) < 0.001, f"Verwachtte ±25%, kreeg ±{f.uncertainty_pct*100:.0f}%"
+    print("\n[ok] Self-test geslaagd; v1.6-model — werkdag-voorbeeld zonder zondag-boost matcht v1.4.")
