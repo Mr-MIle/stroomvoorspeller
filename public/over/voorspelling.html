@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Over de voorspelling — Stroomvoorspeller.nl</title>
+  <meta name="description" content="Hoe werkt de 5-7 dagen prijsvoorspelling van stroomvoorspeller.nl? Een transparant 6-puntenmodel dat historische patronen combineert met huidige weers- en marktinzichten." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">⚡</span>
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/#prijzen">Prijzen</a>
+        <a href="/#voorspelling">Voorspelling</a>
+        <a href="/#tips">Tips</a>
+        <a href="/#uitleg">Uitleg</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="legal-page container">
+    <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
+    <h1>Over de voorspelling</h1>
+    <p class="legal-meta">Modelversie 1.6 · Laatst bijgewerkt: 29 april 2026</p>
+
+    <section>
+      <h2>Korte versie</h2>
+      <p class="legal-summary">
+        De voorspelling kijkt naar <strong>historische patronen</strong> uit de
+        afgelopen 1–2 weken (welk uur van de dag, welke dag van de week, welk
+        prijsniveau) en probeert die te corrigeren met <strong>huidige
+        inzichten</strong>: hoeveel zon en wind verwacht we, hoe koud wordt het,
+        wat doet de gasprijs, en is het een werkdag of weekend. Bij
+        <strong>extreme gebeurtenissen</strong> — een PV-overschot dat de prijs
+        ver onder nul drukt, een gascrisis of geopolitieke onrust — vallen
+        werkelijke prijzen substantieel buiten de modelband en is de voorspelling
+        in die uren onbetrouwbaar. Daarom tonen we altijd een onzekerheidsband.
+      </p>
+    </section>
+
+    <section>
+      <h2>Voor welke uren?</h2>
+      <ul>
+        <li>
+          <strong>Vandaag en morgen</strong>: officiële, definitieve EPEX
+          day-ahead-prijzen (gepubliceerd door ENTSO-E). Geen voorspelling, geen
+          schatting — exacte cijfers.
+        </li>
+        <li>
+          <strong>Overmorgen tot en met 7 dagen vooruit</strong>: eigen schatting,
+          gemaakt met het hieronder beschreven model. Voor deze uren tonen we
+          ook de onzekerheidsband.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Hoe werkt het in twee stappen?</h2>
+
+      <h3>Stap 1 — baseline uit historie</h3>
+      <p>
+        Voor elk toekomstig uur (bijvoorbeeld donderdag 1 mei om 19:00) berekenen
+        we eerst een <strong>basisprijs</strong>: het gemiddelde van de werkelijke
+        prijzen op datzelfde tijdstip op vergelijkbare dagen in de afgelopen week.
+        Voor een werkdag-19:00 zijn dat typisch 5 datapunten (maandag t/m
+        vrijdag van afgelopen week). Voor zaterdag- en zondag-uren kijken we
+        14 dagen terug, omdat 7 dagen maar 1 datapunt per uur oplevert en dat te
+        ruisig is.
+      </p>
+      <p>
+        Deze baseline absorbeert het basis-uurpatroon (nacht goedkoop, ochtend-
+        en avondspits duur, middag soms goedkoop door zon) en het meest recente
+        prijsregime, zonder dat we daar zelf parameters voor hoeven te kiezen.
+      </p>
+
+      <h3>Stap 2 — zes factoren corrigeren de baseline</h3>
+      <p>
+        Boven op de baseline berekenen zes factoren elk een score in
+        <strong>punten</strong>. Het totaal vertaalt zich in een procentuele
+        afwijking van de baseline:
+      </p>
+      <p class="legal-formula">
+        voorspelde_prijs = baseline × (1 + totaal_punten × 2%)
+      </p>
+      <p>
+        Op zondag tellen de twee weersfactoren (zon en wind) extra zwaar (×2),
+        omdat de basisvraag op zondag lager is en weersinvloed de prijs sterker
+        beweegt: een zonnige+winderige zondag drukt de prijs diep, een
+        bewolkte+windstille zondag stuwt hem op.
+      </p>
+    </section>
+
+    <section>
+      <h2>De zes factoren</h2>
+      <ol>
+        <li>
+          <strong>Zonproductie</strong> (−3 tot +3 punten) — bewolkte dagen geven
+          plus-punten (duurder), zonnige dagen min (goedkoper). Bron:
+          Open-Meteo voorspelling, vergeleken met het seizoennormale stralingsniveau.
+        </li>
+        <li>
+          <strong>Windproductie</strong> (−3 tot +3 punten) — windstille dagen
+          plus, stormachtige dagen min. Bron: Open-Meteo windsnelheid op rotorhoogte (100 m).
+        </li>
+        <li>
+          <strong>Temperatuur</strong> (−1 tot +2 punten) — vorst geeft een grote
+          plus (warmtepompen draaien op vol vermogen), aangenaam weer (18-26 °C)
+          geeft een minpunt (lagere ruimtevraag, mensen buiten, zon op piek).
+          Bron: Open-Meteo daggemiddelde.
+        </li>
+        <li>
+          <strong>Gasprijs (TTF)</strong> (−2 tot +2 punten) — vergelijkt de
+          actuele gasprijs met het 30-dagen-gemiddelde. Hoge gasprijs duwt de
+          stroomprijs op (gascentrales zetten vaak het marginale prijsniveau).
+          Bron: Yahoo Finance ticker TTF=F.
+        </li>
+        <li>
+          <strong>Type dag</strong> (−2 tot 0 punten) — zaterdag −1, zondag −2,
+          feestdag −2. Werkdagen zitten al impliciet in de baseline.
+        </li>
+        <li>
+          <strong>Uurpatroon-correctie</strong> (−2 tot +2 punten) — kleine
+          seizoencorrectie per uur (winter avondspits zwaarder dan zomer-avond,
+          zomer-middag goedkoper door zon).
+        </li>
+      </ol>
+      <p>
+        Klik in de grafiek op een voorspeld uur om de bijdrage per factor te zien.
+        De volledige drempelwaarden staan in
+        <a href="https://github.com/mr-mile/stroomvoorspeller/blob/main/public/data/config.json">
+          <code>config.json</code></a> en kunnen zonder code-wijziging worden bijgesteld.
+      </p>
+    </section>
+
+    <section>
+      <h2>Onzekerheidsband</h2>
+      <p>
+        Bij elke voorspelling tonen we een <strong>onzekerheidsband</strong>: een
+        bandbreedte waarbinnen de werkelijke prijs naar verwachting valt. De band
+        is breder bij grotere afwijkingen van de baseline en bij verdere horizon:
+      </p>
+      <ul>
+        <li>Basis: ±10% — onvermijdelijke ruis bij elke voorspelling.</li>
+        <li>+2% per dag verder vooruit — weersvoorspellingen worden snel onzekerder.</li>
+        <li>+1% per absoluut punt — extreme totalen (sterk + of −) zijn zeldzamer en daardoor onzekerder.</li>
+      </ul>
+      <p>
+        Deze band beschrijft normale variatie. Zwarte zwanen (zie hieronder) vallen
+        ver buiten de band en zijn met dit model niet te voorspellen.
+      </p>
+    </section>
+
+    <section>
+      <h2>Wanneer klopt de voorspelling niet?</h2>
+      <p>
+        We zijn eerlijk over waar het model tekortschiet. Er zijn drie hoofdcategorieën:
+      </p>
+      <ul>
+        <li>
+          <strong>Extreme PV-overschot-uren</strong>: zonnige weekends in lente of
+          zomer waar de zonne-opwekking de vraag massaal overstijgt. Prijzen kunnen
+          dan tot −400 EUR/MWh zakken. Het model voorziet de richting (negatief) wel,
+          maar niet de magnitude.
+        </li>
+        <li>
+          <strong>Gascrises en geopolitieke schokken</strong>: een aardgasleiding-
+          incident, sancties, koude-inval in heel Europa. Dat verschuift het hele
+          prijsniveau in dagen tijd buiten de modelband.
+        </li>
+        <li>
+          <strong>Ongeplande centrale-uitval</strong>: als een grote centrale of
+          interconnector wegvalt, schiet de prijs lokaal omhoog. Geen openbare
+          realtime-data bekend om dit in te modelleren.
+        </li>
+      </ul>
+      <p>
+        In al deze gevallen geldt: de getoonde band is een <strong>indicatie</strong>,
+        niet een garantie. Voor harde beslissingen — bijvoorbeeld of je een
+        dynamisch contract neemt of een investering doet — moet je nooit alleen op
+        deze voorspelling afgaan. Zie ook onze <a href="/disclaimer">disclaimer</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2>Hoe goed presteert het model?</h2>
+      <p>
+        Op basis van een backtest over 30 dagen (april 2026) tegen de werkelijke
+        EPEX-prijzen:
+      </p>
+      <ul>
+        <li>
+          Gemiddelde absolute fout op 1 dag vooruit ongeveer <strong>1,5%
+          beter</strong> dan een naïeve voorspelling die alleen historisch
+          gemiddelde gebruikt.
+        </li>
+        <li>
+          Het model geeft op ~51% van de uren de juiste richting van afwijking
+          aan (boven of onder de baseline). Dat is iets beter dan een muntje
+          opgooien — geen wonder, maar wel signaal.
+        </li>
+        <li>
+          Voor "ruwweg goedkoop" en "ruwweg duur" categorisering halen we
+          ongeveer 60% trefzekerheid.
+        </li>
+      </ul>
+      <p>
+        Voor een hobby-project van één persoon vinden we dat acceptabel. We
+        hebben vijf model-iteraties gedaan en zijn tot de conclusie gekomen dat
+        verdere micro-tweaks geen substantiële winst meer opleveren. De volledige
+        modelgeschiedenis staat in het
+        <a href="https://github.com/mr-mile/stroomvoorspeller/blob/main/01-documenten/methodologie-voorspellingsmodel.md">
+          methodologie-document</a> op GitHub (sectie 12 — versiehistorie).
+      </p>
+    </section>
+
+    <section>
+      <h2>Reproduceerbaar — open source</h2>
+      <p>
+        Alle code, data, drempelwaarden en het methodologie-document zijn openbaar
+        beschikbaar in de GitHub-repository. Wie wil kan onze cijfers natellen of
+        het model zelf nabouwen in een Excel-sheet.
+      </p>
+      <ul>
+        <li>
+          <strong>Repository</strong>:
+          <a href="https://github.com/mr-mile/stroomvoorspeller">
+            github.com/mr-mile/stroomvoorspeller</a>
+        </li>
+        <li>
+          <strong>Voorspellings-script</strong>: <code>scripts/forecast.py</code>
+        </li>
+        <li>
+          <strong>Drempelwaarden</strong>: <code>public/data/config.json</code>
+        </li>
+        <li>
+          <strong>Voorspel-data (open data)</strong>:
+          <a href="/data/forecast.json"><code>/data/forecast.json</code></a> —
+          vrij te gebruiken in eigen projecten.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Bronnen</h2>
+      <ul>
+        <li>
+          <strong>Day-ahead prijzen</strong> — ENTSO-E Transparency Platform
+          (transparency.entsoe.eu, gratis na registratie).
+        </li>
+        <li>
+          <strong>Weersvoorspelling</strong> — Open-Meteo (open-meteo.com,
+          CC-BY 4.0 licentie, gratis, geen API-key nodig).
+        </li>
+        <li>
+          <strong>Gasprijs</strong> — Yahoo Finance, ticker TTF=F (front-month
+          natural gas future).
+        </li>
+        <li>
+          <strong>Feestdagen</strong> — eigen NL-kalender, hardgecodeerd in
+          <code>forecast.py</code>.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Fout gevonden of feedback?</h2>
+      <p>
+        Stuur een mailtje naar
+        <a href="mailto:contactstroomvoorspeller@gmail.com">contactstroomvoorspeller@gmail.com</a>
+        of open een issue op de
+        <a href="https://github.com/mr-mile/stroomvoorspeller/issues">GitHub-repo</a>.
+        We waarderen feedback en herstellen aantoonbare fouten zo snel mogelijk.
+      </p>
+    </section>
+
+    <p class="legal-related">
+      Zie ook: <a href="/disclaimer">Disclaimer</a> · <a href="/privacy">Privacy</a> · <a href="/cookies">Cookies</a>
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a> ·
+          <a href="/over/voorspelling">Voorspelling</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
