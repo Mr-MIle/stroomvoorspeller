@@ -22,6 +22,11 @@ Output: public/data/prices.json, met de structuur:
 
 Prijzen zijn in EUR per MWh (zoals ENTSO-E rapporteert). De frontend rekent
 om naar consumenten-eurocenten per kWh inclusief schattingsopslag.
+
+Sinds v1.6 (2026-04-29): we halen 14 dagen historie + 2 dagen toekomst op.
+De extra historie is nodig voor run_forecast.py om voldoende baseline-data
+te hebben (werkdag 7d, weekend 14d, feestdag 7d). De frontend filtert op
+"vandaag + morgen" voor weergave, dus de extra historie schaadt niet.
 """
 
 from __future__ import annotations
@@ -100,9 +105,7 @@ def parse_entsoe_xml(xml_text: str, default_start_utc: datetime) -> list[dict]:
 
     Resultaat is een lijst met dicts {time: ISO-string Amsterdam, price: float}.
     """
-    # Strip namespace voor minder gedoe
     cleaned = xml_text
-    # Bereken default namespace en remove (eenvoudige aanpak)
     tree = ET.fromstring(cleaned)
     ns = ""
     if tree.tag.startswith("{"):
@@ -114,11 +117,9 @@ def parse_entsoe_xml(xml_text: str, default_start_utc: datetime) -> list[dict]:
         if period is None:
             continue
         start_text = period.find(f"{ns}timeInterval/{ns}start").text
-        # ENTSO-E gebruikt 2026-04-27T22:00Z formaat
         period_start_utc = datetime.fromisoformat(start_text.replace("Z", "+00:00"))
         resolution = period.find(f"{ns}resolution").text  # bv. PT60M
 
-        # Resolutie in minuten
         if resolution.endswith("M"):
             res_minutes = int(resolution.replace("PT", "").replace("M", ""))
         elif resolution.endswith("H"):
@@ -134,7 +135,6 @@ def parse_entsoe_xml(xml_text: str, default_start_utc: datetime) -> list[dict]:
             point_ams = utc_to_amsterdam(point_utc)
             results.append({"time": point_ams.isoformat(), "price": round(price, 2)})
 
-    # Sorteer op tijd
     results.sort(key=lambda x: x["time"])
     return results
 
@@ -183,28 +183,25 @@ def aggregate_to_hourly(prices: list[dict]) -> list[dict]:
 
 
 def generate_sample_prices(now_ams: datetime) -> list[dict]:
-    """Genereer realistische sample-data voor 48 uur (vandaag + morgen)."""
+    """Genereer realistische sample-data voor 16 dagen (14d historie + 2d toekomst)."""
     rng = random.Random(42)
-    start = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
+    start = now_ams.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=14)
     prices = []
-    for hour in range(48):
+    for hour in range(16 * 24):
         t = start + timedelta(hours=hour)
         h = t.hour
-        # Basisprijs naar tijd-van-dag patroon
         if 0 <= h <= 5:
             base = 35 + rng.uniform(-8, 8)
         elif 6 <= h <= 8:
             base = 95 + rng.uniform(-15, 15)
         elif 9 <= h <= 14:
-            # Kan lager zijn door zonneproductie, soms negatief
             base = 30 + rng.uniform(-40, 25)
         elif 15 <= h <= 16:
             base = 65 + rng.uniform(-15, 15)
         elif 17 <= h <= 20:
             base = 130 + rng.uniform(-20, 30)
-        else:  # 21-23
+        else:
             base = 70 + rng.uniform(-15, 15)
-        # Weekend -10%
         if t.weekday() >= 5:
             base *= 0.9
         prices.append({"time": t.isoformat(), "price": round(base, 2)})
@@ -215,10 +212,10 @@ def main() -> int:
     token = os.environ.get("ENTSOE_TOKEN", "").strip()
     now_ams = amsterdam_now()
 
-    # Vraag data op voor "vandaag − 14 dagen" tot "overmorgen 00:00" Amsterdam.
-    # Historie van 14 dagen is nodig zodat run_forecast.py voldoende baseline-data
-    # heeft voor werkdag (7d), weekend (14d) en feestdag (7d). De frontend
-    # filtert op "vandaag + morgen" voor weergave, dus de extra historie schaadt niet.
+    # Vraag data op voor "vandaag - 14 dagen" tot "overmorgen 00:00" Amsterdam.
+    # 14 dagen historie zodat run_forecast.py voldoende baseline-data heeft voor
+    # werkdag (7d), weekend (14d) en feestdag (7d). De frontend filtert op
+    # "vandaag + morgen" voor weergave, dus de extra historie schaadt niet.
     today_start_ams = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
     history_start_ams = today_start_ams - timedelta(days=14)
     end_ams = today_start_ams + timedelta(days=2)
@@ -234,15 +231,13 @@ def main() -> int:
             prices = fetch_entsoe(token, start_utc, end_utc)
             source = "entsoe"
             print(f"[ok] {len(prices)} ruwe prijspunten opgehaald van ENTSO-E.", file=sys.stderr)
-            # ENTSO-E levert sinds 2025 voor NL kwartierprijzen (PT15M).
-            # Aggregeer naar uurgemiddelden zodat de grafiek leesbaar blijft.
             before = len(prices)
             prices = aggregate_to_hourly(prices)
             if len(prices) != before:
                 print(f"[ok] Geaggregeerd van {before} sub-uurpunten naar {len(prices)} uurpunten.", file=sys.stderr)
         except Exception as exc:  # noqa: BLE001
             error_msg = f"ENTSO-E fout: {exc}"
-            print(f"[warn] {error_msg} — terugval naar sample-data.", file=sys.stderr)
+            print(f"[warn] {error_msg} - terugval naar sample-data.", file=sys.stderr)
 
     if not prices:
         prices = generate_sample_prices(now_ams)
@@ -258,17 +253,6 @@ def main() -> int:
         "prices": prices,
     }
     if error_msg:
-        payload["last_error"] = error_msg
-
-    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_FILE.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
-    print(f"[ok] Geschreven: {OUTPUT_FILE}", file=sys.stderr)
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
-if error_msg:
         payload["last_error"] = error_msg
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
