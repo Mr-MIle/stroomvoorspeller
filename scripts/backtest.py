@@ -724,8 +724,16 @@ def main() -> int:
     test_end_day = now.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
     test_start_day = test_end_day - timedelta(days=test_days - 1)
 
+    # Prijzen: ENTSO-E publiceert day-ahead, dus we kunnen tot test_end_day + 1 vragen
+    # (dat is "vandaag" in onze context — soms al beschikbaar). Een grotere range veroorzaakt
+    # geen errors maar levert ook geen extra data.
+    # Weer/TTF: het Open-Meteo archive endpoint geeft HTTP 400 bij toekomstige datums en loopt
+    # typisch 2-5 dagen achter op realtime. We cappen daarom op test_end_day. Forecast-targets
+    # voorbij test_end_day worden later toch al overgeslagen via lookup_actual().
     fetch_prices_from = test_start_day - timedelta(days=7)
-    fetch_prices_to = test_end_day + timedelta(days=max(horizons) + 1)
+    fetch_prices_to = test_end_day + timedelta(days=2)
+    weather_end_day = test_end_day
+    ttf_end_day = test_end_day
 
     print(f"[info] Testperiode: {test_start_day.date()} t/m {test_end_day.date()} ({test_days} dagen)",
           file=sys.stderr)
@@ -760,13 +768,23 @@ def main() -> int:
 
         print("[info] Open-Meteo historische weerdata ophalen...", file=sys.stderr)
         weather_start = fetch_prices_from.strftime("%Y-%m-%d")
-        weather_end = fetch_prices_to.strftime("%Y-%m-%d")
-        weather = fetch_open_meteo_archive(weather_start, weather_end)
+        weather_end = weather_end_day.strftime("%Y-%m-%d")
+        try:
+            weather = fetch_open_meteo_archive(weather_start, weather_end)
+        except (urllib.error.URLError, urllib.error.HTTPError) as exc:
+            # Archive lagt soms verder dan 1 dag; retry met end - 5d
+            fallback_end = (weather_end_day - timedelta(days=5)).strftime("%Y-%m-%d")
+            print(f"[warn] Open-Meteo {exc}; retry met end={fallback_end}", file=sys.stderr)
+            try:
+                weather = fetch_open_meteo_archive(weather_start, fallback_end)
+            except (urllib.error.URLError, urllib.error.HTTPError) as exc2:
+                print(f"[err] Open-Meteo blijft falen: {exc2}; afbreken.", file=sys.stderr)
+                return 1
         print(f"[info] {len(weather)} dagen weerdata.", file=sys.stderr)
 
         print("[info] Yahoo Finance TTF historie ophalen...", file=sys.stderr)
         ttf_start = fetch_prices_from - timedelta(days=35)
-        ttf_end = fetch_prices_to
+        ttf_end = ttf_end_day
         try:
             ttf = fetch_yahoo_ttf(ttf_start, ttf_end)
         except (urllib.error.URLError, urllib.error.HTTPError) as exc:
@@ -788,7 +806,7 @@ def main() -> int:
 
     metrics = compute_metrics(results)
 
-    # Korte stderr samenvatting
+    # Korte samenvatting
     print("\n=== Backtest samenvatting ===", file=sys.stderr)
     print(f"Periode: {test_start_day.date()} t/m {test_end_day.date()}", file=sys.stderr)
     print(f"Bron: {source}", file=sys.stderr)
