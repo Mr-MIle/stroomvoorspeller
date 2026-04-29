@@ -323,33 +323,3 @@ if __name__ == "__main__":
     assert abs(f.predicted - 28.96) < 0.1, f"Verwachtte ~28.96 (v1.3), kreeg {f.predicted}"
     assert abs(f.uncertainty_pct - 0.25) < 0.001, f"Verwachtte ±25%, kreeg ±{f.uncertainty_pct*100:.0f}%"
     print("\n[ok] Self-test geslaagd; voorspelling matcht v1.3-model uit methodologie sectie 5.")
-a
-        datetime(2025, 12, 9, 19, 0),   # di
-        datetime(2025, 12, 10, 19, 0),  # wo
-    ]
-    base_prices = [24.0, 26.0, 25.0, 26.0, 26.0]  # gemiddelde = 25.40
-    history = [{"time": d.isoformat(), "price": p} for d, p in zip(base_dates, base_prices)]
-
-    f = forecast_one(
-        target_dt=target,
-        history=history,
-        shortwave_ratio=0.45,
-        wind_ms=6.0,
-        temp_c=8.0,
-        ttf_ratio=1.05,
-        days_ahead=4,
-    )
-    assert f is not None, "Forecast moest lukken"
-    print(f"Target: {f.target_iso}")
-    print(f"Baseline: {f.baseline} EUR/MWh")
-    for fs in f.factors:
-        print(f"  Factor {fs.name:13s}: {fs.points:+d}  ({fs.reason})")
-    print(f"Totaal punten: {f.total_points:+d}")
-    print(f"Voorspelling: {f.predicted} EUR/MWh")
-    print(f"Onzekerheid: ±{f.uncertainty_pct*100:.0f}%  (band {f.lower:.2f} - {f.upper:.2f})")
-
-    assert abs(f.baseline - 25.40) < 0.01, f"Verwachtte baseline 25.40, kreeg {f.baseline}"
-    assert f.total_points == 7, f"Verwachtte 7 punten (v1.3), kreeg {f.total_points}"
-    assert abs(f.predicted - 28.96) < 0.1, f"Verwachtte ~28.96 (v1.3), kreeg {f.predicted}"
-    assert abs(f.uncertainty_pct - 0.25) < 0.001, f"Verwachtte ±25%, kreeg ±{f.uncertainty_pct*100:.0f}%"
-    print("\n[ok] Self-test geslaagd; voorspelling matcht v1.3-model uit methodologie sectie 5.")
