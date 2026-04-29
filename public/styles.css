@@ -368,7 +368,7 @@ a:hover { text-decoration: underline; }
 .legend-pricey::before  { background: var(--c-pricey); }
 .legend-current::before { background: var(--c-brand); border-radius: 50%; }
 
-/* Forecast placeholder */
+/* Forecast placeholder (legacy class, niet meer gebruikt sinds v1.6) */
 .forecast-placeholder {
   background: var(--c-surface);
   border: 1px dashed var(--c-border);
@@ -378,6 +378,21 @@ a:hover { text-decoration: underline; }
 }
 .forecast-placeholder strong { color: var(--c-brand-deep); }
 .forecast-placeholder p { margin: 6px 0 0; }
+
+/* Forecast explainer (live sinds v1.6 — uitleg onder de grafiek) */
+.forecast-explainer {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  color: var(--c-text-soft);
+  line-height: 1.55;
+}
+.forecast-explainer strong { color: var(--c-brand-deep); }
+.forecast-explainer p { margin: 0 0 10px; }
+.forecast-explainer p:last-child { margin-bottom: 0; }
+.forecast-explainer a { color: var(--c-brand); text-decoration: none; }
+.forecast-explainer a:hover { text-decoration: underline; }
 
 /* Best moments */
 .moments-list {
