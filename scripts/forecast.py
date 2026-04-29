@@ -26,8 +26,12 @@ NL_FEESTDAGEN = {
     "2027-12-25", "2027-12-26",
 }
 
-# Gewicht per punt (zie methodologie sectie 3.2)
-POINT_WEIGHT = 0.04
+# Gewicht per punt (zie methodologie sectie 3.2).
+# v1.0-1.2: 0.04. v1.3 (2026-04-29): gehalveerd naar 0.02 nadat backtest v1
+# een systematische over-voorspelling toonde (bias +8 EUR/MWh op 1d, oplopend
+# naar +19 op 7d) en MAE iets boven de naïeve baseline lag.
+# Zie 01-documenten/backtest-resultaat-v1.md.
+POINT_WEIGHT = 0.02
 
 
 @dataclass
@@ -143,16 +147,23 @@ def factor_wind(wind_ms: float) -> FactorScore:
 
 
 # ---- Factor 3: Temperatuur ----
+# v1.3: drempels herzien. Voorheen was alleen koud/vorst positief; mild en
+# warm gaven 0 of +1 zodat de factor structureel niet-negatief was. Dat droeg
+# bij aan de bias in backtest v1. Nu: lekker weer (18-26 °C) geeft -1 (lagere
+# ruimtevraag, mensen buiten, zon op piek), warm (>26 °C) is 0 (lichte
+# airco-koeling balanceert overige effecten).
 
 def factor_temperatuur(temp_c: float) -> FactorScore:
     if temp_c < 0:
         pts, reason = +2, f"vorst ({temp_c:.1f}°C)"
     elif temp_c < 10:
         pts, reason = +1, f"koud ({temp_c:.1f}°C)"
-    elif temp_c <= 25:
+    elif temp_c < 18:
         pts, reason = 0, f"mild ({temp_c:.1f}°C)"
+    elif temp_c <= 26:
+        pts, reason = -1, f"lekker ({temp_c:.1f}°C)"
     else:
-        pts, reason = +1, f"warm ({temp_c:.1f}°C)"
+        pts, reason = 0, f"warm ({temp_c:.1f}°C)"
     return FactorScore("temperatuur", pts, reason)
 
 
@@ -174,6 +185,11 @@ def factor_gas(ttf_ratio: float) -> FactorScore:
 
 
 # ---- Factor 5: Type dag ----
+# v1.3: werkdag-bonus van +1 naar 0. De baseline filtert al op dagtype, dus
+# een expliciete +1 voor werkdagen telde dubbel — een belangrijke oorzaak
+# van de bias in backtest v1. Weekend en feestdag houden hun negatieve
+# gewicht omdat de baseline-window voor zaterdag/zondag/feestdag mager is
+# (1-2 datapunten in 7 dagen) en daar de factor nog corrigerende waarde heeft.
 
 def factor_dagtype(dt: datetime) -> FactorScore:
     if is_feestdag(dt):
@@ -183,12 +199,14 @@ def factor_dagtype(dt: datetime) -> FactorScore:
         return FactorScore("dagtype", -2, "zondag")
     if wd == 5:
         return FactorScore("dagtype", -1, "zaterdag")
-    if wd in (1, 2, 3):
-        return FactorScore("dagtype", +1, "werkdag (di/wo/do)")
-    return FactorScore("dagtype", 0, "ma/vrijdag")
+    return FactorScore("dagtype", 0, "werkdag")
 
 
 # ---- Factor 6: Uurpatroon ----
+# v1.3: ochtendspits winter van +2 naar +1. De NL-markt heeft in 2026 een
+# minder scherpe ochtendpiek dan vroeger — warmtepompen draaien al de hele
+# nacht door, EV's laden 's nachts, en zonsopgang verlicht de ochtend al
+# vroeg in de zomer. De avondspits 17-20 uur blijft wel scherp.
 
 def factor_uurpatroon(dt: datetime) -> FactorScore:
     h = dt.hour
@@ -197,8 +215,7 @@ def factor_uurpatroon(dt: datetime) -> FactorScore:
     if 0 <= h <= 5:
         return FactorScore("uurpatroon", -2, f"{season}, nacht ({h}:00)")
     if 6 <= h <= 8:
-        pts = +1 if zomer else +2
-        return FactorScore("uurpatroon", pts, f"{season}, ochtendspits ({h}:00)")
+        return FactorScore("uurpatroon", +1, f"{season}, ochtendspits ({h}:00)")
     if 9 <= h <= 14:
         pts = -1 if zomer else 0
         return FactorScore("uurpatroon", pts, f"{season}, midden van de dag ({h}:00)")
@@ -260,12 +277,19 @@ def forecast_one(
 
 
 # ---- Self-test (eenvoudige sanity check) ----
+# Verwacht resultaat voor v1.3-model:
+#   factor zon (45% van seizoen): +3
+#   factor wind (6 m/s zwakke wind): +1
+#   factor temperatuur (8°C, koud): +1
+#   factor gas (105% van 30d gem.): 0
+#   factor dagtype (donderdag werkdag): 0
+#   factor uurpatroon (19:00 winter avondspits): +2
+#   Totaal: +7.  Baseline 25.40 EUR/MWh.
+#   Voorspelling: 25.40 × (1 + 7 × 0.02) = 28.96 EUR/MWh.
+#   Onzekerheid op 4d, |7| punten: 0.10 + 0.02×4 + 0.01×7 = 0.25 (±25%).
 
 if __name__ == "__main__":
-    # Self-test: winter-donderdag 19:00 met +8 punten (matcht methodologie sectie 5).
-    # Gekozen: donderdag 11 december 2025 19:00 (echte winter-donderdag).
     target = datetime(2025, 12, 11, 19, 0)
-    # Synthetic history: 5 werkdagen 19:00 in 7 dagen daarvoor (4 t/m 10 dec 2025).
     base_dates = [
         datetime(2025, 12, 4, 19, 0),   # do
         datetime(2025, 12, 5, 19, 0),   # vr
@@ -294,9 +318,38 @@ if __name__ == "__main__":
     print(f"Voorspelling: {f.predicted} EUR/MWh")
     print(f"Onzekerheid: ±{f.uncertainty_pct*100:.0f}%  (band {f.lower:.2f} - {f.upper:.2f})")
 
-    # Verwacht uit methodologie: baseline 25.40, totaal +8 punten, voorspelling ~33.53, onzekerheid 26%
     assert abs(f.baseline - 25.40) < 0.01, f"Verwachtte baseline 25.40, kreeg {f.baseline}"
-    assert f.total_points == 8, f"Verwachtte 8 punten, kreeg {f.total_points}"
-    assert abs(f.predicted - 33.53) < 0.1, f"Verwachtte ~33.53, kreeg {f.predicted}"
-    assert abs(f.uncertainty_pct - 0.26) < 0.001, f"Verwachtte ±26%, kreeg ±{f.uncertainty_pct*100:.0f}%"
-    print("\n[ok] Self-test geslaagd; voorspelling matcht methodologie sectie 5 voorbeeld.")
+    assert f.total_points == 7, f"Verwachtte 7 punten (v1.3), kreeg {f.total_points}"
+    assert abs(f.predicted - 28.96) < 0.1, f"Verwachtte ~28.96 (v1.3), kreeg {f.predicted}"
+    assert abs(f.uncertainty_pct - 0.25) < 0.001, f"Verwachtte ±25%, kreeg ±{f.uncertainty_pct*100:.0f}%"
+    print("\n[ok] Self-test geslaagd; voorspelling matcht v1.3-model uit methodologie sectie 5.")
+a
+        datetime(2025, 12, 9, 19, 0),   # di
+        datetime(2025, 12, 10, 19, 0),  # wo
+    ]
+    base_prices = [24.0, 26.0, 25.0, 26.0, 26.0]  # gemiddelde = 25.40
+    history = [{"time": d.isoformat(), "price": p} for d, p in zip(base_dates, base_prices)]
+
+    f = forecast_one(
+        target_dt=target,
+        history=history,
+        shortwave_ratio=0.45,
+        wind_ms=6.0,
+        temp_c=8.0,
+        ttf_ratio=1.05,
+        days_ahead=4,
+    )
+    assert f is not None, "Forecast moest lukken"
+    print(f"Target: {f.target_iso}")
+    print(f"Baseline: {f.baseline} EUR/MWh")
+    for fs in f.factors:
+        print(f"  Factor {fs.name:13s}: {fs.points:+d}  ({fs.reason})")
+    print(f"Totaal punten: {f.total_points:+d}")
+    print(f"Voorspelling: {f.predicted} EUR/MWh")
+    print(f"Onzekerheid: ±{f.uncertainty_pct*100:.0f}%  (band {f.lower:.2f} - {f.upper:.2f})")
+
+    assert abs(f.baseline - 25.40) < 0.01, f"Verwachtte baseline 25.40, kreeg {f.baseline}"
+    assert f.total_points == 7, f"Verwachtte 7 punten (v1.3), kreeg {f.total_points}"
+    assert abs(f.predicted - 28.96) < 0.1, f"Verwachtte ~28.96 (v1.3), kreeg {f.predicted}"
+    assert abs(f.uncertainty_pct - 0.25) < 0.001, f"Verwachtte ±25%, kreeg ±{f.uncertainty_pct*100:.0f}%"
+    print("\n[ok] Self-test geslaagd; voorspelling matcht v1.3-model uit methodologie sectie 5.")
