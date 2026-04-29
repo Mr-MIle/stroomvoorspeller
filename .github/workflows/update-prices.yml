@@ -36,14 +36,22 @@ jobs:
         run: |
           python scripts/fetch_prices.py
 
+      - name: Genereer voorspelling
+        # Mag falen zonder dat de prijzen-update zelf faalt (continue-on-error).
+        # Bij Open-Meteo of Yahoo downtime krijgen bezoekers de actuele day-ahead
+        # prijzen wel; alleen de 5-7d voorspelling ontbreekt dan tijdelijk.
+        continue-on-error: true
+        run: |
+          python scripts/run_forecast.py
+
       - name: Commit & push als er iets veranderd is
         run: |
           git config user.name "stroomvoorspeller-bot"
           git config user.email "bot@stroomvoorspeller.nl"
-          if [[ -n "$(git status --porcelain public/data/prices.json)" ]]; then
-            git add public/data/prices.json
-            git commit -m "auto: update prijzen $(date -u +'%Y-%m-%dT%H:%MZ')"
+          git add public/data/prices.json public/data/forecast.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: update prijzen + voorspelling $(date -u +'%Y-%m-%dT%H:%MZ')"
             git push
           else
-            echo "Geen wijzigingen in prices.json — niets te committen."
+            echo "Geen wijzigingen — niets te committen."
           fi
