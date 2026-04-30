@@ -1,7 +1,7 @@
 {
   "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in EUR per MWh (zoals ENTSO-E rapporteert).",
-  "version": 3,
-  "updated": "2026-04-28",
+  "version": 4,
+  "updated": "2026-04-30",
   "taxes": {
     "energiebelasting_per_kwh": 0.0916,
     "btw_factor": 1.21,
@@ -37,7 +37,8 @@
       "fixed_per_month": 6.99,
       "verified": "2026-04-28",
       "source": "tibber.com tarievenpagina",
-      "note": "Inkoopvergoeding excl. btw. Daarnaast vast maandbedrag."
+      "note": "Inkoopvergoeding excl. btw. Daarnaast vast maandbedrag.",
+      "website": "https://tibber.com/nl"
     },
     {
       "id": "frank",
@@ -46,7 +47,8 @@
       "fixed_per_month": 6.95,
       "verified": "2026-04-28",
       "source": "Frank-app, terugberekend van datapunt",
-      "note": "Inkoopvergoeding excl. btw. Incl. btw is dit ~€0,0177/kWh."
+      "note": "Inkoopvergoeding excl. btw. Incl. btw is dit ~€0,0177/kWh.",
+      "website": "https://www.frankenergie.nl"
     },
     {
       "id": "energyzero",
@@ -55,7 +57,8 @@
       "fixed_per_month": 5.95,
       "verified": "2026-04-28",
       "source": "energyzero.nl tarievenpagina",
-      "note": "Inkoopvergoeding excl. btw. Hoogste van de zeven gecontroleerde aanbieders."
+      "note": "Inkoopvergoeding excl. btw. Hoogste van de zeven gecontroleerde aanbieders.",
+      "website": "https://www.energyzero.nl"
     },
     {
       "id": "anwb",
@@ -64,7 +67,8 @@
       "fixed_per_month": 6.5,
       "verified": "2026-04-28",
       "source": "anwb.nl/energie tarievenblad",
-      "note": "Inkoopvergoeding excl. btw."
+      "note": "Inkoopvergoeding excl. btw.",
+      "website": "https://www.anwb.nl/energie"
     },
     {
       "id": "vandebron",
@@ -73,7 +77,8 @@
       "fixed_per_month": 7.5,
       "verified": "2026-04-28",
       "source": "vandebron.nl tarievenpagina",
-      "note": "Inkoopvergoeding excl. btw."
+      "note": "Inkoopvergoeding excl. btw.",
+      "website": "https://vandebron.nl"
     },
     {
       "id": "zonneplan",
@@ -82,7 +87,8 @@
       "fixed_per_month": 6.5,
       "verified": "2026-04-28",
       "source": "zonneplan.nl tarievenpagina",
-      "note": "Inkoopvergoeding excl. btw."
+      "note": "Inkoopvergoeding excl. btw.",
+      "website": "https://www.zonneplan.nl"
     },
     {
       "id": "easy",
@@ -91,7 +97,8 @@
       "fixed_per_month": 5.5,
       "verified": "2026-04-28",
       "source": "easyenergy.com tarievenpagina",
-      "note": "Inkoopvergoeding excl. btw."
+      "note": "Inkoopvergoeding excl. btw.",
+      "website": "https://www.easyenergy.com"
     },
     {
       "id": "custom",
