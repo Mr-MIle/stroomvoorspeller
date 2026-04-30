@@ -10,6 +10,7 @@
     mode: "sv.viewMode",          // 'inclusive' | 'exclusive'
     supplier: "sv.supplierId",    // id uit config.suppliers
     customMarkup: "sv.customMarkup", // string (€ per kWh)
+    dismissedNegAlert: "sv.dismissedNegAlert", // ISO-tijd van het event waarvoor de banner gesloten is
   };
 
   const state = {
@@ -186,9 +187,97 @@
     return "#d4a017";
   }
 
+  // ---- Negatieve-prijs detectie ----
+  // Zoek aaneengesloten windows van uren met all-in prijs (incl. btw, met de
+  // gekozen leverancier-opslag) onder de drempel uit config.negative_price_alert.
+  // Verleden uren tellen niet mee — we waarschuwen alleen voor het nu/aankomend.
+  function findNegativePriceWindows() {
+    const cfg = (state.config && state.config.negative_price_alert) || {};
+    if (!cfg.enabled) return [];
+    const threshold = Number(cfg.threshold_cents_inclusive);
+    if (!Number.isFinite(threshold)) return [];
+
+    const prices = state.dayPrices;
+    const now = Date.now();
+    const windows = [];
+    let current = null;
+    for (let i = 0; i < prices.length; i++) {
+      const p = prices[i];
+      // Een uur is afgelopen als z'n eindtijd (start + 1u) al voorbij is
+      const endMs = new Date(p.time).getTime() + 3600000;
+      if (endMs <= now) continue;
+      const cents = priceCents(p.price, "inclusive");
+      if (cents <= threshold) {
+        if (current) {
+          current.endIso = p.time;
+          current.minCents = Math.min(current.minCents, cents);
+        } else {
+          current = { startIso: p.time, endIso: p.time, minCents: cents };
+        }
+      } else if (current) {
+        windows.push(current);
+        current = null;
+      }
+    }
+    if (current) windows.push(current);
+    return windows;
+  }
+
+  function dayLabelFor(iso) {
+    const d = new Date(iso);
+    const today = new Date();
+    if (d.getFullYear() === today.getFullYear() && d.getMonth() === today.getMonth() && d.getDate() === today.getDate()) {
+      return "vandaag";
+    }
+    const tomorrow = new Date(today.getTime() + 86400000);
+    if (d.getFullYear() === tomorrow.getFullYear() && d.getMonth() === tomorrow.getMonth() && d.getDate() === tomorrow.getDate()) {
+      return "morgen";
+    }
+    return d.toLocaleDateString("nl-NL", { weekday: "long" });
+  }
+
+  function hideNegAlert(banner) {
+    banner.setAttribute("hidden", "");
+    document.body.classList.remove("has-neg-alert");
+  }
+  function renderNegativeAlert() {
+    const banner = document.getElementById("neg-alert");
+    if (!banner) return;
+    const windows = findNegativePriceWindows();
+    if (!windows.length) {
+      hideNegAlert(banner);
+      return;
+    }
+    // Event-ID = starttijd eerste negatief uur. Bij dismiss onthouden we die,
+    // zodat de banner weg blijft tot er een NIEUW event ontstaat (andere starttijd).
+    const eventKey = windows[0].startIso;
+    const dismissed = loadStored(STORAGE_KEYS.dismissedNegAlert, "");
+    if (dismissed === eventKey) {
+      hideNegAlert(banner);
+      return;
+    }
+
+    const parts = windows.map((w) => {
+      const startTime = fmtTime(w.startIso);
+      const endDate = new Date(new Date(w.endIso).getTime() + 3600000);
+      const endTime = endDate.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+      return `${dayLabelFor(w.startIso)} ${startTime}–${endTime}`;
+    });
+    const overallMin = Math.min.apply(null, windows.map((w) => w.minCents));
+    const intro = parts.length === 1
+      ? parts[0]
+      : parts.slice(0, -1).join(", ") + " en " + parts[parts.length - 1];
+    const text = `Stroom is ${intro} uitzonderlijk goedkoop (tot ${fmtNum(overallMin, 1)} ct/kWh incl. btw, met jouw leverancier). Goed moment voor wasmachine, droger, EV-laden of warmtepomp.`;
+    setText("neg-alert-text", text);
+    banner.dataset.eventKey = eventKey;
+    banner.removeAttribute("hidden");
+    document.body.classList.add("has-neg-alert");
+  }
+
   // ---- Rendering ----
   function renderAll() {
     if (!state.config || !state.dayPrices.length) return;
+    renderNegativeAlert();
     renderSettingsPanel();
     renderSettingsToggle();
     renderModeBadges();
@@ -637,6 +726,19 @@
           saveStored(STORAGE_KEYS.customMarkup, n);
           renderAll();
         }
+      });
+    }
+
+    // Negatieve-prijs banner sluiten — onthoud event-ID zodat de banner weg blijft
+    // tot er een nieuw event ontstaat (andere starttijd).
+    const negCloseBtn = document.getElementById("neg-alert-close");
+    if (negCloseBtn) {
+      negCloseBtn.addEventListener("click", () => {
+        const banner = document.getElementById("neg-alert");
+        if (!banner) return;
+        const eventKey = banner.dataset.eventKey;
+        if (eventKey) saveStored(STORAGE_KEYS.dismissedNegAlert, eventKey);
+        hideNegAlert(banner);
       });
     }
   }

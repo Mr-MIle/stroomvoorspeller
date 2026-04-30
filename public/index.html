@@ -75,6 +75,16 @@
   </script>
 </head>
 <body>
+  <!-- Negatieve-prijzen banner: verschijnt zodra één of meer uren onder de drempel
+       in config.negative_price_alert zakken. Default hidden, JS toont hem in renderNegativeAlert(). -->
+  <div id="neg-alert" class="neg-alert" role="status" aria-live="polite" hidden>
+    <div class="neg-alert-inner container">
+      <span class="neg-alert-icon" aria-hidden="true">⚡</span>
+      <p class="neg-alert-text" data-field="neg-alert-text">—</p>
+      <button id="neg-alert-close" type="button" class="neg-alert-close" aria-label="Melding sluiten">×</button>
+    </div>
+  </div>
+
   <header class="site-header">
     <div class="container header-row">
       <a class="brand" href="/">

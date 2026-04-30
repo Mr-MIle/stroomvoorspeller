@@ -572,6 +572,75 @@ a:hover { text-decoration: underline; }
   .now-card { padding: 22px 20px 18px; }
 }
 
+/* ----- Negatieve-prijs banner (sticky bovenaan, alleen zichtbaar bij negatieve uren) ----- */
+.neg-alert {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: linear-gradient(90deg, #1a7a31 0%, #2f9e44 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  min-height: 56px;
+}
+/* Header schuift onder de banner zodat ze niet overlappen.
+   JS zet body.has-neg-alert wanneer de banner zichtbaar is. */
+body.has-neg-alert .site-header { top: 56px; }
+@media (max-width: 640px) {
+  .neg-alert { min-height: 84px; }
+  body.has-neg-alert .site-header { top: 84px; }
+}
+.neg-alert-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  min-height: inherit;
+  box-sizing: border-box;
+}
+.neg-alert-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+}
+.neg-alert-text {
+  margin: 0;
+  flex: 1;
+  font-weight: 500;
+}
+.neg-alert-close {
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  font-size: 1.2rem;
+  line-height: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, border-color 0.12s;
+}
+.neg-alert-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+.neg-alert-close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+@media (max-width: 640px) {
+  .neg-alert { font-size: 0.9rem; }
+  .neg-alert-inner { padding: 10px 12px; gap: 10px; }
+  .neg-alert-icon { font-size: 1.2rem; }
+}
+
 /* ----- Aanbieders-prijsvergelijking (sectie #aanbieders) ----- */
 .suppliers-section { padding: 24px 0; }
 .suppliers-table-wrap {
