@@ -19,6 +19,11 @@
     "default_mode": "inclusive",
     "_note": "'inclusive' = (EPEX + opslag + energiebelasting) × btw. 'exclusive' = EPEX + opslag, geen belasting."
   },
+  "negative_price_alert": {
+    "enabled": true,
+    "threshold_cents_inclusive": -10,
+    "_note": "Banner verschijnt op de homepage zodra één of meer uren in vandaag/morgen onder deze drempel zakken (consumentenprijs incl. btw, gebaseerd op de leverancier die de bezoeker heeft gekozen)."
+  },
   "default_supplier": "average",
   "suppliers": [
     {
