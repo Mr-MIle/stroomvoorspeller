@@ -84,12 +84,17 @@
       <nav class="primary-nav" aria-label="hoofdmenu">
         <a href="#prijzen">Prijzen</a>
         <a href="#voorspelling">Voorspelling</a>
+        <a href="#aanbieders">Aanbieders</a>
         <a href="#tips">Tips</a>
         <a href="#uitleg">Uitleg</a>
       </nav>
-      <button id="settings-toggle" class="settings-toggle" type="button" aria-expanded="false" aria-controls="settings-panel" title="Instellingen">
-        <span aria-hidden="true">⚙</span>
-        <span class="settings-toggle-label">Instellingen</span>
+      <button id="settings-toggle" class="settings-toggle" type="button" aria-expanded="false" aria-controls="settings-panel" title="Wijzig je energieleverancier">
+        <span class="settings-toggle-icon" aria-hidden="true">⚙</span>
+        <span class="settings-toggle-text">
+          <span class="settings-toggle-prefix">Mijn leverancier:</span>
+          <span class="settings-toggle-value" data-field="settings-toggle-value">—</span>
+        </span>
+        <span class="settings-toggle-caret" aria-hidden="true">▾</span>
       </button>
     </div>
   </header>
@@ -204,6 +209,30 @@
           <a href="/over/voorspelling">Lees de volledige uitleg →</a>
         </p>
       </div>
+    </section>
+
+    <!-- Aanbieders-prijsvergelijking voor het huidige uur -->
+    <section id="aanbieders" class="suppliers-section container">
+      <div class="section-head">
+        <h2>Wat betaal je per aanbieder, voor het huidige uur</h2>
+        <p class="section-sub">All-in prijs (kale EPEX + opslag + energiebelasting + 21% btw) voor <span data-field="suppliers-now-time">—</span>. Tarieven gevalideerd op <span data-field="suppliers-verified">—</span>; controleer altijd op de site van de aanbieder zelf.</p>
+      </div>
+      <div class="suppliers-table-wrap">
+        <table class="suppliers-table" data-field="suppliers-table">
+          <thead>
+            <tr>
+              <th scope="col" class="th-supplier">Aanbieder</th>
+              <th scope="col" class="th-price">Prijs nu<br><small>ct/kWh incl. btw</small></th>
+              <th scope="col" class="th-markup">Opslag<br><small>€/kWh excl. btw</small></th>
+              <th scope="col" class="th-fixed">Vast<br><small>€/maand</small></th>
+            </tr>
+          </thead>
+          <tbody data-field="suppliers-tbody">
+            <tr><td colspan="4" class="suppliers-loading">Berekenen…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="suppliers-note">Sortering: goedkoopst voor het huidige uur. Geen ranking — verschillen tussen aanbieders kunnen per uur wisselen. Het vaste maandbedrag staat los; bij laag verbruik weegt dat zwaarder dan de opslag.</p>
     </section>
 
     <!-- Best moments -->

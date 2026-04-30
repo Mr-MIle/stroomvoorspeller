@@ -91,29 +91,65 @@ a:hover { text-decoration: underline; }
 .settings-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  border: 1px solid var(--c-border);
-  background: var(--c-surface);
+  gap: 8px;
+  border: 1.5px solid var(--c-brand);
+  background: #f0f6fc;
   border-radius: 999px;
-  padding: 6px 14px;
+  padding: 6px 14px 6px 12px;
   font-family: inherit;
   font-size: 0.9rem;
-  color: var(--c-text-soft);
+  color: var(--c-brand-deep);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+  box-shadow: 0 1px 2px rgba(15, 108, 189, 0.08);
+  max-width: 100%;
 }
 .settings-toggle:hover {
-  background: #f0f4f9;
-  color: var(--c-brand);
-  border-color: var(--c-brand);
+  background: #e3eef9;
+  border-color: var(--c-brand-deep);
+  box-shadow: 0 2px 6px rgba(15, 108, 189, 0.15);
 }
 .settings-toggle[aria-expanded="true"] {
   background: var(--c-brand);
   color: #fff;
   border-color: var(--c-brand);
 }
+.settings-toggle[aria-expanded="true"] .settings-toggle-prefix,
+.settings-toggle[aria-expanded="true"] .settings-toggle-value { color: #fff; }
+.settings-toggle-icon { font-size: 1rem; line-height: 1; flex-shrink: 0; }
+.settings-toggle-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+.settings-toggle-prefix {
+  color: var(--c-text-soft);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.settings-toggle-value {
+  font-weight: 600;
+  color: var(--c-brand-deep);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+.settings-toggle-caret {
+  font-size: 0.85rem;
+  margin-left: -2px;
+  opacity: 0.7;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.settings-toggle[aria-expanded="true"] .settings-toggle-caret {
+  transform: rotate(180deg);
+  opacity: 1;
+}
 @media (max-width: 640px) {
-  .settings-toggle-label { display: none; }
+  .settings-toggle-prefix { display: none; }
+  .settings-toggle-value { max-width: 130px; }
 }
 
 /* Settings panel */
@@ -534,4 +570,117 @@ a:hover { text-decoration: underline; }
   .footer-grid { grid-template-columns: 1fr; }
   .chart-wrapper { height: 300px; }
   .now-card { padding: 22px 20px 18px; }
+}
+
+/* ----- Aanbieders-prijsvergelijking (sectie #aanbieders) ----- */
+.suppliers-section { padding: 24px 0; }
+.suppliers-table-wrap {
+  overflow-x: auto;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.suppliers-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.suppliers-table thead th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--c-text-soft);
+  background: #f7fafc;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--c-border);
+  font-size: 0.85rem;
+  vertical-align: bottom;
+}
+.suppliers-table thead th small {
+  display: block;
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: var(--c-text-mute);
+  margin-top: 2px;
+}
+.suppliers-table .th-price,
+.suppliers-table .th-markup,
+.suppliers-table .th-fixed { text-align: right; }
+.suppliers-table tbody tr {
+  border-bottom: 1px solid var(--c-border);
+  transition: background 0.1s;
+}
+.suppliers-table tbody tr:last-child { border-bottom: none; }
+.suppliers-table tbody tr:hover { background: #fafcfe; }
+.suppliers-table tbody tr.is-mine {
+  background: #f0f6fc;
+  font-weight: 500;
+}
+.suppliers-table tbody tr.is-mine:hover { background: #e3eef9; }
+.suppliers-table td {
+  padding: 12px 16px;
+  vertical-align: middle;
+}
+.suppliers-table .td-supplier { color: var(--c-text); }
+.suppliers-table .td-supplier a {
+  color: var(--c-brand);
+  text-decoration: none;
+  font-weight: 500;
+}
+.suppliers-table .td-supplier a:hover { text-decoration: underline; }
+.suppliers-table .td-price {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text);
+}
+.suppliers-table .td-markup,
+.suppliers-table .td-fixed {
+  text-align: right;
+  color: var(--c-text-soft);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+}
+.suppliers-table .suppliers-loading {
+  text-align: center;
+  color: var(--c-text-mute);
+  padding: 24px;
+}
+.supplier-mine-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--c-brand);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+.suppliers-note {
+  margin: 12px 4px 0;
+  font-size: 0.85rem;
+  color: var(--c-text-mute);
+  line-height: 1.5;
+}
+
+/* Mobile: tabel klapt om naar kaarten per aanbieder */
+@media (max-width: 640px) {
+  .suppliers-table { font-size: 0.9rem; }
+  .suppliers-table thead { display: none; }
+  .suppliers-table, .suppliers-table tbody, .suppliers-table tr, .suppliers-table td { display: block; width: 100%; }
+  .suppliers-table tbody tr {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--c-border);
+  }
+  .suppliers-table td { padding: 4px 0; text-align: left; }
+  .suppliers-table .td-supplier { font-weight: 600; font-size: 1rem; padding-bottom: 6px; }
+  .suppliers-table .td-price::before { content: "Prijs nu: "; color: var(--c-text-mute); font-weight: 400; }
+  .suppliers-table .td-price { text-align: left; font-size: 1rem; }
+  .suppliers-table .td-markup::before { content: "Opslag: "; color: var(--c-text-mute); font-weight: 400; }
+  .suppliers-table .td-markup { text-align: left; }
+  .suppliers-table .td-fixed::before { content: "Vast/maand: "; color: var(--c-text-mute); font-weight: 400; }
+  .suppliers-table .td-fixed { text-align: left; }
 }

@@ -68,6 +68,17 @@
     return (eurMwh / 1000) * 100;
   }
 
+  // Bereken ct/kWh voor een specifieke supplier (gebruikt door de aanbieders-tabel).
+  // Gebruikt altijd "incl. belasting" omdat de tabel die kolom toont; mode-toggle
+  // raakt deze functie niet.
+  function priceCentsForSupplier(eurMwh, supplier) {
+    const epex_per_kwh = eurMwh / 1000;
+    const markup = Number(supplier.markup_per_kwh) || 0;
+    const t = state.config.taxes;
+    const subtotal = epex_per_kwh + markup + (t.energiebelasting_per_kwh || 0);
+    return subtotal * (t.btw_factor || 1) * 100;
+  }
+
   function classify(eurMwh) {
     const t = state.config.thresholds_eur_per_mwh;
     if (eurMwh < (t.very_cheap || 0)) return "very_cheap";
@@ -179,9 +190,11 @@
   function renderAll() {
     if (!state.config || !state.dayPrices.length) return;
     renderSettingsPanel();
+    renderSettingsToggle();
     renderModeBadges();
     renderNowCard();
     renderSummary();
+    renderSupplierTable();
     renderMoments();
     renderFooterMeta();
     renderChart();
@@ -304,6 +317,96 @@
     const m = effectiveMarkup();
     const m_incl = m * (t.btw_factor || 1);
     setText("current-markup", `€${fmtNum(m, 4)}/kWh excl. btw  (= €${fmtNum(m_incl, 4)} incl. btw)`);
+  }
+
+  // Update de header-knop met de naam van de huidige leverancier zodat duidelijk is
+  // dat je daar (1) je leverancier kiest en (2) welke nu actief is.
+  function renderSettingsToggle() {
+    const supplier = getSupplier();
+    setText("settings-toggle-value", supplier.name || "—");
+  }
+
+  // Tabel met alle aanbieders + hun all-in prijs voor het huidige uur, gesorteerd
+  // op prijs oplopend. De geselecteerde aanbieder wordt visueel gemarkeerd.
+  // 'custom' wordt overgeslagen — dat is geen echte aanbieder, alleen een eigen waarde.
+  function renderSupplierTable() {
+    const tbody = document.querySelector('[data-field="suppliers-tbody"]');
+    if (!tbody) return;
+    const prices = state.dayPrices;
+    if (!prices.length) return;
+    const current = state.nowIdx >= 0 ? prices[state.nowIdx] : prices[0];
+    if (!current) return;
+
+    // Tijd-label voor de sectie-kop
+    setText("suppliers-now-time", `Nu, ${fmtTime(current.time)}`);
+
+    // Pak de oudste 'verified' datum als veilige conservatieve weergave —
+    // vertelt eerlijk wanneer we voor het laatst alle tarieven hebben gecontroleerd.
+    const verifiedDates = (state.config.suppliers || [])
+      .map((s) => s.verified)
+      .filter((v) => typeof v === "string" && v.length === 10);
+    if (verifiedDates.length) {
+      const oldest = verifiedDates.sort()[0];
+      const d = new Date(oldest + "T00:00:00");
+      setText("suppliers-verified", d.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" }));
+    }
+
+    const rows = (state.config.suppliers || [])
+      .filter((s) => s.id !== "custom")
+      .map((s) => ({
+        supplier: s,
+        cents: priceCentsForSupplier(current.price, s),
+      }))
+      .sort((a, b) => a.cents - b.cents);
+
+    tbody.innerHTML = "";
+    rows.forEach((r) => {
+      const s = r.supplier;
+      const tr = document.createElement("tr");
+      if (s.id === state.supplierId) tr.className = "is-mine";
+
+      // Cel 1: aanbieder-naam, eventueel als hyperlink naar hun website
+      const tdName = document.createElement("td");
+      tdName.className = "td-supplier";
+      if (s.website) {
+        const a = document.createElement("a");
+        a.href = s.website;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = s.name;
+        tdName.appendChild(a);
+      } else {
+        tdName.textContent = s.name;
+      }
+      if (s.id === state.supplierId) {
+        const badge = document.createElement("span");
+        badge.className = "supplier-mine-badge";
+        badge.textContent = "jouw keuze";
+        tdName.appendChild(badge);
+      }
+      tr.appendChild(tdName);
+
+      // Cel 2: prijs nu incl. btw
+      const tdPrice = document.createElement("td");
+      tdPrice.className = "td-price";
+      tdPrice.textContent = fmtNum(r.cents, 1);
+      tr.appendChild(tdPrice);
+
+      // Cel 3: opslag €/kWh excl. btw
+      const tdMarkup = document.createElement("td");
+      tdMarkup.className = "td-markup";
+      tdMarkup.textContent = `€${fmtNum(s.markup_per_kwh, 4)}`;
+      tr.appendChild(tdMarkup);
+
+      // Cel 4: vast/maand (kan 0 zijn voor 'average')
+      const tdFixed = document.createElement("td");
+      tdFixed.className = "td-fixed";
+      const fx = Number(s.fixed_per_month) || 0;
+      tdFixed.textContent = fx ? `€${fmtNum(fx, 2)}` : "—";
+      tr.appendChild(tdFixed);
+
+      tbody.appendChild(tr);
+    });
   }
 
   function fmtChartLabel(iso) {
