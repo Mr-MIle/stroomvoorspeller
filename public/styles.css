@@ -641,6 +641,47 @@ a:hover { text-decoration: underline; }
   font-variant-numeric: tabular-nums;
   font-size: 0.9rem;
 }
+.suppliers-table .th-action,
+.suppliers-table .td-action {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
+}
+.supplier-pick-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border: 1px solid var(--c-brand);
+  background: #fff;
+  color: var(--c-brand);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.supplier-pick-btn:hover {
+  background: var(--c-brand);
+  color: #fff;
+}
+.supplier-pick-btn:focus-visible {
+  outline: 2px solid var(--c-brand);
+  outline-offset: 2px;
+}
+.supplier-pick-btn[disabled] {
+  border-color: var(--c-border);
+  background: transparent;
+  color: var(--c-text-mute);
+  cursor: default;
+  font-weight: 400;
+}
+.supplier-pick-btn[disabled]:hover {
+  background: transparent;
+  color: var(--c-text-mute);
+}
 .suppliers-table .suppliers-loading {
   text-align: center;
   color: var(--c-text-mute);
@@ -683,4 +724,7 @@ a:hover { text-decoration: underline; }
   .suppliers-table .td-markup { text-align: left; }
   .suppliers-table .td-fixed::before { content: "Vast/maand: "; color: var(--c-text-mute); font-weight: 400; }
   .suppliers-table .td-fixed { text-align: left; }
+  /* Kies-knop in de mobile-card-fallback: vol-breed onderaan de kaart, grotere tap-zone */
+  .suppliers-table .td-action { padding-top: 10px; width: 100%; text-align: left; }
+  .supplier-pick-btn { width: 100%; padding: 10px 14px; font-size: 0.95rem; }
 }

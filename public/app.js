@@ -405,6 +405,34 @@
       tdFixed.textContent = fx ? `€${fmtNum(fx, 2)}` : "—";
       tr.appendChild(tdFixed);
 
+      // Cel 5: Kies-knop (item #40 — v2-uitbreiding van #38).
+      // Hergebruikt exact dezelfde flow als de dropdown in het settings-paneel:
+      // state.supplierId update + localStorage write + renderAll().
+      // Actieve rij toont een disabled "Geselecteerd" zodat de feedback-loop
+      // duidelijk is zonder een tweede klikbare zone op de eigen keuze.
+      const tdAction = document.createElement("td");
+      tdAction.className = "td-action";
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "supplier-pick-btn";
+      if (s.id === state.supplierId) {
+        btn.disabled = true;
+        btn.textContent = "✓ Geselecteerd";
+        btn.setAttribute("aria-label", `${s.name} is jouw geselecteerde leverancier`);
+      } else {
+        // 'average' is conceptueel een fallback, geen specifieke leverancier.
+        // Eigen label maakt duidelijk dat je dan "geen voorkeur" kiest.
+        btn.textContent = s.id === "average" ? "Standaard" : "Kies";
+        btn.setAttribute("aria-label", `Kies ${s.name} als jouw leverancier`);
+        btn.addEventListener("click", () => {
+          state.supplierId = s.id;
+          saveStored(STORAGE_KEYS.supplier, s.id);
+          renderAll();
+        });
+      }
+      tdAction.appendChild(btn);
+      tr.appendChild(tdAction);
+
       tbody.appendChild(tr);
     });
   }
