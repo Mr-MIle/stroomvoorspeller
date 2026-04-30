@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Dynamische energieaanbieders vergelijken — Stroomvoorspeller.nl</title>
+  <meta name="description" content="Vergelijk alle Nederlandse aanbieders van dynamische energiecontracten: Tibber, Frank Energie, Zonneplan, EnergyZero, ANWB, Vandebron en Easy Energy. Tarieven, app-kwaliteit en voor wie geschikt." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/aanbieders" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Dynamische energieaanbieders vergelijken — Stroomvoorspeller.nl" />
+  <meta property="og:description" content="Vergelijk alle Nederlandse aanbieders van dynamische energiecontracten op tarieven, app-kwaliteit en geschiktheid voor jouw situatie." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/aanbieders" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dynamische energieaanbieders vergelijken — Stroomvoorspeller.nl" />
+  <meta name="twitter:description" content="Alle NL aanbieders van dynamische energiecontracten: tarieven, app en voor wie geschikt." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+      { "@type": "ListItem", "position": 2, "name": "Aanbieders", "item": "https://stroomvoorspeller.nl/aanbieders" }
+    ]
+  }
+  </script>
+
+  <style>
+    /* ── Aanbieders-pagina aanvullende stijlen ─────────────────────── */
+    .aanbieders-page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+    .aanbieders-page h1 {
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      font-weight: 700;
+      color: var(--c-text);
+      margin: 0 0 8px;
+    }
+    .aanbieders-page .intro {
+      color: var(--c-text-soft);
+      font-size: 1.05rem;
+      line-height: 1.65;
+      margin: 0 0 20px;
+      max-width: 660px;
+    }
+    .aanbieders-disclaimer {
+      background: var(--c-normal-bg);
+      border-left: 4px solid var(--c-normal);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: var(--c-text-soft);
+      margin-bottom: 32px;
+      line-height: 1.55;
+    }
+    .aanbieders-disclaimer strong { color: var(--c-text); }
+
+    .aanbieder-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 640px) {
+      .aanbieder-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .aanbieder-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius);
+      padding: 20px 22px 22px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .aanbieder-card-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .aanbieder-naam {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--c-text);
+    }
+    .aanbieder-naam a {
+      color: var(--c-brand);
+      text-decoration: none;
+    }
+    .aanbieder-naam a:hover { text-decoration: underline; }
+    .aanbieder-score {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .score-goed   { background: var(--c-cheap-bg);  color: var(--c-cheap); }
+    .score-matig  { background: var(--c-normal-bg); color: var(--c-normal); }
+    .score-slecht { background: var(--c-pricey-bg); color: var(--c-pricey); }
+
+    .aanbieder-tarieven {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .tarief-blok { text-align: left; }
+    .tarief-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--c-text-mute);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .tarief-waarde {
+      font-size: 1.0rem;
+      font-weight: 700;
+      color: var(--c-text);
+    }
+    .tarief-eenheid {
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--c-text-mute);
+      margin-left: 2px;
+    }
+
+    .aanbieder-sectie-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      color: var(--c-text-mute);
+      margin-bottom: 4px;
+    }
+    .aanbieder-app-tekst,
+    .aanbieder-wie-tekst {
+      font-size: 0.9rem;
+      color: var(--c-text-soft);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .aanbieder-opzegtermijn {
+      font-size: 0.82rem;
+      color: var(--c-text-mute);
+      border-top: 1px solid var(--c-border);
+      padding-top: 10px;
+      margin-top: 2px;
+    }
+    .aanbieder-let-op {
+      font-size: 0.82rem;
+      background: var(--c-pricey-bg);
+      color: var(--c-pricey);
+      border-radius: var(--radius-sm);
+      padding: 7px 11px;
+    }
+
+    .aanbieders-footer-note {
+      margin-top: 40px;
+      font-size: 0.85rem;
+      color: var(--c-text-mute);
+      border-top: 1px solid var(--c-border);
+      padding-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">⚡</span>
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/#prijzen">Prijzen</a>
+        <a href="/#voorspelling">Voorspelling</a>
+        <a href="/#tips">Tips</a>
+        <a href="/aanbieders" style="color:var(--c-brand);font-weight:600;">Aanbieders</a>
+        <a href="/kennisbank/">Kennisbank</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="aanbieders-page">
+    <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
+    <h1>Dynamische energieaanbieders</h1>
+    <p class="intro">
+      Overzicht van alle Nederlandse energieleveranciers met een dynamisch contract. Geen ranglijst — welke aanbieder het best bij jou past hangt af van je situatie: heb je zonnepanelen, een EV, of wil je slim automatiseren?
+    </p>
+
+    <div class="aanbieders-disclaimer">
+      <strong>Let op:</strong> tarieven zijn een momentopname (geverifieerd april 2026) en kunnen door aanbieders worden aangepast. Controleer altijd de actuele tarieven op de website van de aanbieder zelf. <strong>Alle opslagbedragen zijn exclusief btw.</strong>
+    </div>
+
+    <div class="aanbieder-grid">
+
+      <!-- ANWB Energie -->
+      <article class="aanbieder-card">
+        <div class="aanbieder-card-header">
+          <div class="aanbieder-naam"><a href="https://www.anwb.nl/energie" target="_blank" rel="noopener">ANWB Energie</a></div>
+          <span class="aanbieder-score score-slecht">5,4 ★</span>
+        </div>
+        <div class="aanbieder-tarieven">
+          <div class="tarief-blok">
+            <span class="tarief-label">Opslag</span>
+            <span class="tarief-waarde">1,8 ct<span class="tarief-eenheid">/kWh excl. btw</span></span>
+          </div>
+          <div class="tarief-blok">
+            <span class="tarief-label">Vast per maand</span>
+            <span class="tarief-waarde">€ 6,50<span class="tarief-eenheid">excl. btw</span></span>
+          </div>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">App &amp; slim laden</p>
+          <p class="aanbieder-app-tekst">Basis app zonder geavanceerde smart-features. Geen officiële Home Assistant-integratie of EV-laad-optimalisatie. Geschikt als je gewoon je verbruik wilt inzien.</p>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">Voor wie geschikt?</p>
+          <p class="aanbieder-wie-tekst">ANWB-leden die alles bij een bekende naam willen regelen. Minder interessant voor techneuten of EV-rijders die willen automatiseren. Klanttevredenheid is de laagste van de vergelijking (5,4).</p>
+        </div>
+        <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: 30 dagen</p>
+      </article>
+
+      <!-- Easy Energy Dynamisch -->
+      <article class="aanbieder-card">
+        <div class="aanbieder-card-header">
+          <div class="aanbieder-naam"><a href="https://www.easyenergy.com" target="_blank" rel="noopener">Easy Energy Dynamisch</a></div>
+        </div>
+        <div class="aanbieder-tarieven">
+          <div class="tarief-blok">
+            <span class="tarief-label">Opslag</span>
+            <span class="tarief-waarde">1,8 ct<span class="tarief-eenheid">/kWh excl. btw</span></span>
+          </div>
+          <div class="tarief-blok">
+            <span class="tarief-label">Vast per maand</span>
+            <span class="tarief-waarde">€ 5,50<span class="tarief-eenheid">excl. btw</span></span>
+          </div>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">App &amp; slim laden</p>
+          <p class="aanbieder-app-tekst">Eenvoudige app met prijsoverzicht en verbruiksdata. Geen bijzondere smart-features of EV-integratie. Functioneel voor de basis.</p>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">Voor wie geschikt?</p>
+          <p class="aanbieder-wie-tekst">Kleine huishoudens en laagverbruikers voor wie het vaste maandbedrag het zwaarst weegt. Laagste vaste kosten van alle zeven aanbieders. Minder geschikt als je geavanceerde domotica-integratie zoekt.</p>
+        </div>
+        <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
+      </article>
+
+      <!-- EnergyZero -->
+      <article class="aanbieder-card">
+        <div class="aanbieder-card-header">
+          <div class="aanbieder-naam"><a href="https://www.energyzero.nl" target="_blank" rel="noopener">EnergyZero</a></div>
+        </div>
+        <div class="aanbieder-tarieven">
+          <div class="tarief-blok">
+            <span class="tarief-label">Opslag</span>
+            <span class="tarief-waarde">1,85 ct<span class="tarief-eenheid">/kWh excl. btw</span></span>
+          </div>
+          <div class="tarief-blok">
+            <span class="tarief-label">Vast per maand</span>
+            <span class="tarief-waarde">€ 5,95<span class="tarief-eenheid">excl. btw</span></span>
+          </div>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">App &amp; slim laden</p>
+          <p class="aanbieder-app-tekst">Functionele app met directe ENTSO-E prijzen. Geen extra smart-laad features. Transparant over de prijsopbouw.</p>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">Voor wie geschikt?</p>
+          <p class="aanbieder-wie-tekst">Gebruikers die transparantie en lage vaste lasten zoeken zonder extra gadgets. Hoogste opslag van de zeven — compenseer dat met slim gebruik op goedkope uren.</p>
+        </div>
+        <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
+      </article>
+
+      <!-- Frank Energie -->
+      <article class="aanbieder-card">
+        <div class="aanbieder-card-header">
+          <div class="aanbieder-naam"><a href="https://www.frankenergie.nl" target="_blank" rel="noopener">Frank Energie</a></div>
+          <span class="aanbieder-score score-goed">8,6 ★</span>
+        </div>
+        <div class="aanbieder-tarieven">
+          <div class="tarief-blok">
+            <span class="tarief-label">Opslag</span>
+            <span class="tarief-waarde">1,5 ct<span class="tarief-eenheid">/kWh excl. btw</span></span>
+          </div>
+          <div class="tarief-blok">
+            <span class="tarief-label">Vast per maand</span>
+            <span class="tarief-waarde">€ 6,95<span class="tarief-eenheid">excl. btw</span></span>
+          </div>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">App &amp; slim laden</p>
+          <p class="aanbieder-app-tekst">Goede app met prijsoverzicht en verbruiksdata. Uitstekende integratiemogelijkheden via de ENTSO-E-gebaseerde prijsdata — populair bij Home Assistant- en EVCC-gebruikers. Winnaar Overstappen.nl Energie Award 2026.</p>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">Voor wie geschikt?</p>
+          <p class="aanbieder-wie-tekst">Prijs-bewuste gebruikers en techneuten die willen automatiseren. Laagste opslag van alle zeven aanbieders. Minder extra features voor zonnepaneel-eigenaren.</p>
+        </div>
+        <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
+      </article>
+
+      <!-- Tibber -->
+      <article class="aanbieder-card">
+        <div class="aanbieder-card-header">
+          <div class="aanbieder-naam"><a href="https://tibber.com/nl" target="_blank" rel="noopener">Tibber</a></div>
+          <span class="aanbieder-score score-goed">8,9 ★</span>
+        </div>
+        <div class="aanbieder-tarieven">
+          <div class="tarief-blok">
+            <span class="tarief-label">Opslag</span>
+            <span class="tarief-waarde">2,05 ct<span class="tarief-eenheid">/kWh excl. btw</span></span>
+          </div>
+          <div class="tarief-blok">
+            <span class="tarief-label">Vast per maand</span>
+            <span class="tarief-waarde">€ 6,99<span class="tarief-eenheid">excl. btw</span></span>
+          </div>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">App &amp; slim laden</p>
+          <p class="aanbieder-app-tekst">Beste app van het veld. Officiële Home Assistant-integratie, GraphQL API, Tibber Pulse (slim energiemonitor), Grid Rewards (bonus op goedkope uren) en slim EV-laden ingebouwd. Hoogste klantscore na Zonneplan.</p>
+        </div>
+        <div class="aanbieder-let-op">
+          ⚠️ Per 1 januari 2026 betaalt Tibber geen terugleveringsvergoeding meer voor zonnepanelen. Minder geschikt als je PV hebt.
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">Voor wie geschikt?</p>
+          <p class="aanbieder-wie-tekst">Tech-enthousiastelingen, EV-rijders en Home Assistant-gebruikers. Niet de goedkoopste opslag, maar de rijkste app-functies. Minder aantrekkelijk als je zonnepanelen hebt.</p>
+        </div>
+        <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
+      </article>
+
+      <!-- Vandebron Dynamisch -->
+      <article class="aanbieder-card">
+        <div class="aanbieder-card-header">
+          <div class="aanbieder-naam"><a href="https://vandebron.nl" target="_blank" rel="noopener">Vandebron Dynamisch</a></div>
+        </div>
+        <div class="aanbieder-tarieven">
+          <div class="tarief-blok">
+            <span class="tarief-label">Opslag</span>
+            <span class="tarief-waarde">1,65 ct<span class="tarief-eenheid">/kWh excl. btw</span></span>
+          </div>
+          <div class="tarief-blok">
+            <span class="tarief-label">Vast per maand</span>
+            <span class="tarief-waarde">€ 7,50<span class="tarief-eenheid">excl. btw</span></span>
+          </div>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">App &amp; slim laden</p>
+          <p class="aanbieder-app-tekst">App met inzicht in verbruik en herkomst van energie (direct van producenten). Geen geavanceerde smart-laad functies. Focus op duurzaamheid en transparantie.</p>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">Voor wie geschikt?</p>
+          <p class="aanbieder-wie-tekst">Huishoudens die waarde hechten aan aantoonbaar groene energie direct van de bron. Hoogste vast maandbedrag; compenseer dat met hoog verbruik op goedkope uren.</p>
+        </div>
+        <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
+      </article>
+
+      <!-- Zonneplan Dynamic -->
+      <article class="aanbieder-card">
+        <div class="aanbieder-card-header">
+          <div class="aanbieder-naam"><a href="https://www.zonneplan.nl" target="_blank" rel="noopener">Zonneplan Dynamic</a></div>
+          <span class="aanbieder-score score-goed">9,6 ★</span>
+        </div>
+        <div class="aanbieder-tarieven">
+          <div class="tarief-blok">
+            <span class="tarief-label">Opslag</span>
+            <span class="tarief-waarde">1,65 ct<span class="tarief-eenheid">/kWh excl. btw</span></span>
+          </div>
+          <div class="tarief-blok">
+            <span class="tarief-label">Vast per maand</span>
+            <span class="tarief-waarde">€ 6,50<span class="tarief-eenheid">excl. btw</span></span>
+          </div>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">App &amp; slim laden</p>
+          <p class="aanbieder-app-tekst">Vernieuwde app (2026) die zonnepanelen, thuisbatterij, laadpaal én energiecontract in één dashboard combineert. Hoogste klanttevredenheid van alle aanbieders (9,6).</p>
+        </div>
+        <div>
+          <p class="aanbieder-sectie-label">Voor wie geschikt?</p>
+          <p class="aanbieder-wie-tekst">Huishoudens met zonnepanelen, thuisbatterij of EV die alles in één app willen beheren. Beste keuze als je meerdere energiesystemen wilt koppelen en de hoogste klanttevredenheid wilt.</p>
+        </div>
+        <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
+      </article>
+
+    </div><!-- /aanbieder-grid -->
+
+    <div class="aanbieders-footer-note">
+      <p>Klanttevredenheidsscores: Overstappen.nl Energie Awards 2026 (EcoHandel.nl, april 2026). Tarieven geverifieerd via aanbieder-websites april 2026. Opzegtermijnen zijn indicatief — controleer altijd de actuele algemene voorwaarden van je leverancier. <strong>Laatste update: april 2026.</strong></p>
+      <p>Zie ook: de <a href="/#aanbieders">live prijsvergelijking</a> op de homepage toont de actuele kWh-prijs per aanbieder voor het huidige uur.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a>
+        </p>
+        <p class="footer-meta">
+          <a href="/over/voorspelling">Over de voorspelling</a> ·
+          <a href="/aanbieders">Aanbieders</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
