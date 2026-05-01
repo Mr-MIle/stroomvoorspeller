@@ -139,13 +139,17 @@ def compose_tweet(summary: dict) -> str:
 
     if n_neg >= 2:
         insight = f"🌞 {n_neg}u met negatieve EPEX-prijs — perfect voor wasmachine, EV laden"
+        tags = "#stroomprijzen #zonnepanelen #EVrijden"
     elif avg < 10:
         insight = "💚 Lekker goedkope dag morgen"
+        tags = "#stroomprijzen #dynamischcontract #energieprijzen"
     elif avg > 25:
         insight = f"💸 Plan zware apparaten op {cheap['hour']:02d}:00"
+        tags = "#stroomprijzen #energieprijzen #dynamischcontract"
     else:
         spread_pct = max(0, round((dear["ct"] - cheap["ct"]) / max(dear["ct"], 1) * 100))
         insight = f"📊 Spreiding {spread_pct}% tussen goedkoopste en duurste uur — schakelen scheelt"
+        tags = "#stroomprijzen #dynamischcontract #energieprijzen"
 
     return (
         f"⚡ Stroomprijs morgen ({date_str})\n\n"
@@ -153,7 +157,8 @@ def compose_tweet(summary: dict) -> str:
         f"Goedkoopst: {cheap['hour']:02d}u → {cheap['ct']:.1f} ct\n"
         f"Duurst: {dear['hour']:02d}u → {dear['ct']:.1f} ct\n"
         f"{insight}\n\n"
-        f"→ {BRAND}"
+        f"→ {BRAND}\n\n"
+        f"{tags}"
     )
 
 
