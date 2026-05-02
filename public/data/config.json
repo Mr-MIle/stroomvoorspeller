@@ -1,7 +1,7 @@
 {
   "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in EUR per MWh (zoals ENTSO-E rapporteert).",
-  "version": 4,
-  "updated": "2026-04-30",
+  "version": 5,
+  "updated": "2026-05-02",
   "taxes": {
     "energiebelasting_per_kwh": 0.0916,
     "btw_factor": 1.21,
@@ -25,6 +25,48 @@
     "_note": "Banner verschijnt op de homepage zodra één of meer uren in vandaag/morgen onder deze drempel zakken (consumentenprijs incl. btw, gebaseerd op de leverancier die de bezoeker heeft gekozen)."
   },
   "default_supplier": "average",
+  "_feestdagen_note": "Verifieer en vul aan per jaarwisseling. feestdagen_nl = officiële NL vrije dagen. feestdagen_crossborder = dagen waarop DE+BE (en vaak FR) ook vrij zijn — dit verhoogt het risico op extra-lage of negatieve prijzen door buurland-overschot op het NL net.",
+  "feestdagen_nl": [
+    "2026-01-01",
+    "2026-04-03",
+    "2026-04-05",
+    "2026-04-06",
+    "2026-04-27",
+    "2026-05-14",
+    "2026-05-24",
+    "2026-05-25",
+    "2026-12-25",
+    "2026-12-26",
+    "2027-01-01",
+    "2027-04-02",
+    "2027-04-04",
+    "2027-04-05",
+    "2027-04-26",
+    "2027-05-13",
+    "2027-05-23",
+    "2027-05-24",
+    "2027-12-25",
+    "2027-12-26"
+  ],
+  "feestdagen_crossborder": [
+    "2026-01-01",
+    "2026-04-03",
+    "2026-04-06",
+    "2026-05-01",
+    "2026-05-14",
+    "2026-05-24",
+    "2026-05-25",
+    "2026-12-25",
+    "2026-12-26",
+    "2027-01-01",
+    "2027-04-02",
+    "2027-04-05",
+    "2027-05-01",
+    "2027-05-13",
+    "2027-05-24",
+    "2027-12-25",
+    "2027-12-26"
+  ],
   "suppliers": [
     {
       "id": "average",
