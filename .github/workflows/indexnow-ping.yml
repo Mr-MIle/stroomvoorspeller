@@ -1,0 +1,36 @@
+name: IndexNow ping
+
+# Wordt getriggerd bij elke push naar main (= nieuwe Vercel-deploy).
+# Wacht 60 seconden zodat Vercel klaar is, pingt daarna alle pagina's
+# bij Bing IndexNow zodat ze snel opnieuw gecrawld worden.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wacht op Vercel-deploy
+        run: sleep 60
+
+      - name: Ping IndexNow
+        run: |
+          curl -s -o /dev/null -w "HTTP %{http_code}\n" \
+            -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d '{
+              "host": "stroomvoorspeller.nl",
+              "key": "dcb0c2ee8d921232a20090825313a646",
+              "keyLocation": "https://stroomvoorspeller.nl/dcb0c2ee8d921232a20090825313a646.txt",
+              "urlList": [
+                "https://stroomvoorspeller.nl/",
+                "https://stroomvoorspeller.nl/aanbieders",
+                "https://stroomvoorspeller.nl/over/voorspelling",
+                "https://stroomvoorspeller.nl/privacy",
+                "https://stroomvoorspeller.nl/cookies",
+                "https://stroomvoorspeller.nl/disclaimer"
+              ]
+            }'
