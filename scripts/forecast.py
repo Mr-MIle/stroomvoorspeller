@@ -13,17 +13,34 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 
-# Vaste NL feestdagen 2025-2027 (kan later naar config.json)
+# Officiële NL vrije dagen 2025-2027.
+# Let op: Bevrijdingsdag (5 mei) is alleen vrij in lustrum-jaren (2020, 2025, 2030).
+# 2026 en 2027 zijn GEEN lustrum, dus niet opgenomen.
+# 2027: Pasen = 28 maart (berekend via Gregoriaanse methode).
 NL_FEESTDAGEN = {
+    # 2025
     "2025-01-01", "2025-04-18", "2025-04-20", "2025-04-21", "2025-04-27",
-    "2025-05-05", "2025-05-29", "2025-06-08", "2025-06-09",
+    "2025-05-05",  # Bevrijdingsdag 2025 — 80e lustrum ✓
+    "2025-05-29", "2025-06-08", "2025-06-09",
     "2025-12-25", "2025-12-26",
+    # 2026 — Pasen = 5 april
     "2026-01-01", "2026-04-03", "2026-04-05", "2026-04-06", "2026-04-27",
-    "2026-05-05", "2026-05-14", "2026-05-24", "2026-05-25",
+    "2026-05-14", "2026-05-24", "2026-05-25",  # Hemelvaart, Pinksteren
     "2026-12-25", "2026-12-26",
+    # 2027 — Pasen = 28 maart
     "2027-01-01", "2027-03-26", "2027-03-28", "2027-03-29", "2027-04-27",
-    "2027-05-05", "2027-05-06", "2027-05-16", "2027-05-17",
+    "2027-05-06", "2027-05-16", "2027-05-17",  # Hemelvaart, Pinksteren
     "2027-12-25", "2027-12-26",
+}
+
+# Dagen waarop DE+BE (en vaak FR) vrij zijn maar NL NIET.
+# v1.7: gebruikt om baseline-besmetting te voorkomen — als een historische
+# werkdag toevallig een EU-feestdag was (bijv. 1 mei), zijn de prijzen van
+# die dag structureel afwijkend (buurland-overschot drukt de prijs) en
+# mogen ze niet meewegen in de baseline van een gewone werkdag.
+CROSSBORDER_FEESTDAGEN = {
+    "2026-05-01",  # Dag van de Arbeid (DE+BE+FR vrij, NL open)
+    "2027-05-01",  # Dag van de Arbeid
 }
 
 # Gewicht per punt (zie methodologie sectie 3.2).
@@ -87,6 +104,8 @@ class Forecast:
 def is_feestdag(dt: datetime) -> bool:
     return dt.strftime("%Y-%m-%d") in NL_FEESTDAGEN
 
+def is_crossborder_feestdag(dt: datetime) -> bool:
+    return dt.strftime("%Y-%m-%d") in CROSSBORDER_FEESTDAGEN
 
 def dagtype(dt: datetime) -> str:
     """werkdag | weekend | feestdag — voor baseline-grouping."""
@@ -113,6 +132,12 @@ def compute_baseline(target_dt: datetime, history: list[dict]) -> Optional[float
       v2 een bias-piek van +27 EUR/MWh op zondag opleverde. 14 dagen geeft 2
       datapunten per hour-of-week, een acceptabele middenweg.
 
+    v1.7: cross-border feestdagen (zoals 1 mei) worden uitgesloten van de
+    werkdag-baseline. Die dagen hebben structureel andere marktomstandigheden
+    (buurland-overschot drukt de prijs negatief) en zijn niet representatief
+    voor een gewone werkdag. Als na filtering te weinig datapunten overblijven
+    (<2), wordt het window verlengd naar 14 dagen en opnieuw geprobeerd.
+
     history: lijst van {time: ISO-string, price: float in EUR/MWh}
     Return: baseline in EUR/MWh, of None als er geen data is.
     """
@@ -122,16 +147,30 @@ def compute_baseline(target_dt: datetime, history: list[dict]) -> Optional[float
     cutoff_start = target_dt - timedelta(days=window_days)
     cutoff_end = target_dt
 
-    matches = []
-    for entry in history:
-        t = datetime.fromisoformat(entry["time"])
-        if t < cutoff_start or t >= cutoff_end:
-            continue
-        if t.hour != target_hour:
-            continue
-        if dagtype(t) != target_type:
-            continue
-        matches.append(entry["price"])
+    def _collect(from_dt):
+        matches = []
+        for entry in history:
+            t = datetime.fromisoformat(entry["time"])
+            if t < from_dt or t >= cutoff_end:
+                continue
+            if t.hour != target_hour:
+                continue
+            if dagtype(t) != target_type:
+                continue
+            # v1.7: werkdag-baseline mag geen cross-border feestdagen bevatten.
+            # Voorbeeld: 1 mei (EU-feestdag) is dagtype "werkdag" maar heeft
+            # structureel lagere prijzen — niet representatief voor gewone werkdag.
+            if target_type == "werkdag" and is_crossborder_feestdag(t):
+                continue
+            matches.append(entry["price"])
+        return matches
+
+    matches = _collect(cutoff_start)
+
+    # Fallback: te weinig datapunten na filtering (bijv. feestdag gevolgd door
+    # een tweede feestdag in het 7d-window). Verleng het window naar 14 dagen.
+    if len(matches) < 2 and window_days <= 7:
+        matches = _collect(target_dt - timedelta(days=14))
 
     if not matches:
         return None
@@ -218,10 +257,16 @@ def factor_gas(ttf_ratio: float) -> FactorScore:
 # van de bias in backtest v1. Weekend en feestdag houden hun negatieve
 # gewicht omdat de baseline-window voor zaterdag/zondag/feestdag mager is
 # (1-2 datapunten in 7 dagen) en daar de factor nog corrigerende waarde heeft.
+#
+# v1.7: ook cross-border feestdagen (EU-feestdag, NL open) krijgen -2 punten.
+# Op die dagen is de effectieve marktprijs structureel lager door verminderde
+# buurland-vraag én exportoverschot dat op het NL net drukt.
 
 def factor_dagtype(dt: datetime) -> FactorScore:
     if is_feestdag(dt):
-        return FactorScore("dagtype", -2, "feestdag")
+        return FactorScore("dagtype", -2, "NL feestdag")
+    if is_crossborder_feestdag(dt):
+        return FactorScore("dagtype", -2, "EU-feestdag (NL open, buurlanden vrij)")
     wd = dt.weekday()
     if wd == 6:
         return FactorScore("dagtype", -2, "zondag")
@@ -325,7 +370,7 @@ def forecast_one(
 
 
 # ---- Self-test (eenvoudige sanity check) ----
-# Verwacht resultaat voor v1.3-model:
+# Verwacht resultaat voor v1.3-model (ongewijzigd in v1.7 voor werkdag-casus):
 #   factor zon (45% van seizoen): +3
 #   factor wind (6 m/s zwakke wind): +1
 #   factor temperatuur (8°C, koud): +1
@@ -367,9 +412,29 @@ if __name__ == "__main__":
     print(f"Onzekerheid: ±{f.uncertainty_pct*100:.0f}%  (band {f.lower:.2f} - {f.upper:.2f})")
 
     assert abs(f.baseline - 25.40) < 0.01, f"Verwachtte baseline 25.40, kreeg {f.baseline}"
-    # v1.6: alle 6 factoren weer aan; donderdag werkdag = geen zondag-boost.
-    # Zelfde getallen als v1.4: +7 punten, voorspelling 28.96, onzekerheid ±25%.
-    assert f.total_points == 7, f"Verwachtte 7 punten (v1.6 werkdag), kreeg {f.total_points}"
-    assert abs(f.predicted - 28.96) < 0.1, f"Verwachtte ~28.96 (v1.6 werkdag), kreeg {f.predicted}"
+    assert f.total_points == 7, f"Verwachtte 7 punten (v1.7 werkdag), kreeg {f.total_points}"
+    assert abs(f.predicted - 28.96) < 0.1, f"Verwachtte ~28.96 (v1.7 werkdag), kreeg {f.predicted}"
     assert abs(f.uncertainty_pct - 0.25) < 0.001, f"Verwachtte ±25%, kreeg ±{f.uncertainty_pct*100:.0f}%"
-    print("\n[ok] Self-test geslaagd; v1.6-model — werkdag-voorbeeld zonder zondag-boost matcht v1.4.")
+
+    # Extra test v1.7: 1 mei (EU-feestdag, NL open) krijgt -2 van factor_dagtype
+    mei1 = datetime(2026, 5, 1, 13, 0)
+    score = factor_dagtype(mei1)
+    assert score.points == -2, f"Verwachtte -2 voor 1 mei (EU-feestdag), kreeg {score.points}"
+    print(f"\n[ok] factor_dagtype 1 mei: {score.points} ({score.reason})")
+
+    # Extra test v1.7: baseline voor werkdag sluit 1 mei uit
+    target_vr = datetime(2026, 5, 8, 13, 0)  # volgende vrijdag
+    history_met_mei1 = [
+        {"time": "2026-04-27T13:00:00", "price": 50.0},  # werkdag (Koningsdag — feestdag)
+        {"time": "2026-04-28T13:00:00", "price": 50.0},  # dinsdag werkdag
+        {"time": "2026-04-29T13:00:00", "price": 50.0},  # woensdag werkdag
+        {"time": "2026-04-30T13:00:00", "price": 50.0},  # donderdag werkdag
+        {"time": "2026-05-01T13:00:00", "price": -300.0},  # vrijdag, EU-feestdag — moet NIET meewegen
+    ]
+    baseline_vr = compute_baseline(target_vr, history_met_mei1)
+    assert baseline_vr is not None, "Baseline moest bepaald kunnen worden"
+    assert baseline_vr > 0, f"Baseline moet positief zijn (1 mei uitgesloten): {baseline_vr}"
+    assert abs(baseline_vr - 50.0) < 0.01, f"Verwachtte baseline 50.0 (1 mei uitgesloten), kreeg {baseline_vr}"
+    print(f"[ok] baseline volgende vrijdag (1 mei uitgesloten): {baseline_vr} EUR/MWh")
+
+    print("\n[ok] Self-test geslaagd; v1.7-model — werkdag-voorbeeld + cross-border feestdag filter.")
