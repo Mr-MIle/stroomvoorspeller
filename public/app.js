@@ -131,6 +131,18 @@
     return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
   }
 
+  // Bouw twee Sets van feestdagen uit config.json:
+  //   nl          — officiële NL vrije dagen
+  //   crossborder — dagen waarop DE+BE (en vaak FR) ook vrij zijn
+  // Beide sets bevatten datumstrings "YYYY-MM-DD".
+  function buildHolidayLookup() {
+    const cfg = state.config || {};
+    return {
+      nl:          new Set(cfg.feestdagen_nl || []),
+      crossborder: new Set(cfg.feestdagen_crossborder || []),
+    };
+  }
+
   function findCurrentIndex(prices, now) {
     let idx = -1;
     for (let i = 0; i < prices.length; i++) {
@@ -526,6 +538,88 @@
     });
   }
 
+  // ---- Chart.js plugin: gekleurde dag-banden ----
+  // Tekent subtiele achtergrondkleuren achter elk uur in de grafiek op basis van
+  // het dagtype: NL feestdag, EU-feestdag (buurlanden vrij maar NL open),
+  // NL+EU feestdag, of weekend. Dag-type met het sterkste effect per dag wint.
+  //
+  // Werking: itereer de timeline, groepeer aaneengesloten indices per kalenderdag,
+  // check de feestdagen-Sets, teken een rechthoek over de chartArea-hoogte.
+  // Tekst-label bovenaan de band alleen als de band breed genoeg is (>50px).
+  const dayBandPlugin = {
+    id: "svDayBand",
+    beforeDatasetsDraw(chart, _args, opts) {
+      const { ctx, chartArea } = chart;
+      const timeline = opts.timeline;
+      const holidays = opts.holidays;
+      if (!timeline || timeline.length < 2 || !chartArea) return;
+
+      const n = timeline.length;
+      const step = (chartArea.right - chartArea.left) / n;
+
+      // Groepeer indices per kalenderdag (eerste en laatste index per datum)
+      const dayMap = Object.create(null);
+      timeline.forEach((pt, i) => {
+        const date = pt.time.slice(0, 10); // "YYYY-MM-DD"
+        if (!dayMap[date]) dayMap[date] = { first: i, last: i };
+        else dayMap[date].last = i;
+      });
+
+      ctx.save();
+
+      Object.entries(dayMap).forEach(([date, { first, last }]) => {
+        const isNL = holidays.nl.has(date);
+        const isCB = holidays.crossborder.has(date);
+        const dow  = new Date(date + "T12:00:00").getDay(); // 0=zo, 6=za
+        const isWeekend = dow === 0 || dow === 6;
+
+        let bg, label, labelColor;
+        if (isNL && isCB) {
+          bg = "rgba(255, 193, 7, 0.18)";
+          label = "🗓 NL + EU feestdag";
+          labelColor = "rgba(110, 70, 0, 0.82)";
+        } else if (isNL) {
+          bg = "rgba(255, 193, 7, 0.13)";
+          label = "🗓 NL feestdag";
+          labelColor = "rgba(110, 70, 0, 0.78)";
+        } else if (isCB) {
+          bg = "rgba(255, 140, 0, 0.13)";
+          label = "🌍 EU-feestdag (NL open)";
+          labelColor = "rgba(140, 70, 0, 0.80)";
+        } else if (isWeekend) {
+          bg = "rgba(100, 100, 180, 0.06)";
+          label = null;
+        } else {
+          return; // gewone werkdag — niets tekenen
+        }
+
+        const x1 = chartArea.left + first * step;
+        const x2 = chartArea.left + (last + 1) * step;
+        const bandW = x2 - x1;
+
+        // Achtergrondrechthoek
+        ctx.fillStyle = bg;
+        ctx.fillRect(x1, chartArea.top, bandW, chartArea.bottom - chartArea.top);
+
+        // Tekst-label bovenaan (alleen als de band breed genoeg is)
+        if (label && bandW > 50) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(x1 + 2, chartArea.top, bandW - 4, chartArea.bottom - chartArea.top);
+          ctx.clip();
+          ctx.fillStyle = labelColor;
+          ctx.font = "bold 9px system-ui, -apple-system, sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "top";
+          ctx.fillText(label, (x1 + x2) / 2, chartArea.top + 5);
+          ctx.restore();
+        }
+      });
+
+      ctx.restore();
+    },
+  };
+
   function fmtChartLabel(iso) {
     // Voor de chart x-axis: korte labels. Voor "vandaag/morgen" alleen HH:MM,
     // voor verdere voorspelling-uren een weekdag-prefix om te onderscheiden.
@@ -577,6 +671,7 @@
 
     state.chart = new Chart(canvas, {
       type: "line",
+      plugins: [dayBandPlugin],
       data: {
         labels,
         datasets: [
@@ -643,6 +738,7 @@
           },
         },
         plugins: {
+          svDayBand: { timeline, holidays: buildHolidayLookup() },
           legend: {
             display: true,
             labels: {
@@ -682,6 +778,22 @@
         },
       },
     });
+
+    // Feestdag-kleurlegenda onder de grafiek (éénmalig aanmaken; blijft staan
+    // bij volgende renderChart-aanroepen zoals leverancier- of modeswitch).
+    if (!document.getElementById("chart-holiday-legend")) {
+      const note = document.createElement("p");
+      note.id = "chart-holiday-legend";
+      note.setAttribute("aria-hidden", "true");
+      note.style.cssText =
+        "font-size:11px;color:#6b7280;margin:6px 0 2px;line-height:1.7;";
+      note.innerHTML =
+        '<span style="background:rgba(255,193,7,0.32);padding:1px 6px;border-radius:3px;margin-right:4px;">\u{1F5D3} NL feestdag</span>' +
+        '<span style="background:rgba(255,140,0,0.30);padding:1px 6px;border-radius:3px;margin-right:4px;">\u{1F30D} EU-feestdag (NL open)</span>' +
+        '<span style="background:rgba(255,193,7,0.32);outline:1px solid rgba(200,110,0,0.40);outline-offset:-1px;padding:1px 6px;border-radius:3px;margin-right:8px;">\u{1F5D3}+\u{1F30D} NL &amp; EU feestdag</span>' +
+        'Op deze dagen valt de stroomprijs vaak extra laag door verminderde vraag in buurlanden.';
+      canvas.insertAdjacentElement("afterend", note);
+    }
   }
 
   // ---- Event wiring ----
