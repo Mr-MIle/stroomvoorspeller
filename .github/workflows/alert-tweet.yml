@@ -1,0 +1,58 @@
+name: Alert X-post bij extreme stroomprijzen
+
+# Wanneer:
+#   update-prices draait op 0,3,6,9,12,15,18,21 UTC.
+#   Wij draaien 45 minuten later zodat prices.json altijd vers is.
+#   Manueel via 'Run workflow' in de GitHub UI voor testen.
+on:
+  schedule:
+    - cron: "45 0,3,6,9,12,15,18,21 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write   # nodig om tweet_state.json terug te committen
+
+concurrency:
+  group: alert-tweet
+  cancel-in-progress: false
+
+jobs:
+  check-and-alert:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installeer dependencies
+        run: pip install tweepy
+
+      - name: Check extreme prijzen + post alert indien nodig
+        # continue-on-error zodat een X-API-fout de state-commit niet blokkeert
+        continue-on-error: true
+        id: alert
+        env:
+          X_API_KEY:        ${{ secrets.X_API_KEY }}
+          X_API_SECRET:     ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN:   ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET:  ${{ secrets.X_ACCESS_SECRET }}
+        run: python scripts/alert_post.py
+
+      - name: Commit tweet_state.json indien gewijzigd
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/tweet_state.json
+          # Alleen committen als er iets veranderd is
+          git diff --cached --quiet && echo "Geen wijzigingen in state." && exit 0
+          # Pull eerst om conflicten met update-prices te vermijden
+          git pull --rebase origin main
+          git commit -m "chore: update tweet_state.json [skip ci]"
+          git push
