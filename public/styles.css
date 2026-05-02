@@ -7,7 +7,7 @@
   --c-surface: #ffffff;
   --c-text: #18222e;
   --c-text-soft: #4a5b6e;
-  --c-text-mute: #7c8a99;
+  --c-text-mute: #5d6f80;
   --c-border: #e1e7ee;
 
   --c-brand: #0f6cbd;
@@ -84,7 +84,7 @@ a:hover { text-decoration: underline; }
 }
 .brand-tld { color: var(--c-text-mute); font-weight: 500; }
 .primary-nav { display: flex; gap: 18px; flex-wrap: wrap; }
-.primary-nav a { color: var(--c-text-soft); font-weight: 500; font-size: 0.95rem; }
+.primary-nav a { color: var(--c-text-soft); font-weight: 500; font-size: 0.95rem; padding: 10px 4px; }
 .primary-nav a:hover { color: var(--c-brand); }
 
 /* Settings toggle button in header */
@@ -286,6 +286,7 @@ a:hover { text-decoration: underline; }
   gap: 8px;
   position: relative;
   overflow: hidden;
+  min-height: 160px;
 }
 .now-card::before {
   content: "";
