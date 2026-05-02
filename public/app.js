@@ -786,7 +786,7 @@
       note.id = "chart-holiday-legend";
       note.setAttribute("aria-hidden", "true");
       note.style.cssText =
-        "font-size:11px;color:#6b7280;margin:6px 0 2px;line-height:1.7;";
+        "font-size:11px;color:#374151;margin:6px 0 2px;line-height:1.7;";
       note.innerHTML =
         '<span style="background:rgba(255,193,7,0.32);padding:1px 6px;border-radius:3px;margin-right:4px;">\u{1F5D3} NL feestdag</span>' +
         '<span style="background:rgba(255,140,0,0.30);padding:1px 6px;border-radius:3px;margin-right:4px;">\u{1F30D} EU-feestdag (NL open)</span>' +

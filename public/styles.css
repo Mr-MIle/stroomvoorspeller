@@ -445,6 +445,7 @@ a:hover { text-decoration: underline; }
   margin: 0;
   display: grid;
   gap: 10px;
+  min-height: 220px;
 }
 .moment {
   display: grid;
@@ -471,7 +472,7 @@ a:hover { text-decoration: underline; }
 .moment-when small { color: var(--c-text-mute); font-weight: 500; margin-left: 6px; }
 .moment-price {
   font-weight: 700;
-  color: var(--c-cheap);
+  color: #1e7b34;
   font-variant-numeric: tabular-nums;
 }
 .moment-loading { color: var(--c-text-mute); padding: 8px; }
@@ -657,6 +658,7 @@ body.has-neg-alert .site-header { top: 56px; }
   border: 1px solid var(--c-border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
+  min-height: 380px;
 }
 .suppliers-table {
   width: 100%;
