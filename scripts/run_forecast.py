@@ -273,8 +273,11 @@ def main() -> int:
             # Alleen meegeven als die prijs daadwerkelijk in prices.json staat
             # (d.w.z. gepubliceerde day-ahead data). Voor D+3 en verder is die
             # prijs nog niet bekend en geeft factor_vorige_dag() 0 terug.
+            # Lookup is op timezone-naïeve strings (prices_by_iso strips tzinfo).
+            # target_dt is timezone-aware (+02:00), dus strip tzinfo vóór opzoeken.
             prior_dt = target_dt - timedelta(days=1)
-            prior_day_price = prices_by_iso.get(prior_dt.isoformat())
+            prior_dt_naive = prior_dt.replace(tzinfo=None)
+            prior_day_price = prices_by_iso.get(prior_dt_naive.isoformat())
 
             fc = forecast_one(
                 target_dt=target_dt,
