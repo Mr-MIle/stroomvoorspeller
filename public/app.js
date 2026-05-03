@@ -900,4 +900,11 @@
       const now = new Date();
       state.dayPrices = filterTodayTomorrow(state.prices, now);
       state.nowIdx = findCurrentIndex(state.dayPrices, now);
-      applyConfigDefaults()
+      applyConfigDefaults();
+      renderAll();
+    })
+    .catch((err) => {
+      console.error("[stroomvoorspeller] Fatal:", err);
+      showError();
+    });
+})();
