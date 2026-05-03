@@ -56,7 +56,7 @@ from forecast import forecast_one, POINT_WEIGHT  # noqa: E402
 from fetch_prices import amsterdam_now  # noqa: E402
 
 # Modelversie — komt mee in de output zodat de frontend hem kan tonen.
-MODEL_VERSION = "1.6"
+MODEL_VERSION = "1.8"
 
 # Paden
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -232,6 +232,24 @@ def main() -> int:
     ttf_ratio = compute_ttf_ratio(ttf_series)
     print(f"[info] TTF ratio (current/30d): {ttf_ratio:.3f}", file=sys.stderr)
 
+    # v1.8: bouw een snelle ISO-string → prijs lookup op basis van prices.json.
+    # Wordt gebruikt om de vorige-dag-prijs per uur door te geven aan forecast_one().
+    # Sleutelformaat: "YYYY-MM-DDTHH:00:00" (zonder timezone-suffix, zoals history).
+    prices_by_iso: dict[str, float] = {}
+    for entry in history:
+        t_str = entry.get("time", "")
+        # Normaliseer: strip eventuele timezone-suffix en seconden zodat het format
+        # consistent is met target_dt.isoformat() dat we later aanmaken.
+        try:
+            t_norm = datetime.fromisoformat(t_str).replace(
+                minute=0, second=0, microsecond=0, tzinfo=None
+            ).isoformat()
+            prices_by_iso[t_norm] = float(entry["price"])
+        except (ValueError, KeyError):
+            continue
+    print(f"[info] {len(prices_by_iso)} uurprijzen geïndexeerd voor prior-day lookup.",
+          file=sys.stderr)
+
     forecasts: list[dict] = []
     skipped = 0
     cursor = horizon_start
@@ -250,6 +268,14 @@ def main() -> int:
 
         for hour in range(24):
             target_dt = cursor.replace(hour=hour, minute=0, second=0, microsecond=0)
+
+            # v1.8: vorige-dag-prijs opzoeken voor hetzelfde uur op D-1.
+            # Alleen meegeven als die prijs daadwerkelijk in prices.json staat
+            # (d.w.z. gepubliceerde day-ahead data). Voor D+3 en verder is die
+            # prijs nog niet bekend en geeft factor_vorige_dag() 0 terug.
+            prior_dt = target_dt - timedelta(days=1)
+            prior_day_price = prices_by_iso.get(prior_dt.isoformat())
+
             fc = forecast_one(
                 target_dt=target_dt,
                 history=history,
@@ -258,6 +284,7 @@ def main() -> int:
                 temp_c=temp,
                 ttf_ratio=ttf_ratio,
                 days_ahead=days_ahead,
+                prior_day_price=prior_day_price,
             )
             if fc is None:
                 skipped += 1

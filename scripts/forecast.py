@@ -50,7 +50,7 @@ CROSSBORDER_FEESTDAGEN = {
 # Zie 01-documenten/backtest-resultaat-v1.md.
 POINT_WEIGHT = 0.02
 
-# Welke factoren tellen mee in de som. Default: alle 6. Via deze set is het
+# Welke factoren tellen mee in de som. Default: alle 7. Via deze set is het
 # mogelijk individuele factoren uit te schakelen voor experimenten zonder de
 # code zelf te wijzigen.
 #
@@ -58,7 +58,9 @@ POINT_WEIGHT = 0.02
 # liet richting-hit zakken van 51% naar 42% op 1d (onder random). Conclusie:
 # de gecombineerde factoren capteren wél subtiele richtingsignalen die individueel
 # weinig lijken bij te dragen, en het volledige model blijft de productiekeuze.
-ENABLED_FACTORS = {"zon", "wind", "temperatuur", "gas", "dagtype", "uurpatroon"}
+#
+# v1.8: "vorige_dag" toegevoegd — zie factor_vorige_dag() hieronder.
+ENABLED_FACTORS = {"zon", "wind", "temperatuur", "gas", "dagtype", "uurpatroon", "vorige_dag"}
 
 # v1.6: zondag-boost voor weersfactoren.
 # Backtest v3 toonde een hardnekkige bias van +27 EUR/MWh op zondag-uren die niet
@@ -300,6 +302,56 @@ def factor_uurpatroon(dt: datetime) -> FactorScore:
     return FactorScore("uurpatroon", -1, f"{season}, late avond ({h}:00)")
 
 
+# ---- Factor 7: Vorige dag (v1.8) ----
+# Dagelijkse day-ahead prijzen vertonen sterke autocorrelatie: een dag met hoge
+# prijzen wordt vaak gevolgd door een dag met relatief hoge prijzen (aanhoudend
+# weerregime, gasprijsniveau, marktomstandigheden veranderen niet van dag op dag).
+#
+# Deze factor benut de bekende D+1-prijzen (gepubliceerd ~13:00) als signaal voor
+# D+2, het eerste te voorspellen uur. Voor D+3 en verder ontbreken de vorige-dag-
+# prijzen en geeft de factor 0 (neutraal).
+#
+# Werkwijze per te voorspellen uur H op dag D+2:
+#   1. Zoek de werkelijke prijs van D+1 op datzelfde uur H  → prior_price
+#   2. Bereken de historische baseline voor dat uur op D+1  → prior_baseline
+#      (= gemiddelde van dezelfde dag/uur-combinatie in de voorgaande 7-14 dagen,
+#       identiek aan hoe compute_baseline() normaal werkt)
+#   3. ratio = prior_price / prior_baseline
+#   4. Sla de ratio om in ±1 of ±2 punten
+#
+# Rationale voor de drempelkeuze (zelfde stijl als factor_gas):
+#   ratio < 0.70 → de voorgaande dag was structureel goedkoop      → -2
+#   ratio < 0.90 → iets goedkoper                                  → -1
+#   ratio ≤ 1.10 → normaal                                         →  0
+#   ratio ≤ 1.30 → iets duurder                                    → +1
+#   ratio > 1.30 → structureel duur                                → +2
+#
+# Effect op de voorspelling (POINT_WEIGHT = 0.02):
+#   max +2 punten → +4% op baseline  (bv. 30 EUR/MWh → 31.20 EUR/MWh)
+#   max -2 punten → -4% op baseline
+# Dit is bewust conservatief: de autocorrelatie is sterk maar niet volledig,
+# en het model mag de historische baseline niet te ver overrulen.
+
+def factor_vorige_dag(prior_ratio: Optional[float]) -> FactorScore:
+    """
+    prior_ratio: (prijs voorgaande dag uur H) / (baseline voorgaande dag uur H).
+    None als de voorgaande-dag-prijs niet beschikbaar is (D+3 en verder).
+    """
+    if prior_ratio is None:
+        return FactorScore("vorige_dag", 0, "niet beschikbaar (>1 dag vooruit)")
+    if prior_ratio < 0.70:
+        pts, reason = -2, f"vorige dag goedkoop ({prior_ratio:.2f}× baseline)"
+    elif prior_ratio < 0.90:
+        pts, reason = -1, f"vorige dag iets goedkoper ({prior_ratio:.2f}×)"
+    elif prior_ratio <= 1.10:
+        pts, reason = 0, f"vorige dag normaal ({prior_ratio:.2f}×)"
+    elif prior_ratio <= 1.30:
+        pts, reason = +1, f"vorige dag duurder ({prior_ratio:.2f}×)"
+    else:
+        pts, reason = +2, f"vorige dag duur ({prior_ratio:.2f}×)"
+    return FactorScore("vorige_dag", pts, reason)
+
+
 # ---- Onzekerheidsband ----
 
 def uncertainty(days_ahead: int, abs_points: int) -> float:
@@ -316,15 +368,28 @@ def forecast_one(
     temp_c: float,
     ttf_ratio: float,
     days_ahead: int,
+    prior_day_price: Optional[float] = None,
 ) -> Optional[Forecast]:
     """
     Voorspel de prijs voor een specifiek toekomstig uur.
+
+    prior_day_price: bekende day-ahead prijs van de voorgaande dag op hetzelfde
+        uur (EUR/MWh). Alleen beschikbaar voor D+2 (eerste voorspeldag), waarbij
+        de D+1-prijzen al gepubliceerd zijn. Geef None door voor D+3 en verder.
 
     Return: Forecast object, of None als baseline niet bepaald kon worden.
     """
     baseline = compute_baseline(target_dt, history)
     if baseline is None:
         return None
+
+    # Factor 7: vorige dag — normaliseer de prior_price op zijn eigen baseline.
+    prior_ratio: Optional[float] = None
+    if prior_day_price is not None:
+        prior_dt = target_dt - timedelta(days=1)
+        prior_baseline = compute_baseline(prior_dt, history)
+        if prior_baseline and prior_baseline != 0:
+            prior_ratio = prior_day_price / prior_baseline
 
     factors = [
         factor_zon(shortwave_ratio),
@@ -333,6 +398,7 @@ def forecast_one(
         factor_gas(ttf_ratio),
         factor_dagtype(target_dt),
         factor_uurpatroon(target_dt),
+        factor_vorige_dag(prior_ratio),
     ]
 
     # v1.6: zondag-boost. Op zondag tellen zon en wind ZWAARDER (×ZONDAG_BOOST)
@@ -438,3 +504,47 @@ if __name__ == "__main__":
     print(f"[ok] baseline volgende vrijdag (1 mei uitgesloten): {baseline_vr} EUR/MWh")
 
     print("\n[ok] Self-test geslaagd; v1.7-model — werkdag-voorbeeld + cross-border feestdag filter.")
+
+    # ---- Test v1.8: factor_vorige_dag ----
+    # Geval 1: geen prior → 0 punten
+    score_none = factor_vorige_dag(None)
+    assert score_none.points == 0, f"Verwachtte 0 voor None, kreeg {score_none.points}"
+
+    # Geval 2: vorige dag 140% van baseline → +2 punten
+    score_duur = factor_vorige_dag(1.40)
+    assert score_duur.points == +2, f"Verwachtte +2 voor ratio 1.40, kreeg {score_duur.points}"
+
+    # Geval 3: vorige dag 65% van baseline → -2 punten
+    score_goedkoop = factor_vorige_dag(0.65)
+    assert score_goedkoop.points == -2, f"Verwachtte -2 voor ratio 0.65, kreeg {score_goedkoop.points}"
+
+    # Geval 4: vorige dag 100% van baseline → 0 punten
+    score_normaal = factor_vorige_dag(1.00)
+    assert score_normaal.points == 0, f"Verwachtte 0 voor ratio 1.00, kreeg {score_normaal.points}"
+
+    # Geval 5: integratie — forecast_one met prior_day_price duur (40 EUR/MWh,
+    # baseline is 25.40 → ratio 1.575 → +2 punten extra t.o.v. geen prior).
+    f_met_prior = forecast_one(
+        target_dt=target,
+        history=history,
+        shortwave_ratio=0.45,
+        wind_ms=6.0,
+        temp_c=8.0,
+        ttf_ratio=1.05,
+        days_ahead=2,
+        prior_day_price=40.0,  # fors boven baseline → +2 punten
+    )
+    assert f_met_prior is not None, "Forecast met prior moest lukken"
+    vorige_dag_factor = next(f for f in f_met_prior.factors if f.name == "vorige_dag")
+    assert vorige_dag_factor.points == +2, (
+        f"Verwachtte +2 voor prior 40/25.40≈1.57, kreeg {vorige_dag_factor.points}"
+    )
+    # Met prior (+2 extra punten): total_points = 7+2 = 9
+    # predicted = 25.40 × (1 + 9 × 0.02) = 25.40 × 1.18 = 29.972 ≈ 29.97
+    assert f_met_prior.total_points == 9, f"Verwachtte 9 punten, kreeg {f_met_prior.total_points}"
+    assert abs(f_met_prior.predicted - 29.97) < 0.1, (
+        f"Verwachtte ~29.97 EUR/MWh, kreeg {f_met_prior.predicted}"
+    )
+
+    print("[ok] factor_vorige_dag: None→0, duur→+2, goedkoop→-2, normaal→0, integratie→ok")
+    print("\n[ok] Self-test geslaagd; v1.8-model — vorige-dag factor toegevoegd.")
