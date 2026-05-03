@@ -796,7 +796,7 @@
         '<span style="background:rgba(255,140,0,0.30);padding:1px 6px;border-radius:3px;white-space:nowrap;">\u{1F30D} EU-feestdag (NL open)</span>' +
         '<span style="background:rgba(255,193,7,0.32);outline:1px solid rgba(200,110,0,0.40);outline-offset:-1px;padding:1px 6px;border-radius:3px;white-space:nowrap;">\u{1F5D3}+\u{1F30D} NL &amp; EU feestdag</span>' +
         '<span style="color:#6b7280;flex-basis:100%;">Op deze dagen valt de stroomprijs vaak extra laag door verminderde vraag in buurlanden.</span>';
-      canvas.insertAdjacentElement("afterend", note);
+      (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", note);
     }
   }
 
