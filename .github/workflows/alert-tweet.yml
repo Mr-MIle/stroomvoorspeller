@@ -49,10 +49,10 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Bestand bestaat pas na de eerste echte alert
+          [ -f public/data/tweet_state.json ] || { echo "Geen state file, niets te committen."; exit 0; }
           git add public/data/tweet_state.json
-          # Alleen committen als er iets veranderd is
           git diff --cached --quiet && echo "Geen wijzigingen in state." && exit 0
-          # Pull eerst om conflicten met update-prices te vermijden
           git pull --rebase origin main
           git commit -m "chore: update tweet_state.json [skip ci]"
           git push
