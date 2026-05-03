@@ -125,7 +125,7 @@ def is_zomer(dt: datetime) -> bool:
 
 def compute_baseline(target_dt: datetime, history: list[dict]) -> Optional[float]:
     """
-    Gemiddelde EPEX-prijs voor hetzelfde uur en hetzelfde dagtype.
+    Robuuste baseline-prijs voor hetzelfde uur en hetzelfde dagtype.
 
     Window-keuze:
     - werkdag/feestdag: laatste 7 dagen (typisch 5 werkdag-datapunten of 1-2 feestdag).
@@ -139,6 +139,13 @@ def compute_baseline(target_dt: datetime, history: list[dict]) -> Optional[float
     (buurland-overschot drukt de prijs negatief) en zijn niet representatief
     voor een gewone werkdag. Als na filtering te weinig datapunten overblijven
     (<2), wordt het window verlengd naar 14 dagen en opnieuw geprobeerd.
+
+    v1.9: mediaan in plaats van gemiddelde. Met slechts 4-5 datapunten per uur
+    kan één extreem (bijv. -200 EUR/MWh op een zonnige dag of +500 op een
+    koude windstille avond) het gemiddelde fors vertrekken. De mediaan is
+    immuun voor zulke uitschieters zonder dat er een drempelwaarde gekozen
+    hoeft te worden. Bij een even aantal waarden wordt het gemiddelde van de
+    twee middelste waarden gebruikt (standaard mediaan-definitie).
 
     history: lijst van {time: ISO-string, price: float in EUR/MWh}
     Return: baseline in EUR/MWh, of None als er geen data is.
@@ -176,7 +183,10 @@ def compute_baseline(target_dt: datetime, history: list[dict]) -> Optional[float
 
     if not matches:
         return None
-    return sum(matches) / len(matches)
+    s = sorted(matches)
+    n = len(s)
+    mid = n // 2
+    return s[mid] if n % 2 else (s[mid - 1] + s[mid]) / 2
 
 
 # ---- Factor 1: Zonproductie ----
@@ -456,7 +466,7 @@ if __name__ == "__main__":
         datetime(2025, 12, 9, 19, 0),   # di
         datetime(2025, 12, 10, 19, 0),  # wo
     ]
-    base_prices = [24.0, 26.0, 25.0, 26.0, 26.0]  # gemiddelde = 25.40
+    base_prices = [24.0, 26.0, 25.0, 26.0, 26.0]  # mediaan = 26.0 (gesorteerd: 24,25,26,26,26)
     history = [{"time": d.isoformat(), "price": p} for d, p in zip(base_dates, base_prices)]
 
     f = forecast_one(
@@ -475,56 +485,44 @@ if __name__ == "__main__":
         print(f"  Factor {fs.name:13s}: {fs.points:+d}  ({fs.reason})")
     print(f"Totaal punten: {f.total_points:+d}")
     print(f"Voorspelling: {f.predicted} EUR/MWh")
-    print(f"Onzekerheid: ±{f.uncertainty_pct*100:.0f}%  (band {f.lower:.2f} - {f.upper:.2f})")
+    print(f"Onzekerheid: +/-{f.uncertainty_pct*100:.0f}%  (band {f.lower:.2f} - {f.upper:.2f})")
 
-    assert abs(f.baseline - 25.40) < 0.01, f"Verwachtte baseline 25.40, kreeg {f.baseline}"
-    assert f.total_points == 7, f"Verwachtte 7 punten (v1.7 werkdag), kreeg {f.total_points}"
-    assert abs(f.predicted - 28.96) < 0.1, f"Verwachtte ~28.96 (v1.7 werkdag), kreeg {f.predicted}"
-    assert abs(f.uncertainty_pct - 0.25) < 0.001, f"Verwachtte ±25%, kreeg ±{f.uncertainty_pct*100:.0f}%"
+    # v1.9: baseline = mediaan [24,25,26,26,26] = 26.0
+    # Voorspelling: 26.0 * (1 + 7 * 0.02) = 26.0 * 1.14 = 29.64
+    assert abs(f.baseline - 26.0) < 0.01, f"Verwachtte baseline 26.0 (mediaan), kreeg {f.baseline}"
+    assert f.total_points == 7, f"Verwachtte 7 punten, kreeg {f.total_points}"
+    assert abs(f.predicted - 29.64) < 0.1, f"Verwachtte ~29.64, kreeg {f.predicted}"
+    assert abs(f.uncertainty_pct - 0.25) < 0.001, f"Verwachtte +/-25%, kreeg {f.uncertainty_pct}"
 
-    # Extra test v1.7: 1 mei (EU-feestdag, NL open) krijgt -2 van factor_dagtype
+    # Test v1.7: factor_dagtype 1 mei
     mei1 = datetime(2026, 5, 1, 13, 0)
     score = factor_dagtype(mei1)
-    assert score.points == -2, f"Verwachtte -2 voor 1 mei (EU-feestdag), kreeg {score.points}"
+    assert score.points == -2, f"Verwachtte -2 voor 1 mei, kreeg {score.points}"
     print(f"\n[ok] factor_dagtype 1 mei: {score.points} ({score.reason})")
 
-    # Extra test v1.7: baseline voor werkdag sluit 1 mei uit
-    target_vr = datetime(2026, 5, 8, 13, 0)  # volgende vrijdag
+    # Test v1.7: baseline sluit 1 mei uit
+    target_vr = datetime(2026, 5, 8, 13, 0)
     history_met_mei1 = [
-        {"time": "2026-04-27T13:00:00", "price": 50.0},  # werkdag (Koningsdag — feestdag)
-        {"time": "2026-04-28T13:00:00", "price": 50.0},  # dinsdag werkdag
-        {"time": "2026-04-29T13:00:00", "price": 50.0},  # woensdag werkdag
-        {"time": "2026-04-30T13:00:00", "price": 50.0},  # donderdag werkdag
-        {"time": "2026-05-01T13:00:00", "price": -300.0},  # vrijdag, EU-feestdag — moet NIET meewegen
+        {"time": "2026-04-27T13:00:00", "price": 50.0},
+        {"time": "2026-04-28T13:00:00", "price": 50.0},
+        {"time": "2026-04-29T13:00:00", "price": 50.0},
+        {"time": "2026-04-30T13:00:00", "price": 50.0},
+        {"time": "2026-05-01T13:00:00", "price": -300.0},  # EU-feestdag: moet worden uitgesloten
     ]
     baseline_vr = compute_baseline(target_vr, history_met_mei1)
-    assert baseline_vr is not None, "Baseline moest bepaald kunnen worden"
-    assert baseline_vr > 0, f"Baseline moet positief zijn (1 mei uitgesloten): {baseline_vr}"
-    assert abs(baseline_vr - 50.0) < 0.01, f"Verwachtte baseline 50.0 (1 mei uitgesloten), kreeg {baseline_vr}"
-    print(f"[ok] baseline volgende vrijdag (1 mei uitgesloten): {baseline_vr} EUR/MWh")
+    assert baseline_vr is not None
+    assert abs(baseline_vr - 50.0) < 0.01, f"Verwachtte 50.0 (1 mei uitgesloten), kreeg {baseline_vr}"
+    print(f"[ok] baseline vrijdag (1 mei uitgesloten, mediaan): {baseline_vr} EUR/MWh")
 
-    print("\n[ok] Self-test geslaagd; v1.7-model — werkdag-voorbeeld + cross-border feestdag filter.")
+    # Test v1.8/v1.9: factor_vorige_dag
+    assert factor_vorige_dag(None).points == 0
+    assert factor_vorige_dag(1.40).points == +2
+    assert factor_vorige_dag(0.65).points == -2
+    assert factor_vorige_dag(1.00).points == 0
 
-    # ---- Test v1.8: factor_vorige_dag ----
-    # Geval 1: geen prior → 0 punten
-    score_none = factor_vorige_dag(None)
-    assert score_none.points == 0, f"Verwachtte 0 voor None, kreeg {score_none.points}"
-
-    # Geval 2: vorige dag 140% van baseline → +2 punten
-    score_duur = factor_vorige_dag(1.40)
-    assert score_duur.points == +2, f"Verwachtte +2 voor ratio 1.40, kreeg {score_duur.points}"
-
-    # Geval 3: vorige dag 65% van baseline → -2 punten
-    score_goedkoop = factor_vorige_dag(0.65)
-    assert score_goedkoop.points == -2, f"Verwachtte -2 voor ratio 0.65, kreeg {score_goedkoop.points}"
-
-    # Geval 4: vorige dag 100% van baseline → 0 punten
-    score_normaal = factor_vorige_dag(1.00)
-    assert score_normaal.points == 0, f"Verwachtte 0 voor ratio 1.00, kreeg {score_normaal.points}"
-
-    # Geval 5: integratie — forecast_one met prior_day_price duur (40 EUR/MWh,
-    # baseline is 25.40 → ratio 1.575 → +2 punten extra t.o.v. geen prior).
-    f_met_prior = forecast_one(
+    # Integratie: prior 40 EUR/MWh, baseline mediaan 26.0 -> ratio ~1.54 -> +2 punten
+    # total = 7+2 = 9; predicted = 26.0 * (1 + 9*0.02) = 26.0 * 1.18 = 30.68
+    f2 = forecast_one(
         target_dt=target,
         history=history,
         shortwave_ratio=0.45,
@@ -532,19 +530,13 @@ if __name__ == "__main__":
         temp_c=8.0,
         ttf_ratio=1.05,
         days_ahead=2,
-        prior_day_price=40.0,  # fors boven baseline → +2 punten
+        prior_day_price=40.0,
     )
-    assert f_met_prior is not None, "Forecast met prior moest lukken"
-    vorige_dag_factor = next(f for f in f_met_prior.factors if f.name == "vorige_dag")
-    assert vorige_dag_factor.points == +2, (
-        f"Verwachtte +2 voor prior 40/25.40≈1.57, kreeg {vorige_dag_factor.points}"
-    )
-    # Met prior (+2 extra punten): total_points = 7+2 = 9
-    # predicted = 25.40 × (1 + 9 × 0.02) = 25.40 × 1.18 = 29.972 ≈ 29.97
-    assert f_met_prior.total_points == 9, f"Verwachtte 9 punten, kreeg {f_met_prior.total_points}"
-    assert abs(f_met_prior.predicted - 29.97) < 0.1, (
-        f"Verwachtte ~29.97 EUR/MWh, kreeg {f_met_prior.predicted}"
-    )
+    assert f2 is not None
+    vd = next(x for x in f2.factors if x.name == "vorige_dag")
+    assert vd.points == +2, f"Verwachtte +2, kreeg {vd.points}"
+    assert f2.total_points == 9, f"Verwachtte 9 punten, kreeg {f2.total_points}"
+    assert abs(f2.predicted - 30.68) < 0.1, f"Verwachtte ~30.68, kreeg {f2.predicted}"
+    print("[ok] factor_vorige_dag: alle gevallen ok")
 
-    print("[ok] factor_vorige_dag: None→0, duur→+2, goedkoop→-2, normaal→0, integratie→ok")
-    print("\n[ok] Self-test geslaagd; v1.8-model — vorige-dag factor toegevoegd.")
+    print("\n[ok] Self-test geslaagd; v1.9 mediaan-baseline + vorige-dag factor.")
