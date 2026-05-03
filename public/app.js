@@ -753,6 +753,7 @@
               label: (item) => {
                 const idx = item.dataIndex;
                 const t = timeline[idx];
+                const isMobile = window.innerWidth < 600;
                 if (t.kind === "actual") {
                   const eurMwh = t.price;
                   return [
@@ -761,16 +762,19 @@
                     `Incl. belasting: ${fmtNum(priceCents(eurMwh, "inclusive"), 2)} ct/kWh`,
                   ];
                 }
-                // Forecast: toon voorspelling, band en factor-bijdrage
+                // Forecast: toon voorspelling, band en samenvatting.
+                // Op mobiel: geen factor-detailregels (tooltip wordt anders te groot).
                 const f = t.forecast;
                 const lines = [
                   `Voorspeld: ${fmtNum(priceCents(f.predicted), 2)} ct/kWh`,
                   `Band: ${fmtNum(priceCents(f.lower), 2)} – ${fmtNum(priceCents(f.upper), 2)} ct/kWh`,
                   `Baseline: ${fmtNum(priceCents(f.baseline), 2)} ct/kWh; ${f.total_points >= 0 ? "+" : ""}${f.total_points} punten`,
                 ];
-                (f.factors || []).forEach((fact) => {
-                  lines.push(`  ${fact.name}: ${fact.points >= 0 ? "+" : ""}${fact.points} (${fact.reason})`);
-                });
+                if (!isMobile) {
+                  (f.factors || []).forEach((fact) => {
+                    lines.push(`  ${fact.name}: ${fact.points >= 0 ? "+" : ""}${fact.points} (${fact.reason})`);
+                  });
+                }
                 return lines;
               },
             },
@@ -786,12 +790,12 @@
       note.id = "chart-holiday-legend";
       note.setAttribute("aria-hidden", "true");
       note.style.cssText =
-        "font-size:11px;color:#374151;margin:6px 0 2px;line-height:1.7;";
+        "font-size:11px;color:#374151;margin:6px 0 2px;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;line-height:1.6;";
       note.innerHTML =
-        '<span style="background:rgba(255,193,7,0.32);padding:1px 6px;border-radius:3px;margin-right:4px;">\u{1F5D3} NL feestdag</span>' +
-        '<span style="background:rgba(255,140,0,0.30);padding:1px 6px;border-radius:3px;margin-right:4px;">\u{1F30D} EU-feestdag (NL open)</span>' +
-        '<span style="background:rgba(255,193,7,0.32);outline:1px solid rgba(200,110,0,0.40);outline-offset:-1px;padding:1px 6px;border-radius:3px;margin-right:8px;">\u{1F5D3}+\u{1F30D} NL &amp; EU feestdag</span>' +
-        'Op deze dagen valt de stroomprijs vaak extra laag door verminderde vraag in buurlanden.';
+        '<span style="background:rgba(255,193,7,0.32);padding:1px 6px;border-radius:3px;white-space:nowrap;">\u{1F5D3} NL feestdag</span>' +
+        '<span style="background:rgba(255,140,0,0.30);padding:1px 6px;border-radius:3px;white-space:nowrap;">\u{1F30D} EU-feestdag (NL open)</span>' +
+        '<span style="background:rgba(255,193,7,0.32);outline:1px solid rgba(200,110,0,0.40);outline-offset:-1px;padding:1px 6px;border-radius:3px;white-space:nowrap;">\u{1F5D3}+\u{1F30D} NL &amp; EU feestdag</span>' +
+        '<span style="color:#6b7280;flex-basis:100%;">Op deze dagen valt de stroomprijs vaak extra laag door verminderde vraag in buurlanden.</span>';
       canvas.insertAdjacentElement("afterend", note);
     }
   }
@@ -896,12 +900,4 @@
       const now = new Date();
       state.dayPrices = filterTodayTomorrow(state.prices, now);
       state.nowIdx = findCurrentIndex(state.dayPrices, now);
-      applyConfigDefaults();
-      wireUI();
-      renderAll();
-    })
-    .catch((err) => {
-      console.error("Kon data niet laden", err);
-      showError("Kon data niet laden — probeer pagina te verversen");
-    });
-})();
+      applyConfigDefaults()
