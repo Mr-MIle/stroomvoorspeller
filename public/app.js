@@ -679,9 +679,9 @@
     const forecastLower = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.lower) : null);
     const forecastUpper = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.upper) : null);
 
-    // Kleur van elk voorspelling-punt op basis van regime
+    // Kleur van elk voorspelling-punt op basis van prijsniveau (zelfde schaal als actuele punten)
     const forecastPointColors = timeline.map((t) =>
-      t.kind === "forecast" ? REGIME_COLOR[getForecastRegime(t.forecast)] : "transparent"
+      t.kind === "forecast" ? pointColor(t.forecast.predicted) : "transparent"
     );
 
     // Dataset 4: voorspelde lijn (gestippeld)
@@ -791,26 +791,21 @@
       },
     });
 
-    // Regime-legenda + feestdag-noot (éénmalig aanmaken)
+    // Prijs-legenda + feestdag-noot (éénmalig aanmaken)
     if (!document.getElementById("chart-regime-legend")) {
       const wrap = document.createElement("div");
       wrap.id = "chart-regime-legend";
       wrap.setAttribute("aria-hidden", "true");
       wrap.style.cssText = "margin:6px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;line-height:1.8;";
-      const dot = (color, label, sub) =>
+      const dot = (color, label) =>
         `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
         `<span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></span>` +
-        `<strong>${label}</strong> <span style="color:#6b7280;">${sub}</span></span>`;
-      const lineItem = (color, dash, label) =>
-        `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#374151;">` +
-        `<svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="${color}" stroke-width="2" ${dash ? 'stroke-dasharray="4 3"' : ""}></line></svg>` +
-        `${label}</span>`;
+        `<strong>${label}</strong></span>`;
       wrap.innerHTML =
-        lineItem("#2e75b6", false, "werkelijke prijs") +
-        lineItem("rgba(46,117,182,0.6)", true, "voorspelling") +
-        dot("#0f6cbd", "Normaal", "±3 ct/kWh") +
-        dot("#f59e0b", "Oversupply", "±5 ct/kWh — veel zon of wind") +
-        dot("#ef4444", "Schaarste", "±2 ct/kWh — koud & windstil") +
+        dot("#2f9e44", "Goedkoop") +
+        dot("#d4a017", "Normaal") +
+        dot("#c92a2a", "Duur") +
+        dot("#0f6cbd", "Nu") +
         `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken in de grafiek zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag.</span>`;
       (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", wrap);
     }
@@ -921,7 +916,4 @@
       renderAll();
     })
     .catch((err) => {
-      console.error("[stroomvoorspeller] Fatal:", err);
-      showError();
-    });
-})();
+      console.error("[stroomvoorspeller] Fat
