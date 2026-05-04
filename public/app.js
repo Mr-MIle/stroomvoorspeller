@@ -766,7 +766,6 @@
               label: (item) => {
                 const idx = item.dataIndex;
                 const t = timeline[idx];
-                const isMobile = window.innerWidth < 600;
                 if (t.kind === "actual") {
                   const eurMwh = t.price;
                   return [
@@ -775,24 +774,16 @@
                     `Incl. belasting: ${fmtNum(priceCents(eurMwh, "inclusive"), 2)} ct/kWh`,
                   ];
                 }
-                // Forecast: toon regime, voorspelling en verwachte fout.
-                // Op mobiel: geen factor-detailregels (tooltip wordt anders te groot).
                 const f = t.forecast;
                 const regime = getForecastRegime(f);
                 const regimeLbl = { oversupply: "Oversupply ☀️", schaarste: "Schaarste ❄️", normaal: "Normaal" }[regime];
                 const halfBand = (f.upper - f.lower) / 2;
-                const lines = [
+                return [
                   `Regime: ${regimeLbl}`,
                   `Voorspeld: ${fmtNum(priceCents(f.predicted), 2)} ct/kWh`,
                   `Verwachte fout: ±${fmtNum(halfBand / 10, 1)} ct/kWh`,
-                  `Baseline: ${fmtNum(priceCents(f.baseline), 2)} ct/kWh; ${f.total_points >= 0 ? "+" : ""}${f.total_points} punten`,
+                  `Baseline: ${fmtNum(priceCents(f.baseline), 2)} ct/kWh`,
                 ];
-                if (!isMobile) {
-                  (f.factors || []).forEach((fact) => {
-                    lines.push(`  ${fact.name}: ${fact.points >= 0 ? "+" : ""}${fact.points} (${fact.reason})`);
-                  });
-                }
-                return lines;
               },
             },
           },
