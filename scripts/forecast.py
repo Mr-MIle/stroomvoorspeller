@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+import math
 
 
 # Officiële NL vrije dagen 2025-2027.
@@ -60,7 +61,8 @@ POINT_WEIGHT = 0.02
 # weinig lijken bij te dragen, en het volledige model blijft de productiekeuze.
 #
 # v1.8: "vorige_dag" toegevoegd — zie factor_vorige_dag() hieronder.
-ENABLED_FACTORS = {"zon", "wind", "temperatuur", "gas", "dagtype", "uurpatroon", "vorige_dag"}
+# v1.10: "nonlinear" toegevoegd — zie nonlinear_correction() hieronder.
+ENABLED_FACTORS = {"zon", "wind", "temperatuur", "gas", "dagtype", "uurpatroon", "vorige_dag", "nonlinear"}
 
 # v1.6: zondag-boost voor weersfactoren.
 # Backtest v3 toonde een hardnekkige bias van +27 EUR/MWh op zondag-uren die niet
@@ -71,6 +73,14 @@ ENABLED_FACTORS = {"zon", "wind", "temperatuur", "gas", "dagtype", "uurpatroon",
 # alleen op zondag de zon- en wind-factoren met deze multiplier; andere dagen
 # ongewijzigd. Andere factoren (temperatuur, gas, dagtype, uurpatroon) blijven 1x.
 ZONDAG_BOOST = 2
+
+# ---- Marktregimes (v1.7 sectie 5) ----
+# Het model detecteert eerst het regime, dat bepaalt welke aanvullende
+# correcties van toepassing zijn (o.a. niet-lineaire oversupply-factor).
+REGIME_NORMAL     = "normaal"       # Normaal Evenwicht
+REGIME_OVERSUPPLY = "oversupply"    # Hernieuwbare Oversupply
+REGIME_SCARCITY   = "schaarste"     # Schaarste / Dunkelflaute
+REGIME_TRANSITION = "transitie"     # Transitie / Volatiliteit (toekomstig)
 
 
 @dataclass
@@ -91,6 +101,8 @@ class Forecast:
     predicted: float           # EUR/MWh
     uncertainty_pct: float     # 0..1
     days_ahead: int
+    regime: str = REGIME_NORMAL          # v1.7: gedetecteerd marktregime
+    extreme_event_prob: float = 0.0      # v1.7: kans op negatieve prijs (0..1)
 
     @property
     def lower(self) -> float:
@@ -362,6 +374,88 @@ def factor_vorige_dag(prior_ratio: Optional[float]) -> FactorScore:
     return FactorScore("vorige_dag", pts, reason)
 
 
+# ---- Regime detectie (v1.7 sectie 5) ----
+
+def detect_regime(solar_ratio: float, wind_ms: float, temp_c: float, dt: datetime) -> str:
+    """
+    Detecteer marktregime voor een uur op basis van zon, wind en temperatuur.
+
+    Regime 3 (Schaarste/Dunkelflaute): alle drie drempels gelijktijdig overschreden.
+      solar < 60% EN wind < 5 m/s EN temp < 8°C — gasprijs bepaalt de markt.
+    Regime 2 (Oversupply): sterke hernieuwbare productie + lage vraag.
+      (solar > 140% OF wind > 12 m/s) EN (weekend/feestdag OF temp > 10°C).
+    Regime 1 (Normaal): alles overig.
+    Regime 4 (Transitie): vereist Δ-weersverwachting als input — nog niet geïmplementeerd.
+    """
+    is_low_demand = dt.weekday() >= 5 or is_feestdag(dt) or temp_c > 10.0
+
+    # Schaarste: lage zon + windstil + koud
+    if solar_ratio < 0.60 and wind_ms < 5.0 and temp_c < 8.0:
+        return REGIME_SCARCITY
+
+    # Oversupply: veel hernieuwbaar + weinig vraag
+    if (solar_ratio > 1.40 or wind_ms > 12.0) and is_low_demand:
+        return REGIME_OVERSUPPLY
+
+    return REGIME_NORMAL
+
+
+# ---- Factor 8: Niet-lineaire oversupply correctie (v1.7 sectie 8) ----
+# De lineaire factoren zon (-3 max) en wind (-3 max) onderschatten extreme events.
+# Bij solar_ratio = 2.0 of wind = 20 m/s drukt de markt de prijs exponentieel omlaag.
+# Deze correctie is ALLEEN actief in REGIME_OVERSUPPLY; in andere regimes 0.
+#
+# Formule (kwadratisch, bewust conservatief gekalibreerd):
+#   solar_penalty = -(solar_ratio - 1.5)² × 8   [punten] (only if > 1.5)
+#   wind_penalty  = -(wind_ms - 16)² × 0.25      [punten] (only if > 16 m/s)
+#
+# Effect op de voorspelling (POINT_WEIGHT = 0.02):
+#   solar_ratio = 1.8 → solar_penalty = -(0.3)² × 8 = -0.72 → -1 pt → -2% baseline
+#   solar_ratio = 2.0 → solar_penalty = -(0.5)² × 8 = -2.0  → -2 pt → -4% baseline
+#   wind_ms = 20     → wind_penalty  = -(4)² × 0.25  = -4.0  → -4 pt → -8% baseline
+
+def nonlinear_correction(solar_ratio: float, wind_ms: float, regime: str) -> FactorScore:
+    """Niet-lineaire correctie voor extreme oversupply (v1.7 sectie 8)."""
+    if regime != REGIME_OVERSUPPLY:
+        return FactorScore("nonlinear", 0, "n.v.t.")
+
+    solar_extra = -(max(0.0, solar_ratio - 1.5) ** 2) * 8.0
+    wind_extra  = -(max(0.0, wind_ms - 16.0) ** 2) * 0.25
+    total_float = solar_extra + wind_extra
+    pts = round(total_float)
+
+    parts = []
+    if solar_extra < -0.05:
+        parts.append(f"zon {solar_extra:.1f}p")
+    if wind_extra < -0.05:
+        parts.append(f"wind {wind_extra:.1f}p")
+    reason = "oversupply niet-lineair: " + (", ".join(parts) if parts else "grensgeval")
+    return FactorScore("nonlinear", pts, reason)
+
+
+# ---- Extreme event probabiliteit (v1.7 sectie 9) ----
+
+def calc_extreme_event_prob(solar_ratio: float, wind_ms: float, regime: str) -> float:
+    """
+    Kans op negatieve EPEX-prijs (0..0.95) bij extreme oversupply (v1.7 sectie 9).
+
+    Logistische functie op severity = max(solar_ratio/1.4, wind_ms/12).
+    Drempel: severity 1.2 → P ≈ 50%  (solar ≈ 1.68 of wind ≈ 14.4 m/s).
+    Alleen zinvol in REGIME_OVERSUPPLY; anders 0.0.
+    """
+    if regime != REGIME_OVERSUPPLY:
+        return 0.0
+    severity = max(
+        solar_ratio / 1.4 if solar_ratio > 1.4 else 0.0,
+        wind_ms / 12.0 if wind_ms > 12.0 else 0.0,
+    )
+    if severity <= 0.0:
+        return 0.0
+    x = 2.5 * (severity - 1.2)
+    p = 1.0 / (1.0 + math.exp(-x))
+    return round(min(p, 0.95), 3)
+
+
 # ---- Onzekerheidsband ----
 
 def uncertainty(days_ahead: int, abs_points: int) -> float:
@@ -393,6 +487,9 @@ def forecast_one(
     if baseline is None:
         return None
 
+    # v1.7: regime detectie — bepaal marktcontext vóór factorenberekening
+    regime = detect_regime(shortwave_ratio, wind_ms, temp_c, target_dt)
+
     # Factor 7: vorige dag — normaliseer de prior_price op zijn eigen baseline.
     prior_ratio: Optional[float] = None
     if prior_day_price is not None:
@@ -409,6 +506,7 @@ def forecast_one(
         factor_dagtype(target_dt),
         factor_uurpatroon(target_dt),
         factor_vorige_dag(prior_ratio),
+        nonlinear_correction(shortwave_ratio, wind_ms, regime),  # v1.7
     ]
 
     # v1.6: zondag-boost. Op zondag tellen zon en wind ZWAARDER (×ZONDAG_BOOST)
@@ -433,6 +531,7 @@ def forecast_one(
     total = sum(f.points for f in factors if f.name in ENABLED_FACTORS)
     predicted = baseline * (1 + total * POINT_WEIGHT)
     unc = uncertainty(days_ahead, abs(total))
+    ep = calc_extreme_event_prob(shortwave_ratio, wind_ms, regime)  # v1.7
 
     return Forecast(
         target_iso=target_dt.isoformat(),
@@ -442,6 +541,8 @@ def forecast_one(
         predicted=round(predicted, 2),
         uncertainty_pct=round(unc, 4),
         days_ahead=days_ahead,
+        regime=regime,
+        extreme_event_prob=ep,
     )
 
 
@@ -539,4 +640,61 @@ if __name__ == "__main__":
     assert abs(f2.predicted - 30.68) < 0.1, f"Verwachtte ~30.68, kreeg {f2.predicted}"
     print("[ok] factor_vorige_dag: alle gevallen ok")
 
-    print("\n[ok] Self-test geslaagd; v1.9 mediaan-baseline + vorige-dag factor.")
+    # Test v1.7/v1.10: regime detectie
+    # Donderdag werkdag winter
+    thu_winter = datetime(2025, 12, 11, 14, 0)
+    assert detect_regime(1.0, 7.0, 5.0, thu_winter) == REGIME_NORMAL, "Verwachtte normaal"
+    # Oversupply: zonnige zaterdag (lage vraag, hoge zon)
+    sat_sunny = datetime(2025, 6, 14, 13, 0)  # zaterdag
+    assert detect_regime(1.6, 8.0, 18.0, sat_sunny) == REGIME_OVERSUPPLY, "Verwachtte oversupply"
+    # Dunkelflaute: donker + windstil + koud
+    assert detect_regime(0.4, 3.0, 2.0, thu_winter) == REGIME_SCARCITY, "Verwachtte schaarste"
+    print("[ok] detect_regime: alle gevallen ok")
+
+    # Test v1.10: nonlinear_correction
+    nl_normal = nonlinear_correction(1.0, 8.0, REGIME_NORMAL)
+    assert nl_normal.points == 0, f"Verwachtte 0 bij normaal regime, kreeg {nl_normal.points}"
+    nl_oversupply_mild = nonlinear_correction(1.5, 10.0, REGIME_OVERSUPPLY)
+    assert nl_oversupply_mild.points == 0, f"Verwachtte 0 aan drempel, kreeg {nl_oversupply_mild.points}"
+    nl_oversupply_extreme = nonlinear_correction(2.0, 8.0, REGIME_OVERSUPPLY)
+    # -(2.0-1.5)^2 * 8 = -2.0 → round(-2.0) = -2
+    assert nl_oversupply_extreme.points == -2, f"Verwachtte -2 bij solar=2.0, kreeg {nl_oversupply_extreme.points}"
+    print("[ok] nonlinear_correction: alle gevallen ok")
+
+    # Test v1.10: calc_extreme_event_prob
+    assert calc_extreme_event_prob(1.0, 8.0, REGIME_NORMAL) == 0.0
+    # Oversupply maar net boven drempel: severity = 1.6/1.4 ≈ 1.14 → x = 2.5*(1.14-1.2) = -0.15 → P ≈ 0.46
+    ep_mild = calc_extreme_event_prob(1.6, 8.0, REGIME_OVERSUPPLY)
+    assert 0.3 < ep_mild < 0.6, f"Verwachtte ~0.46, kreeg {ep_mild}"
+    # Extreme: solar 2.0 → severity = 2.0/1.4 ≈ 1.43 → x = 2.5*(1.43-1.2) ≈ 0.57 → P ≈ 0.64
+    ep_extreme = calc_extreme_event_prob(2.0, 8.0, REGIME_OVERSUPPLY)
+    assert ep_extreme > 0.55, f"Verwachtte >0.55, kreeg {ep_extreme}"
+    print(f"[ok] calc_extreme_event_prob: mild={ep_mild:.2f}, extreme={ep_extreme:.2f}")
+
+    # Integratie: regime + nonlinear in forecast_one
+    # Zonnige zomerzondag, oversupply, solar_ratio=1.8
+    # Zondag: detect_regime(1.8, 8.0, 18.0, zomerzondag) → OVERSUPPLY (1.8>1.4, zaterdag/zondag)
+    # nonlinear: -(1.8-1.5)^2 * 8 = -0.72 → 0 punten (round(-0.72)=-1)
+    # Wacht: round(-0.72) = -1 in Python (banker's rounding voor exact 0.5, maar -0.72 → -1)
+    zomerzondag = datetime(2026, 7, 5, 12, 0)  # zondag
+    history_zomer = [
+        {"time": f"2026-06-2{i}T12:00:00", "price": 20.0} for i in range(1, 6)  # zon werkdagen
+    ] + [
+        {"time": "2026-06-27T12:00:00", "price": 15.0},
+        {"time": "2026-06-28T12:00:00", "price": 15.0},
+    ]
+    f_oversupply = forecast_one(
+        target_dt=zomerzondag,
+        history=history_zomer,
+        shortwave_ratio=1.8,
+        wind_ms=8.0,
+        temp_c=18.0,
+        ttf_ratio=1.0,
+        days_ahead=1,
+    )
+    assert f_oversupply is not None
+    assert f_oversupply.regime == REGIME_OVERSUPPLY, f"Verwachtte oversupply, kreeg {f_oversupply.regime}"
+    assert f_oversupply.extreme_event_prob > 0.3, f"Verwachtte EP > 0.3, kreeg {f_oversupply.extreme_event_prob}"
+    print(f"[ok] forecast_one oversupply: regime={f_oversupply.regime}, EP={f_oversupply.extreme_event_prob:.2f}")
+
+    print("\n[ok] Self-test geslaagd; v1.10 regime-detectie + niet-lineaire correctie.")
