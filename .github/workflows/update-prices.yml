@@ -3,7 +3,7 @@ name: Update prijzen
 # Wanneer draait deze workflow?
 #  - elke 3 uur, op het hele uur (UTC)
 #  - na elke push naar main (handig om de cache te verversen)
-#  - handmatig, via 'Run workflow' in de GitHub UI
+#  - handmatig, via Run workflow in de GitHub UI
 on:
   schedule:
     - cron: "5 */3 * * *"
@@ -40,18 +40,27 @@ jobs:
         # Mag falen zonder dat de prijzen-update zelf faalt (continue-on-error).
         # Bij Open-Meteo of Yahoo downtime krijgen bezoekers de actuele day-ahead
         # prijzen wel; alleen de 5-7d voorspelling ontbreekt dan tijdelijk.
+        # Schrijft ook 03-data/prediction_log.json (nieuwe entries, actual=null).
         continue-on-error: true
         run: |
           python scripts/run_forecast.py
 
-      - name: Commit & push als er iets veranderd is
+      - name: Vul actuals in prediction log
+        # Zoekt entries in prediction_log.json waar actual==null en de prijs
+        # inmiddels beschikbaar is in prices.json. Nodig voor bias-correctie.
+        continue-on-error: true
+        run: |
+          python scripts/update_log.py
+
+      - name: Commit en push als er iets veranderd is
         run: |
           git config user.name "stroomvoorspeller-bot"
           git config user.email "bot@stroomvoorspeller.nl"
           git add public/data/prices.json public/data/forecast.json 2>/dev/null || true
+          git add 03-data/prediction_log.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
-            git commit -m "auto: update prijzen + voorspelling $(date -u +'%Y-%m-%dT%H:%MZ')"
+            git commit -m "auto: update prijzen + voorspelling $(date -u +%Y-%m-%dT%H:%MZ)"
             git push
           else
-            echo "Geen wijzigingen — niets te committen."
+            echo "Geen wijzigingen - niets te committen."
           fi
