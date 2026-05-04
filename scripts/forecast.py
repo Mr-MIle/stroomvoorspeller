@@ -421,17 +421,17 @@ def detect_regime(solar_ratio: float, wind_ms: float, temp_c: float, dt: datetim
     Regime 3 (Schaarste/Dunkelflaute): alle drie drempels gelijktijdig overschreden.
       solar < 60% EN wind < 5 m/s EN temp < 8°C — gasprijs bepaalt de markt.
     Regime 2 (Oversupply): sterke hernieuwbare productie + lage vraag.
-      - Zon-trigger: solar > 140% EN uur 7-20  (v1.12: beperkt tot daglichturen;
-        nacht-uren op zonnige dagen hebben juist HOGE prijzen door ramp-up vraag).
+      - Zon-trigger: solar > 140% EN uur 8-18  (v1.12: daglichturen; v1.13:
+        verkleind tot 8-18h omdat uren 19-20h juist HOGE avondprijzen hebben
+        door ramp-up vraag na zonsondergang — bias was −15 tot −22 EUR/MWh).
       - Wind-trigger: wind > 14 m/s AND (weekend/feestdag/warm) 24/7  (v1.12:
         drempel verhoogd van 12→14 m/s om fout-positieven te verminderen).
     Regime 1 (Normaal): alles overig.
     Regime 4 (Transitie): vereist Δ-weersverwachting als input — nog niet geïmplementeerd.
 
-    v1.12: backtest (mrt-mei 2026) toonde dat het toewijzen van OVERSUPPLY aan alle
-    24u van een zonnige dag een negatieve bias gaf voor nacht-uren (werkelijk 118
-    EUR/MWh, model schatte te laag). De zon-trigger is nu beperkt tot uren 7-20h.
-    Wind-oversupply geldt nog steeds 24/7 maar bij hogere drempel (14 m/s).
+    v1.12: backtest (mrt-mei 2026): zon-trigger beperkt tot 7-20h, winddrempel 14 m/s.
+    v1.13: zon-trigger verder ingeperkt naar 8-18h. Backtest toonde −15 tot −22 EUR/MWh
+    bias op uren 19-20h (hoge avondprijzen, kortere baseline trok voorspelling te laag).
     """
     is_low_demand = dt.weekday() >= 5 or is_feestdag(dt) or temp_c > 10.0
 
@@ -440,7 +440,7 @@ def detect_regime(solar_ratio: float, wind_ms: float, temp_c: float, dt: datetim
         return REGIME_SCARCITY
 
     # Oversupply zon: alleen tijdens daglichturen (zon heeft 's nachts geen effect)
-    if solar_ratio > 1.40 and 7 <= dt.hour <= 20 and is_low_demand:
+    if solar_ratio > 1.40 and 8 <= dt.hour <= 18 and is_low_demand:  # v1.13: 8-18h
         return REGIME_OVERSUPPLY
 
     # Oversupply wind: geldt 24/7, maar hogere drempel (14 m/s) om fout-positieven
