@@ -916,4 +916,7 @@
       renderAll();
     })
     .catch((err) => {
-      console.error("[stroomvoorspeller] Fat
+      console.error("[stroomvoorspeller] Fatal:", err);
+      showError();
+    });
+})();
