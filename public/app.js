@@ -917,6 +917,7 @@
       state.dayPrices = filterTodayTomorrow(state.prices, now);
       state.nowIdx = findCurrentIndex(state.dayPrices, now);
       applyConfigDefaults();
+      wireUI();
       renderAll();
     })
     .catch((err) => {
