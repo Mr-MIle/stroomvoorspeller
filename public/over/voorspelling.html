@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Over de voorspelling — Stroomvoorspeller.nl</title>
-  <meta name="description" content="Hoe werkt de 5-7 dagen prijsvoorspelling van stroomvoorspeller.nl? Een transparant 6-puntenmodel dat historische patronen combineert met huidige weers- en marktinzichten." />
+  <meta name="description" content="Hoe werkt de 5-7 dagen prijsvoorspelling van stroomvoorspeller.nl? Historische patronen, weersinvloed en marktregimes in begrijpelijke taal." />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E" />
   <link rel="canonical" href="https://stroomvoorspeller.nl/over/voorspelling" />
@@ -13,7 +13,7 @@
   <meta property="og:locale" content="nl_NL" />
   <meta property="og:site_name" content="Stroomvoorspeller.nl" />
   <meta property="og:title" content="Over de voorspelling — Stroomvoorspeller.nl" />
-  <meta property="og:description" content="Hoe werkt de 5-7 dagen prijsvoorspelling? Een transparant 6-puntenmodel dat historische patronen combineert met weers- en marktinzichten." />
+  <meta property="og:description" content="Hoe werkt de 5-7 dagen prijsvoorspelling? Historische patronen, weersinvloed en marktregimes uitgelegd." />
   <meta property="og:url" content="https://stroomvoorspeller.nl/over/voorspelling" />
   <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
   <meta property="og:image:width" content="1200" />
@@ -22,7 +22,7 @@
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Over de voorspelling — Stroomvoorspeller.nl" />
-  <meta name="twitter:description" content="Hoe het 6-puntenmodel werkt: historische patronen plus weers- en marktinzichten, met onzekerheidsband." />
+  <meta name="twitter:description" content="Hoe het voorspellingsmodel werkt: historische patronen plus weers- en marktinzichten, met onzekerheidsband." />
   <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
 
   <link rel="stylesheet" href="/styles.css" />
@@ -41,11 +41,11 @@
       {
         "@type": "TechArticle",
         "headline": "Over de voorspelling",
-        "description": "Hoe het 6-puntenmodel van stroomvoorspeller.nl werkt: historische patronen plus huidige weers- en marktinzichten, met expliciete onzekerheidsband.",
+        "description": "Hoe het voorspellingsmodel van stroomvoorspeller.nl werkt: historische patronen, weersinvloed en marktregimes.",
         "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
         "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
         "datePublished": "2026-04-29",
-        "dateModified": "2026-04-29",
+        "dateModified": "2026-05-04",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/over/voorspelling",
@@ -77,255 +77,213 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Over de voorspelling</h1>
-    <p class="legal-meta">Modelversie 1.6 · Laatst bijgewerkt: 29 april 2026</p>
+    <p class="legal-meta">Modelversie 1.9 · Bijgewerkt: 4 mei 2026</p>
 
     <section>
-      <h2>Korte versie</h2>
+      <h2>Kort samengevat</h2>
       <p class="legal-summary">
-        De voorspelling kijkt naar <strong>historische patronen</strong> uit de
-        afgelopen 1–2 weken (welk uur van de dag, welke dag van de week, welk
-        prijsniveau) en probeert die te corrigeren met <strong>huidige
-        inzichten</strong>: hoeveel zon en wind verwacht we, hoe koud wordt het,
-        wat doet de gasprijs, en is het een werkdag of weekend. Bij
-        <strong>extreme gebeurtenissen</strong> — een PV-overschot dat de prijs
-        ver onder nul drukt, een gascrisis of geopolitieke onrust — vallen
-        werkelijke prijzen substantieel buiten de modelband en is de voorspelling
-        in die uren onbetrouwbaar. Daarom tonen we altijd een onzekerheidsband.
+        De voorspelling kijkt naar <strong>wat de prijs de afgelopen 1–2 weken op hetzelfde uur deed</strong>
+        en past dat aan op basis van het verwachte weer (zon, wind, temperatuur), de gasprijs en het
+        type dag. Daarbovenop herkent het model drie <strong>marktregimes</strong>: een gewone dag,
+        een dag met veel hernieuwbare energie (oversupply) en een schaarse dag. Bij oversupply — veel
+        zon en wind tegelijk, zeker in het weekend — kunnen prijzen negatief worden tot ver onder nul;
+        dat is ook het moment waarop de fout het grootst is. We tonen daarom altijd een onzekerheidsband.
       </p>
     </section>
 
     <section>
-      <h2>Voor welke uren?</h2>
-      <ul>
-        <li>
-          <strong>Vandaag en morgen</strong>: officiële, definitieve EPEX
-          day-ahead-prijzen (gepubliceerd door ENTSO-E). Geen voorspelling, geen
-          schatting — exacte cijfers.
-        </li>
-        <li>
-          <strong>Overmorgen tot en met 7 dagen vooruit</strong>: eigen schatting,
-          gemaakt met het hieronder beschreven model. Voor deze uren tonen we
-          ook de onzekerheidsband.
-        </li>
-      </ul>
+      <h2>Welke uren zijn een voorspelling?</h2>
+      <p>
+        <strong>Vandaag en morgen</strong> zijn officiële EPEX day-ahead-prijzen, gepubliceerd door
+        ENTSO-E. Geen schatting — exacte cijfers.
+      </p>
+      <p>
+        <strong>Overmorgen tot zeven dagen vooruit</strong> zijn modelschattingen. Hoe verder vooruit,
+        hoe onzekerder — het weer is op dag 7 veel lastiger te voorspellen dan op dag 2.
+      </p>
     </section>
 
     <section>
-      <h2>Hoe werkt het in twee stappen?</h2>
+      <h2>Hoe werkt het model?</h2>
 
-      <h3>Stap 1 — baseline uit historie</h3>
+      <h3>Stap 1 — Beginprijs uit de afgelopen week</h3>
       <p>
-        Voor elk toekomstig uur (bijvoorbeeld donderdag 1 mei om 19:00) berekenen
-        we eerst een <strong>basisprijs</strong>: het gemiddelde van de werkelijke
-        prijzen op datzelfde tijdstip op vergelijkbare dagen in de afgelopen week.
-        Voor een werkdag-19:00 zijn dat typisch 5 datapunten (maandag t/m
-        vrijdag van afgelopen week). Voor zaterdag- en zondag-uren kijken we
-        14 dagen terug, omdat 7 dagen maar 1 datapunt per uur oplevert en dat te
-        ruisig is.
+        Voor elk toekomstig uur zoeken we de werkelijke prijzen op van
+        <em>hetzelfde uur op vergelijkbare dagen de afgelopen week</em>. De mediaan daarvan wordt de
+        <strong>basisprijs</strong>. Die absorbeert het dagelijkse patroon (nacht goedkoop,
+        ochtend en avond duurder, middag soms goedkoop door zon) zonder dat we parameters hoeven
+        te kiezen.
       </p>
       <p>
-        Deze baseline absorbeert het basis-uurpatroon (nacht goedkoop, ochtend-
-        en avondspits duur, middag soms goedkoop door zon) en het meest recente
-        prijsregime, zonder dat we daar zelf parameters voor hoeven te kiezen.
+        Herkent het model een dag als <strong>oversupply</strong>? Dan kijken we voor de middaguren
+        maar 2 dagen terug in plaats van 7. De reden: zonnige lentedagen veranderen snel — een
+        mediaan van vorige week geeft dan een te hoge startprijs.
       </p>
 
-      <h3>Stap 2 — zes factoren corrigeren de baseline</h3>
+      <h3>Stap 2 — Zes factoren stellen bij</h3>
       <p>
-        Boven op de baseline berekenen zes factoren elk een score in
-        <strong>punten</strong>. Het totaal vertaalt zich in een procentuele
-        afwijking van de baseline:
+        Zes factoren geven elk een score in <strong>punten</strong>. Het totaal verschuift de
+        basisprijs met 1,5% per punt:
       </p>
       <p class="legal-formula">
-        voorspelde_prijs = baseline × (1 + totaal_punten × 2%)
+        voorspelling = basisprijs × (1 + totaalpunten × 1,5%)
       </p>
-      <p>
-        Op zondag tellen de twee weersfactoren (zon en wind) extra zwaar (×2),
-        omdat de basisvraag op zondag lager is en weersinvloed de prijs sterker
-        beweegt: een zonnige+winderige zondag drukt de prijs diep, een
-        bewolkte+windstille zondag stuwt hem op.
-      </p>
+      <p>De zes factoren:</p>
+      <ol>
+        <li>
+          <strong>Zonproductie</strong> — bewolkt geeft plus (duurder), zonnig geeft min.
+          Het model kijkt per uur naar de verwachte straling — op een heldere dag kan het middaguur
+          dubbel zo zonnig zijn als het daggemiddelde, waardoor de prijs op dat uur harder reageert
+          dan op de rest van de dag.
+        </li>
+        <li>
+          <strong>Windproductie</strong> — windstil geeft plus, stormachtig geeft min.
+        </li>
+        <li>
+          <strong>Temperatuur</strong> — vorst geeft een grote plus (warmtepompen op vol vermogen);
+          aangenaam voorjaarsweer geeft een minpunt.
+        </li>
+        <li>
+          <strong>Gasprijs (TTF)</strong> — vergelijkt de actuele gasprijs met het 30-daags gemiddelde.
+          Hoge gasprijs duwt de stroomprijs op, want gascentrales bepalen vaak het rangniveau.
+        </li>
+        <li>
+          <strong>Type dag</strong> — zaterdag en feestdagen scoren min, omdat de vraag dan lager is.
+          Werkdagen zitten al impliciet in de basisprijs.
+        </li>
+        <li>
+          <strong>Uurcorrectie</strong> — kleine seizoenscorrectie: de avondspits weegt in de winter
+          zwaarder dan in de zomer.
+        </li>
+      </ol>
+      <p>Klik in de grafiek op een voorspeld uur om te zien hoe elke factor bijdraagt.</p>
     </section>
 
     <section>
-      <h2>De zes factoren</h2>
-      <ol>
-        <li>
-          <strong>Zonproductie</strong> (−3 tot +3 punten) — bewolkte dagen geven
-          plus-punten (duurder), zonnige dagen min (goedkoper). Bron:
-          Open-Meteo voorspelling, vergeleken met het seizoennormale stralingsniveau.
-        </li>
-        <li>
-          <strong>Windproductie</strong> (−3 tot +3 punten) — windstille dagen
-          plus, stormachtige dagen min. Bron: Open-Meteo windsnelheid op rotorhoogte (100 m).
-        </li>
-        <li>
-          <strong>Temperatuur</strong> (−1 tot +2 punten) — vorst geeft een grote
-          plus (warmtepompen draaien op vol vermogen), aangenaam weer (18-26 °C)
-          geeft een minpunt (lagere ruimtevraag, mensen buiten, zon op piek).
-          Bron: Open-Meteo daggemiddelde.
-        </li>
-        <li>
-          <strong>Gasprijs (TTF)</strong> (−2 tot +2 punten) — vergelijkt de
-          actuele gasprijs met het 30-dagen-gemiddelde. Hoge gasprijs duwt de
-          stroomprijs op (gascentrales zetten vaak het marginale prijsniveau).
-          Bron: Yahoo Finance ticker TTF=F.
-        </li>
-        <li>
-          <strong>Type dag</strong> (−2 tot 0 punten) — zaterdag −1, zondag −2,
-          feestdag −2. Werkdagen zitten al impliciet in de baseline.
-        </li>
-        <li>
-          <strong>Uurpatroon-correctie</strong> (−2 tot +2 punten) — kleine
-          seizoencorrectie per uur (winter avondspits zwaarder dan zomer-avond,
-          zomer-middag goedkoper door zon).
-        </li>
-      </ol>
+      <h2>Drie marktregimes</h2>
       <p>
-        Klik in de grafiek op een voorspeld uur om de bijdrage per factor te zien.
-        De volledige drempelwaarden staan in
-        <a href="https://github.com/mr-mile/stroomvoorspeller/blob/main/public/data/config.json">
-          <code>config.json</code></a> en kunnen zonder code-wijziging worden bijgesteld.
+        Het model herkent drie situaties die ieder een andere dynamiek hebben:
+      </p>
+      <ul>
+        <li>
+          <strong style="color:#0f6cbd;">Normaal</strong> — de gebruikelijke dagelijkse prijsschommeling.
+          Gemiddelde fout: ±3 ct/kWh.
+        </li>
+        <li>
+          <strong style="color:#f59e0b;">Oversupply ☀️</strong> — veel zon en/of wind,
+          gecombineerd met lage vraag (weekend of feestdag). De stroomprijs kan dan uur voor uur
+          sterk dalen of zelfs negatief worden. Het model herkent dit patroon en past de voorspelling
+          fors neerwaarts aan, maar de werkelijke daling kan nog extremer zijn.
+          Gemiddelde fout: ±5 ct/kWh.
+        </li>
+        <li>
+          <strong style="color:#ef4444;">Schaarste ❄️</strong> — koud weer met weinig zon en wind.
+          Prijzen liggen dan structureel hoger. Relatief goed te voorspellen.
+          Gemiddelde fout: ±2 ct/kWh.
+        </li>
+      </ul>
+      <p>
+        In de grafiek zie je het regime als kleur van de voorspellingspunten: blauw is normaal,
+        geel is oversupply, rood is schaarste.
       </p>
     </section>
 
     <section>
       <h2>Onzekerheidsband</h2>
       <p>
-        Bij elke voorspelling tonen we een <strong>onzekerheidsband</strong>: een
-        bandbreedte waarbinnen de werkelijke prijs naar verwachting valt. De band
-        is breder bij grotere afwijkingen van de baseline en bij verdere horizon:
+        Bij elke voorspelling tonen we een <strong>schaduwzone</strong>: het gebied waarbinnen de
+        prijs naar verwachting valt. De band wordt breder naarmate:
       </p>
       <ul>
-        <li>Basis: ±10% — onvermijdelijke ruis bij elke voorspelling.</li>
-        <li>+2% per dag verder vooruit — weersvoorspellingen worden snel onzekerder.</li>
-        <li>+1% per absoluut punt — extreme totalen (sterk + of −) zijn zeldzamer en daardoor onzekerder.</li>
+        <li>het verder vooruit is (dag 7 is onzekerder dan dag 2),</li>
+        <li>de totaalscore extremer is (sterk positief of negatief is zeldzamer),</li>
+        <li>het regime op oversupply staat (grotere prijsuitslagen mogelijk).</li>
       </ul>
       <p>
-        Deze band beschrijft normale variatie. Zwarte zwanen (zie hieronder) vallen
-        ver buiten de band en zijn met dit model niet te voorspellen.
-      </p>
-    </section>
-
-    <section>
-      <h2>Wanneer klopt de voorspelling niet?</h2>
-      <p>
-        We zijn eerlijk over waar het model tekortschiet. Er zijn drie hoofdcategorieën:
-      </p>
-      <ul>
-        <li>
-          <strong>Extreme PV-overschot-uren</strong>: zonnige weekends in lente of
-          zomer waar de zonne-opwekking de vraag massaal overstijgt. Prijzen kunnen
-          dan tot −400 EUR/MWh zakken. Het model voorziet de richting (negatief) wel,
-          maar niet de magnitude.
-        </li>
-        <li>
-          <strong>Gascrises en geopolitieke schokken</strong>: een aardgasleiding-
-          incident, sancties, koude-inval in heel Europa. Dat verschuift het hele
-          prijsniveau in dagen tijd buiten de modelband.
-        </li>
-        <li>
-          <strong>Ongeplande centrale-uitval</strong>: als een grote centrale of
-          interconnector wegvalt, schiet de prijs lokaal omhoog. Geen openbare
-          realtime-data bekend om dit in te modelleren.
-        </li>
-      </ul>
-      <p>
-        In al deze gevallen geldt: de getoonde band is een <strong>indicatie</strong>,
-        niet een garantie. Voor harde beslissingen — bijvoorbeeld of je een
-        dynamisch contract neemt of een investering doet — moet je nooit alleen op
-        deze voorspelling afgaan. Zie ook onze <a href="/disclaimer">disclaimer</a>.
+        Zwarte-zwaan-gebeurtenissen — plotselinge gascrises, grote centrale-uitval, extreme
+        weerverschijnselen — vallen ver buiten de band. Die zijn met historische patronen simpelweg
+        niet te voorspellen.
       </p>
     </section>
 
     <section>
       <h2>Hoe goed presteert het model?</h2>
       <p>
-        Op basis van een backtest over 30 dagen (april 2026) tegen de werkelijke
-        EPEX-prijzen:
+        Op basis van een backtest over 60 dagen (5 maart – 3 mei 2026) tegen werkelijke EPEX-prijzen:
       </p>
       <ul>
         <li>
-          Gemiddelde absolute fout op 1 dag vooruit ongeveer <strong>1,5%
-          beter</strong> dan een naïeve voorspelling die alleen historisch
-          gemiddelde gebruikt.
+          <strong>Gemiddelde fout op 1 dag vooruit: ~3,5 ct/kWh</strong>. Dat klinkt veel, maar de
+          prijzen fluctueren zelf ook sterk — op zonnige middagen tot tientallen cent per kWh.
         </li>
         <li>
-          Het model geeft op ~51% van de uren de juiste richting van afwijking
-          aan (boven of onder de baseline). Dat is iets beter dan een muntje
-          opgooien — geen wonder, maar wel signaal.
+          <strong>Goedkope uren raden we goed:</strong> in 77% van de gevallen zit het model het
+          goedkoopste dagdeel correct — handig als je wil weten wanneer je apparaten aan te zetten.
         </li>
         <li>
-          Voor "ruwweg goedkoop" en "ruwweg duur" categorisering halen we
-          ongeveer 60% trefzekerheid.
+          <strong>Negatieve prijzen:</strong> het model voorspelt de richting (prijs daalt fors) in
+          54% van de gevallen correct, maar de diepte van de daling blijft lastig. Van alle uren
+          met een werkelijk negatieve prijs wordt 30% vooraf herkend als negatief.
+        </li>
+        <li>
+          <strong>Rangvolgorde:</strong> de Spearman-correlatie tussen voorspelde en werkelijke
+          uurvolgorde is 0,78 — het model weet doorgaans welke uren goedkoop zijn ten opzichte van
+          andere uren op dezelfde dag.
         </li>
       </ul>
       <p>
-        Voor een hobby-project van één persoon vinden we dat acceptabel. We
-        hebben vijf model-iteraties gedaan en zijn tot de conclusie gekomen dat
-        verdere micro-tweaks geen substantiële winst meer opleveren. De volledige
-        modelgeschiedenis staat in het
-        <a href="https://github.com/mr-mile/stroomvoorspeller/blob/main/01-documenten/methodologie-voorspellingsmodel.md">
-          methodologie-document</a> op GitHub (sectie 12 — versiehistorie).
+        Het model leert geleidelijk bij: elke voorspelling wordt vergeleken met de werkelijke prijs
+        zodra die beschikbaar is. Systematische afwijkingen — zoals het structureel te hoog schatten
+        van de zonnige middaguren — worden daarmee over de tijd gecorrigeerd.
       </p>
     </section>
 
     <section>
-      <h2>Reproduceerbaar — open source</h2>
+      <h2>Wanneer klopt de voorspelling niet?</h2>
+      <ul>
+        <li>
+          <strong>Extreme zonnige middagen:</strong> een heldere lentedag in het weekend kan de
+          prijs naar −200 of zelfs −500 EUR/MWh drukken. Het model ziet de richting, niet de diepte.
+        </li>
+        <li>
+          <strong>Plotselinge marktschokken:</strong> een aardgasleiding die uitvalt, geopolitieke
+          spanning of een koudegolf door heel Europa schuiven het prijsniveau in dagen buiten de
+          modelband.
+        </li>
+        <li>
+          <strong>Centrale-uitval:</strong> als een grote centrale of kabelverbinding onverwacht
+          wegvalt, schiet de prijs lokaal omhoog. Er is geen openbare realtime-data om dit op te vangen.
+        </li>
+      </ul>
       <p>
-        Alle code, data, drempelwaarden en het methodologie-document zijn openbaar
-        beschikbaar in de GitHub-repository. Wie wil kan onze cijfers natellen of
-        het model zelf nabouwen in een Excel-sheet.
+        Neem nooit alleen op basis van deze voorspelling een grote financiële beslissing.
+        Zie ook de <a href="/disclaimer">disclaimer</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2>Open source en reproduceerbaar</h2>
+      <p>
+        Alle code en data zijn openbaar. Wie wil kan de cijfers natellen of het model zelf nabouwen.
       </p>
       <ul>
-        <li>
-          <strong>Repository</strong>:
-          <a href="https://github.com/mr-mile/stroomvoorspeller">
-            github.com/mr-mile/stroomvoorspeller</a>
-        </li>
-        <li>
-          <strong>Voorspellings-script</strong>: <code>scripts/forecast.py</code>
-        </li>
-        <li>
-          <strong>Drempelwaarden</strong>: <code>public/data/config.json</code>
-        </li>
-        <li>
-          <strong>Voorspel-data (open data)</strong>:
-          <a href="/data/forecast.json"><code>/data/forecast.json</code></a> —
-          vrij te gebruiken in eigen projecten.
-        </li>
+        <li><strong>GitHub-repository:</strong> <a href="https://github.com/mr-mile/stroomvoorspeller">github.com/mr-mile/stroomvoorspeller</a></li>
+        <li><strong>Voorspellingsscript:</strong> <code>scripts/forecast.py</code></li>
+        <li><strong>Live voorspeldata (open data):</strong> <a href="/data/forecast.json"><code>/data/forecast.json</code></a></li>
       </ul>
-    </section>
-
-    <section>
-      <h2>Bronnen</h2>
-      <ul>
-        <li>
-          <strong>Day-ahead prijzen</strong> — ENTSO-E Transparency Platform
-          (transparency.entsoe.eu, gratis na registratie).
-        </li>
-        <li>
-          <strong>Weersvoorspelling</strong> — Open-Meteo (open-meteo.com,
-          CC-BY 4.0 licentie, gratis, geen API-key nodig).
-        </li>
-        <li>
-          <strong>Gasprijs</strong> — Yahoo Finance, ticker TTF=F (front-month
-          natural gas future).
-        </li>
-        <li>
-          <strong>Feestdagen</strong> — eigen NL-kalender, hardgecodeerd in
-          <code>forecast.py</code>.
-        </li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Fout gevonden of feedback?</h2>
       <p>
-        Stuur een mailtje naar
+        <strong>Bronnen:</strong> day-ahead prijzen via ENTSO-E Transparency Platform ·
+        weersverwachting via Open-Meteo (CC-BY 4.0) ·
+        gasprijs via Yahoo Finance (TTF=F).
+      </p>
+    </section>
+
+    <section>
+      <h2>Fout of feedback?</h2>
+      <p>
+        Stuur een mail naar
         <a href="mailto:contactstroomvoorspeller@gmail.com">contactstroomvoorspeller@gmail.com</a>
-        of open een issue op de
-        <a href="https://github.com/mr-mile/stroomvoorspeller/issues">GitHub-repo</a>.
-        We waarderen feedback en herstellen aantoonbare fouten zo snel mogelijk.
+        of open een issue op <a href="https://github.com/mr-mile/stroomvoorspeller/issues">GitHub</a>.
       </p>
     </section>
 
