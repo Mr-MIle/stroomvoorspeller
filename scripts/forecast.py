@@ -138,36 +138,58 @@ def is_zomer(dt: datetime) -> bool:
 
 # ---- Baseline (sectie 3.1) ----
 
-def compute_baseline(target_dt: datetime, history: list[dict]) -> Optional[float]:
+def compute_baseline(
+    target_dt: datetime,
+    history: list[dict],
+    regime: str = "",
+) -> Optional[float]:
     """
     Robuuste baseline-prijs voor hetzelfde uur en hetzelfde dagtype.
 
     Window-keuze:
-    - werkdag/feestdag: laatste 7 dagen (typisch 5 werkdag-datapunten of 1-2 feestdag).
-    - weekend: laatste 14 dagen (v1.4) — een 7d-window levert maar 1 datapunt per
-      uur op (vorige zaterdag of vorige zondag), wat zeer ruisig is en in backtest
-      v2 een bias-piek van +27 EUR/MWh op zondag opleverde. 14 dagen geeft 2
-      datapunten per hour-of-week, een acceptabele middenweg.
+    - werkdag/feestdag normaal:           laatste 7 dagen  (~5 werkdag-punten).
+    - weekend normaal:                    laatste 14 dagen (v1.4, geeft 2 punten/uur).
+    - werkdag/feestdag oversupply:        laatste 4 dagen  (v1.11).
+    - weekend oversupply:                 laatste 7 dagen  (v1.11).
+    - werkdag/feestdag oversupply 9-17h:  laatste 2 dagen  (v1.12, zie hieronder).
 
-    v1.7: cross-border feestdagen (zoals 1 mei) worden uitgesloten van de
-    werkdag-baseline. Die dagen hebben structureel andere marktomstandigheden
-    (buurland-overschot drukt de prijs negatief) en zijn niet representatief
-    voor een gewone werkdag. Als na filtering te weinig datapunten overblijven
-    (<2), wordt het window verlengd naar 14 dagen en opnieuw geprobeerd.
+    v1.11: korter baseline-window bij REGIME_OVERSUPPLY.
+    Backtest (mrt-mei 2026) toonde een oversupply-bias van +19 EUR/MWh ondanks
+    sterkere factoren en niet-lineaire correctie. Oorzaak: de 7d-baseline loopt
+    1-2 weken achter op een structurele prijsdaling door toenemende zon. Tijdens
+    een aanhoudend oversupply-regime (meerdere zonnige dagen op rij) reflecteert
+    een 4-daags window de actuele markt veel beter dan 7 dagen. Fallback naar
+    7 dagen als <2 datapunten beschikbaar zijn.
 
-    v1.9: mediaan in plaats van gemiddelde. Met slechts 4-5 datapunten per uur
-    kan één extreem (bijv. -200 EUR/MWh op een zonnige dag of +500 op een
-    koude windstille avond) het gemiddelde fors vertrekken. De mediaan is
-    immuun voor zulke uitschieters zonder dat er een drempelwaarde gekozen
-    hoeft te worden. Bij een even aantal waarden wordt het gemiddelde van de
-    twee middelste waarden gebruikt (standaard mediaan-definitie).
+    v1.12: solar-piekuren (9-17h) krijgen een nog korter 2-daags window.
+    De prijzen tijdens solar-piek veranderen het snelst: een patroon van toenemende
+    zonnepanelen in mrt-mei duwt de middagprijzen structureel elke week lager. Een
+    2-daags window pikt dit sneller op dan 4 dagen. Fallback naar 7d als er minder
+    dan 2 matches zijn.
+
+    v1.7: cross-border feestdagen worden uitgesloten van de werkdag-baseline.
+    v1.9: mediaan in plaats van gemiddelde (robuuster tegen uitschieters).
 
     history: lijst van {time: ISO-string, price: float in EUR/MWh}
-    Return: baseline in EUR/MWh, of None als er geen data is.
+    regime:  REGIME_OVERSUPPLY verkort het window; andere waarden gebruiken standaard.
+    Return:  baseline in EUR/MWh, of None als er geen data is.
     """
     target_hour = target_dt.hour
     target_type = dagtype(target_dt)
-    window_days = 14 if target_type == "weekend" else 7
+
+    # Window-keuze: oversupply gebruikt kortere windows om sneller te adaptieren.
+    # v1.12: solar-piekuren (9-17h) krijgen extra-kort 2-daags window.
+    if regime == REGIME_OVERSUPPLY:
+        if target_type == "weekend":
+            window_days, fallback_days = 7, 14
+        elif 9 <= target_hour <= 17:
+            window_days, fallback_days = 2, 7   # v1.12: solar-piek extra kort
+        else:
+            window_days, fallback_days = 4, 7   # v1.11: overige oversupply-uren
+    else:
+        window_days = 14 if target_type == "weekend" else 7
+        fallback_days = 14
+
     cutoff_start = target_dt - timedelta(days=window_days)
     cutoff_end = target_dt
 
@@ -182,8 +204,6 @@ def compute_baseline(target_dt: datetime, history: list[dict]) -> Optional[float
             if dagtype(t) != target_type:
                 continue
             # v1.7: werkdag-baseline mag geen cross-border feestdagen bevatten.
-            # Voorbeeld: 1 mei (EU-feestdag) is dagtype "werkdag" maar heeft
-            # structureel lagere prijzen — niet representatief voor gewone werkdag.
             if target_type == "werkdag" and is_crossborder_feestdag(t):
                 continue
             matches.append(entry["price"])
@@ -191,10 +211,9 @@ def compute_baseline(target_dt: datetime, history: list[dict]) -> Optional[float
 
     matches = _collect(cutoff_start)
 
-    # Fallback: te weinig datapunten na filtering (bijv. feestdag gevolgd door
-    # een tweede feestdag in het 7d-window). Verleng het window naar 14 dagen.
-    if len(matches) < 2 and window_days <= 7:
-        matches = _collect(target_dt - timedelta(days=14))
+    # Fallback: te weinig datapunten — verleng window
+    if len(matches) < 2 and window_days < fallback_days:
+        matches = _collect(target_dt - timedelta(days=fallback_days))
 
     if not matches:
         return None
@@ -402,9 +421,17 @@ def detect_regime(solar_ratio: float, wind_ms: float, temp_c: float, dt: datetim
     Regime 3 (Schaarste/Dunkelflaute): alle drie drempels gelijktijdig overschreden.
       solar < 60% EN wind < 5 m/s EN temp < 8°C — gasprijs bepaalt de markt.
     Regime 2 (Oversupply): sterke hernieuwbare productie + lage vraag.
-      (solar > 140% OF wind > 12 m/s) EN (weekend/feestdag OF temp > 10°C).
+      - Zon-trigger: solar > 140% EN uur 7-20  (v1.12: beperkt tot daglichturen;
+        nacht-uren op zonnige dagen hebben juist HOGE prijzen door ramp-up vraag).
+      - Wind-trigger: wind > 14 m/s AND (weekend/feestdag/warm) 24/7  (v1.12:
+        drempel verhoogd van 12→14 m/s om fout-positieven te verminderen).
     Regime 1 (Normaal): alles overig.
     Regime 4 (Transitie): vereist Δ-weersverwachting als input — nog niet geïmplementeerd.
+
+    v1.12: backtest (mrt-mei 2026) toonde dat het toewijzen van OVERSUPPLY aan alle
+    24u van een zonnige dag een negatieve bias gaf voor nacht-uren (werkelijk 118
+    EUR/MWh, model schatte te laag). De zon-trigger is nu beperkt tot uren 7-20h.
+    Wind-oversupply geldt nog steeds 24/7 maar bij hogere drempel (14 m/s).
     """
     is_low_demand = dt.weekday() >= 5 or is_feestdag(dt) or temp_c > 10.0
 
@@ -412,8 +439,14 @@ def detect_regime(solar_ratio: float, wind_ms: float, temp_c: float, dt: datetim
     if solar_ratio < 0.60 and wind_ms < 5.0 and temp_c < 8.0:
         return REGIME_SCARCITY
 
-    # Oversupply: veel hernieuwbaar + weinig vraag
-    if (solar_ratio > 1.40 or wind_ms > 12.0) and is_low_demand:
+    # Oversupply zon: alleen tijdens daglichturen (zon heeft 's nachts geen effect)
+    if solar_ratio > 1.40 and 7 <= dt.hour <= 20 and is_low_demand:
+        return REGIME_OVERSUPPLY
+
+    # Oversupply wind: geldt 24/7, maar hogere drempel (14 m/s) om fout-positieven
+    # te beperken — wind bij 12-13 m/s verhoogt weliswaar productie maar duwt
+    # nacht-prijzen in NL zelden negatief.
+    if wind_ms > 14.0 and is_low_demand:
         return REGIME_OVERSUPPLY
 
     return REGIME_NORMAL
@@ -425,24 +458,30 @@ def detect_regime(solar_ratio: float, wind_ms: float, temp_c: float, dt: datetim
 # Deze correctie is ALLEEN actief in REGIME_OVERSUPPLY; in andere regimes 0.
 #
 # Formule (kwadratisch):
-#   solar_penalty = -(solar_ratio - 1.5)² × 14   [punten] (only if > 1.5)
+#   solar_penalty = -(solar_ratio - 1.3)² × 14   [punten] (only if > 1.3)
 #   wind_penalty  = -(wind_ms - 16)² × 0.25       [punten] (only if > 16 m/s)
 #
 # Effect op de voorspelling (POINT_WEIGHT = 0.015):
-#   solar_ratio = 1.8 → solar_penalty = -(0.3)² × 14 = -1.26 → -1 pt → -1.5% baseline
-#   solar_ratio = 2.0 → solar_penalty = -(0.5)² × 14 = -3.5  → -4 pt → -6% baseline
-#   solar_ratio = 2.5 → solar_penalty = -(1.0)² × 14 = -14.0 → -14 pt → -21% baseline
+#   solar_ratio = 1.4 → solar_penalty = -(0.1)² × 14 = -0.14 → 0 pt
+#   solar_ratio = 1.5 → solar_penalty = -(0.2)² × 14 = -0.56 → -1 pt → -1.5% baseline
+#   solar_ratio = 1.8 → solar_penalty = -(0.5)² × 14 = -3.5  → -4 pt → -6% baseline
+#   solar_ratio = 2.0 → solar_penalty = -(0.7)² × 14 = -6.86 → -7 pt → -10% baseline
+#   solar_ratio = 2.5 → solar_penalty = -(1.2)² × 14 = -20.2 → -20 pt → -30% baseline
 #   wind_ms = 20     → wind_penalty  = -(4)² × 0.25   = -4.0  → -4 pt → -6% baseline
 #
 # v1.10: multiplier zon 8→14 na backtest die toonde dat oversupply-bias +18.8 EUR/MWh
 # was; de eerdere correctie was te klein om extreem zonnige voorjaarsdagen te vangen.
+# v1.12: drempel zon 1.5→1.3 zodat de correctie al actief is voor typische oversupply
+# (solar_ratio 1.4-1.8). Backtest toonde dat correctie bij drempel 1.5 pas kickte bij
+# solar_ratio > 1.5, terwijl de trigger al 1.4 is. Nu actief voor vrijwel alle
+# oversupply-uren.
 
 def nonlinear_correction(solar_ratio: float, wind_ms: float, regime: str) -> FactorScore:
-    """Niet-lineaire correctie voor extreme oversupply (v1.7 sectie 8, v1.10)."""
+    """Niet-lineaire correctie voor extreme oversupply (v1.7 sectie 8, v1.10, v1.12)."""
     if regime != REGIME_OVERSUPPLY:
         return FactorScore("nonlinear", 0, "n.v.t.")
 
-    solar_extra = -(max(0.0, solar_ratio - 1.5) ** 2) * 14.0
+    solar_extra = -(max(0.0, solar_ratio - 1.3) ** 2) * 14.0  # v1.12: drempel 1.5→1.3
     wind_extra  = -(max(0.0, wind_ms - 16.0) ** 2) * 0.25
     total_float = solar_extra + wind_extra
     pts = round(total_float)
@@ -506,14 +545,17 @@ def forecast_one(
 
     Return: Forecast object, of None als baseline niet bepaald kon worden.
     """
-    baseline = compute_baseline(target_dt, history)
+    # v1.7: regime detectie — vóór baseline zodat window-keuze regime-bewust is
+    regime = detect_regime(shortwave_ratio, wind_ms, temp_c, target_dt)
+
+    # v1.11: geef regime door aan baseline zodat oversupply kortere window gebruikt
+    baseline = compute_baseline(target_dt, history, regime=regime)
     if baseline is None:
         return None
 
-    # v1.7: regime detectie — bepaal marktcontext vóór factorenberekening
-    regime = detect_regime(shortwave_ratio, wind_ms, temp_c, target_dt)
-
     # Factor 7: vorige dag — normaliseer de prior_price op zijn eigen baseline.
+    # Gebruik standaard window (geen regime-override) voor de prior_baseline:
+    # de vorige dag was een andere dag met mogelijk ander regime.
     prior_ratio: Optional[float] = None
     if prior_day_price is not None:
         prior_dt = target_dt - timedelta(days=1)
@@ -675,22 +717,46 @@ if __name__ == "__main__":
     assert detect_regime(0.4, 3.0, 2.0, thu_winter) == REGIME_SCARCITY, "Verwachtte schaarste"
     print("[ok] detect_regime: alle gevallen ok")
 
-    # Test v1.10: nonlinear_correction
+    # Test v1.10/v1.12: nonlinear_correction
+    # v1.12: drempel 1.5→1.3, dus correctie begint eerder
     nl_normal = nonlinear_correction(1.0, 8.0, REGIME_NORMAL)
     assert nl_normal.points == 0, f"Verwachtte 0 bij normaal regime, kreeg {nl_normal.points}"
     nl_oversupply_mild = nonlinear_correction(1.5, 10.0, REGIME_OVERSUPPLY)
-    assert nl_oversupply_mild.points == 0, f"Verwachtte 0 aan drempel, kreeg {nl_oversupply_mild.points}"
+    assert nl_oversupply_mild.points == -1, f"Verwachtte -1 bij solar=1.5 (drempel 1.3), kreeg {nl_oversupply_mild.points}"
     nl_oversupply_extreme = nonlinear_correction(2.0, 8.0, REGIME_OVERSUPPLY)
-    # -(2.0-1.5)^2 * 14 = -3.5 → round(-3.5) = -4 (Python banker's rounding)
-    assert nl_oversupply_extreme.points == -4, f"Verwachtte -4 bij solar=2.0 (mult=14), kreeg {nl_oversupply_extreme.points}"
+    # -(2.0-1.3)^2 * 14 = -(0.7)^2 * 14 = -6.86 -> round(-6.86) = -7
+    assert nl_oversupply_extreme.points == -7, f"Verwachtte -7 bij solar=2.0 (drempel 1.3), kreeg {nl_oversupply_extreme.points}"
     print("[ok] nonlinear_correction: alle gevallen ok")
+
+    # Test v1.12: detect_regime uur-restrictie zon
+    sat_noon = datetime(2025, 6, 14, 13, 0)    # zaterdag 13u -> oversupply
+    sat_night = datetime(2025, 6, 14, 2, 0)     # zaterdag 02u -> normaal (zon niet actief)
+    sat_night_wind = datetime(2025, 6, 14, 2, 0)
+    assert detect_regime(1.6, 8.0, 18.0, sat_noon) == REGIME_OVERSUPPLY
+    assert detect_regime(1.6, 8.0, 18.0, sat_night) == REGIME_NORMAL, "Nacht+zon moet NORMAAL zijn"
+    assert detect_regime(0.0, 15.0, 18.0, sat_night_wind) == REGIME_OVERSUPPLY, "Wind>14 's nachts = oversupply"
+    assert detect_regime(0.0, 12.0, 18.0, sat_night_wind) == REGIME_NORMAL, "Wind 12 m/s < drempel 14"
+    print("[ok] detect_regime v1.12: uur-restrictie zon + winddrempel 14 m/s")
+
+    # Test v1.12: compute_baseline 2d solar-piekuur
+    # Vrijdag 9 jan, werkdag, 12u; history: ma-do met dalende prijs
+    target_12u = datetime(2026, 1, 9, 12, 0)
+    history_dalend = [
+        {"time": datetime(2026, 1, d, 12, 0).isoformat(), "price": float(100 - (d-5)*10)}
+        for d in range(5, 9)  # ma=100, di=90, wo=80, do=70
+    ]
+    b_os_2d = compute_baseline(target_12u, history_dalend, regime=REGIME_OVERSUPPLY)
+    b_nm_7d = compute_baseline(target_12u, history_dalend)
+    # OS 2d: vr 9 - 2d = wo 7. Matches: wo 7 (80), do 8 (70) -> mediaan 75
+    # Normal 7d: ma t/m do: 100, 90, 80, 70 -> mediaan 85
+    assert abs(b_os_2d - 75.0) < 0.01, f"Baseline oversupply 12u (2d): verwacht 75.0, kreeg {b_os_2d}"
+    assert abs(b_nm_7d - 85.0) < 0.01, f"Baseline normaal 12u (7d): verwacht 85.0, kreeg {b_nm_7d}"
+    print("[ok] compute_baseline v1.12: 2d solar-piek window vs 7d normaal")
 
     # Test v1.10: calc_extreme_event_prob
     assert calc_extreme_event_prob(1.0, 8.0, REGIME_NORMAL) == 0.0
-    # Oversupply maar net boven drempel: severity = 1.6/1.4 ≈ 1.14 → x = 2.5*(1.14-1.2) = -0.15 → P ≈ 0.46
     ep_mild = calc_extreme_event_prob(1.6, 8.0, REGIME_OVERSUPPLY)
     assert 0.3 < ep_mild < 0.6, f"Verwachtte ~0.46, kreeg {ep_mild}"
-    # Extreme: solar 2.0 → severity = 2.0/1.4 ≈ 1.43 → x = 2.5*(1.43-1.2) ≈ 0.57 → P ≈ 0.64
     ep_extreme = calc_extreme_event_prob(2.0, 8.0, REGIME_OVERSUPPLY)
     assert ep_extreme > 0.55, f"Verwachtte >0.55, kreeg {ep_extreme}"
     print(f"[ok] calc_extreme_event_prob: mild={ep_mild:.2f}, extreme={ep_extreme:.2f}")
@@ -717,4 +783,4 @@ if __name__ == "__main__":
     assert f_oversupply.extreme_event_prob > 0.3, f"Verwachtte EP > 0.3, kreeg {f_oversupply.extreme_event_prob}"
     print(f"[ok] forecast_one oversupply: regime={f_oversupply.regime}, EP={f_oversupply.extreme_event_prob:.2f}")
 
-    print("\n[ok] Self-test geslaagd; v1.10 regime + niet-lineaire correctie + herzien uurpatroon.")
+    print("\n[ok] Self-test geslaagd; v1.12 hour-restricted oversupply + korter solar-piek window.")
