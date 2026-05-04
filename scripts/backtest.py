@@ -64,6 +64,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from forecast import (  # noqa: E402
     POINT_WEIGHT,
+    REGIME_NORMAL, REGIME_OVERSUPPLY, REGIME_SCARCITY, REGIME_TRANSITION,
     Forecast,
     FactorScore,
     compute_baseline,
@@ -457,6 +458,8 @@ def run_backtest(
                     "uncertainty_pct": fc.uncertainty_pct,
                     "actual_cat": categorize(actual, thresholds),
                     "predicted_cat": categorize(fc.predicted, thresholds),
+                    "regime": fc.regime,                             # v1.7
+                    "extreme_event_prob": fc.extreme_event_prob,     # v1.7
                 })
 
     print(f"[info] Backtest: {len(results)} datapunten; "
@@ -467,6 +470,106 @@ def run_backtest(
 
 
 # ---- Metrics ----
+
+def compute_rank_metrics(results: list[dict]) -> dict:
+    """
+    v1.7 sectie 10: gebruiksgerichte metrics.
+
+    1. Rank accuracy (Spearman ρ): rangcorrelatie van uur-voor-uur prijsvolgorde
+       per dag. Gemiddeld over alle (forecast_date × horizon)-combinaties met ≥12 uren.
+       ρ = 1.0 = perfecte rangvolgorde; 0.0 = random; < 0 = omgekeerd.
+
+    2. Cheap-hour hit rate: van de goedkoopste 25% uren per dag (=6 uur bij 24),
+       welk percentage valt ook in de voorspelde goedkoopste 25%?
+       Dit is de meest directe maatstaf voor gebruikerswaarde (slimme oplaad-adviezen).
+
+    3. Negatieve prijs detectie: precision en recall voor uren waarop de werkelijke
+       EPEX-prijs < 0 EUR/MWh. Geeft inzicht in hoe goed het model extreme events herkent.
+    """
+    # Groepeer per dag (forecast_date + horizon + target_date)
+    by_day: dict[tuple, list] = {}
+    for r in results:
+        key = (r["forecast_date"], r["horizon_days"], r["target_iso"][:10])
+        by_day.setdefault(key, []).append(r)
+
+    spearman_vals: list[float] = []
+    cheap_hits = 0
+    cheap_total = 0
+    neg_tp = neg_fp = neg_fn = 0
+
+    for rows in by_day.values():
+        if len(rows) < 12:
+            continue
+        rows_s = sorted(rows, key=lambda x: x["hour"])
+        actuals = [r["actual"] for r in rows_s]
+        preds   = [r["predicted"] for r in rows_s]
+        n = len(rows_s)
+
+        # --- Spearman rangcorrelatie ---
+        # Bepaal rang van elk element (laagste waarde = rang 0)
+        rank_a = [0] * n
+        rank_p = [0] * n
+        for rank, idx in enumerate(sorted(range(n), key=lambda i: actuals[i])):
+            rank_a[idx] = rank
+        for rank, idx in enumerate(sorted(range(n), key=lambda i: preds[i])):
+            rank_p[idx] = rank
+        d2 = sum((rank_a[i] - rank_p[i]) ** 2 for i in range(n))
+        rho = 1.0 - 6.0 * d2 / (n * (n * n - 1))
+        spearman_vals.append(rho)
+
+        # --- Cheap-hour hit rate: goedkoopste 25% ---
+        k = max(1, n // 4)
+        actual_cheap = set(sorted(range(n), key=lambda i: actuals[i])[:k])
+        pred_cheap   = set(sorted(range(n), key=lambda i: preds[i])[:k])
+        cheap_hits  += len(actual_cheap & pred_cheap)
+        cheap_total += k
+
+        # --- Negatieve prijs detectie ---
+        for r in rows_s:
+            a_neg = r["actual"] < 0
+            p_neg = r["predicted"] < 0
+            if a_neg and p_neg:
+                neg_tp += 1
+            elif not a_neg and p_neg:
+                neg_fp += 1
+            elif a_neg and not p_neg:
+                neg_fn += 1
+
+    neg_precision = neg_tp / (neg_tp + neg_fp) if (neg_tp + neg_fp) > 0 else None
+    neg_recall    = neg_tp / (neg_tp + neg_fn) if (neg_tp + neg_fn) > 0 else None
+
+    return {
+        "spearman_mean":       round(statistics.mean(spearman_vals), 3) if spearman_vals else None,
+        "spearman_n_days":     len(spearman_vals),
+        "cheap_hour_hit_rate": round(cheap_hits / cheap_total, 3) if cheap_total > 0 else None,
+        "cheap_total_slots":   cheap_total,
+        "neg_price_precision": round(neg_precision, 3) if neg_precision is not None else None,
+        "neg_price_recall":    round(neg_recall, 3) if neg_recall is not None else None,
+        "neg_tp": neg_tp, "neg_fp": neg_fp, "neg_fn": neg_fn,
+    }
+
+
+def compute_regime_breakdown(results: list[dict]) -> dict:
+    """
+    v1.7: verdeling van datapunten over regimes, met MAE per regime.
+    Geeft inzicht in welk marktregime het model het best/slechtst presteert.
+    """
+    by_regime: dict[str, list] = {}
+    for r in results:
+        reg = r.get("regime", REGIME_NORMAL)
+        by_regime.setdefault(reg, []).append(r)
+
+    out = {}
+    for reg, rows in by_regime.items():
+        abs_errors = [abs(r["predicted"] - r["actual"]) for r in rows]
+        errors     = [r["predicted"] - r["actual"] for r in rows]
+        out[reg] = {
+            "n":    len(rows),
+            "mae":  round(statistics.mean(abs_errors), 2) if abs_errors else None,
+            "bias": round(statistics.mean(errors), 2)     if errors else None,
+        }
+    return out
+
 
 def compute_metrics(results: list[dict]) -> dict:
     """Aggregeer MAE, bias, hit-rate per horizon."""
@@ -524,8 +627,10 @@ def compute_metrics(results: list[dict]) -> dict:
         }
 
     return {
-        "total_points": len(results),
-        "per_horizon": metrics_per_horizon,
+        "total_points":    len(results),
+        "per_horizon":     metrics_per_horizon,
+        "rank_metrics":    compute_rank_metrics(results),        # v1.7
+        "regime_breakdown": compute_regime_breakdown(results),   # v1.7
     }
 
 
@@ -644,6 +749,75 @@ def write_report(
             lines.append(f"- **Schaalverloop** MAE 7d/1d = {ratio:.2f}x - verwacht is een factor 1,5-2,5.")
 
     lines.append("")
+
+    # --- v1.7: Rank metrics ---
+    rm = metrics.get("rank_metrics", {})
+    lines.append("## Gebruiksgerichte metrics (v1.7)")
+    lines.append("")
+    lines.append("### Rank accuracy (Spearman ρ)")
+    lines.append("")
+    sp = rm.get("spearman_mean")
+    sp_n = rm.get("spearman_n_days", 0)
+    if sp is not None:
+        lines.append(f"Gemiddelde Spearman ρ over {sp_n} dag×horizon-combinaties: **{sp:.3f}**")
+        if sp > 0.6:
+            lines.append("→ Model sorteert uren redelijk goed van goedkoop naar duur.")
+        elif sp > 0.35:
+            lines.append("→ Matige rangvolgorde; model heeft een globale richting maar mist details.")
+        else:
+            lines.append("→ Zwakke rangvolgorde; ruimte voor verbetering in relatieve uur-ranking.")
+    else:
+        lines.append("Geen data.")
+    lines.append("")
+    lines.append("### Cheap-hour hit rate (goedkoopste 25% uren)")
+    lines.append("")
+    chr_val = rm.get("cheap_hour_hit_rate")
+    chr_n   = rm.get("cheap_total_slots", 0)
+    if chr_val is not None:
+        lines.append(f"Van de werkelijk goedkoopste 6 uren per dag zit **{chr_val*100:.0f}%** ook in de voorspelde goedkoopste 6 uren (n={chr_n} slots).")
+        if chr_val > 0.60:
+            lines.append("→ Bruikbaar voor slimme laadadvies-toepassingen.")
+        elif chr_val > 0.40:
+            lines.append("→ Redelijk; beter dan random (random ≈ 25%).")
+        else:
+            lines.append("→ Dicht bij random (25%); model herkent goedkope uren onvoldoende.")
+    else:
+        lines.append("Geen data.")
+    lines.append("")
+    lines.append("### Negatieve prijs detectie")
+    lines.append("")
+    neg_p = rm.get("neg_price_precision")
+    neg_r = rm.get("neg_price_recall")
+    neg_tp = rm.get("neg_tp", 0)
+    neg_fp = rm.get("neg_fp", 0)
+    neg_fn = rm.get("neg_fn", 0)
+    lines.append(f"TP={neg_tp}, FP={neg_fp}, FN={neg_fn}")
+    if neg_p is not None:
+        lines.append(f"Precision: **{neg_p*100:.0f}%** | Recall: **{neg_r*100:.0f}%**")
+    else:
+        lines.append("Geen negatieve prijsuren in testperiode (of model voorspelt nooit negatief).")
+    lines.append("")
+
+    # --- v1.7: Regime breakdown ---
+    rb = metrics.get("regime_breakdown", {})
+    lines.append("## Regime-uitslag (v1.7)")
+    lines.append("")
+    lines.append("| Regime | n | MAE (EUR/MWh) | Bias |")
+    lines.append("|:---|---:|---:|---:|")
+    regime_labels = {
+        REGIME_NORMAL:     "Normaal",
+        REGIME_OVERSUPPLY: "Oversupply (hernieuwbaar)",
+        REGIME_SCARCITY:   "Schaarste / Dunkelflaute",
+        REGIME_TRANSITION: "Transitie",
+    }
+    for reg in [REGIME_NORMAL, REGIME_OVERSUPPLY, REGIME_SCARCITY, REGIME_TRANSITION]:
+        rd = rb.get(reg)
+        if rd and rd["n"] > 0:
+            label = regime_labels.get(reg, reg)
+            lines.append(f"| {label} | {rd['n']} | {rd['mae']:.2f} | {rd['bias']:+.2f} |")
+    lines.append("")
+    lines.append("")
+
     lines.append("## Caveats")
     lines.append("")
     lines.append("1. **Perfect-foresight weather**: deze backtest gebruikt de werkelijke gemeten weersgegevens op de targetdag, niet de voorspelde weersdata van het moment van forecast. Dit overschat de modelkwaliteit licht. In productie introduceert weervoorspellingsfout extra variantie. Voor de 7-dagen horizon kan dat substantieel zijn.")
