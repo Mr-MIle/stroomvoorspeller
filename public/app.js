@@ -655,6 +655,9 @@
     const dayPrices = state.dayPrices;
     const forecasts = state.forecasts;
 
+    // Feestdagen-lookup: eenmaal bouwen, hergebruiken in dayBand-plugin én tooltip
+    const holidays = buildHolidayLookup();
+
     // Bouw één gecombineerde tijdlijn: dayPrices + forecasts. dayPrices komen
     // eerst (vandaag + morgen), forecasts daarna (overmorgen t/m +7d).
     const timeline = [
@@ -679,9 +682,10 @@
     const forecastLower = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.lower) : null);
     const forecastUpper = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.upper) : null);
 
-    // Kleur van elk voorspelling-punt op basis van prijsniveau (zelfde schaal als actuele punten)
+    // Forecast-punten krijgen een vaste neutrale kleur — duidelijk 'voorspelling', niet gemengd met prijs-kleuren
+    const FORECAST_DOT = "rgba(100, 116, 139, 0.75)"; // grijsblauw: duidelijk anders dan groen/geel/rood
     const forecastPointColors = timeline.map((t) =>
-      t.kind === "forecast" ? pointColor(t.forecast.predicted) : "transparent"
+      t.kind === "forecast" ? FORECAST_DOT : "transparent"
     );
 
     // Dataset 4: voorspelde lijn (gestippeld)
@@ -757,7 +761,7 @@
           },
         },
         plugins: {
-          svDayBand: { timeline, holidays: buildHolidayLookup() },
+          svDayBand: { timeline, holidays },
           legend: { display: false },
           tooltip: {
             filter: (item) => !item.dataset.label || !item.dataset.label.startsWith("_"),
@@ -778,12 +782,19 @@
                 const regime = getForecastRegime(f);
                 const regimeLbl = { oversupply: "Oversupply ☀️", schaarste: "Schaarste ❄️", normaal: "Normaal" }[regime];
                 const halfBand = (f.upper - f.lower) / 2;
-                return [
+                const dateStr = t.time.slice(0, 10);
+                const isNL = holidays.nl.has(dateStr);
+                const isCross = holidays.crossborder.has(dateStr);
+                const lines = [
                   `Regime: ${regimeLbl}`,
                   `Voorspeld: ${fmtNum(priceCents(f.predicted), 2)} ct/kWh`,
                   `Verwachte fout: ±${fmtNum(halfBand / 10, 1)} ct/kWh`,
                   `Baseline: ${fmtNum(priceCents(f.baseline), 2)} ct/kWh`,
                 ];
+                if (isNL && isCross) lines.push("📅 NL + EU feestdag — lage prijs verwacht");
+                else if (isNL) lines.push("📅 NL feestdag — lage prijs verwacht");
+                else if (isCross) lines.push("📅 EU feestdag (buurlanden) — mogelijk lagere prijs");
+                return lines;
               },
             },
           },
@@ -791,8 +802,10 @@
       },
     });
 
-    // Prijs-legenda + feestdag-noot (éénmalig aanmaken)
-    if (!document.getElementById("chart-regime-legend")) {
+    // Prijs-legenda + feestdag-noot — altijd vernieuwen om duplicaten te voorkomen
+    const _existingLegend = document.getElementById("chart-regime-legend");
+    if (_existingLegend) _existingLegend.remove();
+    {
       const wrap = document.createElement("div");
       wrap.id = "chart-regime-legend";
       wrap.setAttribute("aria-hidden", "true");
