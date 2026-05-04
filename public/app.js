@@ -538,6 +538,19 @@
     });
   }
 
+  // ── Regime-kleuren voor de grafiekpunten (backtest-MAE: oversupply ~5 ct, normaal ~3 ct, schaarste ~2 ct)
+  const REGIME_COLOR = { oversupply: "#f59e0b", schaarste: "#ef4444", normaal: "#0f6cbd" };
+
+  function getForecastRegime(f) {
+    if (!f || !f.factors) return "normaal";
+    for (const fact of f.factors) {
+      const r = (fact.reason || "").toLowerCase();
+      if (r.includes("oversupply")) return "oversupply";
+      if (r.includes("schaarste")) return "schaarste";
+    }
+    return "normaal";
+  }
+
   // ---- Chart.js plugin: gekleurde dag-banden ----
   // Tekent subtiele achtergrondkleuren achter elk uur in de grafiek op basis van
   // het dagtype: NL feestdag, EU-feestdag (buurlanden vrij maar NL open),
@@ -666,6 +679,11 @@
     const forecastLower = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.lower) : null);
     const forecastUpper = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.upper) : null);
 
+    // Kleur van elk voorspelling-punt op basis van regime
+    const forecastPointColors = timeline.map((t) =>
+      t.kind === "forecast" ? REGIME_COLOR[getForecastRegime(t.forecast)] : "transparent"
+    );
+
     // Dataset 4: voorspelde lijn (gestippeld)
     const forecastPredicted = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.predicted) : null);
 
@@ -710,12 +728,13 @@
           {
             label: "voorspelling",
             data: forecastPredicted,
-            borderColor: "#0f6cbd",
+            borderColor: "rgba(46,117,182,0.5)",
             borderDash: [4, 4],
             borderWidth: 2,
             tension: 0.25,
-            pointRadius: 2,
-            pointBackgroundColor: "#0f6cbd",
+            pointRadius: 3,
+            pointBackgroundColor: forecastPointColors,
+            pointBorderColor: forecastPointColors,
             pointHoverRadius: 5,
             fill: false,
             spanGaps: false,
@@ -739,13 +758,7 @@
         },
         plugins: {
           svDayBand: { timeline, holidays: buildHolidayLookup() },
-          legend: {
-            display: true,
-            labels: {
-              filter: (item) => !item.text.startsWith("_"),
-              boxWidth: 18, boxHeight: 2, font: { size: 11 },
-            },
-          },
+          legend: { display: false },
           tooltip: {
             filter: (item) => !item.dataset.label || !item.dataset.label.startsWith("_"),
             callbacks: {
@@ -762,12 +775,16 @@
                     `Incl. belasting: ${fmtNum(priceCents(eurMwh, "inclusive"), 2)} ct/kWh`,
                   ];
                 }
-                // Forecast: toon voorspelling, band en samenvatting.
+                // Forecast: toon regime, voorspelling en verwachte fout.
                 // Op mobiel: geen factor-detailregels (tooltip wordt anders te groot).
                 const f = t.forecast;
+                const regime = getForecastRegime(f);
+                const regimeLbl = { oversupply: "Oversupply ☀️", schaarste: "Schaarste ❄️", normaal: "Normaal" }[regime];
+                const halfBand = (f.upper - f.lower) / 2;
                 const lines = [
+                  `Regime: ${regimeLbl}`,
                   `Voorspeld: ${fmtNum(priceCents(f.predicted), 2)} ct/kWh`,
-                  `Band: ${fmtNum(priceCents(f.lower), 2)} – ${fmtNum(priceCents(f.upper), 2)} ct/kWh`,
+                  `Verwachte fout: ±${fmtNum(halfBand / 10, 1)} ct/kWh`,
                   `Baseline: ${fmtNum(priceCents(f.baseline), 2)} ct/kWh; ${f.total_points >= 0 ? "+" : ""}${f.total_points} punten`,
                 ];
                 if (!isMobile) {
@@ -783,20 +800,28 @@
       },
     });
 
-    // Feestdag-kleurlegenda onder de grafiek (éénmalig aanmaken; blijft staan
-    // bij volgende renderChart-aanroepen zoals leverancier- of modeswitch).
-    if (!document.getElementById("chart-holiday-legend")) {
-      const note = document.createElement("p");
-      note.id = "chart-holiday-legend";
-      note.setAttribute("aria-hidden", "true");
-      note.style.cssText =
-        "font-size:11px;color:#374151;margin:6px 0 2px;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;line-height:1.6;";
-      note.innerHTML =
-        '<span style="background:rgba(255,193,7,0.32);padding:1px 6px;border-radius:3px;white-space:nowrap;">\u{1F5D3} NL feestdag</span>' +
-        '<span style="background:rgba(255,140,0,0.30);padding:1px 6px;border-radius:3px;white-space:nowrap;">\u{1F30D} EU-feestdag (NL open)</span>' +
-        '<span style="background:rgba(255,193,7,0.32);outline:1px solid rgba(200,110,0,0.40);outline-offset:-1px;padding:1px 6px;border-radius:3px;white-space:nowrap;">\u{1F5D3}+\u{1F30D} NL &amp; EU feestdag</span>' +
-        '<span style="color:#6b7280;flex-basis:100%;">Op deze dagen valt de stroomprijs vaak extra laag door verminderde vraag in buurlanden.</span>';
-      (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", note);
+    // Regime-legenda + feestdag-noot (éénmalig aanmaken)
+    if (!document.getElementById("chart-regime-legend")) {
+      const wrap = document.createElement("div");
+      wrap.id = "chart-regime-legend";
+      wrap.setAttribute("aria-hidden", "true");
+      wrap.style.cssText = "margin:6px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;line-height:1.8;";
+      const dot = (color, label, sub) =>
+        `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
+        `<span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></span>` +
+        `<strong>${label}</strong> <span style="color:#6b7280;">${sub}</span></span>`;
+      const lineItem = (color, dash, label) =>
+        `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#374151;">` +
+        `<svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="${color}" stroke-width="2" ${dash ? 'stroke-dasharray="4 3"' : ""}></line></svg>` +
+        `${label}</span>`;
+      wrap.innerHTML =
+        lineItem("#2e75b6", false, "werkelijke prijs") +
+        lineItem("rgba(46,117,182,0.6)", true, "voorspelling") +
+        dot("#0f6cbd", "Normaal", "±3 ct/kWh") +
+        dot("#f59e0b", "Oversupply", "±5 ct/kWh — veel zon of wind") +
+        dot("#ef4444", "Schaarste", "±2 ct/kWh — koud & windstil") +
+        `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken in de grafiek zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag.</span>`;
+      (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", wrap);
     }
   }
 
