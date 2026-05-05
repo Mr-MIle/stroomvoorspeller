@@ -1,779 +1,23 @@
 {
-  "generated_at": "2026-05-05T21:54:47.883831+00:00",
+  "generated_at": "2026-05-05T23:36:45.647280+00:00",
   "currency": "EUR",
   "unit": "EUR/MWh",
   "tz": "Europe/Amsterdam",
   "model_version": "1.9",
-  "horizon_start": "2026-05-07T00:00:00+02:00",
-  "horizon_end": "2026-05-12T23:59:59+02:00",
+  "horizon_start": "2026-05-08T00:00:00+02:00",
+  "horizon_end": "2026-05-13T23:59:59+02:00",
   "forecasts": [
     {
-      "time": "2026-05-07T00:00:00+02:00",
-      "baseline": 118.46,
-      "predicted": 120.23,
-      "lower": 102.2,
-      "upper": 138.26,
+      "time": "2026-05-08T00:00:00+02:00",
+      "baseline": 119.73,
+      "predicted": 121.53,
+      "lower": 103.3,
+      "upper": 139.76,
       "uncertainty_pct": 0.15,
       "total_points": 1,
       "days_ahead": 2,
-      "sw_ratio_h": 1.252,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (125%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (0:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.15×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T01:00:00+02:00",
-      "baseline": 111.1,
-      "predicted": 112.77,
-      "lower": 95.85,
-      "upper": 129.69,
-      "uncertainty_pct": 0.15,
-      "total_points": 1,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.252,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (125%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (1:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.15×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T02:00:00+02:00",
-      "baseline": 111.22,
-      "predicted": 112.88,
-      "lower": 95.95,
-      "upper": 129.81,
-      "uncertainty_pct": 0.15,
-      "total_points": 1,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.252,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (125%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (2:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.12×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T03:00:00+02:00",
-      "baseline": 108.99,
-      "predicted": 110.62,
-      "lower": 94.03,
-      "upper": 127.21,
-      "uncertainty_pct": 0.15,
-      "total_points": 1,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.252,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (125%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (3:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.15×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T04:00:00+02:00",
-      "baseline": 110.12,
-      "predicted": 111.77,
-      "lower": 95.0,
-      "upper": 128.54,
-      "uncertainty_pct": 0.15,
-      "total_points": 1,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.252,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (125%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (4:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.11×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T05:00:00+02:00",
-      "baseline": 121.25,
-      "predicted": 121.25,
-      "lower": 104.27,
-      "upper": 138.23,
-      "uncertainty_pct": 0.14,
-      "total_points": 0,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.252,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (125%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (5:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.01×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T06:00:00+02:00",
-      "baseline": 140.61,
-      "predicted": 155.37,
-      "lower": 122.74,
-      "upper": 188.0,
-      "uncertainty_pct": 0.21,
-      "total_points": 7,
-      "days_ahead": 2,
-      "sw_ratio_h": 0.0,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 3,
-          "reason": "bewolkt (0% van seizoen)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 1,
-          "reason": "zomer, ochtendspits (6:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (0.92×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T07:00:00+02:00",
-      "baseline": 146.42,
-      "predicted": 161.79,
-      "lower": 127.81,
-      "upper": 195.77,
-      "uncertainty_pct": 0.21,
-      "total_points": 7,
-      "days_ahead": 2,
-      "sw_ratio_h": 0.231,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 3,
-          "reason": "bewolkt (23% van seizoen)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 1,
-          "reason": "zomer, ochtendspits (7:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.04×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T08:00:00+02:00",
-      "baseline": 137.6,
-      "predicted": 149.98,
-      "lower": 119.98,
-      "upper": 179.98,
-      "uncertainty_pct": 0.2,
-      "total_points": 6,
-      "days_ahead": 2,
-      "sw_ratio_h": 0.658,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (66%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 1,
-          "reason": "zomer, ochtendspits (8:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.18×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T09:00:00+02:00",
-      "baseline": 119.92,
-      "predicted": 127.12,
-      "lower": 104.24,
-      "upper": 150.0,
-      "uncertainty_pct": 0.18,
-      "total_points": 4,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.009,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 0,
-          "reason": "normaal (101%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (9:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (1.38×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T10:00:00+02:00",
-      "baseline": 109.43,
-      "predicted": 114.35,
-      "lower": 94.91,
-      "upper": 133.79,
-      "uncertainty_pct": 0.17,
-      "total_points": 3,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.272,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (127%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (10:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (2.03×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T11:00:00+02:00",
-      "baseline": 107.66,
-      "predicted": 112.5,
-      "lower": 93.38,
-      "upper": 131.62,
-      "uncertainty_pct": 0.17,
-      "total_points": 3,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.454,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (145%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (11:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (2.16×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.3p"
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T12:00:00+02:00",
-      "baseline": 101.83,
-      "predicted": 106.41,
-      "lower": 88.32,
-      "upper": 124.5,
-      "uncertainty_pct": 0.17,
-      "total_points": 3,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.412,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (141%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (12:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (2.85×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.2p"
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T13:00:00+02:00",
-      "baseline": 87.09,
-      "predicted": 91.01,
-      "lower": 75.54,
-      "upper": 106.48,
-      "uncertainty_pct": 0.17,
-      "total_points": 3,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.368,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (137%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (13:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (3.63×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T14:00:00+02:00",
-      "baseline": 92.97,
-      "predicted": 98.55,
-      "lower": 80.81,
-      "upper": 116.29,
-      "uncertainty_pct": 0.18,
-      "total_points": 4,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.092,
-      "sw_ratio_daily": 1.252,
+      "sw_ratio_h": 1.09,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
@@ -783,547 +27,7 @@
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (14:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (2.76×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T15:00:00+02:00",
-      "baseline": 102.06,
-      "predicted": 108.18,
-      "lower": 88.71,
-      "upper": 127.65,
-      "uncertainty_pct": 0.18,
-      "total_points": 4,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.123,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 0,
-          "reason": "normaal (112%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, namiddag (15:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (2.31×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T16:00:00+02:00",
-      "baseline": 105.75,
-      "predicted": 112.09,
-      "lower": 91.91,
-      "upper": 132.27,
-      "uncertainty_pct": 0.18,
-      "total_points": 4,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.13,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 0,
-          "reason": "normaal (113%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, namiddag (16:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (2.14×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T17:00:00+02:00",
-      "baseline": 118.36,
-      "predicted": 125.46,
-      "lower": 102.88,
-      "upper": 148.04,
-      "uncertainty_pct": 0.18,
-      "total_points": 4,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.212,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (121%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 0,
-          "reason": "zomer, vroege avond (17:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (1.77×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T18:00:00+02:00",
-      "baseline": 125.96,
-      "predicted": 116.51,
-      "lower": 94.37,
-      "upper": 138.65,
-      "uncertainty_pct": 0.19,
-      "total_points": -5,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.934,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (193%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 0,
-          "reason": "zomer, vroege avond (18:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.29×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": -6,
-          "reason": "oversupply niet-lineair: zon -5.6p"
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T19:00:00+02:00",
-      "baseline": 145.25,
-      "predicted": 145.25,
-      "lower": 124.91,
-      "upper": 165.59,
-      "uncertainty_pct": 0.14,
-      "total_points": 0,
-      "days_ahead": 2,
-      "sw_ratio_h": 2.063,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -5,
-          "reason": "extreem zonnig (206%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 1,
-          "reason": "zomer, avondspits (19:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.13×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T20:00:00+02:00",
-      "baseline": 165.56,
-      "predicted": 163.07,
-      "lower": 138.61,
-      "upper": 187.53,
-      "uncertainty_pct": 0.15,
-      "total_points": -1,
-      "days_ahead": 2,
-      "sw_ratio_h": 2.515,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -5,
-          "reason": "extreem zonnig (252%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 1,
-          "reason": "zomer, avondspits (20:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (0.98×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T21:00:00+02:00",
-      "baseline": 148.96,
-      "predicted": 151.19,
-      "lower": 128.51,
-      "upper": 173.87,
-      "uncertainty_pct": 0.15,
-      "total_points": 1,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.252,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (125%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, late avond (21:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.09×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T22:00:00+02:00",
-      "baseline": 134.16,
-      "predicted": 138.18,
-      "lower": 116.07,
-      "upper": 160.29,
-      "uncertainty_pct": 0.16,
-      "total_points": 2,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.252,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (125%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, late avond (22:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.20×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-07T23:00:00+02:00",
-      "baseline": 119.68,
-      "predicted": 123.27,
-      "lower": 103.55,
-      "upper": 142.99,
-      "uncertainty_pct": 0.16,
-      "total_points": 2,
-      "days_ahead": 2,
-      "sw_ratio_h": 1.252,
-      "sw_ratio_daily": 1.252,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (125%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (4.0 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (11.8°C)"
-        },
-        {
-          "name": "gas",
-          "points": 0,
-          "reason": "normaal (104%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, late avond (23:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.19×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ]
-    },
-    {
-      "time": "2026-05-08T00:00:00+02:00",
-      "baseline": 119.73,
-      "predicted": 121.53,
-      "lower": 100.87,
-      "upper": 142.19,
-      "uncertainty_pct": 0.17,
-      "total_points": 1,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.054,
-      "sw_ratio_daily": 1.054,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 0,
-          "reason": "normaal (105%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1361,23 +65,23 @@
       "time": "2026-05-08T01:00:00+02:00",
       "baseline": 113.77,
       "predicted": 115.48,
-      "lower": 95.85,
-      "upper": 135.11,
-      "uncertainty_pct": 0.17,
+      "lower": 98.16,
+      "upper": 132.8,
+      "uncertainty_pct": 0.15,
       "total_points": 1,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.054,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.09,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (105%)"
+          "reason": "normaal (109%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1415,23 +119,23 @@
       "time": "2026-05-08T02:00:00+02:00",
       "baseline": 111.9,
       "predicted": 113.58,
-      "lower": 94.27,
-      "upper": 132.89,
-      "uncertainty_pct": 0.17,
+      "lower": 96.54,
+      "upper": 130.62,
+      "uncertainty_pct": 0.15,
       "total_points": 1,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.054,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.09,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (105%)"
+          "reason": "normaal (109%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1469,23 +173,23 @@
       "time": "2026-05-08T03:00:00+02:00",
       "baseline": 111.63,
       "predicted": 113.3,
-      "lower": 94.04,
-      "upper": 132.56,
-      "uncertainty_pct": 0.17,
+      "lower": 96.3,
+      "upper": 130.29,
+      "uncertainty_pct": 0.15,
       "total_points": 1,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.054,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.09,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (105%)"
+          "reason": "normaal (109%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1523,23 +227,23 @@
       "time": "2026-05-08T04:00:00+02:00",
       "baseline": 111.58,
       "predicted": 113.25,
-      "lower": 94.0,
-      "upper": 132.5,
-      "uncertainty_pct": 0.17,
+      "lower": 96.26,
+      "upper": 130.24,
+      "uncertainty_pct": 0.15,
       "total_points": 1,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.054,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.09,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (105%)"
+          "reason": "normaal (109%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1577,23 +281,23 @@
       "time": "2026-05-08T05:00:00+02:00",
       "baseline": 126.89,
       "predicted": 128.79,
-      "lower": 106.9,
-      "upper": 150.68,
-      "uncertainty_pct": 0.17,
+      "lower": 109.47,
+      "upper": 148.11,
+      "uncertainty_pct": 0.15,
       "total_points": 1,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.054,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.09,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (105%)"
+          "reason": "normaal (109%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1631,13 +335,13 @@
       "time": "2026-05-08T06:00:00+02:00",
       "baseline": 148.75,
       "predicted": 164.37,
-      "lower": 126.56,
-      "upper": 202.18,
-      "uncertainty_pct": 0.23,
+      "lower": 129.85,
+      "upper": 198.89,
+      "uncertainty_pct": 0.21,
       "total_points": 7,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "sw_ratio_h": 0.0,
-      "sw_ratio_daily": 1.054,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
@@ -1647,7 +351,7 @@
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1685,23 +389,23 @@
       "time": "2026-05-08T07:00:00+02:00",
       "baseline": 152.56,
       "predicted": 168.58,
-      "lower": 129.81,
-      "upper": 207.35,
-      "uncertainty_pct": 0.23,
+      "lower": 133.18,
+      "upper": 203.98,
+      "uncertainty_pct": 0.21,
       "total_points": 7,
-      "days_ahead": 3,
-      "sw_ratio_h": 0.218,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 0.23,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 3,
-          "reason": "bewolkt (22% van seizoen)"
+          "reason": "bewolkt (23% van seizoen)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1739,23 +443,23 @@
       "time": "2026-05-08T08:00:00+02:00",
       "baseline": 139.76,
       "predicted": 150.24,
-      "lower": 118.69,
-      "upper": 181.79,
-      "uncertainty_pct": 0.21,
+      "lower": 121.69,
+      "upper": 178.79,
+      "uncertainty_pct": 0.19,
       "total_points": 5,
-      "days_ahead": 3,
-      "sw_ratio_h": 0.521,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 0.613,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 1,
-          "reason": "iets minder zon (52%)"
+          "reason": "iets minder zon (61%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1793,23 +497,23 @@
       "time": "2026-05-08T09:00:00+02:00",
       "baseline": 121.7,
       "predicted": 125.35,
-      "lower": 102.79,
-      "upper": 147.91,
-      "uncertainty_pct": 0.18,
+      "lower": 105.29,
+      "upper": 145.41,
+      "uncertainty_pct": 0.16,
       "total_points": 2,
-      "days_ahead": 3,
-      "sw_ratio_h": 0.862,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 0.872,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (86%)"
+          "reason": "normaal (87%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1847,23 +551,23 @@
       "time": "2026-05-08T10:00:00+02:00",
       "baseline": 110.2,
       "predicted": 113.51,
-      "lower": 93.08,
-      "upper": 133.94,
-      "uncertainty_pct": 0.18,
+      "lower": 95.35,
+      "upper": 131.67,
+      "uncertainty_pct": 0.16,
       "total_points": 2,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.002,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.176,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (100%)"
+          "reason": "normaal (118%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1900,24 +604,24 @@
     {
       "time": "2026-05-08T11:00:00+02:00",
       "baseline": 105.87,
-      "predicted": 109.05,
-      "lower": 89.42,
-      "upper": 128.68,
-      "uncertainty_pct": 0.18,
-      "total_points": 2,
-      "days_ahead": 3,
-      "sw_ratio_h": 0.92,
-      "sw_ratio_daily": 1.054,
+      "predicted": 107.46,
+      "lower": 91.34,
+      "upper": 123.58,
+      "uncertainty_pct": 0.15,
+      "total_points": 1,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.342,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (92%)"
+          "points": -1,
+          "reason": "zonnig (134%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -1955,13 +659,13 @@
       "time": "2026-05-08T12:00:00+02:00",
       "baseline": 101.1,
       "predicted": 102.62,
-      "lower": 85.17,
-      "upper": 120.07,
-      "uncertainty_pct": 0.17,
+      "lower": 87.23,
+      "upper": 118.01,
+      "uncertainty_pct": 0.15,
       "total_points": 1,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.33,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.334,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
@@ -1971,7 +675,7 @@
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2008,24 +712,24 @@
     {
       "time": "2026-05-08T13:00:00+02:00",
       "baseline": 91.95,
-      "predicted": 89.19,
-      "lower": 73.14,
-      "upper": 105.24,
-      "uncertainty_pct": 0.18,
-      "total_points": -2,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.607,
-      "sw_ratio_daily": 1.054,
+      "predicted": 93.33,
+      "lower": 79.33,
+      "upper": 107.33,
+      "uncertainty_pct": 0.15,
+      "total_points": 1,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.378,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (161%)"
+          "points": -1,
+          "reason": "zonnig (138%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2054,8 +758,8 @@
         },
         {
           "name": "nonlinear",
-          "points": -1,
-          "reason": "oversupply niet-lineair: zon -1.3p"
+          "points": 0,
+          "reason": "n.v.t."
         }
       ]
     },
@@ -2063,23 +767,23 @@
       "time": "2026-05-08T14:00:00+02:00",
       "baseline": 94.31,
       "predicted": 97.14,
-      "lower": 79.65,
-      "upper": 114.63,
-      "uncertainty_pct": 0.18,
+      "lower": 81.6,
+      "upper": 112.68,
+      "uncertainty_pct": 0.16,
       "total_points": 2,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.122,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 0.824,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (112%)"
+          "reason": "normaal (82%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2117,23 +821,23 @@
       "time": "2026-05-08T15:00:00+02:00",
       "baseline": 102.98,
       "predicted": 106.07,
-      "lower": 86.98,
-      "upper": 125.16,
-      "uncertainty_pct": 0.18,
+      "lower": 89.1,
+      "upper": 123.04,
+      "uncertainty_pct": 0.16,
       "total_points": 2,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.011,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 0.838,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (101%)"
+          "reason": "normaal (84%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2170,24 +874,24 @@
     {
       "time": "2026-05-08T16:00:00+02:00",
       "baseline": 106.77,
-      "predicted": 109.97,
-      "lower": 90.18,
-      "upper": 129.76,
-      "uncertainty_pct": 0.18,
-      "total_points": 2,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.156,
-      "sw_ratio_daily": 1.054,
+      "predicted": 108.37,
+      "lower": 92.11,
+      "upper": 124.63,
+      "uncertainty_pct": 0.15,
+      "total_points": 1,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.304,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (116%)"
+          "points": -1,
+          "reason": "zonnig (130%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2224,24 +928,24 @@
     {
       "time": "2026-05-08T17:00:00+02:00",
       "baseline": 120.15,
-      "predicted": 125.56,
-      "lower": 101.7,
-      "upper": 149.42,
-      "uncertainty_pct": 0.19,
-      "total_points": 3,
-      "days_ahead": 3,
-      "sw_ratio_h": 0.891,
-      "sw_ratio_daily": 1.054,
+      "predicted": 123.75,
+      "lower": 103.95,
+      "upper": 143.55,
+      "uncertainty_pct": 0.16,
+      "total_points": 2,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.448,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (89%)"
+          "points": -1,
+          "reason": "zonnig (145%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2271,7 +975,7 @@
         {
           "name": "nonlinear",
           "points": 0,
-          "reason": "n.v.t."
+          "reason": "oversupply niet-lineair: zon -0.3p"
         }
       ]
     },
@@ -2279,23 +983,23 @@
       "time": "2026-05-08T18:00:00+02:00",
       "baseline": 125.96,
       "predicted": 131.63,
-      "lower": 106.62,
-      "upper": 156.64,
-      "uncertainty_pct": 0.19,
+      "lower": 109.25,
+      "upper": 154.01,
+      "uncertainty_pct": 0.17,
       "total_points": 3,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.094,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 0.914,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (109%)"
+          "reason": "normaal (91%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2332,24 +1036,24 @@
     {
       "time": "2026-05-08T19:00:00+02:00",
       "baseline": 153.0,
-      "predicted": 159.88,
-      "lower": 129.5,
-      "upper": 190.26,
-      "uncertainty_pct": 0.19,
-      "total_points": 3,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.221,
-      "sw_ratio_daily": 1.054,
+      "predicted": 162.18,
+      "lower": 132.99,
+      "upper": 191.37,
+      "uncertainty_pct": 0.18,
+      "total_points": 4,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.051,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
-          "points": -1,
-          "reason": "zonnig (122%)"
+          "points": 0,
+          "reason": "normaal (105%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2387,23 +1091,23 @@
       "time": "2026-05-08T20:00:00+02:00",
       "baseline": 156.4,
       "predicted": 158.75,
-      "lower": 131.76,
-      "upper": 185.74,
-      "uncertainty_pct": 0.17,
+      "lower": 134.94,
+      "upper": 182.56,
+      "uncertainty_pct": 0.15,
       "total_points": 1,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.536,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.83,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": -3,
-          "reason": "heel zonnig (154%)"
+          "reason": "heel zonnig (183%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2441,23 +1145,23 @@
       "time": "2026-05-08T21:00:00+02:00",
       "baseline": 154.61,
       "predicted": 159.25,
-      "lower": 130.59,
-      "upper": 187.91,
-      "uncertainty_pct": 0.18,
+      "lower": 133.77,
+      "upper": 184.73,
+      "uncertainty_pct": 0.16,
       "total_points": 2,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.054,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.09,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (105%)"
+          "reason": "normaal (109%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2495,23 +1199,23 @@
       "time": "2026-05-08T22:00:00+02:00",
       "baseline": 143.41,
       "predicted": 147.71,
-      "lower": 121.12,
-      "upper": 174.3,
-      "uncertainty_pct": 0.18,
+      "lower": 124.08,
+      "upper": 171.34,
+      "uncertainty_pct": 0.16,
       "total_points": 2,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.054,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.09,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (105%)"
+          "reason": "normaal (109%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2549,23 +1253,23 @@
       "time": "2026-05-08T23:00:00+02:00",
       "baseline": 128.43,
       "predicted": 132.28,
-      "lower": 108.47,
-      "upper": 156.09,
-      "uncertainty_pct": 0.18,
+      "lower": 111.12,
+      "upper": 153.44,
+      "uncertainty_pct": 0.16,
       "total_points": 2,
-      "days_ahead": 3,
-      "sw_ratio_h": 1.054,
-      "sw_ratio_daily": 1.054,
+      "days_ahead": 2,
+      "sw_ratio_h": 1.09,
+      "sw_ratio_daily": 1.09,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (105%)"
+          "reason": "normaal (109%)"
         },
         {
           "name": "wind",
           "points": 3,
-          "reason": "windstil (2.7 m/s)"
+          "reason": "windstil (2.5 m/s)"
         },
         {
           "name": "temperatuur",
@@ -2603,18 +1307,18 @@
       "time": "2026-05-09T00:00:00+02:00",
       "baseline": 121.75,
       "predicted": 119.93,
-      "lower": 97.14,
-      "upper": 142.72,
-      "uncertainty_pct": 0.19,
+      "lower": 99.54,
+      "upper": 140.32,
+      "uncertainty_pct": 0.17,
       "total_points": -1,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.292,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.385,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (129%)"
+          "reason": "zonnig (139%)"
         },
         {
           "name": "wind",
@@ -2624,7 +1328,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -2657,18 +1361,18 @@
       "time": "2026-05-09T01:00:00+02:00",
       "baseline": 115.58,
       "predicted": 113.84,
-      "lower": 92.21,
-      "upper": 135.47,
-      "uncertainty_pct": 0.19,
+      "lower": 94.49,
+      "upper": 133.19,
+      "uncertainty_pct": 0.17,
       "total_points": -1,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.292,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.385,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (129%)"
+          "reason": "zonnig (139%)"
         },
         {
           "name": "wind",
@@ -2678,7 +1382,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -2711,18 +1415,18 @@
       "time": "2026-05-09T02:00:00+02:00",
       "baseline": 115.13,
       "predicted": 113.4,
-      "lower": 91.85,
-      "upper": 134.95,
-      "uncertainty_pct": 0.19,
+      "lower": 94.12,
+      "upper": 132.68,
+      "uncertainty_pct": 0.17,
       "total_points": -1,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.292,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.385,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (129%)"
+          "reason": "zonnig (139%)"
         },
         {
           "name": "wind",
@@ -2732,7 +1436,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -2765,18 +1469,18 @@
       "time": "2026-05-09T03:00:00+02:00",
       "baseline": 109.73,
       "predicted": 108.09,
-      "lower": 87.55,
-      "upper": 128.63,
-      "uncertainty_pct": 0.19,
+      "lower": 89.71,
+      "upper": 126.47,
+      "uncertainty_pct": 0.17,
       "total_points": -1,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.292,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.385,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (129%)"
+          "reason": "zonnig (139%)"
         },
         {
           "name": "wind",
@@ -2786,7 +1490,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -2819,18 +1523,18 @@
       "time": "2026-05-09T04:00:00+02:00",
       "baseline": 109.22,
       "predicted": 107.59,
-      "lower": 87.15,
-      "upper": 128.03,
-      "uncertainty_pct": 0.19,
+      "lower": 89.3,
+      "upper": 125.88,
+      "uncertainty_pct": 0.17,
       "total_points": -1,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.292,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.385,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (129%)"
+          "reason": "zonnig (139%)"
         },
         {
           "name": "wind",
@@ -2840,7 +1544,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -2873,18 +1577,18 @@
       "time": "2026-05-09T05:00:00+02:00",
       "baseline": 107.36,
       "predicted": 105.75,
-      "lower": 85.66,
-      "upper": 125.84,
-      "uncertainty_pct": 0.19,
+      "lower": 87.77,
+      "upper": 123.73,
+      "uncertainty_pct": 0.17,
       "total_points": -1,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.292,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.385,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (129%)"
+          "reason": "zonnig (139%)"
         },
         {
           "name": "wind",
@@ -2894,7 +1598,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -2927,13 +1631,13 @@
       "time": "2026-05-09T06:00:00+02:00",
       "baseline": 113.77,
       "predicted": 124.01,
-      "lower": 94.25,
-      "upper": 153.77,
-      "uncertainty_pct": 0.24,
+      "lower": 96.73,
+      "upper": 151.29,
+      "uncertainty_pct": 0.22,
       "total_points": 6,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "sw_ratio_h": 0.0,
-      "sw_ratio_daily": 1.292,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
@@ -2948,7 +1652,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -2981,18 +1685,18 @@
       "time": "2026-05-09T07:00:00+02:00",
       "baseline": 108.55,
       "predicted": 118.32,
-      "lower": 89.92,
-      "upper": 146.72,
-      "uncertainty_pct": 0.24,
+      "lower": 92.29,
+      "upper": 144.35,
+      "uncertainty_pct": 0.22,
       "total_points": 6,
-      "days_ahead": 4,
-      "sw_ratio_h": 0.258,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 0.216,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": 3,
-          "reason": "bewolkt (26% van seizoen)"
+          "reason": "bewolkt (22% van seizoen)"
         },
         {
           "name": "wind",
@@ -3002,7 +1706,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3035,18 +1739,18 @@
       "time": "2026-05-09T08:00:00+02:00",
       "baseline": 80.22,
       "predicted": 85.03,
-      "lower": 66.32,
-      "upper": 103.74,
-      "uncertainty_pct": 0.22,
+      "lower": 68.02,
+      "upper": 102.04,
+      "uncertainty_pct": 0.2,
       "total_points": 4,
-      "days_ahead": 4,
-      "sw_ratio_h": 0.553,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 0.637,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": 1,
-          "reason": "iets minder zon (55%)"
+          "reason": "iets minder zon (64%)"
         },
         {
           "name": "wind",
@@ -3056,7 +1760,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3089,18 +1793,18 @@
       "time": "2026-05-09T09:00:00+02:00",
       "baseline": 27.62,
       "predicted": 28.03,
-      "lower": 22.7,
-      "upper": 33.36,
-      "uncertainty_pct": 0.19,
+      "lower": 23.26,
+      "upper": 32.8,
+      "uncertainty_pct": 0.17,
       "total_points": 1,
-      "days_ahead": 4,
-      "sw_ratio_h": 0.817,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 0.894,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (82%)"
+          "reason": "normaal (89%)"
         },
         {
           "name": "wind",
@@ -3110,7 +1814,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3143,18 +1847,18 @@
       "time": "2026-05-09T10:00:00+02:00",
       "baseline": -0.92,
       "predicted": -0.93,
-      "lower": -0.75,
-      "upper": -1.11,
-      "uncertainty_pct": 0.19,
+      "lower": -0.77,
+      "upper": -1.09,
+      "uncertainty_pct": 0.17,
       "total_points": 1,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.101,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.145,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (110%)"
+          "reason": "normaal (115%)"
         },
         {
           "name": "wind",
@@ -3164,7 +1868,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3197,18 +1901,18 @@
       "time": "2026-05-09T11:00:00+02:00",
       "baseline": -25.66,
       "predicted": -25.66,
-      "lower": -21.04,
-      "upper": -30.28,
-      "uncertainty_pct": 0.18,
+      "lower": -21.55,
+      "upper": -29.77,
+      "uncertainty_pct": 0.16,
       "total_points": 0,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.332,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.353,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (133%)"
+          "reason": "zonnig (135%)"
         },
         {
           "name": "wind",
@@ -3218,7 +1922,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3251,18 +1955,18 @@
       "time": "2026-05-09T12:00:00+02:00",
       "baseline": 4.04,
       "predicted": 4.04,
-      "lower": 3.31,
-      "upper": 4.77,
-      "uncertainty_pct": 0.18,
+      "lower": 3.39,
+      "upper": 4.69,
+      "uncertainty_pct": 0.16,
       "total_points": 0,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.444,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.485,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (144%)"
+          "reason": "zonnig (149%)"
         },
         {
           "name": "wind",
@@ -3272,7 +1976,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3297,26 +2001,26 @@
         {
           "name": "nonlinear",
           "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.3p"
+          "reason": "oversupply niet-lineair: zon -0.5p"
         }
       ]
     },
     {
       "time": "2026-05-09T13:00:00+02:00",
       "baseline": -13.14,
-      "predicted": -13.14,
-      "lower": -10.77,
-      "upper": -15.51,
-      "uncertainty_pct": 0.18,
-      "total_points": 0,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.475,
-      "sw_ratio_daily": 1.292,
+      "predicted": -12.55,
+      "lower": -10.17,
+      "upper": -14.93,
+      "uncertainty_pct": 0.19,
+      "total_points": -3,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.566,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
-          "points": -1,
-          "reason": "zonnig (147%)"
+          "points": -3,
+          "reason": "heel zonnig (157%)"
         },
         {
           "name": "wind",
@@ -3326,7 +2030,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3350,8 +2054,8 @@
         },
         {
           "name": "nonlinear",
-          "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.4p"
+          "points": -1,
+          "reason": "oversupply niet-lineair: zon -1.0p"
         }
       ]
     },
@@ -3361,16 +2065,16 @@
       "predicted": -0.0,
       "lower": -0.0,
       "upper": -0.0,
-      "uncertainty_pct": 0.18,
-      "total_points": 0,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.477,
-      "sw_ratio_daily": 1.292,
+      "uncertainty_pct": 0.19,
+      "total_points": -3,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.609,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
-          "points": -1,
-          "reason": "zonnig (148%)"
+          "points": -3,
+          "reason": "heel zonnig (161%)"
         },
         {
           "name": "wind",
@@ -3380,7 +2084,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3404,27 +2108,27 @@
         },
         {
           "name": "nonlinear",
-          "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.4p"
+          "points": -1,
+          "reason": "oversupply niet-lineair: zon -1.3p"
         }
       ]
     },
     {
       "time": "2026-05-09T15:00:00+02:00",
       "baseline": 18.1,
-      "predicted": 18.1,
-      "lower": 14.84,
-      "upper": 21.36,
-      "uncertainty_pct": 0.18,
-      "total_points": 0,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.471,
-      "sw_ratio_daily": 1.292,
+      "predicted": 17.29,
+      "lower": 14.0,
+      "upper": 20.58,
+      "uncertainty_pct": 0.19,
+      "total_points": -3,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.603,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
-          "points": -1,
-          "reason": "zonnig (147%)"
+          "points": -3,
+          "reason": "heel zonnig (160%)"
         },
         {
           "name": "wind",
@@ -3434,7 +2138,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3458,27 +2162,27 @@
         },
         {
           "name": "nonlinear",
-          "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.4p"
+          "points": -1,
+          "reason": "oversupply niet-lineair: zon -1.3p"
         }
       ]
     },
     {
       "time": "2026-05-09T16:00:00+02:00",
       "baseline": 32.66,
-      "predicted": 32.66,
-      "lower": 26.78,
-      "upper": 38.54,
-      "uncertainty_pct": 0.18,
-      "total_points": 0,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.445,
-      "sw_ratio_daily": 1.292,
+      "predicted": 31.19,
+      "lower": 25.26,
+      "upper": 37.12,
+      "uncertainty_pct": 0.19,
+      "total_points": -3,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.564,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
-          "points": -1,
-          "reason": "zonnig (145%)"
+          "points": -3,
+          "reason": "heel zonnig (156%)"
         },
         {
           "name": "wind",
@@ -3488,7 +2192,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3512,27 +2216,27 @@
         },
         {
           "name": "nonlinear",
-          "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.3p"
+          "points": -1,
+          "reason": "oversupply niet-lineair: zon -1.0p"
         }
       ]
     },
     {
       "time": "2026-05-09T17:00:00+02:00",
       "baseline": 89.56,
-      "predicted": 90.9,
-      "lower": 73.63,
-      "upper": 108.17,
-      "uncertainty_pct": 0.19,
-      "total_points": 1,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.438,
-      "sw_ratio_daily": 1.292,
+      "predicted": 86.87,
+      "lower": 71.23,
+      "upper": 102.51,
+      "uncertainty_pct": 0.18,
+      "total_points": -2,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.551,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
-          "points": -1,
-          "reason": "zonnig (144%)"
+          "points": -3,
+          "reason": "heel zonnig (155%)"
         },
         {
           "name": "wind",
@@ -3542,7 +2246,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3566,27 +2270,27 @@
         },
         {
           "name": "nonlinear",
-          "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.3p"
+          "points": -1,
+          "reason": "oversupply niet-lineair: zon -0.9p"
         }
       ]
     },
     {
       "time": "2026-05-09T18:00:00+02:00",
       "baseline": 127.99,
-      "predicted": 124.15,
-      "lower": 99.32,
-      "upper": 148.98,
-      "uncertainty_pct": 0.2,
-      "total_points": -2,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.505,
-      "sw_ratio_daily": 1.292,
+      "predicted": 122.23,
+      "lower": 99.01,
+      "upper": 145.45,
+      "uncertainty_pct": 0.19,
+      "total_points": -3,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.644,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -3,
-          "reason": "heel zonnig (150%)"
+          "reason": "heel zonnig (164%)"
         },
         {
           "name": "wind",
@@ -3596,7 +2300,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3620,8 +2324,8 @@
         },
         {
           "name": "nonlinear",
-          "points": -1,
-          "reason": "oversupply niet-lineair: zon -0.6p"
+          "points": -2,
+          "reason": "oversupply niet-lineair: zon -1.7p"
         }
       ]
     },
@@ -3629,18 +2333,18 @@
       "time": "2026-05-09T19:00:00+02:00",
       "baseline": 148.94,
       "predicted": 148.94,
-      "lower": 122.13,
-      "upper": 175.75,
-      "uncertainty_pct": 0.18,
+      "lower": 125.11,
+      "upper": 172.77,
+      "uncertainty_pct": 0.16,
       "total_points": 0,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.68,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.866,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -3,
-          "reason": "heel zonnig (168%)"
+          "reason": "heel zonnig (187%)"
         },
         {
           "name": "wind",
@@ -3650,7 +2354,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3683,18 +2387,18 @@
       "time": "2026-05-09T20:00:00+02:00",
       "baseline": 158.56,
       "predicted": 153.8,
-      "lower": 123.04,
-      "upper": 184.56,
-      "uncertainty_pct": 0.2,
+      "lower": 126.12,
+      "upper": 181.48,
+      "uncertainty_pct": 0.18,
       "total_points": -2,
-      "days_ahead": 4,
-      "sw_ratio_h": 2.202,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 2.534,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -5,
-          "reason": "extreem zonnig (220%)"
+          "reason": "extreem zonnig (253%)"
         },
         {
           "name": "wind",
@@ -3704,7 +2408,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3737,18 +2441,18 @@
       "time": "2026-05-09T21:00:00+02:00",
       "baseline": 150.59,
       "predicted": 150.59,
-      "lower": 123.48,
-      "upper": 177.7,
-      "uncertainty_pct": 0.18,
+      "lower": 126.5,
+      "upper": 174.68,
+      "uncertainty_pct": 0.16,
       "total_points": 0,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.292,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.385,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (129%)"
+          "reason": "zonnig (139%)"
         },
         {
           "name": "wind",
@@ -3758,7 +2462,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3791,18 +2495,18 @@
       "time": "2026-05-09T22:00:00+02:00",
       "baseline": 135.99,
       "predicted": 135.99,
-      "lower": 111.51,
-      "upper": 160.47,
-      "uncertainty_pct": 0.18,
+      "lower": 114.23,
+      "upper": 157.75,
+      "uncertainty_pct": 0.16,
       "total_points": 0,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.292,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.385,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (129%)"
+          "reason": "zonnig (139%)"
         },
         {
           "name": "wind",
@@ -3812,7 +2516,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3845,18 +2549,18 @@
       "time": "2026-05-09T23:00:00+02:00",
       "baseline": 120.38,
       "predicted": 120.38,
-      "lower": 98.71,
-      "upper": 142.05,
-      "uncertainty_pct": 0.18,
+      "lower": 101.12,
+      "upper": 139.64,
+      "uncertainty_pct": 0.16,
       "total_points": 0,
-      "days_ahead": 4,
-      "sw_ratio_h": 1.292,
-      "sw_ratio_daily": 1.292,
+      "days_ahead": 3,
+      "sw_ratio_h": 1.385,
+      "sw_ratio_daily": 1.385,
       "factors": [
         {
           "name": "zon",
           "points": -1,
-          "reason": "zonnig (129%)"
+          "reason": "zonnig (139%)"
         },
         {
           "name": "wind",
@@ -3866,7 +2570,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.5°C)"
+          "reason": "mild (14.2°C)"
         },
         {
           "name": "gas",
@@ -3899,18 +2603,18 @@
       "time": "2026-05-10T00:00:00+02:00",
       "baseline": 120.13,
       "predicted": 123.73,
-      "lower": 96.51,
-      "upper": 150.95,
-      "uncertainty_pct": 0.22,
+      "lower": 98.98,
+      "upper": 148.48,
+      "uncertainty_pct": 0.2,
       "total_points": 2,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.89,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.081,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (89%) ×2 (zondag)"
+          "reason": "normaal (108%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -3920,7 +2624,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -3953,18 +2657,18 @@
       "time": "2026-05-10T01:00:00+02:00",
       "baseline": 115.12,
       "predicted": 118.57,
-      "lower": 92.48,
-      "upper": 144.66,
-      "uncertainty_pct": 0.22,
+      "lower": 94.86,
+      "upper": 142.28,
+      "uncertainty_pct": 0.2,
       "total_points": 2,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.89,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.081,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (89%) ×2 (zondag)"
+          "reason": "normaal (108%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -3974,7 +2678,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4007,18 +2711,18 @@
       "time": "2026-05-10T02:00:00+02:00",
       "baseline": 114.06,
       "predicted": 117.48,
-      "lower": 91.63,
-      "upper": 143.33,
-      "uncertainty_pct": 0.22,
+      "lower": 93.98,
+      "upper": 140.98,
+      "uncertainty_pct": 0.2,
       "total_points": 2,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.89,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.081,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (89%) ×2 (zondag)"
+          "reason": "normaal (108%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4028,7 +2732,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4061,18 +2765,18 @@
       "time": "2026-05-10T03:00:00+02:00",
       "baseline": 110.76,
       "predicted": 114.08,
-      "lower": 88.98,
-      "upper": 139.18,
-      "uncertainty_pct": 0.22,
+      "lower": 91.26,
+      "upper": 136.9,
+      "uncertainty_pct": 0.2,
       "total_points": 2,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.89,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.081,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (89%) ×2 (zondag)"
+          "reason": "normaal (108%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4082,7 +2786,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4115,18 +2819,18 @@
       "time": "2026-05-10T04:00:00+02:00",
       "baseline": 108.4,
       "predicted": 111.65,
-      "lower": 87.09,
-      "upper": 136.21,
-      "uncertainty_pct": 0.22,
+      "lower": 89.32,
+      "upper": 133.98,
+      "uncertainty_pct": 0.2,
       "total_points": 2,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.89,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.081,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (89%) ×2 (zondag)"
+          "reason": "normaal (108%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4136,7 +2840,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4169,18 +2873,18 @@
       "time": "2026-05-10T05:00:00+02:00",
       "baseline": 107.59,
       "predicted": 110.82,
-      "lower": 86.44,
-      "upper": 135.2,
-      "uncertainty_pct": 0.22,
+      "lower": 88.66,
+      "upper": 132.98,
+      "uncertainty_pct": 0.2,
       "total_points": 2,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.89,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.081,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (89%) ×2 (zondag)"
+          "reason": "normaal (108%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4190,7 +2894,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4223,13 +2927,13 @@
       "time": "2026-05-10T06:00:00+02:00",
       "baseline": 107.29,
       "predicted": 124.99,
-      "lower": 86.24,
-      "upper": 163.74,
-      "uncertainty_pct": 0.31,
+      "lower": 88.74,
+      "upper": 161.24,
+      "uncertainty_pct": 0.29,
       "total_points": 11,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "sw_ratio_h": 0.0,
-      "sw_ratio_daily": 0.89,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
@@ -4244,7 +2948,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4277,18 +2981,18 @@
       "time": "2026-05-10T07:00:00+02:00",
       "baseline": 101.1,
       "predicted": 117.78,
-      "lower": 81.27,
-      "upper": 154.29,
-      "uncertainty_pct": 0.31,
+      "lower": 83.62,
+      "upper": 151.94,
+      "uncertainty_pct": 0.29,
       "total_points": 11,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.215,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 0.244,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 6,
-          "reason": "bewolkt (21% van seizoen) ×2 (zondag)"
+          "reason": "bewolkt (24% van seizoen) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4298,7 +3002,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4330,19 +3034,19 @@
     {
       "time": "2026-05-10T08:00:00+02:00",
       "baseline": 79.74,
-      "predicted": 92.9,
-      "lower": 64.1,
-      "upper": 121.7,
-      "uncertainty_pct": 0.31,
-      "total_points": 11,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.455,
-      "sw_ratio_daily": 0.89,
+      "predicted": 88.11,
+      "lower": 66.08,
+      "upper": 110.14,
+      "uncertainty_pct": 0.25,
+      "total_points": 7,
+      "days_ahead": 4,
+      "sw_ratio_h": 0.502,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
-          "points": 6,
-          "reason": "bewolkt (45% van seizoen) ×2 (zondag)"
+          "points": 2,
+          "reason": "iets minder zon (50%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4352,7 +3056,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4385,18 +3089,18 @@
       "time": "2026-05-10T09:00:00+02:00",
       "baseline": 7.76,
       "predicted": 8.34,
-      "lower": 6.25,
-      "upper": 10.43,
-      "uncertainty_pct": 0.25,
+      "lower": 6.42,
+      "upper": 10.26,
+      "uncertainty_pct": 0.23,
       "total_points": 5,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.683,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 0.705,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 2,
-          "reason": "iets minder zon (68%) ×2 (zondag)"
+          "reason": "iets minder zon (70%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4406,7 +3110,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4439,18 +3143,18 @@
       "time": "2026-05-10T10:00:00+02:00",
       "baseline": -0.52,
       "predicted": -0.54,
-      "lower": -0.42,
-      "upper": -0.66,
-      "uncertainty_pct": 0.23,
+      "lower": -0.43,
+      "upper": -0.65,
+      "uncertainty_pct": 0.21,
       "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.937,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 0.906,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (94%) ×2 (zondag)"
+          "reason": "normaal (91%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4460,7 +3164,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4493,18 +3197,18 @@
       "time": "2026-05-10T11:00:00+02:00",
       "baseline": -9.22,
       "predicted": -9.63,
-      "lower": -7.42,
-      "upper": -11.84,
-      "uncertainty_pct": 0.23,
+      "lower": -7.61,
+      "upper": -11.65,
+      "uncertainty_pct": 0.21,
       "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 1.121,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.077,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (112%) ×2 (zondag)"
+          "reason": "normaal (108%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4514,7 +3218,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4547,18 +3251,18 @@
       "time": "2026-05-10T12:00:00+02:00",
       "baseline": -20.47,
       "predicted": -21.39,
-      "lower": -16.47,
-      "upper": -26.31,
-      "uncertainty_pct": 0.23,
+      "lower": -16.9,
+      "upper": -25.88,
+      "uncertainty_pct": 0.21,
       "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 1.13,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.182,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (113%) ×2 (zondag)"
+          "reason": "normaal (118%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4568,7 +3272,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4600,19 +3304,19 @@
     {
       "time": "2026-05-10T13:00:00+02:00",
       "baseline": -59.43,
-      "predicted": -62.1,
-      "lower": -47.82,
-      "upper": -76.38,
-      "uncertainty_pct": 0.23,
-      "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 1.023,
-      "sw_ratio_daily": 0.89,
+      "predicted": -60.32,
+      "lower": -48.86,
+      "upper": -71.78,
+      "uncertainty_pct": 0.19,
+      "total_points": 1,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.245,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (102%) ×2 (zondag)"
+          "points": -2,
+          "reason": "zonnig (124%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4622,7 +3326,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4654,19 +3358,19 @@
     {
       "time": "2026-05-10T14:00:00+02:00",
       "baseline": -40.01,
-      "predicted": -41.81,
-      "lower": -32.19,
-      "upper": -51.43,
-      "uncertainty_pct": 0.23,
-      "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.919,
-      "sw_ratio_daily": 0.89,
+      "predicted": -40.61,
+      "lower": -32.89,
+      "upper": -48.33,
+      "uncertainty_pct": 0.19,
+      "total_points": 1,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.283,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (92%) ×2 (zondag)"
+          "points": -2,
+          "reason": "zonnig (128%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4676,7 +3380,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4708,19 +3412,19 @@
     {
       "time": "2026-05-10T15:00:00+02:00",
       "baseline": -8.8,
-      "predicted": -9.2,
-      "lower": -7.08,
-      "upper": -11.32,
-      "uncertainty_pct": 0.23,
-      "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.871,
-      "sw_ratio_daily": 0.89,
+      "predicted": -8.93,
+      "lower": -7.23,
+      "upper": -10.63,
+      "uncertainty_pct": 0.19,
+      "total_points": 1,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.328,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (87%) ×2 (zondag)"
+          "points": -2,
+          "reason": "zonnig (133%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4730,7 +3434,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4765,16 +3469,16 @@
       "predicted": 0.06,
       "lower": 0.05,
       "upper": 0.07,
-      "uncertainty_pct": 0.23,
-      "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.845,
-      "sw_ratio_daily": 0.89,
+      "uncertainty_pct": 0.19,
+      "total_points": 1,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.358,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (84%) ×2 (zondag)"
+          "points": -2,
+          "reason": "zonnig (136%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4784,7 +3488,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4816,19 +3520,19 @@
     {
       "time": "2026-05-10T17:00:00+02:00",
       "baseline": 73.48,
-      "predicted": 77.89,
-      "lower": 59.2,
-      "upper": 96.58,
-      "uncertainty_pct": 0.24,
-      "total_points": 4,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.842,
-      "sw_ratio_daily": 0.89,
+      "predicted": 75.68,
+      "lower": 60.54,
+      "upper": 90.82,
+      "uncertainty_pct": 0.2,
+      "total_points": 2,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.333,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (84%) ×2 (zondag)"
+          "points": -2,
+          "reason": "zonnig (133%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4838,7 +3542,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4870,19 +3574,19 @@
     {
       "time": "2026-05-10T18:00:00+02:00",
       "baseline": 118.14,
-      "predicted": 125.23,
-      "lower": 95.17,
-      "upper": 155.29,
-      "uncertainty_pct": 0.24,
-      "total_points": 4,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.882,
-      "sw_ratio_daily": 0.89,
+      "predicted": 121.68,
+      "lower": 97.34,
+      "upper": 146.02,
+      "uncertainty_pct": 0.2,
+      "total_points": 2,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.202,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (88%) ×2 (zondag)"
+          "points": -2,
+          "reason": "zonnig (120%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4892,7 +3596,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4925,18 +3629,18 @@
       "time": "2026-05-10T19:00:00+02:00",
       "baseline": 158.91,
       "predicted": 170.83,
-      "lower": 128.12,
-      "upper": 213.54,
-      "uncertainty_pct": 0.25,
+      "lower": 131.54,
+      "upper": 210.12,
+      "uncertainty_pct": 0.23,
       "total_points": 5,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.995,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.025,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (100%) ×2 (zondag)"
+          "reason": "normaal (102%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -4946,7 +3650,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -4978,19 +3682,19 @@
     {
       "time": "2026-05-10T20:00:00+02:00",
       "baseline": 165.71,
-      "predicted": 173.17,
-      "lower": 133.34,
-      "upper": 213.0,
+      "predicted": 178.14,
+      "lower": 137.17,
+      "upper": 219.11,
       "uncertainty_pct": 0.23,
-      "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 1.37,
-      "sw_ratio_daily": 0.89,
+      "total_points": 5,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.041,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
-          "points": -2,
-          "reason": "zonnig (137%) ×2 (zondag)"
+          "points": 0,
+          "reason": "normaal (104%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -5000,7 +3704,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -5033,18 +3737,18 @@
       "time": "2026-05-10T21:00:00+02:00",
       "baseline": 145.05,
       "predicted": 151.58,
-      "lower": 116.72,
-      "upper": 186.44,
-      "uncertainty_pct": 0.23,
+      "lower": 119.75,
+      "upper": 183.41,
+      "uncertainty_pct": 0.21,
       "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.89,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.081,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (89%) ×2 (zondag)"
+          "reason": "normaal (108%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -5054,7 +3758,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -5087,18 +3791,18 @@
       "time": "2026-05-10T22:00:00+02:00",
       "baseline": 129.69,
       "predicted": 135.53,
-      "lower": 104.36,
-      "upper": 166.7,
-      "uncertainty_pct": 0.23,
+      "lower": 107.07,
+      "upper": 163.99,
+      "uncertainty_pct": 0.21,
       "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.89,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.081,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (89%) ×2 (zondag)"
+          "reason": "normaal (108%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -5108,7 +3812,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -5141,18 +3845,18 @@
       "time": "2026-05-10T23:00:00+02:00",
       "baseline": 119.44,
       "predicted": 124.81,
-      "lower": 96.1,
-      "upper": 153.52,
-      "uncertainty_pct": 0.23,
+      "lower": 98.6,
+      "upper": 151.02,
+      "uncertainty_pct": 0.21,
       "total_points": 3,
-      "days_ahead": 5,
-      "sw_ratio_h": 0.89,
-      "sw_ratio_daily": 0.89,
+      "days_ahead": 4,
+      "sw_ratio_h": 1.081,
+      "sw_ratio_daily": 1.081,
       "factors": [
         {
           "name": "zon",
           "points": 0,
-          "reason": "normaal (89%) ×2 (zondag)"
+          "reason": "normaal (108%) ×2 (zondag)"
         },
         {
           "name": "wind",
@@ -5162,7 +3866,7 @@
         {
           "name": "temperatuur",
           "points": 0,
-          "reason": "mild (15.4°C)"
+          "reason": "mild (15.1°C)"
         },
         {
           "name": "gas",
@@ -5194,19 +3898,19 @@
     {
       "time": "2026-05-11T00:00:00+02:00",
       "baseline": 119.73,
-      "predicted": 117.93,
-      "lower": 90.81,
-      "upper": 145.05,
+      "predicted": 125.12,
+      "lower": 96.34,
+      "upper": 153.9,
       "uncertainty_pct": 0.23,
-      "total_points": -1,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.189,
-      "sw_ratio_daily": 1.189,
+      "total_points": 3,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.38,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (119%)"
+          "points": 3,
+          "reason": "bewolkt (38% van seizoen)"
         },
         {
           "name": "wind",
@@ -5215,8 +3919,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5248,19 +3952,19 @@
     {
       "time": "2026-05-11T01:00:00+02:00",
       "baseline": 113.77,
-      "predicted": 112.06,
-      "lower": 86.29,
-      "upper": 137.83,
+      "predicted": 118.89,
+      "lower": 91.55,
+      "upper": 146.23,
       "uncertainty_pct": 0.23,
-      "total_points": -1,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.189,
-      "sw_ratio_daily": 1.189,
+      "total_points": 3,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.38,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (119%)"
+          "points": 3,
+          "reason": "bewolkt (38% van seizoen)"
         },
         {
           "name": "wind",
@@ -5269,8 +3973,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5302,19 +4006,19 @@
     {
       "time": "2026-05-11T02:00:00+02:00",
       "baseline": 111.9,
-      "predicted": 110.22,
-      "lower": 84.87,
-      "upper": 135.57,
+      "predicted": 116.94,
+      "lower": 90.04,
+      "upper": 143.84,
       "uncertainty_pct": 0.23,
-      "total_points": -1,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.189,
-      "sw_ratio_daily": 1.189,
+      "total_points": 3,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.38,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (119%)"
+          "points": 3,
+          "reason": "bewolkt (38% van seizoen)"
         },
         {
           "name": "wind",
@@ -5323,8 +4027,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5356,19 +4060,19 @@
     {
       "time": "2026-05-11T03:00:00+02:00",
       "baseline": 111.63,
-      "predicted": 109.96,
-      "lower": 84.67,
-      "upper": 135.25,
+      "predicted": 116.65,
+      "lower": 89.82,
+      "upper": 143.48,
       "uncertainty_pct": 0.23,
-      "total_points": -1,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.189,
-      "sw_ratio_daily": 1.189,
+      "total_points": 3,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.38,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (119%)"
+          "points": 3,
+          "reason": "bewolkt (38% van seizoen)"
         },
         {
           "name": "wind",
@@ -5377,8 +4081,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5410,19 +4114,19 @@
     {
       "time": "2026-05-11T04:00:00+02:00",
       "baseline": 111.58,
-      "predicted": 109.91,
-      "lower": 84.63,
-      "upper": 135.19,
+      "predicted": 116.6,
+      "lower": 89.78,
+      "upper": 143.42,
       "uncertainty_pct": 0.23,
-      "total_points": -1,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.189,
-      "sw_ratio_daily": 1.189,
+      "total_points": 3,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.38,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (119%)"
+          "points": 3,
+          "reason": "bewolkt (38% van seizoen)"
         },
         {
           "name": "wind",
@@ -5431,8 +4135,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5464,19 +4168,19 @@
     {
       "time": "2026-05-11T05:00:00+02:00",
       "baseline": 126.89,
-      "predicted": 124.99,
-      "lower": 96.24,
-      "upper": 153.74,
+      "predicted": 132.6,
+      "lower": 102.1,
+      "upper": 163.1,
       "uncertainty_pct": 0.23,
-      "total_points": -1,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.189,
-      "sw_ratio_daily": 1.189,
+      "total_points": 3,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.38,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (119%)"
+          "points": 3,
+          "reason": "bewolkt (38% van seizoen)"
         },
         {
           "name": "wind",
@@ -5485,8 +4189,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5518,14 +4222,14 @@
     {
       "time": "2026-05-11T06:00:00+02:00",
       "baseline": 148.75,
-      "predicted": 159.91,
-      "lower": 116.73,
-      "upper": 203.09,
-      "uncertainty_pct": 0.27,
-      "total_points": 5,
-      "days_ahead": 6,
+      "predicted": 162.14,
+      "lower": 119.98,
+      "upper": 204.3,
+      "uncertainty_pct": 0.26,
+      "total_points": 6,
+      "days_ahead": 5,
       "sw_ratio_h": 0.0,
-      "sw_ratio_daily": 1.189,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
@@ -5539,8 +4243,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5572,19 +4276,19 @@
     {
       "time": "2026-05-11T07:00:00+02:00",
       "baseline": 152.56,
-      "predicted": 164.0,
-      "lower": 119.72,
-      "upper": 208.28,
-      "uncertainty_pct": 0.27,
-      "total_points": 5,
-      "days_ahead": 6,
-      "sw_ratio_h": 0.112,
-      "sw_ratio_daily": 1.189,
+      "predicted": 166.29,
+      "lower": 123.05,
+      "upper": 209.53,
+      "uncertainty_pct": 0.26,
+      "total_points": 6,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.03,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
           "points": 3,
-          "reason": "bewolkt (11% van seizoen)"
+          "reason": "bewolkt (3% van seizoen)"
         },
         {
           "name": "wind",
@@ -5593,8 +4297,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5626,19 +4330,19 @@
     {
       "time": "2026-05-11T08:00:00+02:00",
       "baseline": 139.76,
-      "predicted": 150.24,
-      "lower": 109.68,
-      "upper": 190.8,
-      "uncertainty_pct": 0.27,
-      "total_points": 5,
-      "days_ahead": 6,
-      "sw_ratio_h": 0.22,
-      "sw_ratio_daily": 1.189,
+      "predicted": 152.34,
+      "lower": 112.73,
+      "upper": 191.95,
+      "uncertainty_pct": 0.26,
+      "total_points": 6,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.071,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
           "points": 3,
-          "reason": "bewolkt (22% van seizoen)"
+          "reason": "bewolkt (7% van seizoen)"
         },
         {
           "name": "wind",
@@ -5647,8 +4351,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5680,19 +4384,19 @@
     {
       "time": "2026-05-11T09:00:00+02:00",
       "baseline": 121.7,
-      "predicted": 123.53,
-      "lower": 95.12,
-      "upper": 151.94,
-      "uncertainty_pct": 0.23,
-      "total_points": 1,
-      "days_ahead": 6,
-      "sw_ratio_h": 0.609,
-      "sw_ratio_daily": 1.189,
+      "predicted": 129.0,
+      "lower": 98.04,
+      "upper": 159.96,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.17,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (61%)"
+          "points": 3,
+          "reason": "bewolkt (17% van seizoen)"
         },
         {
           "name": "wind",
@@ -5701,8 +4405,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5734,19 +4438,19 @@
     {
       "time": "2026-05-11T10:00:00+02:00",
       "baseline": 110.2,
-      "predicted": 111.85,
-      "lower": 86.12,
-      "upper": 137.58,
-      "uncertainty_pct": 0.23,
-      "total_points": 1,
-      "days_ahead": 6,
-      "sw_ratio_h": 0.783,
-      "sw_ratio_daily": 1.189,
+      "predicted": 116.81,
+      "lower": 88.78,
+      "upper": 144.84,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.321,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (78%)"
+          "points": 3,
+          "reason": "bewolkt (32% van seizoen)"
         },
         {
           "name": "wind",
@@ -5755,8 +4459,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5788,19 +4492,19 @@
     {
       "time": "2026-05-11T11:00:00+02:00",
       "baseline": 105.87,
-      "predicted": 105.87,
-      "lower": 82.58,
-      "upper": 129.16,
-      "uncertainty_pct": 0.22,
-      "total_points": 0,
-      "days_ahead": 6,
-      "sw_ratio_h": 0.965,
-      "sw_ratio_daily": 1.189,
+      "predicted": 112.22,
+      "lower": 85.29,
+      "upper": 139.15,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.436,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (96%)"
+          "points": 3,
+          "reason": "bewolkt (44% van seizoen)"
         },
         {
           "name": "wind",
@@ -5809,8 +4513,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5842,19 +4546,19 @@
     {
       "time": "2026-05-11T12:00:00+02:00",
       "baseline": 101.1,
-      "predicted": 101.1,
-      "lower": 78.86,
-      "upper": 123.34,
-      "uncertainty_pct": 0.22,
-      "total_points": 0,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.146,
-      "sw_ratio_daily": 1.189,
+      "predicted": 107.17,
+      "lower": 81.45,
+      "upper": 132.89,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.413,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (115%)"
+          "points": 3,
+          "reason": "bewolkt (41% van seizoen)"
         },
         {
           "name": "wind",
@@ -5863,8 +4567,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5896,19 +4600,19 @@
     {
       "time": "2026-05-11T13:00:00+02:00",
       "baseline": 91.95,
-      "predicted": 90.57,
-      "lower": 69.74,
-      "upper": 111.4,
-      "uncertainty_pct": 0.23,
-      "total_points": -1,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.307,
-      "sw_ratio_daily": 1.189,
+      "predicted": 97.47,
+      "lower": 74.08,
+      "upper": 120.86,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.355,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": -1,
-          "reason": "zonnig (131%)"
+          "points": 3,
+          "reason": "bewolkt (35% van seizoen)"
         },
         {
           "name": "wind",
@@ -5917,8 +4621,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5950,19 +4654,19 @@
     {
       "time": "2026-05-11T14:00:00+02:00",
       "baseline": 94.31,
-      "predicted": 92.9,
-      "lower": 71.53,
-      "upper": 114.27,
-      "uncertainty_pct": 0.23,
-      "total_points": -1,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.429,
-      "sw_ratio_daily": 1.189,
+      "predicted": 99.97,
+      "lower": 75.98,
+      "upper": 123.96,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.306,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": -1,
-          "reason": "zonnig (143%)"
+          "points": 3,
+          "reason": "bewolkt (31% van seizoen)"
         },
         {
           "name": "wind",
@@ -5971,8 +4675,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -5997,26 +4701,26 @@
         {
           "name": "nonlinear",
           "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.2p"
+          "reason": "n.v.t."
         }
       ]
     },
     {
       "time": "2026-05-11T15:00:00+02:00",
       "baseline": 102.98,
-      "predicted": 96.8,
-      "lower": 71.63,
-      "upper": 121.97,
-      "uncertainty_pct": 0.26,
-      "total_points": -4,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.512,
-      "sw_ratio_daily": 1.189,
+      "predicted": 109.16,
+      "lower": 82.96,
+      "upper": 135.36,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.365,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (151%)"
+          "points": 3,
+          "reason": "bewolkt (36% van seizoen)"
         },
         {
           "name": "wind",
@@ -6025,8 +4729,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -6050,27 +4754,27 @@
         },
         {
           "name": "nonlinear",
-          "points": -1,
-          "reason": "oversupply niet-lineair: zon -0.6p"
+          "points": 0,
+          "reason": "n.v.t."
         }
       ]
     },
     {
       "time": "2026-05-11T16:00:00+02:00",
       "baseline": 106.77,
-      "predicted": 100.36,
-      "lower": 74.27,
-      "upper": 126.45,
-      "uncertainty_pct": 0.26,
-      "total_points": -4,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.576,
-      "sw_ratio_daily": 1.189,
+      "predicted": 113.18,
+      "lower": 86.02,
+      "upper": 140.34,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.436,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (158%)"
+          "points": 3,
+          "reason": "bewolkt (44% van seizoen)"
         },
         {
           "name": "wind",
@@ -6079,8 +4783,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -6104,27 +4808,27 @@
         },
         {
           "name": "nonlinear",
-          "points": -1,
-          "reason": "oversupply niet-lineair: zon -1.1p"
+          "points": 0,
+          "reason": "n.v.t."
         }
       ]
     },
     {
       "time": "2026-05-11T17:00:00+02:00",
       "baseline": 120.15,
-      "predicted": 114.74,
-      "lower": 86.05,
-      "upper": 143.42,
-      "uncertainty_pct": 0.25,
-      "total_points": -3,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.624,
-      "sw_ratio_daily": 1.189,
+      "predicted": 125.56,
+      "lower": 96.68,
+      "upper": 154.44,
+      "uncertainty_pct": 0.23,
+      "total_points": 3,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.518,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (162%)"
+          "points": 1,
+          "reason": "iets minder zon (52%)"
         },
         {
           "name": "wind",
@@ -6133,8 +4837,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -6158,27 +4862,27 @@
         },
         {
           "name": "nonlinear",
-          "points": -1,
-          "reason": "oversupply niet-lineair: zon -1.5p"
+          "points": 0,
+          "reason": "n.v.t."
         }
       ]
     },
     {
       "time": "2026-05-11T18:00:00+02:00",
       "baseline": 125.96,
-      "predicted": 118.4,
-      "lower": 87.62,
-      "upper": 149.18,
-      "uncertainty_pct": 0.26,
-      "total_points": -4,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.677,
-      "sw_ratio_daily": 1.189,
+      "predicted": 131.63,
+      "lower": 101.36,
+      "upper": 161.9,
+      "uncertainty_pct": 0.23,
+      "total_points": 3,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.613,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (168%)"
+          "points": 1,
+          "reason": "iets minder zon (61%)"
         },
         {
           "name": "wind",
@@ -6187,8 +4891,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -6212,27 +4916,27 @@
         },
         {
           "name": "nonlinear",
-          "points": -2,
-          "reason": "oversupply niet-lineair: zon -2.0p"
+          "points": 0,
+          "reason": "n.v.t."
         }
       ]
     },
     {
       "time": "2026-05-11T19:00:00+02:00",
       "baseline": 153.0,
-      "predicted": 150.7,
-      "lower": 116.04,
-      "upper": 185.36,
-      "uncertainty_pct": 0.23,
-      "total_points": -1,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.799,
-      "sw_ratio_daily": 1.189,
+      "predicted": 162.18,
+      "lower": 123.26,
+      "upper": 201.1,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.74,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (180%)"
+          "points": 1,
+          "reason": "iets minder zon (74%)"
         },
         {
           "name": "wind",
@@ -6241,8 +4945,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -6274,19 +4978,19 @@
     {
       "time": "2026-05-11T20:00:00+02:00",
       "baseline": 156.4,
-      "predicted": 149.36,
-      "lower": 112.02,
-      "upper": 186.7,
-      "uncertainty_pct": 0.25,
-      "total_points": -3,
-      "days_ahead": 6,
-      "sw_ratio_h": 2.355,
-      "sw_ratio_daily": 1.189,
+      "predicted": 163.44,
+      "lower": 125.85,
+      "upper": 201.03,
+      "uncertainty_pct": 0.23,
+      "total_points": 3,
+      "days_ahead": 5,
+      "sw_ratio_h": 1.073,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": -5,
-          "reason": "extreem zonnig (235%)"
+          "points": 0,
+          "reason": "normaal (107%)"
         },
         {
           "name": "wind",
@@ -6295,8 +4999,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -6328,19 +5032,19 @@
     {
       "time": "2026-05-11T21:00:00+02:00",
       "baseline": 154.61,
-      "predicted": 154.61,
-      "lower": 120.6,
-      "upper": 188.62,
-      "uncertainty_pct": 0.22,
-      "total_points": 0,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.189,
-      "sw_ratio_daily": 1.189,
+      "predicted": 163.89,
+      "lower": 124.56,
+      "upper": 203.22,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.38,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (119%)"
+          "points": 3,
+          "reason": "bewolkt (38% van seizoen)"
         },
         {
           "name": "wind",
@@ -6349,8 +5053,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -6382,19 +5086,19 @@
     {
       "time": "2026-05-11T22:00:00+02:00",
       "baseline": 143.41,
-      "predicted": 143.41,
-      "lower": 111.86,
-      "upper": 174.96,
-      "uncertainty_pct": 0.22,
-      "total_points": 0,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.189,
-      "sw_ratio_daily": 1.189,
+      "predicted": 152.01,
+      "lower": 115.53,
+      "upper": 188.49,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.38,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (119%)"
+          "points": 3,
+          "reason": "bewolkt (38% van seizoen)"
         },
         {
           "name": "wind",
@@ -6403,8 +5107,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -6436,19 +5140,19 @@
     {
       "time": "2026-05-11T23:00:00+02:00",
       "baseline": 128.43,
-      "predicted": 128.43,
-      "lower": 100.18,
-      "upper": 156.68,
-      "uncertainty_pct": 0.22,
-      "total_points": 0,
-      "days_ahead": 6,
-      "sw_ratio_h": 1.189,
-      "sw_ratio_daily": 1.189,
+      "predicted": 136.14,
+      "lower": 103.47,
+      "upper": 168.81,
+      "uncertainty_pct": 0.24,
+      "total_points": 4,
+      "days_ahead": 5,
+      "sw_ratio_h": 0.38,
+      "sw_ratio_daily": 0.38,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (119%)"
+          "points": 3,
+          "reason": "bewolkt (38% van seizoen)"
         },
         {
           "name": "wind",
@@ -6457,8 +5161,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (16.4°C)"
+          "points": 1,
+          "reason": "koud (9.5°C)"
         },
         {
           "name": "gas",
@@ -6490,19 +5194,19 @@
     {
       "time": "2026-05-12T00:00:00+02:00",
       "baseline": 124.31,
-      "predicted": 128.04,
-      "lower": 94.75,
-      "upper": 161.33,
-      "uncertainty_pct": 0.26,
-      "total_points": 2,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.793,
-      "sw_ratio_daily": 0.793,
+      "predicted": 126.18,
+      "lower": 97.16,
+      "upper": 155.2,
+      "uncertainty_pct": 0.23,
+      "total_points": 1,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.287,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (79%)"
+          "points": -1,
+          "reason": "zonnig (129%)"
         },
         {
           "name": "wind",
@@ -6511,8 +5215,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -6544,19 +5248,19 @@
     {
       "time": "2026-05-12T01:00:00+02:00",
       "baseline": 118.64,
-      "predicted": 122.2,
-      "lower": 90.43,
-      "upper": 153.97,
-      "uncertainty_pct": 0.26,
-      "total_points": 2,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.793,
-      "sw_ratio_daily": 0.793,
+      "predicted": 120.42,
+      "lower": 92.72,
+      "upper": 148.12,
+      "uncertainty_pct": 0.23,
+      "total_points": 1,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.287,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (79%)"
+          "points": -1,
+          "reason": "zonnig (129%)"
         },
         {
           "name": "wind",
@@ -6565,8 +5269,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -6598,19 +5302,19 @@
     {
       "time": "2026-05-12T02:00:00+02:00",
       "baseline": 115.2,
-      "predicted": 118.66,
-      "lower": 87.81,
-      "upper": 149.51,
-      "uncertainty_pct": 0.26,
-      "total_points": 2,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.793,
-      "sw_ratio_daily": 0.793,
+      "predicted": 116.93,
+      "lower": 90.04,
+      "upper": 143.82,
+      "uncertainty_pct": 0.23,
+      "total_points": 1,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.287,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (79%)"
+          "points": -1,
+          "reason": "zonnig (129%)"
         },
         {
           "name": "wind",
@@ -6619,8 +5323,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -6652,19 +5356,19 @@
     {
       "time": "2026-05-12T03:00:00+02:00",
       "baseline": 114.99,
-      "predicted": 118.44,
-      "lower": 87.65,
-      "upper": 149.23,
-      "uncertainty_pct": 0.26,
-      "total_points": 2,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.793,
-      "sw_ratio_daily": 0.793,
+      "predicted": 116.71,
+      "lower": 89.87,
+      "upper": 143.55,
+      "uncertainty_pct": 0.23,
+      "total_points": 1,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.287,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (79%)"
+          "points": -1,
+          "reason": "zonnig (129%)"
         },
         {
           "name": "wind",
@@ -6673,8 +5377,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -6706,19 +5410,19 @@
     {
       "time": "2026-05-12T04:00:00+02:00",
       "baseline": 115.82,
-      "predicted": 119.3,
-      "lower": 88.28,
-      "upper": 150.32,
-      "uncertainty_pct": 0.26,
-      "total_points": 2,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.793,
-      "sw_ratio_daily": 0.793,
+      "predicted": 117.56,
+      "lower": 90.52,
+      "upper": 144.6,
+      "uncertainty_pct": 0.23,
+      "total_points": 1,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.287,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (79%)"
+          "points": -1,
+          "reason": "zonnig (129%)"
         },
         {
           "name": "wind",
@@ -6727,8 +5431,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -6760,19 +5464,19 @@
     {
       "time": "2026-05-12T05:00:00+02:00",
       "baseline": 122.56,
-      "predicted": 126.24,
-      "lower": 93.42,
-      "upper": 159.06,
-      "uncertainty_pct": 0.26,
-      "total_points": 2,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.793,
-      "sw_ratio_daily": 0.793,
+      "predicted": 124.4,
+      "lower": 95.79,
+      "upper": 153.01,
+      "uncertainty_pct": 0.23,
+      "total_points": 1,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.287,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (79%)"
+          "points": -1,
+          "reason": "zonnig (129%)"
         },
         {
           "name": "wind",
@@ -6781,8 +5485,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -6814,14 +5518,14 @@
     {
       "time": "2026-05-12T06:00:00+02:00",
       "baseline": 140.81,
-      "predicted": 155.6,
-      "lower": 107.36,
-      "upper": 203.84,
-      "uncertainty_pct": 0.31,
-      "total_points": 7,
-      "days_ahead": 7,
+      "predicted": 157.71,
+      "lower": 110.4,
+      "upper": 205.02,
+      "uncertainty_pct": 0.3,
+      "total_points": 8,
+      "days_ahead": 6,
       "sw_ratio_h": 0.0,
-      "sw_ratio_daily": 0.793,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
@@ -6835,8 +5539,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -6868,19 +5572,19 @@
     {
       "time": "2026-05-12T07:00:00+02:00",
       "baseline": 149.01,
-      "predicted": 164.66,
-      "lower": 113.62,
-      "upper": 215.7,
-      "uncertainty_pct": 0.31,
-      "total_points": 7,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.2,
-      "sw_ratio_daily": 0.793,
+      "predicted": 166.89,
+      "lower": 116.82,
+      "upper": 216.96,
+      "uncertainty_pct": 0.3,
+      "total_points": 8,
+      "days_ahead": 6,
+      "sw_ratio_h": 0.276,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
           "points": 3,
-          "reason": "bewolkt (20% van seizoen)"
+          "reason": "bewolkt (28% van seizoen)"
         },
         {
           "name": "wind",
@@ -6889,8 +5593,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -6922,19 +5626,19 @@
     {
       "time": "2026-05-12T08:00:00+02:00",
       "baseline": 141.44,
-      "predicted": 156.3,
-      "lower": 107.85,
-      "upper": 204.75,
-      "uncertainty_pct": 0.31,
-      "total_points": 7,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.382,
-      "sw_ratio_daily": 0.793,
+      "predicted": 154.18,
+      "lower": 111.01,
+      "upper": 197.35,
+      "uncertainty_pct": 0.28,
+      "total_points": 6,
+      "days_ahead": 6,
+      "sw_ratio_h": 0.538,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 3,
-          "reason": "bewolkt (38% van seizoen)"
+          "points": 1,
+          "reason": "iets minder zon (54%)"
         },
         {
           "name": "wind",
@@ -6943,8 +5647,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -6976,19 +5680,19 @@
     {
       "time": "2026-05-12T09:00:00+02:00",
       "baseline": 125.19,
-      "predicted": 134.58,
-      "lower": 95.55,
-      "upper": 173.61,
-      "uncertainty_pct": 0.29,
-      "total_points": 5,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.484,
-      "sw_ratio_daily": 0.793,
+      "predicted": 132.71,
+      "lower": 98.21,
+      "upper": 167.21,
+      "uncertainty_pct": 0.26,
+      "total_points": 4,
+      "days_ahead": 6,
+      "sw_ratio_h": 0.716,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 3,
-          "reason": "bewolkt (48% van seizoen)"
+          "points": 1,
+          "reason": "iets minder zon (72%)"
         },
         {
           "name": "wind",
@@ -6997,8 +5701,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7031,18 +5735,18 @@
       "time": "2026-05-12T10:00:00+02:00",
       "baseline": 112.32,
       "predicted": 117.37,
-      "lower": 85.68,
-      "upper": 149.06,
-      "uncertainty_pct": 0.27,
+      "lower": 88.03,
+      "upper": 146.71,
+      "uncertainty_pct": 0.25,
       "total_points": 3,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.555,
-      "sw_ratio_daily": 0.793,
+      "days_ahead": 6,
+      "sw_ratio_h": 0.881,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (55%)"
+          "points": 0,
+          "reason": "normaal (88%)"
         },
         {
           "name": "wind",
@@ -7051,8 +5755,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7085,18 +5789,18 @@
       "time": "2026-05-12T11:00:00+02:00",
       "baseline": 107.66,
       "predicted": 112.5,
-      "lower": 82.12,
-      "upper": 142.88,
-      "uncertainty_pct": 0.27,
+      "lower": 84.38,
+      "upper": 140.62,
+      "uncertainty_pct": 0.25,
       "total_points": 3,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.607,
-      "sw_ratio_daily": 0.793,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.04,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (61%)"
+          "points": 0,
+          "reason": "normaal (104%)"
         },
         {
           "name": "wind",
@@ -7105,8 +5809,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7139,18 +5843,18 @@
       "time": "2026-05-12T12:00:00+02:00",
       "baseline": 101.83,
       "predicted": 106.41,
-      "lower": 77.68,
-      "upper": 135.14,
-      "uncertainty_pct": 0.27,
+      "lower": 79.81,
+      "upper": 133.01,
+      "uncertainty_pct": 0.25,
       "total_points": 3,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.655,
-      "sw_ratio_daily": 0.793,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.193,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (66%)"
+          "points": 0,
+          "reason": "normaal (119%)"
         },
         {
           "name": "wind",
@@ -7159,8 +5863,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7192,19 +5896,19 @@
     {
       "time": "2026-05-12T13:00:00+02:00",
       "baseline": 95.56,
-      "predicted": 99.86,
-      "lower": 72.9,
-      "upper": 126.82,
-      "uncertainty_pct": 0.27,
-      "total_points": 3,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.705,
-      "sw_ratio_daily": 0.793,
+      "predicted": 98.43,
+      "lower": 74.81,
+      "upper": 122.05,
+      "uncertainty_pct": 0.24,
+      "total_points": 2,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.334,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (70%)"
+          "points": -1,
+          "reason": "zonnig (133%)"
         },
         {
           "name": "wind",
@@ -7213,8 +5917,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7246,19 +5950,19 @@
     {
       "time": "2026-05-12T14:00:00+02:00",
       "baseline": 95.53,
-      "predicted": 99.82,
-      "lower": 72.87,
-      "upper": 126.77,
-      "uncertainty_pct": 0.27,
-      "total_points": 3,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.766,
-      "sw_ratio_daily": 0.793,
+      "predicted": 98.39,
+      "lower": 74.78,
+      "upper": 122.0,
+      "uncertainty_pct": 0.24,
+      "total_points": 2,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.451,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (77%)"
+          "points": -1,
+          "reason": "zonnig (145%)"
         },
         {
           "name": "wind",
@@ -7267,8 +5971,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7300,19 +6004,19 @@
     {
       "time": "2026-05-12T15:00:00+02:00",
       "baseline": 103.17,
-      "predicted": 106.27,
-      "lower": 78.64,
-      "upper": 133.9,
-      "uncertainty_pct": 0.26,
-      "total_points": 2,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.856,
-      "sw_ratio_daily": 0.793,
+      "predicted": 103.17,
+      "lower": 80.47,
+      "upper": 125.87,
+      "uncertainty_pct": 0.22,
+      "total_points": 0,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.545,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (86%)"
+          "points": -3,
+          "reason": "heel zonnig (155%)"
         },
         {
           "name": "wind",
@@ -7321,8 +6025,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7354,19 +6058,19 @@
     {
       "time": "2026-05-12T16:00:00+02:00",
       "baseline": 107.36,
-      "predicted": 110.58,
-      "lower": 81.83,
-      "upper": 139.33,
-      "uncertainty_pct": 0.26,
-      "total_points": 2,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.98,
-      "sw_ratio_daily": 0.793,
+      "predicted": 107.36,
+      "lower": 83.74,
+      "upper": 130.98,
+      "uncertainty_pct": 0.22,
+      "total_points": 0,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.631,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (98%)"
+          "points": -3,
+          "reason": "heel zonnig (163%)"
         },
         {
           "name": "wind",
@@ -7375,8 +6079,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7408,19 +6112,19 @@
     {
       "time": "2026-05-12T17:00:00+02:00",
       "baseline": 118.36,
-      "predicted": 123.69,
-      "lower": 90.29,
-      "upper": 157.09,
-      "uncertainty_pct": 0.27,
-      "total_points": 3,
-      "days_ahead": 7,
-      "sw_ratio_h": 1.131,
-      "sw_ratio_daily": 0.793,
+      "predicted": 120.14,
+      "lower": 92.51,
+      "upper": 147.77,
+      "uncertainty_pct": 0.23,
+      "total_points": 1,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.718,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 0,
-          "reason": "normaal (113%)"
+          "points": -3,
+          "reason": "heel zonnig (172%)"
         },
         {
           "name": "wind",
@@ -7429,8 +6133,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7462,19 +6166,19 @@
     {
       "time": "2026-05-12T18:00:00+02:00",
       "baseline": 130.75,
-      "predicted": 134.67,
-      "lower": 99.66,
-      "upper": 169.68,
-      "uncertainty_pct": 0.26,
-      "total_points": 2,
-      "days_ahead": 7,
-      "sw_ratio_h": 1.31,
-      "sw_ratio_daily": 0.793,
+      "predicted": 132.71,
+      "lower": 102.19,
+      "upper": 163.23,
+      "uncertainty_pct": 0.23,
+      "total_points": 1,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.825,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": -1,
-          "reason": "zonnig (131%)"
+          "points": -3,
+          "reason": "heel zonnig (183%)"
         },
         {
           "name": "wind",
@@ -7483,8 +6187,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7516,19 +6220,19 @@
     {
       "time": "2026-05-12T19:00:00+02:00",
       "baseline": 145.25,
-      "predicted": 147.43,
-      "lower": 110.57,
-      "upper": 184.29,
-      "uncertainty_pct": 0.25,
-      "total_points": 1,
-      "days_ahead": 7,
-      "sw_ratio_h": 1.564,
-      "sw_ratio_daily": 0.793,
+      "predicted": 145.25,
+      "lower": 113.3,
+      "upper": 177.2,
+      "uncertainty_pct": 0.22,
+      "total_points": 0,
+      "days_ahead": 6,
+      "sw_ratio_h": 2.034,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (156%)"
+          "points": -5,
+          "reason": "extreem zonnig (203%)"
         },
         {
           "name": "wind",
@@ -7537,8 +6241,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7570,19 +6274,19 @@
     {
       "time": "2026-05-12T20:00:00+02:00",
       "baseline": 150.17,
-      "predicted": 147.92,
-      "lower": 110.94,
-      "upper": 184.9,
-      "uncertainty_pct": 0.25,
-      "total_points": -1,
-      "days_ahead": 7,
-      "sw_ratio_h": 2.261,
-      "sw_ratio_daily": 0.793,
+      "predicted": 150.17,
+      "lower": 117.13,
+      "upper": 183.21,
+      "uncertainty_pct": 0.22,
+      "total_points": 0,
+      "days_ahead": 6,
+      "sw_ratio_h": 2.807,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
           "points": -5,
-          "reason": "extreem zonnig (226%)"
+          "reason": "extreem zonnig (281%)"
         },
         {
           "name": "wind",
@@ -7591,8 +6295,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7624,19 +6328,19 @@
     {
       "time": "2026-05-12T21:00:00+02:00",
       "baseline": 147.69,
-      "predicted": 154.34,
-      "lower": 112.67,
-      "upper": 196.01,
-      "uncertainty_pct": 0.27,
-      "total_points": 3,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.793,
-      "sw_ratio_daily": 0.793,
+      "predicted": 152.12,
+      "lower": 115.61,
+      "upper": 188.63,
+      "uncertainty_pct": 0.24,
+      "total_points": 2,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.287,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (79%)"
+          "points": -1,
+          "reason": "zonnig (129%)"
         },
         {
           "name": "wind",
@@ -7645,8 +6349,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7678,19 +6382,19 @@
     {
       "time": "2026-05-12T22:00:00+02:00",
       "baseline": 134.16,
-      "predicted": 140.19,
-      "lower": 102.34,
-      "upper": 178.04,
-      "uncertainty_pct": 0.27,
-      "total_points": 3,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.793,
-      "sw_ratio_daily": 0.793,
+      "predicted": 138.18,
+      "lower": 105.02,
+      "upper": 171.34,
+      "uncertainty_pct": 0.24,
+      "total_points": 2,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.287,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (79%)"
+          "points": -1,
+          "reason": "zonnig (129%)"
         },
         {
           "name": "wind",
@@ -7699,8 +6403,8 @@
         },
         {
           "name": "temperatuur",
-          "points": 0,
-          "reason": "mild (14.0°C)"
+          "points": 1,
+          "reason": "koud (8.8°C)"
         },
         {
           "name": "gas",
@@ -7732,19 +6436,19 @@
     {
       "time": "2026-05-12T23:00:00+02:00",
       "baseline": 119.68,
-      "predicted": 125.07,
-      "lower": 91.3,
-      "upper": 158.84,
-      "uncertainty_pct": 0.27,
-      "total_points": 3,
-      "days_ahead": 7,
-      "sw_ratio_h": 0.793,
-      "sw_ratio_daily": 0.793,
+      "predicted": 123.27,
+      "lower": 93.69,
+      "upper": 152.85,
+      "uncertainty_pct": 0.24,
+      "total_points": 2,
+      "days_ahead": 6,
+      "sw_ratio_h": 1.287,
+      "sw_ratio_daily": 1.287,
       "factors": [
         {
           "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (79%)"
+          "points": -1,
+          "reason": "zonnig (129%)"
         },
         {
           "name": "wind",
@@ -7753,8 +6457,1304 @@
         },
         {
           "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (8.8°C)"
+        },
+        {
+          "name": "gas",
           "points": 0,
-          "reason": "mild (14.0°C)"
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, late avond (23:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T00:00:00+02:00",
+      "baseline": 117.18,
+      "predicted": 117.18,
+      "lower": 89.06,
+      "upper": 145.3,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.173,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (117%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (0:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T01:00:00+02:00",
+      "baseline": 108.44,
+      "predicted": 108.44,
+      "lower": 82.41,
+      "upper": 134.47,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.173,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (117%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (1:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T02:00:00+02:00",
+      "baseline": 110.53,
+      "predicted": 110.53,
+      "lower": 84.0,
+      "upper": 137.06,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.173,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (117%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (2:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T03:00:00+02:00",
+      "baseline": 106.35,
+      "predicted": 106.35,
+      "lower": 80.83,
+      "upper": 131.87,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.173,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (117%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (3:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T04:00:00+02:00",
+      "baseline": 108.66,
+      "predicted": 108.66,
+      "lower": 82.58,
+      "upper": 134.74,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.173,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (117%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (4:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T05:00:00+02:00",
+      "baseline": 115.61,
+      "predicted": 115.61,
+      "lower": 87.86,
+      "upper": 143.36,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.173,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (117%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (5:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T06:00:00+02:00",
+      "baseline": 134.51,
+      "predicted": 146.62,
+      "lower": 102.63,
+      "upper": 190.61,
+      "uncertainty_pct": 0.3,
+      "total_points": 6,
+      "days_ahead": 7,
+      "sw_ratio_h": 0.0,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 3,
+          "reason": "bewolkt (0% van seizoen)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 1,
+          "reason": "zomer, ochtendspits (6:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T07:00:00+02:00",
+      "baseline": 140.28,
+      "predicted": 152.91,
+      "lower": 107.04,
+      "upper": 198.78,
+      "uncertainty_pct": 0.3,
+      "total_points": 6,
+      "days_ahead": 7,
+      "sw_ratio_h": 0.263,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 3,
+          "reason": "bewolkt (26% van seizoen)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 1,
+          "reason": "zomer, ochtendspits (7:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T08:00:00+02:00",
+      "baseline": 135.44,
+      "predicted": 147.63,
+      "lower": 103.34,
+      "upper": 191.92,
+      "uncertainty_pct": 0.3,
+      "total_points": 6,
+      "days_ahead": 7,
+      "sw_ratio_h": 0.496,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 3,
+          "reason": "bewolkt (50% van seizoen)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 1,
+          "reason": "zomer, ochtendspits (8:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T09:00:00+02:00",
+      "baseline": 118.14,
+      "predicted": 121.68,
+      "lower": 90.04,
+      "upper": 153.32,
+      "uncertainty_pct": 0.26,
+      "total_points": 2,
+      "days_ahead": 7,
+      "sw_ratio_h": 0.649,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 1,
+          "reason": "iets minder zon (65%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (9:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T10:00:00+02:00",
+      "baseline": 108.65,
+      "predicted": 111.91,
+      "lower": 82.81,
+      "upper": 141.01,
+      "uncertainty_pct": 0.26,
+      "total_points": 2,
+      "days_ahead": 7,
+      "sw_ratio_h": 0.78,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 1,
+          "reason": "iets minder zon (78%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (10:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T11:00:00+02:00",
+      "baseline": 101.69,
+      "predicted": 103.22,
+      "lower": 77.41,
+      "upper": 129.03,
+      "uncertainty_pct": 0.25,
+      "total_points": 1,
+      "days_ahead": 7,
+      "sw_ratio_h": 0.905,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (90%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (11:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T12:00:00+02:00",
+      "baseline": 88.71,
+      "predicted": 90.04,
+      "lower": 67.53,
+      "upper": 112.55,
+      "uncertainty_pct": 0.25,
+      "total_points": 1,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.025,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (102%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (12:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T13:00:00+02:00",
+      "baseline": 82.23,
+      "predicted": 83.46,
+      "lower": 62.59,
+      "upper": 104.32,
+      "uncertainty_pct": 0.25,
+      "total_points": 1,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.139,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (114%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (13:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T14:00:00+02:00",
+      "baseline": 91.63,
+      "predicted": 91.63,
+      "lower": 69.64,
+      "upper": 113.62,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.247,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -1,
+          "reason": "zonnig (125%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (14:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T15:00:00+02:00",
+      "baseline": 101.14,
+      "predicted": 101.14,
+      "lower": 76.87,
+      "upper": 125.41,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.359,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -1,
+          "reason": "zonnig (136%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, namiddag (15:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T16:00:00+02:00",
+      "baseline": 104.72,
+      "predicted": 104.72,
+      "lower": 79.59,
+      "upper": 129.85,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.489,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -1,
+          "reason": "zonnig (149%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, namiddag (16:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T17:00:00+02:00",
+      "baseline": 116.57,
+      "predicted": 114.82,
+      "lower": 86.11,
+      "upper": 143.52,
+      "uncertainty_pct": 0.25,
+      "total_points": -1,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.635,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -3,
+          "reason": "heel zonnig (163%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 0,
+          "reason": "zomer, vroege avond (17:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T18:00:00+02:00",
+      "baseline": 125.1,
+      "predicted": 123.22,
+      "lower": 92.41,
+      "upper": 154.03,
+      "uncertainty_pct": 0.25,
+      "total_points": -1,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.813,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -3,
+          "reason": "heel zonnig (181%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 0,
+          "reason": "zomer, vroege avond (18:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T19:00:00+02:00",
+      "baseline": 137.5,
+      "predicted": 133.38,
+      "lower": 98.7,
+      "upper": 168.06,
+      "uncertainty_pct": 0.26,
+      "total_points": -2,
+      "days_ahead": 7,
+      "sw_ratio_h": 2.09,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -5,
+          "reason": "extreem zonnig (209%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 1,
+          "reason": "zomer, avondspits (19:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T20:00:00+02:00",
+      "baseline": 156.4,
+      "predicted": 151.71,
+      "lower": 112.27,
+      "upper": 191.15,
+      "uncertainty_pct": 0.26,
+      "total_points": -2,
+      "days_ahead": 7,
+      "sw_ratio_h": 2.943,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -5,
+          "reason": "extreem zonnig (294%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 1,
+          "reason": "zomer, avondspits (20:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T21:00:00+02:00",
+      "baseline": 143.3,
+      "predicted": 145.45,
+      "lower": 109.09,
+      "upper": 181.81,
+      "uncertainty_pct": 0.25,
+      "total_points": 1,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.173,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (117%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, late avond (21:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T22:00:00+02:00",
+      "baseline": 124.9,
+      "predicted": 126.77,
+      "lower": 95.08,
+      "upper": 158.46,
+      "uncertainty_pct": 0.25,
+      "total_points": 1,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.173,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (117%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
+        },
+        {
+          "name": "gas",
+          "points": 0,
+          "reason": "normaal (104%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, late avond (22:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ]
+    },
+    {
+      "time": "2026-05-13T23:00:00+02:00",
+      "baseline": 110.93,
+      "predicted": 112.59,
+      "lower": 84.44,
+      "upper": 140.74,
+      "uncertainty_pct": 0.25,
+      "total_points": 1,
+      "days_ahead": 7,
+      "sw_ratio_h": 1.173,
+      "sw_ratio_daily": 1.173,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (117%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (4.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": 1,
+          "reason": "koud (9.7°C)"
         },
         {
           "name": "gas",
