@@ -1,0 +1,46 @@
+name: Wekelijkse X-post
+
+# Wanneer:
+#  - Zondag 10:00 UTC = 11:00 CET (winter) / 12:00 CEST (zomer).
+#    Op zondagochtend zijn de prijzen van de hele afgelopen week bekend,
+#    én publiceert EPEX vaak al de maandagprijzen — handig voor de richting-hint.
+#  - Manueel via 'Run workflow' in de GitHub UI (workflow_dispatch).
+on:
+  schedule:
+    - cron: "0 10 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly-tweet
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installeer dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tweepy
+
+      - name: Genereer + post weekoverzicht
+        # Mag falen zonder alarm — volgende zondag proberen we opnieuw.
+        continue-on-error: true
+        env:
+          X_API_KEY:        ${{ secrets.X_API_KEY }}
+          X_API_SECRET:     ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN:   ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET:  ${{ secrets.X_ACCESS_SECRET }}
+        run: |
+          python scripts/weekly_post.py
