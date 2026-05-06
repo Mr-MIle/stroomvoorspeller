@@ -594,10 +594,32 @@ a:hover { text-decoration: underline; }
 .footer-meta-small { color: var(--c-text-mute); font-size: 0.85rem; }
 
 @media (max-width: 640px) {
-  .quick-summary { grid-template-columns: 1fr; }
+  /* #48 quick-summary: 2+1 grid (goedkoopst + duurste naast elkaar, gemiddelde vol-breed) */
+  .quick-summary { grid-template-columns: 1fr 1fr; }
+  .quick-summary .summary-item:last-child { grid-column: 1 / -1; }
   .footer-grid { grid-template-columns: 1fr; }
   .chart-wrapper { height: 300px; }
   .now-card { padding: 22px 20px 18px; }
+
+  /* #45 section-padding reduceren: 40vh (338px op iPhone 14) → 80px */
+  .forecast-section,
+  .suppliers-section,
+  .moments-section,
+  .explain-section { padding-bottom: 80px; }
+
+  /* #46 primaire nav: horizontaal scrollbaar op smal scherm */
+  .primary-nav {
+    order: 3;         /* eigen rij onder brand + settings-toggle */
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    gap: 0;
+  }
+  .primary-nav::-webkit-scrollbar { display: none; }
+  .primary-nav a { white-space: nowrap; padding: 10px 10px; }
 }
 
 /* ----- Negatieve-prijs banner (sticky bovenaan, alleen zichtbaar bij negatieve uren) ----- */
