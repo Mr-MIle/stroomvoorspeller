@@ -51,8 +51,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # Bestand bestaat pas na de eerste echte alert
           [ -f public/data/tweet_state.json ] || { echo "Geen state file, niets te committen."; exit 0; }
+          # Pull eerst (working tree is nog schoon), daarna adden — anders weigert rebase
+          git pull --rebase origin main
           git add public/data/tweet_state.json
           git diff --cached --quiet && echo "Geen wijzigingen in state." && exit 0
-          git pull --rebase origin main
           git commit -m "chore: update tweet_state.json [skip ci]"
           git push
