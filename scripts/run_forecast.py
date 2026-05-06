@@ -7,7 +7,7 @@ Pijplijn:
 1. Lees `public/data/prices.json` voor history (minimaal 14 dagen nodig).
 2. Fetch Open-Meteo forecast voor De Bilt voor de komende 7 dagen.
 3. Fetch Yahoo Finance TTF=F voor laatste ~35 dagen → current TTF + 30d gemiddelde.
-4. Voor elk uur van "overmorgen 00:00" t/m "+7 dagen 23:00" Amsterdam roep
+4. Voor elk uur van "morgen 00:00" t/m "+7 dagen 23:00" Amsterdam roep
    `forecast_one()` aan met de juiste inputs.
 5. Schrijf `public/data/forecast.json` met de resultaten.
 
@@ -351,8 +351,10 @@ def main() -> int:
     now_ams = amsterdam_now()
     today_start = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
     # Day-ahead dekt vandaag + morgen via fetch_prices.py.
-    # Voorspelling start vanaf "overmorgen 00:00" tot "+7 dagen 23:00".
-    horizon_start = today_start + timedelta(days=2)
+    # Voorspelling start altijd vanaf "morgen 00:00" — de frontend toont morgen
+    # als voorspelling als de day-ahead prijzen nog niet gepubliceerd zijn
+    # (voor ~13:00 CET), anders begint de gestippelde lijn pas bij overmorgen.
+    horizon_start = today_start + timedelta(days=1)
     horizon_end = today_start + timedelta(days=8)  # exclusive
 
     # Open-Meteo: vraag forecast voor de komende 8 dagen (today + 7).
