@@ -920,10 +920,26 @@
       state.payload = payload;
       state.forecastPayload = forecastPayload;
       state.prices = payload.prices || [];
-      state.forecasts = (forecastPayload && forecastPayload.forecasts) || [];
       const now = new Date();
       state.dayPrices = filterTodayTomorrow(state.prices, now);
       state.nowIdx = findCurrentIndex(state.dayPrices, now);
+
+      // Bepaal of morgen actuals beschikbaar zijn (= day-ahead gepubliceerd, na ~13:00 CET).
+      // forecast.json bevat altijd forecasts vanaf morgen 00:00.
+      // Toon morgen als voorspelling als er geen actuals zijn; anders start de
+      // gestippelde lijn pas bij overmorgen (zodat actuals en forecasts niet overlappen).
+      const allForecasts = (forecastPayload && forecastPayload.forecasts) || [];
+      const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
+      const dayAfterTomorrowStart = new Date(tomorrowStart.getTime() + 24 * 3600 * 1000);
+      const hasTomorrowActuals = state.dayPrices.some((p) => {
+        const t = new Date(p.time);
+        return t >= tomorrowStart && t < dayAfterTomorrowStart;
+      });
+      // Als morgen geen actuals heeft → toon alle forecasts (incl. morgen).
+      // Als morgen actuals heeft → toon alleen forecasts vanaf overmorgen.
+      state.forecasts = hasTomorrowActuals
+        ? allForecasts.filter((f) => new Date(f.time) >= dayAfterTomorrowStart)
+        : allForecasts;
       applyConfigDefaults();
       wireUI();
       renderAll();
