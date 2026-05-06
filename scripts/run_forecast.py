@@ -57,7 +57,7 @@ from forecast import forecast_one, POINT_WEIGHT  # noqa: E402
 from fetch_prices import amsterdam_now  # noqa: E402
 
 # Modelversie — komt mee in de output zodat de frontend hem kan tonen.
-MODEL_VERSION = "1.9"  # v1.14 uurlijkse solar_ratio + prediction logging
+MODEL_VERSION = "2.0"  # v2.0: POINT_WEIGHT 0.015→0.030, uurpatroon-blokkering bij sw_h<0.30
 
 # Paden
 PROJECT_ROOT = Path(__file__).resolve().parent.parent

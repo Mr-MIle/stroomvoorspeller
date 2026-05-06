@@ -52,7 +52,11 @@ CROSSBORDER_FEESTDAGEN = {
 # (60 dagen, mrt-mei 2026): bias +7.5 EUR/MWh op 1d. Puntenverdeling structureel
 # positief (gem +1.03), wat samen met POINT_WEIGHT 0.02 de opwaartse bias verklaart.
 # Zie 01-documenten/backtest-resultaat-v1.md.
-POINT_WEIGHT = 0.015
+# v2.0 (2026-05-06): verdubbeld naar 0.030 na analyse prediction_log 6 mei.
+# MAE 32.4 EUR/MWh; dynamische range bij 0.015 onvoldoende om grote
+# baseline-afwijkingen te overbruggen (max ±21% bij 14 punten → nu ±42%).
+# Verdere kalibratie gepland op 18 mei zodra meer data beschikbaar is.
+POINT_WEIGHT = 0.030
 
 # Welke factoren tellen mee in de som. Default: alle 7. Via deze set is het
 # mogelijk individuele factoren uit te schakelen voor experimenten zonder de
@@ -563,13 +567,26 @@ def forecast_one(
         if prior_baseline and prior_baseline != 0:
             prior_ratio = prior_day_price / prior_baseline
 
+    # v2.0: uurpatroon-blokkering bij sterk bewolkt uur (sw_ratio_h < 0.30).
+    # De uurpatroon-factor gaat ervan uit dat middag goedkoop is door zon
+    # (zomer: -1 punt voor 9-16h). Op een bewolkte dag is die aanname onjuist
+    # en onderdrukt hij het correcte signaal van factor_zon. Als het uurlijkse
+    # zonratio < 0.30 is (minder dan 30% van normaal), wordt uurpatroon op 0
+    # gezet zodat factor_zon ongehinderd kan corrigeren.
+    _uurpatroon = factor_uurpatroon(target_dt)
+    if shortwave_ratio < 0.30 and _uurpatroon.points != 0:
+        _uurpatroon = FactorScore(
+            "uurpatroon", 0,
+            f"geblokkeerd (bewolkt: sw_h={shortwave_ratio:.2f}<0.30)"
+        )
+
     factors = [
         factor_zon(shortwave_ratio),
         factor_wind(wind_ms),
         factor_temperatuur(temp_c),
         factor_gas(ttf_ratio),
         factor_dagtype(target_dt),
-        factor_uurpatroon(target_dt),
+        _uurpatroon,
         factor_vorige_dag(prior_ratio),
         nonlinear_correction(shortwave_ratio, wind_ms, regime),  # v1.7
     ]
@@ -612,8 +629,8 @@ def forecast_one(
 
 
 # ---- Self-test (eenvoudige sanity check) ----
-# Verwacht resultaat voor v1.10-model (werkdag-casus, donderdag 19:00 winter):
-#   factor zon (45% van seizoen): +3
+# Verwacht resultaat voor v2.0-model (werkdag-casus, donderdag 19:00 winter):
+#   factor zon (45% van seizoen): +3  [sw_ratio_h=0.45 > 0.30 → uurpatroon NIET geblokkeerd]
 #   factor wind (6 m/s zwakke wind): +1
 #   factor temperatuur (8°C, koud): +1
 #   factor gas (105% van 30d gem.): 0
@@ -621,7 +638,7 @@ def forecast_one(
 #   factor uurpatroon (19:00 winter avondspits): +2  [19h = avondspits winter]
 #   factor nonlinear: 0  [geen oversupply regime]
 #   Totaal: +7.  Baseline mediaan 26.0 EUR/MWh.
-#   Voorspelling: 26.0 × (1 + 7 × 0.015) = 26.0 × 1.105 = 28.73 EUR/MWh.
+#   Voorspelling: 26.0 × (1 + 7 × 0.030) = 26.0 × 1.21 = 31.46 EUR/MWh.
 #   Onzekerheid op 4d, |7| punten: 0.10 + 0.02×4 + 0.01×7 = 0.25 (±25%).
 
 if __name__ == "__main__":
@@ -654,11 +671,11 @@ if __name__ == "__main__":
     print(f"Voorspelling: {f.predicted} EUR/MWh")
     print(f"Onzekerheid: +/-{f.uncertainty_pct*100:.0f}%  (band {f.lower:.2f} - {f.upper:.2f})")
 
-    # v1.10: baseline = mediaan [24,25,26,26,26] = 26.0
-    # Voorspelling: 26.0 * (1 + 7 * 0.015) = 26.0 * 1.105 = 28.73
+    # v2.0: baseline = mediaan [24,25,26,26,26] = 26.0
+    # Voorspelling: 26.0 * (1 + 7 * 0.030) = 26.0 * 1.21 = 31.46
     assert abs(f.baseline - 26.0) < 0.01, f"Verwachtte baseline 26.0 (mediaan), kreeg {f.baseline}"
     assert f.total_points == 7, f"Verwachtte 7 punten, kreeg {f.total_points}"
-    assert abs(f.predicted - 28.73) < 0.1, f"Verwachtte ~28.73, kreeg {f.predicted}"
+    assert abs(f.predicted - 31.46) < 0.1, f"Verwachtte ~31.46, kreeg {f.predicted}"
     assert abs(f.uncertainty_pct - 0.25) < 0.001, f"Verwachtte +/-25%, kreeg {f.uncertainty_pct}"
 
     # Test v1.7: factor_dagtype 1 mei
@@ -688,7 +705,7 @@ if __name__ == "__main__":
     assert factor_vorige_dag(1.00).points == 0
 
     # Integratie: prior 40 EUR/MWh, baseline mediaan 26.0 -> ratio ~1.54 -> +2 punten
-    # total = 7+2 = 9; predicted = 26.0 * (1 + 9*0.015) = 26.0 * 1.135 = 29.51
+    # total = 7+2 = 9; predicted = 26.0 * (1 + 9*0.030) = 26.0 * 1.27 = 33.02
     f2 = forecast_one(
         target_dt=target,
         history=history,
@@ -703,7 +720,7 @@ if __name__ == "__main__":
     vd = next(x for x in f2.factors if x.name == "vorige_dag")
     assert vd.points == +2, f"Verwachtte +2, kreeg {vd.points}"
     assert f2.total_points == 9, f"Verwachtte 9 punten, kreeg {f2.total_points}"
-    assert abs(f2.predicted - 29.51) < 0.1, f"Verwachtte ~29.51, kreeg {f2.predicted}"
+    assert abs(f2.predicted - 33.02) < 0.1, f"Verwachtte ~33.02, kreeg {f2.predicted}"
     print("[ok] factor_vorige_dag: alle gevallen ok")
 
     # Test v1.7/v1.10: regime detectie
