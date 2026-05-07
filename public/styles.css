@@ -848,3 +848,375 @@ body.has-neg-alert .site-header { top: 56px; }
   .suppliers-table .td-action { padding-top: 10px; width: 100%; text-align: left; }
   .supplier-pick-btn { width: 100%; padding: 10px 14px; font-size: 0.95rem; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   KENNISBANK — overzichtspagina & artikel-footers
+   Alle klassen zijn .kb-* om conflicten te vermijden.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Brede lay-out voor de overzichtspagina (ruimer dan .legal-page) */
+.kb-page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+}
+
+/* ── Hero ──────────────────────────────────────────────── */
+.kb-hero {
+  background: var(--c-brand-deep);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
+.kb-hero h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  margin: 0 0 5px;
+  letter-spacing: -0.02em;
+}
+.kb-hero-sub {
+  color: #a8c4dc;
+  font-size: 0.97rem;
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+.kb-hero-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.kb-hero-chip {
+  background: rgba(255,255,255,0.12);
+  color: #d0e6f5;
+  font-size: 0.78rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* ── Leerpad-stepper ────────────────────────────────────── */
+.kb-leerpad {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px 16px;
+  margin-bottom: 28px;
+}
+.kb-leerpad-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--c-brand);
+  margin-bottom: 10px;
+}
+.kb-leerpad-steps {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.kb-leerpad-step {
+  flex: 1;
+  min-width: 140px;
+  background: #f3f7fb;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  text-decoration: none;
+  color: var(--c-text);
+  border: 1px solid var(--c-border);
+  transition: border-color 0.15s, background 0.15s;
+}
+.kb-leerpad-step:hover {
+  border-color: var(--c-brand);
+  background: #eaf2fa;
+  text-decoration: none;
+}
+.kb-leerpad-step-n {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--c-brand);
+  display: block;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.kb-leerpad-step-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--c-text);
+}
+.kb-leerpad-arrow {
+  color: var(--c-text-mute);
+  font-size: 1rem;
+  flex-shrink: 0;
+  align-self: center;
+  padding: 0 2px;
+}
+
+/* ── Featured card ──────────────────────────────────────── */
+.kb-featured {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-left: 4px solid var(--c-brand);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin-bottom: 36px;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.15s, border-left-color 0.15s;
+}
+.kb-featured:hover {
+  box-shadow: var(--shadow-md);
+  border-left-color: var(--c-brand-deep);
+  text-decoration: none;
+}
+.kb-featured-icon {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+.kb-featured-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-brand);
+  margin-bottom: 4px;
+}
+.kb-featured-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--c-text);
+  margin-bottom: 5px;
+  line-height: 1.35;
+}
+.kb-featured-desc {
+  font-size: 0.88rem;
+  color: var(--c-text-soft);
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.kb-featured-meta {
+  font-size: 0.78rem;
+  color: var(--c-text-mute);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ── Categorie-sectie ────────────────────────────────────── */
+.kb-cat {
+  margin-bottom: 32px;
+}
+.kb-cat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  background: var(--c-brand-deep);
+  color: #fff;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+.kb-cat-icon { font-size: 1.1rem; line-height: 1; }
+.kb-cat-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  flex: 1;
+}
+.kb-cat-count {
+  font-size: 0.72rem;
+  background: rgba(255,255,255,0.15);
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Kaartgrid binnen categorie — deelt één border via 1px gap op gekleurde achtergrond */
+.kb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--c-border);
+  border: 1px solid var(--c-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  overflow: hidden;
+}
+
+/* ── Artikel-kaart ──────────────────────────────────────── */
+.kb-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--c-surface);
+  padding: 16px 18px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+}
+.kb-card:hover {
+  background: #f3f8fd;
+  text-decoration: none;
+}
+.kb-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.kb-card-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--c-brand);
+  line-height: 1.4;
+}
+/* Niveaubadges */
+.kb-level {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.kb-level-begin { background: #d3f9d8; color: #1a6629; }
+.kb-level-mid   { background: #fff3bf; color: #7d5a00; }
+.kb-level-adv   { background: #ffe3e3; color: #9b2020; }
+
+.kb-card-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-bottom: 7px;
+}
+.kb-card-title {
+  font-size: 0.97rem;
+  font-weight: 700;
+  line-height: 1.38;
+  margin-bottom: 6px;
+  color: var(--c-text);
+}
+.kb-card-desc {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--c-text-soft);
+  flex-grow: 1;
+  /* Tekstafkapping na 3 regels */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.kb-card-foot {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid var(--c-border);
+  padding-top: 9px;
+}
+.kb-card-time {
+  font-size: 0.75rem;
+  color: var(--c-text-mute);
+}
+.kb-card-cta {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--c-brand);
+}
+/* "Nieuw" badge — toon alleen bij artikelen < 30 dagen oud */
+.kb-new-badge {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--c-brand);
+  color: #fff;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+/* ── "Lees ook"-blok op artikelpagina's ─────────────────── */
+.kb-lees-ook {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--c-border);
+}
+.kb-lees-ook-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--c-text-mute);
+  margin-bottom: 12px;
+}
+.kb-lees-ook-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.kb-lees-ook-card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 11px 13px;
+  border: 1px solid var(--c-border);
+  border-left: 3px solid var(--c-brand);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: inherit;
+  background: var(--c-surface);
+  transition: border-left-color 0.15s, background 0.15s;
+}
+.kb-lees-ook-card:hover {
+  border-left-color: var(--c-brand-deep);
+  background: #f3f8fd;
+  text-decoration: none;
+}
+.kb-lees-ook-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--c-brand);
+}
+.kb-lees-ook-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--c-text);
+}
+.kb-lees-ook-meta {
+  font-size: 0.72rem;
+  color: var(--c-text-mute);
+  margin-top: 3px;
+}
+
+/* ── Mobiele aanpassingen ────────────────────────────────── */
+@media (max-width: 640px) {
+  .kb-hero { padding: 18px 16px; }
+  .kb-hero h1 { font-size: 1.45rem; }
+  .kb-leerpad-steps { flex-direction: column; gap: 8px; }
+  .kb-leerpad-arrow { transform: rotate(90deg); align-self: center; }
+  .kb-leerpad-step { min-width: 0; }
+  .kb-featured { flex-direction: column; gap: 10px; padding: 14px 16px; }
+  .kb-featured-icon { font-size: 1.8rem; }
+  .kb-grid { grid-template-columns: 1fr; }
+  .kb-lees-ook-grid { grid-template-columns: 1fr; }
+}
