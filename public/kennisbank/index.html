@@ -44,59 +44,23 @@
         "url": "https://stroomvoorspeller.nl/kennisbank/",
         "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
         "inLanguage": "nl-NL"
+      },
+      {
+        "@type": "ItemList",
+        "name": "Kennisbank artikelen",
+        "url": "https://stroomvoorspeller.nl/kennisbank/",
+        "numberOfItems": 5,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "url": "https://stroomvoorspeller.nl/kennisbank/negatieve-stroomprijzen", "name": "Negatieve stroomprijzen uitgelegd: wanneer kost terugleveren jou geld?" },
+          { "@type": "ListItem", "position": 2, "url": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-kosten", "name": "Thuisbatterij kosten 2026: een eerlijk beeld" },
+          { "@type": "ListItem", "position": 3, "url": "https://stroomvoorspeller.nl/kennisbank/wateraccu", "name": "Wateraccu voor zonnepanelen: goedkoper dan een thuisbatterij en toch effectief?" },
+          { "@type": "ListItem", "position": 4, "url": "https://stroomvoorspeller.nl/kennisbank/salderingsregeling", "name": "Salderingsregeling stopt in 2027: wat nu met je zonnepanelen?" },
+          { "@type": "ListItem", "position": 5, "url": "https://stroomvoorspeller.nl/kennisbank/zonnepanelen-uitzetten-negatieve-prijs", "name": "Zonnepanelen uitzetten bij negatieve stroomprijs: hoe werkt het en is het slim?" }
+        ]
       }
     ]
   }
   </script>
-
-  <style>
-    .kb-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-    .kb-card {
-      display: flex;
-      flex-direction: column;
-      border: 1px solid var(--border, #e2e8f0);
-      border-radius: 0.75rem;
-      padding: 1.5rem;
-      text-decoration: none;
-      color: inherit;
-      transition: box-shadow 0.15s, border-color 0.15s;
-    }
-    .kb-card:hover {
-      border-color: var(--accent, #0f6cbd);
-      box-shadow: 0 4px 16px rgba(15,108,189,0.10);
-    }
-    .kb-card-tag {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--accent, #0f6cbd);
-      margin-bottom: 0.5rem;
-    }
-    .kb-card-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      line-height: 1.35;
-      margin-bottom: 0.6rem;
-      color: var(--text, #1a202c);
-    }
-    .kb-card-desc {
-      font-size: 0.9rem;
-      line-height: 1.55;
-      color: var(--text-muted, #4a5568);
-      flex-grow: 1;
-    }
-    .kb-card-meta {
-      font-size: 0.78rem;
-      color: var(--text-muted, #4a5568);
-      margin-top: 1rem;
-    }
-  </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
@@ -116,51 +80,203 @@
     </div>
   </header>
 
-  <main class="legal-page container">
+  <main class="kb-page">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
-    <h1>Kennisbank</h1>
-    <p class="legal-meta">Uitleg, gidsen en achtergrond over dynamische energieprijzen en slim verbruik</p>
 
-    <p>Hier vind je onafhankelijke artikelen over alles wat relevant is als je een dynamisch energiecontract hebt of overweegt: van thuisbatterijen en zonnepanelen tot de day-ahead markt en slimme tips om je energierekening te verlagen.</p>
+    <!-- ── Hero ─────────────────────────────────────── -->
+    <section class="kb-hero">
+      <h1>⚡ Kennisbank</h1>
+      <p class="kb-hero-sub">Uitleg, gidsen en achtergrond over dynamische energieprijzen en slim verbruik</p>
+      <div class="kb-hero-chips">
+        <span class="kb-hero-chip">5 artikelen</span>
+        <span class="kb-hero-chip">3 categorieën</span>
+        <span class="kb-hero-chip">Onafhankelijk</span>
+      </div>
+    </section>
 
-    <div class="kb-grid">
-
-      <a class="kb-card" href="/kennisbank/thuisbatterij-kosten">
-        <p class="kb-card-tag">Opslag &amp; kosten</p>
-        <p class="kb-card-title">Thuisbatterij kosten 2026: een eerlijk beeld</p>
-        <p class="kb-card-desc">Wat kost een thuisbatterij echt? Inclusief de bijkomende installatiekosten die aanbieders verzwijgen, btw-voordeel en een eerlijk beeld van de terugverdientijd.</p>
-        <p class="kb-card-meta">3 mei 2026 · 8 min leestijd</p>
-      </a>
-
-      <a class="kb-card" href="/kennisbank/salderingsregeling">
-        <p class="kb-card-tag">Zonnepanelen &amp; wet</p>
-        <p class="kb-card-title">Salderingsregeling stopt in 2027: wat nu met je zonnepanelen?</p>
-        <p class="kb-card-desc">Per 1 januari 2027 verdwijnt de salderingsregeling. Wat verandert er, hoeveel kost het je, en wat kun je nu al doen om de schade te beperken?</p>
-        <p class="kb-card-meta">1 mei 2026 · 5 min leestijd</p>
-      </a>
-
-      <a class="kb-card" href="/kennisbank/wateraccu">
-        <p class="kb-card-tag">Opslag &amp; besparing</p>
-        <p class="kb-card-title">Wateraccu voor zonnepanelen: goedkoper dan een thuisbatterij en toch effectief?</p>
-        <p class="kb-card-desc">Een wateraccu kost ~€1.500 en verhoogt je eigen stroomverbruik van 30% naar 70%. Eerlijk vergeleken met een thuisbatterij — inclusief rekenvoorbeeld.</p>
-        <p class="kb-card-meta">30 april 2026 · 6 min leestijd</p>
-      </a>
-
-      <a class="kb-card" href="/kennisbank/zonnepanelen-uitzetten-negatieve-prijs">
-        <p class="kb-card-tag">Zonnepanelen &amp; opslag</p>
-        <p class="kb-card-title">Zonnepanelen uitzetten bij negatieve stroomprijs: hoe werkt het en is het slim?</p>
-        <p class="kb-card-desc">Bij negatieve prijzen betaal je om terug te leveren. Welke omvormers regelen dit zelf, welke diensten zijn er, en wat moet je weten als je ook een thuisbatterij hebt?</p>
-        <p class="kb-card-meta">2 mei 2026 · 7 min leestijd</p>
-      </a>
-
-      <a class="kb-card" href="/kennisbank/negatieve-stroomprijzen">
-        <p class="kb-card-tag">Dynamisch contract &amp; prijzen</p>
-        <p class="kb-card-title">Negatieve stroomprijzen uitgelegd: wanneer kost terugleveren jou geld?</p>
-        <p class="kb-card-desc">In 2025 waren er al 584 negatieve uren. Wat zijn negatieve stroomprijzen, wanneer komen ze voor, en hoe voorkom je dat je er geld door verliest?</p>
-        <p class="kb-card-meta">7 mei 2026 · 6 min leestijd</p>
-      </a>
-
+    <!-- ── Leerpad — handig voor eerstebezoek vanuit Google ── -->
+    <div class="kb-leerpad">
+      <p class="kb-leerpad-label">📚 Nieuw bij dynamische energie? Begin hier:</p>
+      <div class="kb-leerpad-steps">
+        <a class="kb-leerpad-step" href="/kennisbank/negatieve-stroomprijzen">
+          <span class="kb-leerpad-step-n">Stap 1</span>
+          <span class="kb-leerpad-step-title">Negatieve prijzen begrijpen</span>
+        </a>
+        <span class="kb-leerpad-arrow" aria-hidden="true">→</span>
+        <a class="kb-leerpad-step" href="/kennisbank/salderingsregeling">
+          <span class="kb-leerpad-step-n">Stap 2</span>
+          <span class="kb-leerpad-step-title">Salderingsregeling afschaffing</span>
+        </a>
+        <span class="kb-leerpad-arrow" aria-hidden="true">→</span>
+        <a class="kb-leerpad-step" href="/kennisbank/thuisbatterij-kosten">
+          <span class="kb-leerpad-step-n">Stap 3</span>
+          <span class="kb-leerpad-step-title">Thuisbatterij overwegen?</span>
+        </a>
+      </div>
     </div>
+
+    <!-- ── Uitgelicht artikel (handmatig updaten bij nieuw artikel) ── -->
+    <!--
+      REDACTIE-INSTRUCTIE: verander het href, de icon, badge-tekst, titel,
+      beschrijving en meta hieronder zodra een nieuwer/relevanter artikel
+      het "uitgelicht"-slot verdient. Houd de HTML-structuur intact.
+    -->
+    <a class="kb-featured" href="/kennisbank/negatieve-stroomprijzen">
+      <span class="kb-featured-icon" aria-hidden="true">📉</span>
+      <div>
+        <p class="kb-featured-badge">⭐ Nieuw artikel</p>
+        <p class="kb-featured-title">Negatieve stroomprijzen uitgelegd: wanneer kost terugleveren jou geld?</p>
+        <p class="kb-featured-desc">In 2025 waren er al 584 negatieve uren. Wat zijn negatieve stroomprijzen, wanneer komen ze voor, en hoe voorkom je dat je er geld door verliest?</p>
+        <div class="kb-featured-meta">
+          <span>⚡ Dynamisch contract</span>
+          <span>·</span>
+          <span class="kb-level kb-level-begin">Beginner</span>
+          <span>·</span>
+          <span>⏱ 6 min leestijd</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- ══════════════════════════════════════════════
+         CATEGORIE 1 — Dynamisch contract & prijzen
+         ══════════════════════════════════════════════ -->
+    <section class="kb-cat" aria-labelledby="cat-dynamisch">
+      <div class="kb-cat-header">
+        <span class="kb-cat-icon" aria-hidden="true">⚡</span>
+        <h2 class="kb-cat-title" id="cat-dynamisch">Dynamisch contract &amp; prijzen</h2>
+        <span class="kb-cat-count">1 artikel</span>
+      </div>
+      <div class="kb-grid">
+
+        <a class="kb-card" href="/kennisbank/negatieve-stroomprijzen">
+          <div class="kb-card-head">
+            <span class="kb-card-tag">⚡ Dynamisch contract</span>
+            <span class="kb-level kb-level-begin">Beginner</span>
+          </div>
+          <span class="kb-card-icon" aria-hidden="true">📉</span>
+          <p class="kb-card-title">Negatieve stroomprijzen uitgelegd: wanneer kost terugleveren jou geld?</p>
+          <p class="kb-card-desc">In 2025 waren er al 584 negatieve uren. Wat zijn negatieve stroomprijzen, wanneer komen ze voor, en hoe voorkom je dat je er geld door verliest?</p>
+          <div class="kb-card-foot">
+            <span class="kb-card-time">⏱ 6 min leestijd</span>
+            <span class="kb-card-cta">Lees artikel →</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         CATEGORIE 2 — Thuisbatterij & opslag
+         ══════════════════════════════════════════════ -->
+    <section class="kb-cat" aria-labelledby="cat-batterij">
+      <div class="kb-cat-header">
+        <span class="kb-cat-icon" aria-hidden="true">🔋</span>
+        <h2 class="kb-cat-title" id="cat-batterij">Thuisbatterij &amp; opslag</h2>
+        <span class="kb-cat-count">2 artikelen</span>
+      </div>
+      <div class="kb-grid">
+
+        <a class="kb-card" href="/kennisbank/thuisbatterij-kosten">
+          <div class="kb-card-head">
+            <span class="kb-card-tag">🔋 Thuisbatterij</span>
+            <span class="kb-level kb-level-mid">Gemiddeld</span>
+          </div>
+          <span class="kb-card-icon" aria-hidden="true">🔋</span>
+          <p class="kb-card-title">Thuisbatterij kosten 2026: een eerlijk beeld</p>
+          <p class="kb-card-desc">Wat kost een thuisbatterij echt? Inclusief de bijkomende installatiekosten die aanbieders verzwijgen, btw-voordeel en een eerlijk beeld van de terugverdientijd.</p>
+          <div class="kb-card-foot">
+            <span class="kb-card-time">⏱ 8 min leestijd</span>
+            <span class="kb-card-cta">Lees artikel →</span>
+          </div>
+        </a>
+
+        <a class="kb-card" href="/kennisbank/wateraccu">
+          <div class="kb-card-head">
+            <span class="kb-card-tag">🔋 Thuisbatterij</span>
+            <span class="kb-level kb-level-mid">Gemiddeld</span>
+          </div>
+          <span class="kb-card-icon" aria-hidden="true">💧</span>
+          <p class="kb-card-title">Wateraccu voor zonnepanelen: goedkoper dan een thuisbatterij en toch effectief?</p>
+          <p class="kb-card-desc">Een wateraccu kost ~€1.500 en verhoogt je eigen stroomverbruik van 30% naar 70%. Eerlijk vergeleken met een thuisbatterij — inclusief rekenvoorbeeld.</p>
+          <div class="kb-card-foot">
+            <span class="kb-card-time">⏱ 6 min leestijd</span>
+            <span class="kb-card-cta">Lees artikel →</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         CATEGORIE 3 — Zonnepanelen
+         ══════════════════════════════════════════════ -->
+    <section class="kb-cat" aria-labelledby="cat-zon">
+      <div class="kb-cat-header">
+        <span class="kb-cat-icon" aria-hidden="true">☀️</span>
+        <h2 class="kb-cat-title" id="cat-zon">Zonnepanelen</h2>
+        <span class="kb-cat-count">2 artikelen</span>
+      </div>
+      <div class="kb-grid">
+
+        <a class="kb-card" href="/kennisbank/salderingsregeling">
+          <div class="kb-card-head">
+            <span class="kb-card-tag">☀️ Zonnepanelen</span>
+            <span class="kb-level kb-level-begin">Beginner</span>
+          </div>
+          <span class="kb-card-icon" aria-hidden="true">⚖️</span>
+          <p class="kb-card-title">Salderingsregeling stopt in 2027: wat nu met je zonnepanelen?</p>
+          <p class="kb-card-desc">Per 1 januari 2027 verdwijnt de salderingsregeling. Wat verandert er, hoeveel kost het je, en wat kun je nu al doen om de schade te beperken?</p>
+          <div class="kb-card-foot">
+            <span class="kb-card-time">⏱ 5 min leestijd</span>
+            <span class="kb-card-cta">Lees artikel →</span>
+          </div>
+        </a>
+
+        <a class="kb-card" href="/kennisbank/zonnepanelen-uitzetten-negatieve-prijs">
+          <div class="kb-card-head">
+            <span class="kb-card-tag">☀️ Zonnepanelen · ⚡ Negatieve prijs</span>
+            <span class="kb-level kb-level-adv">Gevorderd</span>
+          </div>
+          <span class="kb-card-icon" aria-hidden="true">☀️</span>
+          <p class="kb-card-title">Zonnepanelen uitzetten bij negatieve stroomprijs: hoe werkt het en is het slim?</p>
+          <p class="kb-card-desc">Bij negatieve prijzen betaal je om terug te leveren. Welke omvormers regelen dit zelf, welke diensten zijn er, en wat moet je weten als je ook een thuisbatterij hebt?</p>
+          <div class="kb-card-foot">
+            <span class="kb-card-time">⏱ 7 min leestijd</span>
+            <span class="kb-card-cta">Lees artikel →</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!--
+      ══════════════════════════════════════════════════════
+      REDACTIE-INSTRUCTIE — nieuw artikel toevoegen:
+
+      1. Kies de categorie (⚡ Dynamisch / 🔋 Thuisbatterij / ☀️ Zonnepanelen)
+         of maak een nieuwe sectie aan als het artikel niet past.
+
+      2. Kopieer een <a class="kb-card"> blok en vul in:
+         - href="/kennisbank/[slug]"
+         - kb-card-tag: emoji + categorienaam
+         - kb-level: kb-level-begin / kb-level-mid / kb-level-adv
+         - kb-card-icon: passende emoji
+         - kb-card-title: ongewijzigde artikeltitel
+         - kb-card-desc: eerste zin of intro van het artikel (max ~100 tekens)
+         - kb-card-time: leestijd in minuten
+
+      3. Verhoog de kb-cat-count van de betreffende categorie.
+
+      4. Verhoog numberOfItems in de JSON-LD ItemList (bovenaan in <head>)
+         en voeg een ListItem toe.
+
+      5. Als het artikel nieuw is (< 30 dagen): voeg <span class="kb-new-badge">Nieuw</span>
+         toe achter de kb-card-title tekst.
+
+      6. Overweeg het uitgelicht-artikel (kb-featured) te updaten.
+      ══════════════════════════════════════════════════════
+    -->
+
   </main>
 
   <footer class="site-footer">
@@ -175,8 +291,8 @@
           <a href="/cookies">Cookies</a> ·
           <a href="/disclaimer">Disclaimer</a> ·
           <a href="/over/voorspelling">Voorspelling</a> ·
-          <a href="/aanbieders">Aanbieders</a>
-        <a href="/kennisbank/">Kennisbank</a>
+          <a href="/aanbieders">Aanbieders</a> ·
+          <a href="/kennisbank/">Kennisbank</a>
         </p>
       </div>
     </div>
