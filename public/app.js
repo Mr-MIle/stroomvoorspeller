@@ -9,7 +9,7 @@
   const STORAGE_KEYS = {
     mode: "sv.viewMode",          // 'inclusive' | 'exclusive'
     supplier: "sv.supplierId",    // id uit config.suppliers
-    customMarkup: "sv.customMarkup", // string (€ per kWh)
+    customMarkup: "sv.customMarkup", // string (euro per kWh)
     dismissedNegAlert: "sv.dismissedNegAlert", // ISO-tijd van het event waarvoor de banner gesloten is
   };
 
@@ -59,7 +59,7 @@
       // Excl. belasting: EPEX + opslag, zonder energiebelasting en zonder btw.
       return (epex_per_kwh + effectiveMarkup()) * 100;
     }
-    // Incl. belasting: EPEX + opslag + energiebelasting, dan × btw.
+    // Incl. belasting: EPEX + opslag + energiebelasting, dan x btw.
     const t = state.config.taxes;
     const subtotal = epex_per_kwh + effectiveMarkup() + (t.energiebelasting_per_kwh || 0);
     return subtotal * (t.btw_factor || 1) * 100;
@@ -70,8 +70,6 @@
   }
 
   // Bereken ct/kWh voor een specifieke supplier (gebruikt door de aanbieders-tabel).
-  // Gebruikt altijd "incl. belasting" omdat de tabel die kolom toont; mode-toggle
-  // raakt deze functie niet.
   function priceCentsForSupplier(eurMwh, supplier) {
     const epex_per_kwh = eurMwh / 1000;
     const markup = Number(supplier.markup_per_kwh) || 0;
@@ -131,10 +129,6 @@
     return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
   }
 
-  // Bouw twee Sets van feestdagen uit config.json:
-  //   nl          — officiële NL vrije dagen
-  //   crossborder — dagen waarop DE+BE (en vaak FR) ook vrij zijn
-  // Beide sets bevatten datumstrings "YYYY-MM-DD".
   function buildHolidayLookup() {
     const cfg = state.config || {};
     return {
@@ -152,9 +146,6 @@
   }
 
   function filterTodayTomorrow(prices, now) {
-    // Knip alle prijzen weg vóór "vandaag 00:00" en na "overmorgen 00:00".
-    // De volledige prices.json bevat 14d historie + 2d toekomst sinds v1.6;
-    // de UI toont alleen de relevante 48 uur.
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
     const dayAfterTomorrow = new Date(todayStart.getTime() + 48 * 3600 * 1000);
     return prices.filter((p) => {
@@ -200,9 +191,6 @@
   }
 
   // ---- Negatieve-prijs detectie ----
-  // Zoek aaneengesloten windows van uren met all-in prijs (incl. btw, met de
-  // gekozen leverancier-opslag) onder de drempel uit config.negative_price_alert.
-  // Verleden uren tellen niet mee — we waarschuwen alleen voor het nu/aankomend.
   function findNegativePriceWindows() {
     const cfg = (state.config && state.config.negative_price_alert) || {};
     if (!cfg.enabled) return [];
@@ -215,7 +203,6 @@
     let current = null;
     for (let i = 0; i < prices.length; i++) {
       const p = prices[i];
-      // Een uur is afgelopen als z'n eindtijd (start + 1u) al voorbij is
       const endMs = new Date(p.time).getTime() + 3600000;
       if (endMs <= now) continue;
       const cents = priceCents(p.price, "inclusive");
@@ -260,8 +247,6 @@
       hideNegAlert(banner);
       return;
     }
-    // Event-ID = starttijd eerste negatief uur. Bij dismiss onthouden we die,
-    // zodat de banner weg blijft tot er een NIEUW event ontstaat (andere starttijd).
     const eventKey = windows[0].startIso;
     const dismissed = loadStored(STORAGE_KEYS.dismissedNegAlert, "");
     if (dismissed === eventKey) {
@@ -314,16 +299,13 @@
     const prices = state.dayPrices;
     const nowIdx = state.nowIdx;
     const current = nowIdx >= 0 ? prices[nowIdx] : prices[0];
-
     const cls = classify(current.price);
     const card = document.querySelector(".now-card");
     if (card) card.dataset.status = classifyToCard(cls);
-
     setText("now-cents", fmtCents(current.price, 1));
     setText("now-time", `Nu, ${fmtTime(current.time)}`);
     setText("now-secondary", `${fmtNum(priceCents(current.price, otherMode()), 1)} ct/kWh ${modeLabel(otherMode())}`);
     setText("now-epex", `Kale EPEX: ${fmtNum(priceCentsRaw(current.price), 2)} ct/kWh`);
-
     const statusEl = document.querySelector(".status-value");
     if (statusEl) statusEl.textContent = statusLabel(cls);
   }
@@ -409,27 +391,20 @@
 
     const t = state.config.taxes;
     const eb_incl = (t.energiebelasting_per_kwh || 0) * (t.btw_factor || 1);
-    // Toon incl-btw tarief — dat is wat leveranciers in hun app/tariefblad laten zien
     setText("config-energiebelasting", `€${fmtNum(eb_incl, 4)}/kWh (incl. btw)`);
     setText("config-btw", `${Math.round((t.btw_factor - 1) * 100)}%`);
     setText("config-year", String(t.year));
 
-    // Toon huidige effectieve opslag boven de dropdown — beide varianten
     const m = effectiveMarkup();
     const m_incl = m * (t.btw_factor || 1);
     setText("current-markup", `€${fmtNum(m, 4)}/kWh excl. btw  (= €${fmtNum(m_incl, 4)} incl. btw)`);
   }
 
-  // Update de header-knop met de naam van de huidige leverancier zodat duidelijk is
-  // dat je daar (1) je leverancier kiest en (2) welke nu actief is.
   function renderSettingsToggle() {
     const supplier = getSupplier();
     setText("settings-toggle-value", supplier.name || "—");
   }
 
-  // Tabel met alle aanbieders + hun all-in prijs voor het huidige uur, gesorteerd
-  // op prijs oplopend. De geselecteerde aanbieder wordt visueel gemarkeerd.
-  // 'custom' wordt overgeslagen — dat is geen echte aanbieder, alleen een eigen waarde.
   function renderSupplierTable() {
     const tbody = document.querySelector('[data-field="suppliers-tbody"]');
     if (!tbody) return;
@@ -438,11 +413,8 @@
     const current = state.nowIdx >= 0 ? prices[state.nowIdx] : prices[0];
     if (!current) return;
 
-    // Tijd-label voor de sectie-kop
     setText("suppliers-now-time", `Nu, ${fmtTime(current.time)}`);
 
-    // Pak de oudste 'verified' datum als veilige conservatieve weergave —
-    // vertelt eerlijk wanneer we voor het laatst alle tarieven hebben gecontroleerd.
     const verifiedDates = (state.config.suppliers || [])
       .map((s) => s.verified)
       .filter((v) => typeof v === "string" && v.length === 10);
@@ -454,10 +426,7 @@
 
     const rows = (state.config.suppliers || [])
       .filter((s) => s.id !== "custom")
-      .map((s) => ({
-        supplier: s,
-        cents: priceCentsForSupplier(current.price, s),
-      }))
+      .map((s) => ({ supplier: s, cents: priceCentsForSupplier(current.price, s) }))
       .sort((a, b) => a.cents - b.cents);
 
     tbody.innerHTML = "";
@@ -466,7 +435,6 @@
       const tr = document.createElement("tr");
       if (s.id === state.supplierId) tr.className = "is-mine";
 
-      // Cel 1: aanbieder-naam, eventueel als hyperlink naar hun website
       const tdName = document.createElement("td");
       tdName.className = "td-supplier";
       if (s.website) {
@@ -487,30 +455,22 @@
       }
       tr.appendChild(tdName);
 
-      // Cel 2: prijs nu incl. btw
       const tdPrice = document.createElement("td");
       tdPrice.className = "td-price";
       tdPrice.textContent = fmtNum(r.cents, 1);
       tr.appendChild(tdPrice);
 
-      // Cel 3: opslag €/kWh excl. btw
       const tdMarkup = document.createElement("td");
       tdMarkup.className = "td-markup";
       tdMarkup.textContent = `€${fmtNum(s.markup_per_kwh, 4)}`;
       tr.appendChild(tdMarkup);
 
-      // Cel 4: vast/maand (kan 0 zijn voor 'average')
       const tdFixed = document.createElement("td");
       tdFixed.className = "td-fixed";
       const fx = Number(s.fixed_per_month) || 0;
       tdFixed.textContent = fx ? `€${fmtNum(fx, 2)}` : "—";
       tr.appendChild(tdFixed);
 
-      // Cel 5: Kies-knop (item #40 — v2-uitbreiding van #38).
-      // Hergebruikt exact dezelfde flow als de dropdown in het settings-paneel:
-      // state.supplierId update + localStorage write + renderAll().
-      // Actieve rij toont een disabled "Geselecteerd" zodat de feedback-loop
-      // duidelijk is zonder een tweede klikbare zone op de eigen keuze.
       const tdAction = document.createElement("td");
       tdAction.className = "td-action";
       const btn = document.createElement("button");
@@ -521,8 +481,6 @@
         btn.textContent = "✓ Geselecteerd";
         btn.setAttribute("aria-label", `${s.name} is jouw geselecteerde leverancier`);
       } else {
-        // 'average' is conceptueel een fallback, geen specifieke leverancier.
-        // Eigen label maakt duidelijk dat je dan "geen voorkeur" kiest.
         btn.textContent = s.id === "average" ? "Standaard" : "Kies";
         btn.setAttribute("aria-label", `Kies ${s.name} als jouw leverancier`);
         btn.addEventListener("click", () => {
@@ -533,16 +491,33 @@
       }
       tdAction.appendChild(btn);
       tr.appendChild(tdAction);
-
       tbody.appendChild(tr);
     });
   }
 
-  // ── Regime-kleuren voor de grafiekpunten (backtest-MAE: oversupply ~5 ct, normaal ~3 ct, schaarste ~2 ct)
+  // Regime-kleuren voor de grafiekpunten
   const REGIME_COLOR = { oversupply: "#f59e0b", schaarste: "#ef4444", normaal: "#0f6cbd" };
 
+  // Plausibility-bandkleuren (v2.1)
+  const PLAUSIBILITY_BAND_COLOR = {
+    HIGH:            "rgba(147,197,253,0.25)",
+    NORMAL:          "rgba(147,197,253,0.18)",
+    LOW:             "rgba(253,186,116,0.25)",
+    VERY_RARE_EVENT: "rgba(252,165,165,0.30)",
+  };
+  const PLAUSIBILITY_LABELS_ORDERED = ["HIGH", "NORMAL", "LOW", "VERY_RARE_EVENT"];
+
+  const PLAUSIBILITY_TOOLTIP = {
+    HIGH:            "✓ Normaal",
+    NORMAL:          "✓ Normaal",
+    LOW:             "⚠ Zelden gezien",
+    VERY_RARE_EVENT: "⚠⚠ Historisch zeldzaam",
+  };
+
   function getForecastRegime(f) {
-    if (!f || !f.factors) return "normaal";
+    if (!f) return "normaal";
+    if (f.regime) return f.regime;
+    if (!f.factors) return "normaal";
     for (const fact of f.factors) {
       const r = (fact.reason || "").toLowerCase();
       if (r.includes("oversupply")) return "oversupply";
@@ -551,14 +526,6 @@
     return "normaal";
   }
 
-  // ---- Chart.js plugin: gekleurde dag-banden ----
-  // Tekent subtiele achtergrondkleuren achter elk uur in de grafiek op basis van
-  // het dagtype: NL feestdag, EU-feestdag (buurlanden vrij maar NL open),
-  // NL+EU feestdag, of weekend. Dag-type met het sterkste effect per dag wint.
-  //
-  // Werking: itereer de timeline, groepeer aaneengesloten indices per kalenderdag,
-  // check de feestdagen-Sets, teken een rechthoek over de chartArea-hoogte.
-  // Tekst-label bovenaan de band alleen als de band breed genoeg is (>50px).
   const dayBandPlugin = {
     id: "svDayBand",
     beforeDatasetsDraw(chart, _args, opts) {
@@ -570,51 +537,47 @@
       const n = timeline.length;
       const step = (chartArea.right - chartArea.left) / n;
 
-      // Groepeer indices per kalenderdag (eerste en laatste index per datum)
       const dayMap = Object.create(null);
       timeline.forEach((pt, i) => {
-        const date = pt.time.slice(0, 10); // "YYYY-MM-DD"
+        const date = pt.time.slice(0, 10);
         if (!dayMap[date]) dayMap[date] = { first: i, last: i };
         else dayMap[date].last = i;
       });
 
       ctx.save();
-
       Object.entries(dayMap).forEach(([date, { first, last }]) => {
         const isNL = holidays.nl.has(date);
         const isCB = holidays.crossborder.has(date);
-        const dow  = new Date(date + "T12:00:00").getDay(); // 0=zo, 6=za
+        const dow  = new Date(date + "T12:00:00").getDay();
         const isWeekend = dow === 0 || dow === 6;
 
         let bg, label, labelColor;
         if (isNL && isCB) {
           bg = "rgba(255, 193, 7, 0.18)";
-          label = "🗓 NL + EU feestdag";
+          label = "\U0001f5d3 NL + EU feestdag";
           labelColor = "rgba(110, 70, 0, 0.82)";
         } else if (isNL) {
           bg = "rgba(255, 193, 7, 0.13)";
-          label = "🗓 NL feestdag";
+          label = "\U0001f5d3 NL feestdag";
           labelColor = "rgba(110, 70, 0, 0.78)";
         } else if (isCB) {
           bg = "rgba(255, 140, 0, 0.13)";
-          label = "🌍 EU-feestdag (NL open)";
+          label = "\U0001f30d EU-feestdag (NL open)";
           labelColor = "rgba(140, 70, 0, 0.80)";
         } else if (isWeekend) {
           bg = "rgba(100, 100, 180, 0.06)";
           label = null;
         } else {
-          return; // gewone werkdag — niets tekenen
+          return;
         }
 
         const x1 = chartArea.left + first * step;
         const x2 = chartArea.left + (last + 1) * step;
         const bandW = x2 - x1;
 
-        // Achtergrondrechthoek
         ctx.fillStyle = bg;
         ctx.fillRect(x1, chartArea.top, bandW, chartArea.bottom - chartArea.top);
 
-        // Tekst-label bovenaan (alleen als de band breed genoeg is)
         if (label && bandW > 50) {
           ctx.save();
           ctx.beginPath();
@@ -628,21 +591,16 @@
           ctx.restore();
         }
       });
-
       ctx.restore();
     },
   };
 
   function fmtChartLabel(iso) {
-    // Voor de chart x-axis: korte labels. Voor "vandaag/morgen" alleen HH:MM,
-    // voor verdere voorspelling-uren een weekdag-prefix om te onderscheiden.
     const d = new Date(iso);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const dayDiff = Math.floor((d - today) / 86400000);
-    if (dayDiff <= 1) {
-      return fmtTime(iso);
-    }
+    if (dayDiff <= 1) return fmtTime(iso);
     const wd = d.toLocaleDateString("nl-NL", { weekday: "short" });
     return `${wd} ${fmtTime(iso)}`;
   }
@@ -654,19 +612,14 @@
 
     const dayPrices = state.dayPrices;
     const forecasts = state.forecasts;
-
-    // Feestdagen-lookup: eenmaal bouwen, hergebruiken in dayBand-plugin én tooltip
     const holidays = buildHolidayLookup();
 
-    // Bouw één gecombineerde tijdlijn: dayPrices + forecasts. dayPrices komen
-    // eerst (vandaag + morgen), forecasts daarna (overmorgen t/m +7d).
     const timeline = [
       ...dayPrices.map((p) => ({ kind: "actual", time: p.time, price: p.price })),
       ...forecasts.map((f) => ({ kind: "forecast", time: f.time, forecast: f })),
     ];
     const labels = timeline.map((t) => fmtChartLabel(t.time));
 
-    // Dataset 1: actuele prijzen (solid line, gekleurde punten)
     const actualData = timeline.map((t) => t.kind === "actual" ? priceCents(t.price) : null);
     const actualColors = timeline.map((t, i) => {
       if (t.kind !== "actual") return "transparent";
@@ -677,18 +630,47 @@
       return i === state.nowIdx ? 6 : 3;
     });
 
-    // Datasets 2 & 3: voorspellingsband. We tekenen lower met fill naar upper
-    // (Chart.js: fill: '+1' = vul tot volgend dataset). Beide linkers transparant.
-    const forecastLower = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.lower) : null);
-    const forecastUpper = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.upper) : null);
+    // Datasets 2-9: band per plausibility-label
+    function buildBandDatasets(tl) {
+      const sets = [];
+      for (const label of PLAUSIBILITY_LABELS_ORDERED) {
+        const lower = tl.map((t) => {
+          if (t.kind !== "forecast") return null;
+          return (t.forecast.event_plausibility_label || "NORMAL") === label
+            ? priceCents(t.forecast.lower) : null;
+        });
+        const upper = tl.map((t) => {
+          if (t.kind !== "forecast") return null;
+          return (t.forecast.event_plausibility_label || "NORMAL") === label
+            ? priceCents(t.forecast.upper) : null;
+        });
+        sets.push({
+          label: `_forecast_lower_${label}`,
+          data: lower,
+          borderColor: "transparent",
+          backgroundColor: PLAUSIBILITY_BAND_COLOR[label],
+          pointRadius: 0,
+          fill: "+1",
+          tension: 0.25,
+          spanGaps: false,
+        });
+        sets.push({
+          label: `_forecast_upper_${label}`,
+          data: upper,
+          borderColor: "transparent",
+          pointRadius: 0,
+          fill: false,
+          tension: 0.25,
+          spanGaps: false,
+        });
+      }
+      return sets;
+    }
 
-    // Forecast-punten krijgen een vaste neutrale kleur — duidelijk 'voorspelling', niet gemengd met prijs-kleuren
-    const FORECAST_DOT = "rgba(100, 116, 139, 0.75)"; // grijsblauw: duidelijk anders dan groen/geel/rood
+    const FORECAST_DOT = "rgba(100, 116, 139, 0.75)";
     const forecastPointColors = timeline.map((t) =>
       t.kind === "forecast" ? FORECAST_DOT : "transparent"
     );
-
-    // Dataset 4: voorspelde lijn (gestippeld)
     const forecastPredicted = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.predicted) : null);
 
     state.chart = new Chart(canvas, {
@@ -710,25 +692,7 @@
             fill: { target: "origin", above: "rgba(46,117,182,0.08)" },
             spanGaps: false,
           },
-          {
-            label: "_forecast_lower",
-            data: forecastLower,
-            borderColor: "transparent",
-            backgroundColor: "rgba(46,117,182,0.12)",
-            pointRadius: 0,
-            fill: "+1",
-            tension: 0.25,
-            spanGaps: false,
-          },
-          {
-            label: "_forecast_upper",
-            data: forecastUpper,
-            borderColor: "transparent",
-            pointRadius: 0,
-            fill: false,
-            tension: 0.25,
-            spanGaps: false,
-          },
+          ...buildBandDatasets(timeline),
           {
             label: "voorspelling",
             data: forecastPredicted,
@@ -791,9 +755,22 @@
                   `Verwachte fout: ±${fmtNum(halfBand / 10, 1)} ct/kWh`,
                   `Baseline: ${fmtNum(priceCents(f.baseline), 2)} ct/kWh`,
                 ];
-                if (isNL && isCross) lines.push("📅 NL + EU feestdag — lage prijs verwacht");
-                else if (isNL) lines.push("📅 NL feestdag — lage prijs verwacht");
-                else if (isCross) lines.push("📅 EU feestdag (buurlanden) — mogelijk lagere prijs");
+                if (isNL && isCross) lines.push("\U0001f4c5 NL + EU feestdag — lage prijs verwacht");
+                else if (isNL) lines.push("\U0001f4c5 NL feestdag — lage prijs verwacht");
+                else if (isCross) lines.push("\U0001f4c5 EU feestdag (buurlanden) — mogelijk lagere prijs");
+
+                // Plausibility (v2.1)
+                const plLabel = f.event_plausibility_label || "NORMAL";
+                const plText = PLAUSIBILITY_TOOLTIP[plLabel] || PLAUSIBILITY_TOOLTIP.NORMAL;
+                lines.push(`Situatie: ${plText}`);
+                const plN = f.analog_sample_size;
+                if ((plLabel === "LOW" || plLabel === "VERY_RARE_EVENT") && plN !== undefined) {
+                  lines.push(`Vergelijkbare uren in log: ${plN}`);
+                }
+                if (f.realistic_negative_probability !== undefined) {
+                  const pct = Math.round(f.realistic_negative_probability * 100);
+                  lines.push(`Kans negatieve prijs: ~${pct}%`);
+                }
                 return lines;
               },
             },
@@ -802,7 +779,6 @@
       },
     });
 
-    // Prijs-legenda + feestdag-noot — altijd vernieuwen om duplicaten te voorkomen
     const _existingLegend = document.getElementById("chart-regime-legend");
     if (_existingLegend) _existingLegend.remove();
     {
@@ -869,8 +845,6 @@
       });
     }
 
-    // Negatieve-prijs banner sluiten — onthoud event-ID zodat de banner weg blijft
-    // tot er een nieuw event ontstaat (andere starttijd).
     const negCloseBtn = document.getElementById("neg-alert-close");
     if (negCloseBtn) {
       negCloseBtn.addEventListener("click", () => {
@@ -908,8 +882,6 @@
 
   loadInitialState();
 
-  // forecast.json mag falen (recent toegevoegd; oude deploys hebben hem niet) —
-  // de site werkt dan zonder voorspellingslijn maar prijzen blijven wel zichtbaar.
   Promise.all([
     fetch("data/config.json", { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error("config HTTP " + r.status); return r.json(); }),
     fetch("data/prices.json", { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error("prices HTTP " + r.status); return r.json(); }),
@@ -924,10 +896,6 @@
       state.dayPrices = filterTodayTomorrow(state.prices, now);
       state.nowIdx = findCurrentIndex(state.dayPrices, now);
 
-      // Bepaal of morgen actuals beschikbaar zijn (= day-ahead gepubliceerd, na ~13:00 CET).
-      // forecast.json bevat altijd forecasts vanaf morgen 00:00.
-      // Toon morgen als voorspelling als er geen actuals zijn; anders start de
-      // gestippelde lijn pas bij overmorgen (zodat actuals en forecasts niet overlappen).
       const allForecasts = (forecastPayload && forecastPayload.forecasts) || [];
       const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
       const dayAfterTomorrowStart = new Date(tomorrowStart.getTime() + 24 * 3600 * 1000);
@@ -935,8 +903,6 @@
         const t = new Date(p.time);
         return t >= tomorrowStart && t < dayAfterTomorrowStart;
       });
-      // Als morgen geen actuals heeft → toon alle forecasts (incl. morgen).
-      // Als morgen actuals heeft → toon alleen forecasts vanaf overmorgen.
       state.forecasts = hasTomorrowActuals
         ? allForecasts.filter((f) => new Date(f.time) >= dayAfterTomorrowStart)
         : allForecasts;
