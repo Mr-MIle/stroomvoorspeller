@@ -45,7 +45,7 @@
         "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
         "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
         "datePublished": "2026-04-29",
-        "dateModified": "2026-05-04",
+        "dateModified": "2026-05-07",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/over/voorspelling",
@@ -77,7 +77,7 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Over de voorspelling</h1>
-    <p class="legal-meta">Modelversie 1.9 · Bijgewerkt: 4 mei 2026</p>
+    <p class="legal-meta">Modelversie 2.1 · Bijgewerkt: 7 mei 2026</p>
 
     <section>
       <h2>Kort samengevat</h2>
@@ -120,15 +120,15 @@
         mediaan van vorige week geeft dan een te hoge startprijs.
       </p>
 
-      <h3>Stap 2 — Zes factoren stellen bij</h3>
+      <h3>Stap 2 — Acht factoren stellen bij</h3>
       <p>
-        Zes factoren geven elk een score in <strong>punten</strong>. Het totaal verschuift de
-        basisprijs met 1,5% per punt:
+        Acht factoren geven elk een score in <strong>punten</strong>. Het totaal verschuift de
+        basisprijs met 3% per punt:
       </p>
       <p class="legal-formula">
-        voorspelling = basisprijs × (1 + totaalpunten × 1,5%)
+        voorspelling = basisprijs × (1 + totaalpunten × 3%)
       </p>
-      <p>De zes factoren:</p>
+      <p>De acht factoren:</p>
       <ol>
         <li>
           <strong>Zonproductie</strong> — bewolkt geeft plus (duurder), zonnig geeft min.
@@ -154,6 +154,17 @@
         <li>
           <strong>Uurcorrectie</strong> — kleine seizoenscorrectie: de avondspits weegt in de winter
           zwaarder dan in de zomer.
+        </li>
+        <li>
+          <strong>Vorige dag</strong> — vergelijkt de prijs van hetzelfde uur gisteren met de
+          basisprijs. Een dag die opvallend anders liep dan verwacht (grote veiling-meevaller of
+          -tegenvaller) trekt de volgende dag meetbaar mee.
+        </li>
+        <li>
+          <strong>Oversupply-cap</strong> — nonlineaire correctie bij extreme oversupply-situaties.
+          Als zon én wind gelijktijdig piekeren terwijl de vraag laag is, versterkt het model de
+          neerwaartse bijstelling extra, want lineaire factoren onderschatten dan systematisch hoe
+          ver de prijs kan zakken.
         </li>
       </ol>
       <p>Klik in de grafiek op een voorspeld uur om te zien hoe elke factor bijdraagt.</p>
@@ -200,9 +211,50 @@
         <li>het regime op oversupply staat (grotere prijsuitslagen mogelijk).</li>
       </ul>
       <p>
+        De <strong>kleur</strong> van de band geeft aan hoe goed het model weet wat het doet
+        voor dat uur — zie de volgende sectie voor uitleg.
         Zwarte-zwaan-gebeurtenissen — plotselinge gascrises, grote centrale-uitval, extreme
         weerverschijnselen — vallen ver buiten de band. Die zijn met historische patronen simpelweg
         niet te voorspellen.
+      </p>
+    </section>
+
+    <section>
+      <h2>Hoe zeldzaam is dit uur?</h2>
+      <p>
+        Niet alle voorspellingen zijn even goed onderbouwd. Het model zoekt in de recente geschiedenis
+        naar <strong>vergelijkbare uren</strong>: uren met vergelijkbare zonstraling, windsnelheid,
+        temperatuur en dag­type. Hoe meer zulke uren gevonden worden, hoe betrouwbaarder de
+        schatting. Het resultaat heet de <em>plausibility score</em>.
+      </p>
+      <p>Er zijn vier niveaus:</p>
+      <ul>
+        <li>
+          <strong style="color:#3b82f6;">Normaal</strong> — genoeg vergelijkbare uren gevonden.
+          De schaduwband is lichtblauw, zoals gewoonlijk.
+        </li>
+        <li>
+          <strong style="color:#f97316;">⚠ Zelden gezien</strong> — weinig vergelijkbare uren in
+          de log. De band kleurt oranje als waarschuwing. Het model rekent wel een prijs, maar de
+          historische basis is dun.
+        </li>
+        <li>
+          <strong style="color:#ef4444;">⚠⚠ Historisch zeldzaam</strong> — nauwelijks vergelijkbare
+          uren gevonden. Rode band. Denk aan een combinatie die het model nog zelden of nooit heeft
+          meegemaakt: een extreme lentedag met piekzon, nauwelijks wind én een feestdag tegelijk.
+          De onzekerheid is dan veel groter dan de band aangeeft.
+        </li>
+      </ul>
+      <p>
+        In de tooltip (klik of hover op een voorspeld uur in de grafiek) staat hoeveel vergelijkbare
+        uren er gevonden zijn. Bij een negatieve prijsverwachting voegt het model ook een
+        <strong>historisch gecorrigeerde kans</strong> toe: hoe vaak leidde een vergelijkbare
+        situatie in het verleden ook echt tot een negatieve prijs?
+      </p>
+      <p>
+        <em>Let op:</em> vlak na een update van het model zijn er nog weinig historische
+        vergelijkingsuren opgeslagen. In die periode scoren veel uren automatisch laag — dat is
+        verwacht en zegt niets over de kwaliteit van de voorspelling zelf.
       </p>
     </section>
 
