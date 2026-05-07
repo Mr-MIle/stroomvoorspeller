@@ -254,6 +254,54 @@ a:hover { text-decoration: underline; }
   .mode-btn { padding: 6px 10px; font-size: 0.83rem; }
 }
 
+/* Resolution toggle (per uur / per kwartier) — zit in chart section-head */
+.chart-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.chart-head-text { flex: 1 1 auto; min-width: 0; }
+.res-toggle {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  padding-top: 4px; /* visueel uitlijnen met h2 baseline */
+}
+.res-toggle[hidden] { display: none; }
+.res-toggle-buttons {
+  display: inline-flex;
+  background: #ecf1f6;
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.res-btn {
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--c-text-mute);
+  padding: 6px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+.res-btn:hover { color: var(--c-text); }
+.res-btn.is-active {
+  background: var(--c-surface);
+  color: var(--c-brand-deep);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+@media (max-width: 560px) {
+  .chart-section-head { flex-direction: column; gap: 8px; }
+  .res-toggle { padding-top: 0; }
+  .res-btn { padding: 5px 11px; font-size: 0.82rem; }
+}
+
 /* Now-card aanpassing — extra mode-label en EPEX-regel */
 .now-price-mode {
   font-size: 0.9rem;

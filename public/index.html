@@ -190,9 +190,17 @@
 
     <!-- Chart -->
     <section class="chart-section container">
-      <div class="section-head">
-        <h2>Vandaag &amp; morgen, per uur</h2>
-        <p class="section-sub">Day-ahead prijzen van EPEX Spot, weergegeven als <span data-field="mode-label">incl. belasting</span>. Tooltip toont alle drie de varianten.</p>
+      <div class="section-head chart-section-head">
+        <div class="chart-head-text">
+          <h2 id="chart-heading">Vandaag &amp; morgen, per uur</h2>
+          <p class="section-sub" id="chart-sub">Day-ahead prijzen van EPEX Spot, weergegeven als <span data-field="mode-label">incl. belasting</span>. Tooltip toont alle drie de varianten.</p>
+        </div>
+        <div id="chart-res-toggle" class="res-toggle" hidden>
+          <div class="res-toggle-buttons" role="group" aria-label="Grafiek resolutie">
+            <button class="res-btn is-active" data-res-btn="hourly" aria-pressed="true">Per uur</button>
+            <button class="res-btn" data-res-btn="quarter" aria-pressed="false">Per kwartier</button>
+          </div>
+        </div>
       </div>
       <div class="chart-wrapper">
         <canvas id="dayChart" aria-label="Lijngrafiek met stroomprijzen per uur voor vandaag en morgen"></canvas>
