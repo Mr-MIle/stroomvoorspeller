@@ -1,26 +1,33 @@
 // Stroomvoorspeller — frontend logica
 // Laadt configuratie + prijzen, rendert now-card, samenvatting, slimste momenten en grafiek.
-// Houdt rekening met gebruikersinstellingen: weergavemodus en leverancieropslag.
+// Houdt rekening met gebruikersinstellingen: weergavemodus, leverancieropslag en grafiekresolutie.
+// v2.2: adaptieve grafiek met PT15M/PT60M toggle (dag 0+1 kwartierweergave vs. volledige weekprognose).
 
 (function () {
   "use strict";
 
   // ---- Storage keys ----
   const STORAGE_KEYS = {
-    mode: "sv.viewMode",          // 'inclusive' | 'exclusive'
-    supplier: "sv.supplierId",    // id uit config.suppliers
-    customMarkup: "sv.customMarkup", // string (euro per kWh)
-    dismissedNegAlert: "sv.dismissedNegAlert", // ISO-tijd van het event waarvoor de banner gesloten is
+    mode:              "sv.viewMode",           // 'inclusive' | 'exclusive'
+    supplier:          "sv.supplierId",          // id uit config.suppliers
+    customMarkup:      "sv.customMarkup",        // string (euro per kWh)
+    dismissedNegAlert: "sv.dismissedNegAlert",  // ISO-tijd van het event waarvoor de banner gesloten is
+    chartRes:          "sv.chartRes",           // 'hourly' | 'quarter'
   };
 
   const state = {
     config: null,
     payload: null,
     forecastPayload: null,
-    prices: [],          // alle prijzen uit prices.json (14d historie + 2d toekomst)
-    dayPrices: [],       // gefilterd: alleen vandaag + morgen voor now-card/grafiek
-    forecasts: [],       // overmorgen t/m +7d uit forecast.json
-    nowIdx: -1,          // index in dayPrices
+    prices: [],          // alle uurprijzen uit prices.json (14d historie + 2d toekomst)
+    prices15m: [],       // ruwe kwartierdata voor vandaag + morgen (uit prices.json.prices_15m)
+    dayPrices: [],       // gefilterd: vandaag + morgen, uurresolutie, voor now-card/grafiek/model
+    dayPrices15m: [],    // gefilterd: vandaag + morgen, kwartierresolutie, voor chart in quarter-mode
+    forecasts: [],       // dag 2–7 voorspellingen uit forecast.json
+    nowIdx: -1,          // index in dayPrices (uurresolutie)
+    nowIdx15m: -1,       // index in dayPrices15m (kwartierresolutie)
+    hasPt15m: false,     // True als prices_15m echte PT15M-data bevat
+    chartResolution: "hourly",  // 'hourly' | 'quarter'
     mode: "inclusive",
     supplierId: "average",
     customMarkup: 0.025,
@@ -56,20 +63,15 @@
   function priceCents(eurMwh, mode = state.mode) {
     const epex_per_kwh = eurMwh / 1000;
     if (mode === "exclusive") {
-      // Excl. belasting: EPEX + opslag, zonder energiebelasting en zonder btw.
       return (epex_per_kwh + effectiveMarkup()) * 100;
     }
-    // Incl. belasting: EPEX + opslag + energiebelasting, dan x btw.
     const t = state.config.taxes;
     const subtotal = epex_per_kwh + effectiveMarkup() + (t.energiebelasting_per_kwh || 0);
     return subtotal * (t.btw_factor || 1) * 100;
   }
   function priceCentsRaw(eurMwh) {
-    // Echt kale EPEX prijs (zonder opslag, zonder belasting). Voor de tooltip.
     return (eurMwh / 1000) * 100;
   }
-
-  // Bereken ct/kWh voor een specifieke supplier (gebruikt door de aanbieders-tabel).
   function priceCentsForSupplier(eurMwh, supplier) {
     const epex_per_kwh = eurMwh / 1000;
     const markup = Number(supplier.markup_per_kwh) || 0;
@@ -197,7 +199,7 @@
     const threshold = Number(cfg.threshold_cents_inclusive);
     if (!Number.isFinite(threshold)) return [];
 
-    const prices = state.dayPrices;
+    const prices = state.dayPrices;  // altijd uurresolutie, onafhankelijk van chartResolution
     const now = Date.now();
     const windows = [];
     let current = null;
@@ -283,6 +285,7 @@
     renderSupplierTable();
     renderMoments();
     renderFooterMeta();
+    renderResolutionToggle();
     renderChart();
   }
 
@@ -296,7 +299,7 @@
   }
 
   function renderNowCard() {
-    const prices = state.dayPrices;
+    const prices = state.dayPrices;  // altijd uurresolutie
     const nowIdx = state.nowIdx;
     const current = nowIdx >= 0 ? prices[nowIdx] : prices[0];
     const cls = classify(current.price);
@@ -311,7 +314,7 @@
   }
 
   function renderSummary() {
-    const prices = state.dayPrices;
+    const prices = state.dayPrices;  // altijd uurresolutie voor dagstatistieken
     const nowIdx = state.nowIdx;
     const current = nowIdx >= 0 ? prices[nowIdx] : prices[0];
     const today = prices.filter((p) => isSameLocalDay(p.time, current.time));
@@ -325,7 +328,7 @@
   }
 
   function renderMoments() {
-    const prices = state.dayPrices;
+    const prices = state.dayPrices;  // altijd uurresolutie voor 2-uurs vensters
     const fromIdx = state.nowIdx >= 0 ? state.nowIdx : 0;
     const moments = findBestMoments(prices, fromIdx, 3, 2);
     const list = document.querySelector('[data-field="best-moments"]');
@@ -495,37 +498,48 @@
     });
   }
 
-  // Regime-kleuren voor de grafiekpunten
-  const REGIME_COLOR = { oversupply: "#f59e0b", schaarste: "#ef4444", normaal: "#0f6cbd" };
+  // ---- Resolution toggle ----
+  function renderResolutionToggle() {
+    const toggleWrap = document.getElementById("chart-res-toggle");
+    if (!toggleWrap) return;
 
-  // Plausibility-bandkleuren (v2.1)
-  const PLAUSIBILITY_BAND_COLOR = {
-    HIGH:            "rgba(147,197,253,0.25)",
-    NORMAL:          "rgba(147,197,253,0.18)",
-    LOW:             "rgba(253,186,116,0.25)",
-    VERY_RARE_EVENT: "rgba(252,165,165,0.30)",
-  };
-  const PLAUSIBILITY_LABELS_ORDERED = ["HIGH", "NORMAL", "LOW", "VERY_RARE_EVENT"];
+    // Toon toggle alleen als er echte PT15M-data beschikbaar is.
+    const available = state.hasPt15m && state.dayPrices15m.length > 0;
+    toggleWrap.hidden = !available;
 
-  const PLAUSIBILITY_TOOLTIP = {
-    HIGH:            "✓ Normaal",
-    NORMAL:          "✓ Normaal",
-    LOW:             "⚠ Zelden gezien",
-    VERY_RARE_EVENT: "⚠⚠ Historisch zeldzaam",
-  };
-
-  function getForecastRegime(f) {
-    if (!f) return "normaal";
-    if (f.regime) return f.regime;
-    if (!f.factors) return "normaal";
-    for (const fact of f.factors) {
-      const r = (fact.reason || "").toLowerCase();
-      if (r.includes("oversupply")) return "oversupply";
-      if (r.includes("schaarste")) return "schaarste";
+    if (!available) {
+      // Zorg dat de heading de juiste tekst toont als toggle verborgen is.
+      const heading = document.getElementById("chart-heading");
+      if (heading) heading.textContent = "Vandaag & morgen, per uur";
+      return;
     }
-    return "normaal";
+
+    // Zet actief knop-state.
+    document.querySelectorAll("[data-res-btn]").forEach((btn) => {
+      const active = btn.dataset.resBtn === state.chartResolution;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+
+    // Pas de sectie-heading en subtitle aan op de actuele resolutie.
+    const heading = document.getElementById("chart-heading");
+    const sub = document.getElementById("chart-sub");
+    if (state.chartResolution === "quarter") {
+      if (heading) heading.textContent = "Vandaag & morgen, per kwartier";
+      if (sub) sub.innerHTML =
+        `Kwartierlijkse day-ahead prijzen (EPEX Spot, v.a. okt&nbsp;2025), weergegeven als <span data-field="mode-label">${modeLabel()}</span>. ` +
+        `Tooltip toont alle varianten. <strong>Schakel naar "Per uur" voor de weekprognose.</strong>`;
+    } else {
+      if (heading) heading.textContent = "Vandaag & morgen";
+      if (sub) sub.innerHTML =
+        `Day-ahead prijzen van EPEX Spot, weergegeven als <span data-field="mode-label">${modeLabel()}</span>. ` +
+        `Tooltip toont alle drie de varianten.`;
+    }
   }
 
+  // ---- Chart: plugins ----
+
+  // Kleurt daglintbanden (feestdagen, weekenden) en "Vandaag / Morgen" labels in kwartier-modus.
   const dayBandPlugin = {
     id: "svDayBand",
     beforeDatasetsDraw(chart, _args, opts) {
@@ -568,15 +582,18 @@
           bg = "rgba(100, 100, 180, 0.06)";
           label = null;
         } else {
-          return;
+          bg = null;
+          label = null;
         }
 
         const x1 = chartArea.left + first * step;
         const x2 = chartArea.left + (last + 1) * step;
         const bandW = x2 - x1;
 
-        ctx.fillStyle = bg;
-        ctx.fillRect(x1, chartArea.top, bandW, chartArea.bottom - chartArea.top);
+        if (bg) {
+          ctx.fillStyle = bg;
+          ctx.fillRect(x1, chartArea.top, bandW, chartArea.bottom - chartArea.top);
+        }
 
         if (label && bandW > 50) {
           ctx.save();
@@ -595,87 +612,217 @@
     },
   };
 
-  function fmtChartLabel(iso) {
+  // Tekent verticale scheidslijn(en) op opgegeven index-posities in de timeline.
+  // Gebruikt voor: vandaag→morgen-grens (quarter mode) en day-ahead→prognose-grens (hourly mode).
+  const svBoundaryPlugin = {
+    id: "svBoundary",
+    afterDatasetsDraw(chart, _args, opts) {
+      const { ctx, chartArea } = chart;
+      const { boundaries = [], n } = opts;
+      if (!boundaries.length || !n || !chartArea) return;
+
+      const step = (chartArea.right - chartArea.left) / n;
+
+      ctx.save();
+      for (const { index, label, labelSide = "right" } of boundaries) {
+        if (index < 0 || index > n) continue;
+        const x = chartArea.left + index * step;
+
+        // Verticale stippellijn
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(100, 116, 139, 0.38)";
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.moveTo(x, chartArea.top + 2);
+        ctx.lineTo(x, chartArea.bottom);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Optioneel label (bv. "Morgen" of "Voorspelling →")
+        if (label) {
+          const pad = 5;
+          const textX = labelSide === "left" ? x - pad : x + pad;
+          ctx.fillStyle = "rgba(71, 85, 105, 0.75)";
+          ctx.font = "bold 10px system-ui, -apple-system, sans-serif";
+          ctx.textAlign = labelSide === "left" ? "right" : "left";
+          ctx.textBaseline = "top";
+          ctx.fillText(label, textX, chartArea.top + 6);
+        }
+      }
+      ctx.restore();
+    },
+  };
+
+  // Regime-kleuren en plausibility-configuratie
+  const REGIME_COLOR = { oversupply: "#f59e0b", schaarste: "#ef4444", normaal: "#0f6cbd" };
+
+  const PLAUSIBILITY_BAND_COLOR = {
+    HIGH:            "rgba(147,197,253,0.25)",
+    NORMAL:          "rgba(147,197,253,0.18)",
+    LOW:             "rgba(253,186,116,0.25)",
+    VERY_RARE_EVENT: "rgba(252,165,165,0.30)",
+  };
+  const PLAUSIBILITY_LABELS_ORDERED = ["HIGH", "NORMAL", "LOW", "VERY_RARE_EVENT"];
+
+  const PLAUSIBILITY_TOOLTIP = {
+    HIGH:            "✓ Normaal",
+    NORMAL:          "✓ Normaal",
+    LOW:             "⚠ Zelden gezien",
+    VERY_RARE_EVENT: "⚠⚠ Historisch zeldzaam",
+  };
+
+  function getForecastRegime(f) {
+    if (!f) return "normaal";
+    if (f.regime) return f.regime;
+    if (!f.factors) return "normaal";
+    for (const fact of f.factors) {
+      const r = (fact.reason || "").toLowerCase();
+      if (r.includes("oversupply")) return "oversupply";
+      if (r.includes("schaarste")) return "schaarste";
+    }
+    return "normaal";
+  }
+
+  // ---- Chart label formatters ----
+
+  function fmtChartLabel(iso, isQuarterMode) {
     const d = new Date(iso);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const dayDiff = Math.floor((d - today) / 86400000);
+    // In quarter-mode: vandaag+morgen altijd als tijd (HH:MM). Forecast-uren (>1) met dag erbij.
     if (dayDiff <= 1) return fmtTime(iso);
     const wd = d.toLocaleDateString("nl-NL", { weekday: "short" });
     return `${wd} ${fmtTime(iso)}`;
   }
 
+  // ---- Chart bouw-helpers ----
+
+  function buildBandDatasets(tl) {
+    const sets = [];
+    for (const label of PLAUSIBILITY_LABELS_ORDERED) {
+      const lower = tl.map((t) => {
+        if (t.kind !== "forecast") return null;
+        return (t.forecast.event_plausibility_label || "NORMAL") === label
+          ? priceCents(t.forecast.lower) : null;
+      });
+      const upper = tl.map((t) => {
+        if (t.kind !== "forecast") return null;
+        return (t.forecast.event_plausibility_label || "NORMAL") === label
+          ? priceCents(t.forecast.upper) : null;
+      });
+      sets.push({
+        label: `_forecast_lower_${label}`,
+        data: lower, borderColor: "transparent",
+        backgroundColor: PLAUSIBILITY_BAND_COLOR[label],
+        pointRadius: 0, fill: "+1", tension: 0.25, spanGaps: false,
+      });
+      sets.push({
+        label: `_forecast_upper_${label}`,
+        data: upper, borderColor: "transparent",
+        pointRadius: 0, fill: false, tension: 0.25, spanGaps: false,
+      });
+    }
+    return sets;
+  }
+
+  // ---- renderResolutionToggle (alleen chart + toggle, geen volledige re-render) ----
+  // Gebruikt intern door wireUI om alleen de grafiek opnieuw te tekenen zonder
+  // alle andere DOM-elementen te beroeren. Snel en smooth.
+  function switchResolution(res) {
+    if (res !== "hourly" && res !== "quarter") return;
+    if (res === state.chartResolution) return;
+    state.chartResolution = res;
+    saveStored(STORAGE_KEYS.chartRes, res);
+    renderResolutionToggle();
+    renderChart();
+  }
+
+  // ---- Hoofd chart-renderer ----
   function renderChart() {
     const canvas = document.getElementById("dayChart");
     if (!canvas || typeof Chart === "undefined") return;
     if (state.chart) { state.chart.destroy(); state.chart = null; }
 
-    const dayPrices = state.dayPrices;
-    const forecasts = state.forecasts;
     const holidays = buildHolidayLookup();
+    const isQuarter = state.chartResolution === "quarter" && state.dayPrices15m.length > 0;
 
-    const timeline = [
-      ...dayPrices.map((p) => ({ kind: "actual", time: p.time, price: p.price })),
-      ...forecasts.map((f) => ({ kind: "forecast", time: f.time, forecast: f })),
-    ];
-    const labels = timeline.map((t) => fmtChartLabel(t.time));
+    // ── Timeline opbouwen ──────────────────────────────────────────────────────
+    let timeline, chartNowIdx, boundaries;
 
+    if (isQuarter) {
+      // Quarter-mode: alleen vandaag + morgen in PT15M, geen prognose.
+      timeline = state.dayPrices15m.map((p) => ({ kind: "actual", time: p.time, price: p.price }));
+      chartNowIdx = state.nowIdx15m;
+
+      // Grens tussen vandaag en morgen markeren.
+      const tomorrowStr = (() => {
+        const d = new Date();
+        d.setDate(d.getDate() + 1);
+        return d.toISOString().slice(0, 10);
+      })();
+      const tomorrowIdx = timeline.findIndex((pt) => pt.time.slice(0, 10) === tomorrowStr);
+      boundaries = tomorrowIdx >= 0 ? [{ index: tomorrowIdx, label: "Morgen" }] : [];
+
+    } else {
+      // Hourly-mode: vandaag + morgen actueel + prognose dag 2+
+      timeline = [
+        ...state.dayPrices.map((p) => ({ kind: "actual", time: p.time, price: p.price })),
+        ...state.forecasts.map((f) => ({ kind: "forecast", time: f.time, forecast: f })),
+      ];
+      chartNowIdx = state.nowIdx;
+
+      // Grens tussen actuals en prognose markeren (enkel als er beide zijn).
+      const boundaryIdx = state.dayPrices.length;
+      boundaries = state.forecasts.length > 0
+        ? [{ index: boundaryIdx, label: "Voorspelling", labelSide: "right" }]
+        : [];
+    }
+
+    const n = timeline.length;
+    const labels = timeline.map((t) => fmtChartLabel(t.time, isQuarter));
+
+    // ── Dataset: actuele prijzen ───────────────────────────────────────────────
     const actualData = timeline.map((t) => t.kind === "actual" ? priceCents(t.price) : null);
     const actualColors = timeline.map((t, i) => {
       if (t.kind !== "actual") return "transparent";
-      return i === state.nowIdx ? "#0f6cbd" : pointColor(t.price);
+      return i === chartNowIdx ? "#0f6cbd" : pointColor(t.price);
     });
+    // In quarter-mode: kleinere punten (veel datapunten), grotere 'nu'-stip.
     const actualRadii = timeline.map((t, i) => {
       if (t.kind !== "actual") return 0;
-      return i === state.nowIdx ? 6 : 3;
+      if (i === chartNowIdx) return 6;
+      return isQuarter ? 2 : 3;
     });
+    const actualHoverRadii = timeline.map((_, i) => i === chartNowIdx ? 7 : (isQuarter ? 4 : 5));
 
-    // Datasets 2-9: band per plausibility-label
-    function buildBandDatasets(tl) {
-      const sets = [];
-      for (const label of PLAUSIBILITY_LABELS_ORDERED) {
-        const lower = tl.map((t) => {
-          if (t.kind !== "forecast") return null;
-          return (t.forecast.event_plausibility_label || "NORMAL") === label
-            ? priceCents(t.forecast.lower) : null;
-        });
-        const upper = tl.map((t) => {
-          if (t.kind !== "forecast") return null;
-          return (t.forecast.event_plausibility_label || "NORMAL") === label
-            ? priceCents(t.forecast.upper) : null;
-        });
-        sets.push({
-          label: `_forecast_lower_${label}`,
-          data: lower,
-          borderColor: "transparent",
-          backgroundColor: PLAUSIBILITY_BAND_COLOR[label],
-          pointRadius: 0,
-          fill: "+1",
-          tension: 0.25,
-          spanGaps: false,
-        });
-        sets.push({
-          label: `_forecast_upper_${label}`,
-          data: upper,
-          borderColor: "transparent",
-          pointRadius: 0,
-          fill: false,
-          tension: 0.25,
-          spanGaps: false,
-        });
-      }
-      return sets;
-    }
-
+    // ── Datasets: prognose-banden en -lijn ────────────────────────────────────
     const FORECAST_DOT = "rgba(100, 116, 139, 0.75)";
     const forecastPointColors = timeline.map((t) =>
       t.kind === "forecast" ? FORECAST_DOT : "transparent"
     );
-    const forecastPredicted = timeline.map((t) => t.kind === "forecast" ? priceCents(t.forecast.predicted) : null);
+    const forecastPredicted = timeline.map((t) =>
+      t.kind === "forecast" ? priceCents(t.forecast.predicted) : null
+    );
 
+    // ── X-as tick-configuratie per modus ──────────────────────────────────────
+    // In quarter-mode: toon alleen labels op volle uren (elke 4de punt).
+    // autoSkip handelt verdere verdunning op smalle schermen.
+    const xTickCallback = isQuarter
+      ? function (value, index) {
+          const iso = timeline[index] && timeline[index].time;
+          if (!iso) return "";
+          const d = new Date(iso);
+          return d.getMinutes() === 0 ? fmtTime(iso) : "";
+        }
+      : (v) => v;  // default: gebruik de vooraf berekende labels
+
+    const maxTicksLimit = isQuarter ? 24 : 14;
+
+    // ── Chart aanmaken ─────────────────────────────────────────────────────────
     state.chart = new Chart(canvas, {
       type: "line",
-      plugins: [dayBandPlugin],
+      plugins: [dayBandPlugin, svBoundaryPlugin],
       data: {
         labels,
         datasets: [
@@ -684,16 +831,16 @@
             data: actualData,
             tension: 0.25,
             borderColor: "#2e75b6",
-            borderWidth: 2,
+            borderWidth: isQuarter ? 1.5 : 2,
             pointBackgroundColor: actualColors,
             pointBorderColor: actualColors,
             pointRadius: actualRadii,
-            pointHoverRadius: (ctx) => (ctx.dataIndex === state.nowIdx ? 7 : 5),
+            pointHoverRadius: actualHoverRadii,
             fill: { target: "origin", above: "rgba(46,117,182,0.08)" },
             spanGaps: false,
           },
-          ...buildBandDatasets(timeline),
-          {
+          ...(isQuarter ? [] : buildBandDatasets(timeline)),
+          ...(isQuarter ? [] : [{
             label: "voorspelling",
             data: forecastPredicted,
             borderColor: "rgba(46,117,182,0.5)",
@@ -706,17 +853,23 @@
             pointHoverRadius: 5,
             fill: false,
             spanGaps: false,
-          },
+          }]),
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: { duration: 250 },
+        animation: { duration: 280 },
         interaction: { mode: "index", intersect: false },
         scales: {
           x: {
-            ticks: { autoSkip: true, maxTicksLimit: 14, color: "#7c8a99", font: { size: 11 } },
+            ticks: {
+              autoSkip: true,
+              maxTicksLimit,
+              color: "#7c8a99",
+              font: { size: 11 },
+              callback: xTickCallback,
+            },
             grid: { color: "rgba(0,0,0,0.04)" },
           },
           y: {
@@ -726,11 +879,25 @@
         },
         plugins: {
           svDayBand: { timeline, holidays },
+          svBoundary: { boundaries, n },
           legend: { display: false },
           tooltip: {
             filter: (item) => !item.dataset.label || !item.dataset.label.startsWith("_"),
             callbacks: {
-              title: (items) => fmtDateTime(timeline[items[0].dataIndex].time),
+              title: (items) => {
+                const t = timeline[items[0].dataIndex];
+                if (!t) return "";
+                if (isQuarter && t.kind === "actual") {
+                  // Kwartier-modus: toon "08:15 – 08:30"
+                  const start = new Date(t.time);
+                  const end   = new Date(start.getTime() + 15 * 60 * 1000);
+                  const startFmt = start.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+                  const endFmt   = end.toLocaleTimeString("nl-NL",   { hour: "2-digit", minute: "2-digit" });
+                  const dateFmt  = start.toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short" });
+                  return `${dateFmt}  ${startFmt} – ${endFmt}`;
+                }
+                return fmtDateTime(t.time);
+              },
               label: (item) => {
                 const idx = item.dataIndex;
                 const t = timeline[idx];
@@ -742,6 +909,7 @@
                     `Incl. belasting: ${fmtNum(priceCents(eurMwh, "inclusive"), 2)} ct/kWh`,
                   ];
                 }
+                if (!t.forecast) return [];
                 const f = t.forecast;
                 const regime = getForecastRegime(f);
                 const regimeLbl = { oversupply: "Oversupply ☀️", schaarste: "Schaarste ❄️", normaal: "Normaal" }[regime];
@@ -758,10 +926,8 @@
                 if (isNL && isCross) lines.push("\U0001f4c5 NL + EU feestdag — lage prijs verwacht");
                 else if (isNL) lines.push("\U0001f4c5 NL feestdag — lage prijs verwacht");
                 else if (isCross) lines.push("\U0001f4c5 EU feestdag (buurlanden) — mogelijk lagere prijs");
-
-                // Plausibility (v2.1)
                 const plLabel = f.event_plausibility_label || "NORMAL";
-                const plText = PLAUSIBILITY_TOOLTIP[plLabel] || PLAUSIBILITY_TOOLTIP.NORMAL;
+                const plText  = PLAUSIBILITY_TOOLTIP[plLabel] || PLAUSIBILITY_TOOLTIP.NORMAL;
                 lines.push(`Situatie: ${plText}`);
                 const plN = f.analog_sample_size;
                 if ((plLabel === "LOW" || plLabel === "VERY_RARE_EVENT") && plN !== undefined) {
@@ -779,6 +945,7 @@
       },
     });
 
+    // ── Legenda onder de grafiek ───────────────────────────────────────────────
     const _existingLegend = document.getElementById("chart-regime-legend");
     if (_existingLegend) _existingLegend.remove();
     {
@@ -795,13 +962,17 @@
         dot("#d4a017", "Normaal") +
         dot("#c92a2a", "Duur") +
         dot("#0f6cbd", "Nu") +
-        `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken in de grafiek zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag.</span>`;
+        (isQuarter
+          ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Kwartierlijkse day-ahead prijzen voor vandaag en morgen. Schakel naar "Per uur" voor de prognose tot volgende week.</span>`
+          : `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag.</span>`
+        );
       (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", wrap);
     }
   }
 
   // ---- Event wiring ----
   function wireUI() {
+    // Incl./excl. belasting toggle
     document.querySelectorAll("[data-mode-btn]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const mode = btn.dataset.modeBtn;
@@ -813,6 +984,7 @@
       });
     });
 
+    // Instellingen-panel
     const toggleBtn = document.getElementById("settings-toggle");
     const panel = document.getElementById("settings-panel");
     if (toggleBtn && panel) {
@@ -824,6 +996,7 @@
       });
     }
 
+    // Leverancier-selectie
     const select = document.getElementById("supplier-select");
     if (select) {
       select.addEventListener("change", (e) => {
@@ -845,6 +1018,7 @@
       });
     }
 
+    // Negatief-alert sluiten
     const negCloseBtn = document.getElementById("neg-alert-close");
     if (negCloseBtn) {
       negCloseBtn.addEventListener("click", () => {
@@ -855,6 +1029,13 @@
         hideNegAlert(banner);
       });
     }
+
+    // Resolutie-toggle (per uur / per kwartier)
+    document.querySelectorAll("[data-res-btn]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        switchResolution(btn.dataset.resBtn);
+      });
+    });
   }
 
   // ---- Boot ----
@@ -863,6 +1044,8 @@
     state.supplierId = loadStored(STORAGE_KEYS.supplier, "average");
     const cm = parseFloat(loadStored(STORAGE_KEYS.customMarkup, "0.025"));
     state.customMarkup = Number.isFinite(cm) ? cm : 0.025;
+    const storedRes = loadStored(STORAGE_KEYS.chartRes, "hourly");
+    state.chartResolution = storedRes === "quarter" ? "quarter" : "hourly";
   }
   function applyConfigDefaults() {
     if (!state.config) return;
@@ -883,29 +1066,40 @@
   loadInitialState();
 
   Promise.all([
-    fetch("data/config.json", { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error("config HTTP " + r.status); return r.json(); }),
-    fetch("data/prices.json", { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error("prices HTTP " + r.status); return r.json(); }),
+    fetch("data/config.json",  { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error("config HTTP " + r.status); return r.json(); }),
+    fetch("data/prices.json",  { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error("prices HTTP " + r.status); return r.json(); }),
     fetch("data/forecast.json", { cache: "no-store" }).then((r) => r.ok ? r.json() : null).catch(() => null),
   ])
     .then(([config, payload, forecastPayload]) => {
-      state.config = config;
-      state.payload = payload;
+      state.config          = config;
+      state.payload         = payload;
       state.forecastPayload = forecastPayload;
-      state.prices = payload.prices || [];
-      const now = new Date();
-      state.dayPrices = filterTodayTomorrow(state.prices, now);
-      state.nowIdx = findCurrentIndex(state.dayPrices, now);
 
+      // Uurprijzen (16d historie + 2d toekomst) — gebruikt door model, now-card, samenvatting, momenten.
+      state.prices    = payload.prices || [];
+      state.hasPt15m  = payload.has_pt15m === true;
+      state.prices15m = payload.prices_15m || [];
+
+      const now = new Date();
+      state.dayPrices   = filterTodayTomorrow(state.prices, now);
+      state.nowIdx      = findCurrentIndex(state.dayPrices, now);
+
+      // Kwartierdata voor vandaag + morgen (al gefilterd door de backend).
+      state.dayPrices15m = state.prices15m;
+      state.nowIdx15m    = findCurrentIndex(state.dayPrices15m, now);
+
+      // Prognoses: dag 2+ (skip morgen als morgenochtend 00:00 al in dayPrices zit).
       const allForecasts = (forecastPayload && forecastPayload.forecasts) || [];
-      const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
+      const tomorrowStart       = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
       const dayAfterTomorrowStart = new Date(tomorrowStart.getTime() + 24 * 3600 * 1000);
-      const hasTomorrowActuals = state.dayPrices.some((p) => {
+      const hasTomorrowActuals  = state.dayPrices.some((p) => {
         const t = new Date(p.time);
         return t >= tomorrowStart && t < dayAfterTomorrowStart;
       });
       state.forecasts = hasTomorrowActuals
         ? allForecasts.filter((f) => new Date(f.time) >= dayAfterTomorrowStart)
         : allForecasts;
+
       applyConfigDefaults();
       wireUI();
       renderAll();
