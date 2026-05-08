@@ -81,12 +81,15 @@
   }
 
   function classify(eurMwh) {
-    const t = state.config.thresholds_eur_per_mwh;
-    if (eurMwh < 0)                          return "negative";   // ≤ 0 EUR/MWh
-    if (eurMwh < (t.very_cheap || 0))        return "very_cheap";
-    if (eurMwh < (t.cheap || 50))            return "cheap";
-    if (eurMwh > (t.very_pricey || 200))     return "very_pricey";
-    if (eurMwh > (t.pricey || 110))          return "pricey";
+    // Classificeer altijd op basis van de consumentenprijs incl. energiebelasting + btw
+    // + leverancieropslag (= wat de bezoeker daadwerkelijk betaalt), niet op kale EPEX.
+    const ct = priceCents(eurMwh, "inclusive");
+    const t  = state.config.thresholds_ct_kwh_inclusive || {};
+    if (ct < 0)                          return "negative";
+    if (ct < (t.very_cheap ?? 14))       return "very_cheap";
+    if (ct < (t.cheap      ?? 22))       return "cheap";
+    if (ct > (t.very_pricey ?? 38))      return "very_pricey";
+    if (ct > (t.pricey      ?? 28))      return "pricey";
     return "normal";
   }
   function classifyToCard(c) {
