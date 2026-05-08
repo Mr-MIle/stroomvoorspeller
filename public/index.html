@@ -88,6 +88,14 @@
     </div>
   </div>
 
+  <!-- Stale-data banner: verschijnt als prices.json ouder is dan 6 uur. Default hidden. -->
+  <div id="stale-alert" class="stale-alert" role="status" aria-live="polite" hidden>
+    <div class="stale-alert-inner container">
+      <span class="stale-alert-icon" aria-hidden="true">⚠</span>
+      <p class="stale-alert-text">Data tijdelijk niet bijgewerkt — laatste update: <span id="stale-alert-time">—</span></p>
+    </div>
+  </div>
+
   <header class="site-header">
     <div class="container header-row">
       <a class="brand" href="/">
@@ -330,5 +338,7 @@
       </div>
     </div>
   </footer>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
 </body>
 </html>

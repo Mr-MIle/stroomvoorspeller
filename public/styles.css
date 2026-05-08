@@ -670,6 +670,26 @@ a:hover { text-decoration: underline; }
   .primary-nav a { white-space: nowrap; padding: 10px 10px; }
 }
 
+/* ----- Stale-data banner (subtiele waarschuwing als prices.json ouder is dan 6 uur) ----- */
+.stale-alert {
+  width: 100%;
+  background: #fff8e1;
+  border-bottom: 1px solid #ffe082;
+  color: #5a4100;
+  font-size: 0.88rem;
+}
+.stale-alert-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+}
+.stale-alert-icon { flex-shrink: 0; font-size: 1rem; }
+.stale-alert-text { margin: 0; }
+@media (max-width: 640px) {
+  .stale-alert-inner { padding: 8px 12px; }
+}
+
 /* ----- Negatieve-prijs banner (sticky bovenaan, alleen zichtbaar bij negatieve uren) ----- */
 .neg-alert {
   position: sticky;

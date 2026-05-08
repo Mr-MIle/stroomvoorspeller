@@ -277,6 +277,7 @@
   function renderAll() {
     if (!state.config || !state.dayPrices.length) return;
     renderNegativeAlert();
+    checkStaleData();
     renderSettingsPanel();
     renderSettingsToggle();
     renderModeBadges();
@@ -365,6 +366,28 @@
       setText("source-note", "Let op: testdata, niet de echte day-ahead prijzen. Dit is een ontwikkelversie.");
     } else {
       setText("source-note", "");
+    }
+  }
+
+  // ---- Stale-data banner ----
+  // Toont een subtiele waarschuwing als prices.json ouder is dan 6 uur.
+  // Geen sluitknop nodig — banner verdwijnt vanzelf bij de volgende paginalading met verse data.
+  function checkStaleData() {
+    const banner = document.getElementById("stale-alert");
+    if (!banner) return;
+    const payload = state.payload || {};
+    if (!payload.generated_at) return;
+    const generatedAt = new Date(payload.generated_at);
+    const ageMs = Date.now() - generatedAt.getTime();
+    const STALE_THRESHOLD_MS = 6 * 60 * 60 * 1000; // 6 uur
+    if (ageMs > STALE_THRESHOLD_MS) {
+      const timeStr = generatedAt.toLocaleString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+      const dateStr = generatedAt.toLocaleString("nl-NL", { weekday: "short", day: "numeric", month: "short" });
+      const el = document.getElementById("stale-alert-time");
+      if (el) el.textContent = `${dateStr} ${timeStr}`;
+      banner.removeAttribute("hidden");
+    } else {
+      banner.setAttribute("hidden", "");
     }
   }
 
