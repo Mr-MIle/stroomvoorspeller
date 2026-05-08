@@ -82,18 +82,21 @@
 
   function classify(eurMwh) {
     const t = state.config.thresholds_eur_per_mwh;
-    if (eurMwh < (t.very_cheap || 0)) return "very_cheap";
-    if (eurMwh < (t.cheap || 50)) return "cheap";
-    if (eurMwh > (t.very_pricey || 200)) return "very_pricey";
-    if (eurMwh > (t.pricey || 110)) return "pricey";
+    if (eurMwh < 0)                          return "negative";   // ≤ 0 EUR/MWh
+    if (eurMwh < (t.very_cheap || 0))        return "very_cheap";
+    if (eurMwh < (t.cheap || 50))            return "cheap";
+    if (eurMwh > (t.very_pricey || 200))     return "very_pricey";
+    if (eurMwh > (t.pricey || 110))          return "pricey";
     return "normal";
   }
   function classifyToCard(c) {
+    if (c === "negative")                    return "free";
     if (c === "very_cheap" || c === "cheap") return "cheap";
     if (c === "pricey" || c === "very_pricey") return "pricey";
     return "normal";
   }
   function statusLabel(c) {
+    if (c === "negative")    return "gratis";
     if (c === "very_cheap")  return "uitstekend";
     if (c === "cheap")       return "goedkoop";
     if (c === "very_pricey") return "extreem duur";
@@ -185,6 +188,7 @@
 
   function pointColor(eurMwh) {
     const c = classify(eurMwh);
+    if (c === "negative")    return "#7048e8";
     if (c === "very_cheap")  return "#1a7a31";
     if (c === "cheap")       return "#2f9e44";
     if (c === "very_pricey") return "#9c1a1a";
@@ -341,14 +345,16 @@
     }
     moments.forEach((m, i) => {
       const li = document.createElement("li");
-      li.className = "moment";
+      const isNeg = m.avg < 0;
+      li.className = isNeg ? "moment is-negative" : "moment";
+      const badge = isNeg ? `<span class="moment-badge-free">⚡ gratis</span>` : "";
       li.innerHTML = `
         <span class="moment-rank">${i + 1}</span>
         <span class="moment-when">
           ${fmtDateTime(m.startIso)} – ${fmtTime(m.endIso, { hour: "2-digit", minute: "2-digit" })}
           <small>(2 uur)</small>
         </span>
-        <span class="moment-price">${fmtCents(m.avg)} ct/kWh</span>
+        <span class="moment-price">${fmtCents(m.avg)} ct/kWh${badge}</span>
       `;
       list.appendChild(li);
     });
@@ -981,6 +987,7 @@
         `<span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></span>` +
         `<strong>${label}</strong></span>`;
       wrap.innerHTML =
+        dot("#7048e8", "Gratis/negatief") +
         dot("#2f9e44", "Goedkoop") +
         dot("#d4a017", "Normaal") +
         dot("#c92a2a", "Duur") +

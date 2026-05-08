@@ -14,6 +14,8 @@
   --c-brand-deep: #0a4f8b;
   --c-accent: #2e75b6;
 
+  --c-free: #7048e8;
+  --c-free-bg: #f0ebff;
   --c-cheap: #2f9e44;
   --c-cheap-bg: #e6f4ea;
   --c-normal: #d4a017;
@@ -355,6 +357,7 @@ a:hover { text-decoration: underline; }
   background: linear-gradient(90deg, var(--c-cheap), var(--c-normal), var(--c-pricey));
   opacity: 0.85;
 }
+.now-card[data-status="free"]    { background: linear-gradient(180deg, var(--c-free-bg) 0%, var(--c-surface) 65%); }
 .now-card[data-status="cheap"]   { background: linear-gradient(180deg, var(--c-cheap-bg) 0%, var(--c-surface) 65%); }
 .now-card[data-status="normal"]  { background: linear-gradient(180deg, var(--c-normal-bg) 0%, var(--c-surface) 65%); }
 .now-card[data-status="pricey"]  { background: linear-gradient(180deg, var(--c-pricey-bg) 0%, var(--c-surface) 65%); }
@@ -372,7 +375,8 @@ a:hover { text-decoration: underline; }
   background: var(--c-text-mute);
   display: inline-block;
 }
-.now-card[data-status="cheap"]  .status-dot { background: var(--c-cheap); box-shadow: 0 0 0 4px var(--c-cheap-bg); }
+.now-card[data-status="free"]   .status-dot { background: var(--c-free);   box-shadow: 0 0 0 4px var(--c-free-bg); }
+.now-card[data-status="cheap"]  .status-dot { background: var(--c-cheap);  box-shadow: 0 0 0 4px var(--c-cheap-bg); }
 .now-card[data-status="normal"] .status-dot { background: var(--c-normal); box-shadow: 0 0 0 4px var(--c-normal-bg); }
 .now-card[data-status="pricey"] .status-dot { background: var(--c-pricey); box-shadow: 0 0 0 4px var(--c-pricey-bg); }
 .status-value {
@@ -474,6 +478,7 @@ a:hover { text-decoration: underline; }
   border-radius: 2px;
   background: var(--c-text-mute);
 }
+.legend-free::before    { background: var(--c-free); }
 .legend-cheap::before   { background: var(--c-cheap); }
 .legend-normal::before  { background: var(--c-normal); }
 .legend-pricey::before  { background: var(--c-pricey); }
@@ -541,6 +546,21 @@ a:hover { text-decoration: underline; }
   font-weight: 700;
   color: #1e7b34;
   font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.moment.is-negative .moment-price { color: var(--c-free); }
+.moment-badge-free {
+  display: inline-block;
+  background: var(--c-free-bg);
+  color: var(--c-free);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
 }
 .moment-loading { color: var(--c-text-mute); padding: 8px; }
 
