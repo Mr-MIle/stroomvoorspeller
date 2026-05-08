@@ -1,19 +1,19 @@
 {
-  "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in EUR per MWh (zoals ENTSO-E rapporteert).",
-  "version": 5,
-  "updated": "2026-05-02",
+  "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in ct/kWh consumentenprijs incl. energiebelasting + btw + leverancieropslag.",
+  "version": 6,
+  "updated": "2026-05-08",
   "taxes": {
     "energiebelasting_per_kwh": 0.0916,
     "btw_factor": 1.21,
     "year": 2026,
     "_note": "Tarief 2026 voor verbruik tot 10.000 kWh per jaar, EXCL. btw. Incl. btw is dit €0,1108/kWh. Verifieer jaarlijks per 1 januari."
   },
-  "thresholds_eur_per_mwh": {
-    "very_cheap": 0,
-    "cheap": 50,
-    "pricey": 110,
-    "very_pricey": 200,
-    "_note": "Onder very_cheap = negatief. Drempels op kale EPEX-basis."
+  "thresholds_ct_kwh_inclusive": {
+    "very_cheap": 14,
+    "cheap": 22,
+    "pricey": 28,
+    "very_pricey": 38,
+    "_note": "Consumentenprijs ct/kWh incl. energiebelasting + btw + leverancieropslag. Negatief (< 0) is een eigen klasse. Correspondentie (bij gem. opslag 2,1 ct): very_cheap ≈ EPEX 0, cheap ≈ EPEX 50, pricey ≈ EPEX 110, very_pricey ≈ EPEX 200 EUR/MWh."
   },
   "view": {
     "default_mode": "inclusive",
