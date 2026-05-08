@@ -208,6 +208,39 @@ def generate_sample_prices(now_ams: datetime) -> list[dict]:
     return prices
 
 
+def generate_sample_prices_15m(now_ams: datetime) -> list[dict]:
+    """Genereer realistische 15-minuten sample-data voor vandaag + morgen (192 punten).
+
+    Elke uur-baseline uit generate_sample_prices krijgt vier kwartierwaarden met
+    realistische intra-uur variatie (standaarddeviatie ~4 EUR/MWh).
+    """
+    rng = random.Random(137)  # apart seed zodat kwartierwaarden anders zijn dan uurwaarden
+    start = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
+    prices = []
+    for hour in range(2 * 24):  # vandaag + morgen = 48 uur
+        t_hour = start + timedelta(hours=hour)
+        h = t_hour.hour
+        if 0 <= h <= 5:
+            base = 35 + rng.uniform(-8, 8)
+        elif 6 <= h <= 8:
+            base = 95 + rng.uniform(-15, 15)
+        elif 9 <= h <= 14:
+            base = 30 + rng.uniform(-40, 25)
+        elif 15 <= h <= 16:
+            base = 65 + rng.uniform(-15, 15)
+        elif 17 <= h <= 20:
+            base = 130 + rng.uniform(-20, 30)
+        else:
+            base = 70 + rng.uniform(-15, 15)
+        if t_hour.weekday() >= 5:
+            base *= 0.9
+        for q in range(4):
+            t = t_hour + timedelta(minutes=15 * q)
+            intra = rng.gauss(0, 4.0)  # ~4 EUR/MWh std intra-uur variatie
+            prices.append({"time": t.isoformat(), "price": round(base + intra, 2)})
+    return prices
+
+
 def main() -> int:
     token = os.environ.get("ENTSOE_TOKEN", "").strip()
     now_ams = amsterdam_now()
@@ -222,27 +255,42 @@ def main() -> int:
     start_utc = history_start_ams.astimezone(timezone.utc)
     end_utc = end_ams.astimezone(timezone.utc)
 
+    # Datum-strings voor vandaag en morgen (Amsterdam), gebruikt als filter voor prices_15m.
+    today_date = today_start_ams.strftime("%Y-%m-%d")
+    tomorrow_date = (today_start_ams + timedelta(days=1)).strftime("%Y-%m-%d")
+
     source = "sample"
     prices: list[dict] = []
+    prices_15m: list[dict] = []
+    has_pt15m = False
     error_msg = None
 
     if token:
         try:
-            prices = fetch_entsoe(token, start_utc, end_utc)
+            raw_prices = fetch_entsoe(token, start_utc, end_utc)
             source = "entsoe"
-            print(f"[ok] {len(prices)} ruwe prijspunten opgehaald van ENTSO-E.", file=sys.stderr)
-            before = len(prices)
-            prices = aggregate_to_hourly(prices)
-            if len(prices) != before:
-                print(f"[ok] Geaggregeerd van {before} sub-uurpunten naar {len(prices)} uurpunten.", file=sys.stderr)
+            print(f"[ok] {len(raw_prices)} ruwe prijspunten opgehaald van ENTSO-E.", file=sys.stderr)
+            before = len(raw_prices)
+            prices = aggregate_to_hourly(raw_prices)
+            has_pt15m = before > len(prices)  # True als ENTSO-E PT15M leverde
+            if has_pt15m:
+                print(f"[ok] Geaggregeerd van {before} PT15M-punten naar {len(prices)} uurpunten.", file=sys.stderr)
+                # Sla ruwe kwartierdata op voor vandaag + morgen (voor de frontend-chart).
+                prices_15m = [
+                    p for p in raw_prices
+                    if p["time"][:10] in (today_date, tomorrow_date)
+                ]
+                print(f"[ok] {len(prices_15m)} PT15M-punten bewaard voor vandaag+morgen.", file=sys.stderr)
         except Exception as exc:  # noqa: BLE001
             error_msg = f"ENTSO-E fout: {exc}"
             print(f"[warn] {error_msg} - terugval naar sample-data.", file=sys.stderr)
 
     if not prices:
         prices = generate_sample_prices(now_ams)
+        prices_15m = generate_sample_prices_15m(now_ams)
+        has_pt15m = True  # sample-data heeft altijd PT15M voor dev-gebruik
         source = "sample"
-        print(f"[ok] {len(prices)} sample-prijzen gegenereerd.", file=sys.stderr)
+        print(f"[ok] {len(prices)} sample-uurprijzen + {len(prices_15m)} sample-kwartierdata gegenereerd.", file=sys.stderr)
 
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -250,7 +298,9 @@ def main() -> int:
         "unit": "EUR/MWh",
         "tz": "Europe/Amsterdam",
         "source": source,
+        "has_pt15m": has_pt15m,
         "prices": prices,
+        "prices_15m": prices_15m,  # Kwartierdata voor vandaag+morgen (leeg als PT60M of fout)
     }
     if error_msg:
         payload["last_error"] = error_msg
