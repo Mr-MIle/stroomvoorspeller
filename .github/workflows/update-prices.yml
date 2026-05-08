@@ -52,11 +52,19 @@ jobs:
         run: |
           python scripts/update_log.py
 
+      - name: Genereer RSS-feed
+        # Schrijft public/data/feed.xml met de laatste 7 dagen uurprijzen.
+        # Mag falen zonder dat de rest van de workflow stopt.
+        continue-on-error: true
+        run: |
+          python scripts/generate_feed.py
+
       - name: Commit en push als er iets veranderd is
         run: |
           git config user.name "stroomvoorspeller-bot"
           git config user.email "bot@stroomvoorspeller.nl"
           git add public/data/prices.json public/data/forecast.json 2>/dev/null || true
+          git add public/data/feed.xml 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "auto: update prijzen + voorspelling $(date -u +%Y-%m-%dT%H:%MZ)"
