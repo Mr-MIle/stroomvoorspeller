@@ -1,7 +1,7 @@
 {
   "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in ct/kWh consumentenprijs incl. energiebelasting + btw + leverancieropslag.",
   "version": 6,
-  "updated": "2026-05-08",
+  "updated": "2026-05-09",
   "taxes": {
     "energiebelasting_per_kwh": 0.0916,
     "btw_factor": 1.21,
@@ -71,11 +71,11 @@
     {
       "id": "average",
       "name": "Algemeen gemiddelde",
-      "markup_per_kwh": 0.021,
+      "markup_per_kwh": 0.0175,
       "fixed_per_month": 0,
-      "verified": "2026-04-28",
-      "source": "Berekend gemiddelde van de zeven onderstaande aanbieders",
-      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan = 0.020, gemiddelde = 0.0213."
+      "verified": "2026-05-09",
+      "source": "Berekend gemiddelde van de tien onderstaande aanbieders",
+      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan = 0.018, gemiddelde = 0.0175."
     },
     {
       "id": "tibber",
@@ -146,6 +146,36 @@
       "source": "easyenergy.com tarievenpagina",
       "note": "Inkoopvergoeding excl. btw.",
       "website": "https://www.easyenergy.com"
+    },
+    {
+      "id": "nextenergy",
+      "name": "NextEnergy",
+      "markup_per_kwh": 0.0181,
+      "fixed_per_month": 4.95,
+      "verified": "2026-05-09",
+      "source": "nextenergy.nl tarievenpagina, geverifieerd mei 2026",
+      "note": "Inkoopvergoeding excl. btw. Vaste kosten €5,99/maand incl. btw = €4,95 excl. btw.",
+      "website": "https://www.nextenergy.nl"
+    },
+    {
+      "id": "budget",
+      "name": "Budget Energie",
+      "markup_per_kwh": 0.01405,
+      "fixed_per_month": 4.95,
+      "verified": "2026-05-09",
+      "source": "budgetthuis.nl tarievenpagina, €0,017/kWh incl. btw, geverifieerd mei 2026",
+      "note": "Inkoopvergoeding: €0,017 incl. btw ÷ 1,21 = €0,01405 excl. btw. Vaste kosten €5,99/maand incl. btw = €4,95 excl. btw.",
+      "website": "https://www.budgetthuis.nl/energie/dynamisch-energiecontract"
+    },
+    {
+      "id": "eneco",
+      "name": "Eneco Dynamisch",
+      "markup_per_kwh": 0.02,
+      "fixed_per_month": 5.79,
+      "verified": "2026-05-09",
+      "source": "eneco.nl tarievenpagina, tarief per 1 mei 2026, geverifieerd mei 2026",
+      "note": "Inkoopvergoeding excl. btw per 1 mei 2026. Vaste kosten €7,00/maand incl. btw = €5,79 excl. btw.",
+      "website": "https://www.eneco.nl/duurzame-energie/dynamisch-energiecontract/"
     },
     {
       "id": "custom",
