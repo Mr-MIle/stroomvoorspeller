@@ -348,7 +348,8 @@
     }
     moments.forEach((m, i) => {
       const li = document.createElement("li");
-      const isNeg = m.avg < 0;
+      const consumerCents = priceCents(m.avg);
+      const isNeg = consumerCents <= 0;
       li.className = isNeg ? "moment is-negative" : "moment";
       const badge = isNeg ? `<span class="moment-badge-free">⚡ gratis</span>` : "";
       li.innerHTML = `
