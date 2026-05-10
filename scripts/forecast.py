@@ -219,6 +219,26 @@ def compute_baseline(
     if len(matches) < 2 and window_days < fallback_days:
         matches = _collect(target_dt - timedelta(days=fallback_days))
 
+    # Fallback feestdag zonder recente feestdag-history (v2.2).
+    # Feestdagen zoals Hemelvaart, Pinksteren en Koningsdag liggen ver uit
+    # elkaar (soms >5 weken). Als het 14-dagenvenster geen enkel feestdaguur
+    # bevat, valt de baseline terug op weekendprijzen: economisch vergelijkbaar
+    # (lage industrievraag, vergelijkbaar consumptiepatroon) en betrouwbaarder
+    # dan helemaal niets. factor_dagtype geeft al -2 punten, net als zondag,
+    # dus de predictie corrigeert daarna nog voor het feestdagkarakter.
+    if not matches and target_type == "feestdag":
+        feestdag_fallback_days = 14
+        fallback_cutoff = target_dt - timedelta(days=feestdag_fallback_days)
+        for entry in history:
+            t = datetime.fromisoformat(entry["time"])
+            if t < fallback_cutoff or t >= cutoff_end:
+                continue
+            if t.hour != target_hour:
+                continue
+            if dagtype(t) != "weekend":
+                continue
+            matches.append(entry["price"])
+
     if not matches:
         return None
     s = sorted(matches)
