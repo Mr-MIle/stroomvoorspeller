@@ -434,16 +434,72 @@ def main() -> int:
     print(f"[info] {len(historical_log)} historische entries beschikbaar "
           f"voor analogie-zoekopdracht.", file=sys.stderr)
 
+    # ---------------------------------------------------------------------------
+    # Seizoensnorm wind + temp als fallback bij ontbrekende Open-Meteo waarden.
+    # Waarden zijn bewuste neutrale schattingen gebaseerd op KNMI De Bilt:
+    #   wind: 8 m/s op 100m (jaargemiddelde NL landstations, gecorrigeerd 10m->100m)
+    #   temp: interpolatie op basis van MONTHLY_TEMP_NORM_C hieronder.
+    # Fix 1 + 3 (2026-05-10): stille dag-skip vervangen door per-dag logging en
+    # fallback op seizoensnormen, zodat dagen nooit meer ontbreken in de prognose.
+    # ---------------------------------------------------------------------------
+    MONTHLY_TEMP_NORM_C = {
+        1: 3.5, 2: 4.0, 3: 7.0, 4: 10.5, 5: 14.5, 6: 17.5,
+        7: 19.5, 8: 19.5, 9: 16.0, 10: 12.0, 11: 7.5, 12: 4.5,
+    }
+    FALLBACK_WIND_MS = 8.0
+
+    def seasonal_temp_norm(dt: datetime) -> float:
+        """Lineaire interpolatie van maandtemperatuur (KNMI De Bilt klimatologie)."""
+        m = dt.month
+        d = dt.day
+        if d <= 15:
+            prev_m = 12 if m == 1 else m - 1
+            frac = (d + 15) / 30
+            return MONTHLY_TEMP_NORM_C[prev_m] * (1 - frac) + MONTHLY_TEMP_NORM_C[m] * frac
+        next_m = 1 if m == 12 else m + 1
+        frac = (d - 15) / 30
+        return MONTHLY_TEMP_NORM_C[m] * (1 - frac) + MONTHLY_TEMP_NORM_C[next_m] * frac
+
     forecasts: list = []
     skipped = 0
     cursor = horizon_start
     while cursor < horizon_end:
         day_key = cursor.strftime("%Y-%m-%d")
-        wx = weather.get(day_key)
-        if not wx or any(wx.get(k) is None for k in ("shortwave_mj", "wind_ms", "temp_c")):
-            skipped += 24
-            cursor += timedelta(hours=24)
-            continue
+        wx = weather.get(day_key) or {}
+
+        # Fix 1: log per dag welk veld ontbreekt (i.p.v. stille skip).
+        # Fix 3: vul ontbrekende velden aan met seizoensnormen als fallback.
+        # Eerder werd de hele dag overgeslagen zodra een veld None was, wat leidde
+        # tot gaten in de weekprognose (bijv. een ontbrekende donderdag). Nu wordt
+        # een dag alleen nog overgeslagen als er helemaal geen weerdata is en het
+        # seizoensfallback-mechanisme ook mislukt -- wat in de praktijk nooit
+        # voorkomt omdat de normen altijd berekend kunnen worden.
+        missing_fields = [k for k in ("shortwave_mj", "wind_ms", "temp_c") if wx.get(k) is None]
+        if missing_fields:
+            for field in missing_fields:
+                if field == "shortwave_mj":
+                    fallback_val = round(seasonal_solar_norm_mj(cursor), 2)
+                    wx["shortwave_mj"] = fallback_val
+                    print(
+                        f"[warn] {day_key}: shortwave_mj ontbreekt in Open-Meteo response"
+                        f" -- seizoensnorm {fallback_val} MJ/m2 gebruikt.",
+                        file=sys.stderr,
+                    )
+                elif field == "wind_ms":
+                    wx["wind_ms"] = FALLBACK_WIND_MS
+                    print(
+                        f"[warn] {day_key}: wind_ms ontbreekt in Open-Meteo response"
+                        f" -- fallback {FALLBACK_WIND_MS} m/s (100m) gebruikt.",
+                        file=sys.stderr,
+                    )
+                elif field == "temp_c":
+                    fallback_val = round(seasonal_temp_norm(cursor), 1)
+                    wx["temp_c"] = fallback_val
+                    print(
+                        f"[warn] {day_key}: temp_c ontbreekt in Open-Meteo response"
+                        f" -- seizoensnorm {fallback_val} grC gebruikt.",
+                        file=sys.stderr,
+                    )
 
         sw_ratio_daily = wx["shortwave_mj"] / seasonal_solar_norm_mj(cursor)
         wind           = wx["wind_ms"]
