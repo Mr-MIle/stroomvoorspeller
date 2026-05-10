@@ -616,15 +616,15 @@
         let bg, label, labelColor;
         if (isNL && isCB) {
           bg = "rgba(255, 193, 7, 0.18)";
-          label = "\U0001f5d3 NL + EU feestdag";
+          label = "NL + EU feestdag";
           labelColor = "rgba(110, 70, 0, 0.82)";
         } else if (isNL) {
           bg = "rgba(255, 193, 7, 0.13)";
-          label = "\U0001f5d3 NL feestdag";
+          label = "NL feestdag";
           labelColor = "rgba(110, 70, 0, 0.78)";
         } else if (isCB) {
           bg = "rgba(255, 140, 0, 0.13)";
-          label = "\U0001f30d EU-feestdag (NL open)";
+          label = "EU-feestdag (NL open)";
           labelColor = "rgba(140, 70, 0, 0.80)";
         } else if (isWeekend) {
           bg = "rgba(100, 100, 180, 0.06)";
@@ -971,9 +971,9 @@
                   `Verwachte fout: ±${fmtNum(halfBand / 10, 1)} ct/kWh`,
                   `Baseline: ${fmtNum(priceCents(f.baseline), 2)} ct/kWh`,
                 ];
-                if (isNL && isCross) lines.push("\U0001f4c5 NL + EU feestdag — lage prijs verwacht");
-                else if (isNL) lines.push("\U0001f4c5 NL feestdag — lage prijs verwacht");
-                else if (isCross) lines.push("\U0001f4c5 EU feestdag (buurlanden) — mogelijk lagere prijs");
+                if (isNL && isCross) lines.push("NL + EU feestdag — lage prijs verwacht");
+                else if (isNL) lines.push("NL feestdag — lage prijs verwacht");
+                else if (isCross) lines.push("EU feestdag (buurlanden) — mogelijk lagere prijs");
                 const plLabel = f.event_plausibility_label || "NORMAL";
                 const plText  = PLAUSIBILITY_TOOLTIP[plLabel] || PLAUSIBILITY_TOOLTIP.NORMAL;
                 lines.push(`Situatie: ${plText}`);
