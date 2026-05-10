@@ -710,6 +710,26 @@ a:hover { text-decoration: underline; }
   .stale-alert-inner { padding: 8px 12px; }
 }
 
+/* ----- Source-fout banner (rood, als ENTSO-E onbereikbaar en sample-data wordt getoond) ----- */
+.source-alert {
+  width: 100%;
+  background: #fff0f0;
+  border-bottom: 1px solid #ffb3b3;
+  color: #7f1d1d;
+  font-size: 0.88rem;
+}
+.source-alert-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+}
+.source-alert-icon { flex-shrink: 0; font-size: 1rem; }
+.source-alert-text { margin: 0; }
+@media (max-width: 640px) {
+  .source-alert-inner { padding: 8px 12px; }
+}
+
 /* ----- Negatieve-prijs banner (sticky bovenaan, alleen zichtbaar bij negatieve uren) ----- */
 .neg-alert {
   position: sticky;

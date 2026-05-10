@@ -283,6 +283,7 @@
   // ---- Rendering ----
   function renderAll() {
     if (!state.config || !state.dayPrices.length) return;
+    renderSourceAlert();
     renderNegativeAlert();
     checkStaleData();
     renderSettingsPanel();
@@ -376,6 +377,20 @@
       setText("source-note", "Let op: testdata, niet de echte day-ahead prijzen. Dit is een ontwikkelversie.");
     } else {
       setText("source-note", "");
+    }
+  }
+
+  // ---- Source-fout banner ----
+  // Toont een rode waarschuwing als prices.json sample-data bevat (ENTSO-E was onbereikbaar
+  // én er was geen bestaande echte data om te bewaren — zie fetch_prices.py).
+  function renderSourceAlert() {
+    const banner = document.getElementById("source-alert");
+    if (!banner) return;
+    const payload = state.payload || {};
+    if (payload.source === "sample") {
+      banner.removeAttribute("hidden");
+    } else {
+      banner.setAttribute("hidden", "");
     }
   }
 
@@ -848,7 +863,7 @@
           const d = new Date(iso);
           return d.getMinutes() === 0 ? fmtTime(iso) : "";
         }
-      : (v) => v;  // default: gebruik de vooraf berekende labels
+      : function(value, index) { return labels[index] || ""; };  // index → label-string (Chart.js 3 geeft index als value)
 
     const maxTicksLimit = isQuarter ? 24 : 14;
 

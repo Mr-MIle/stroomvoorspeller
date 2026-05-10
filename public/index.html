@@ -89,6 +89,16 @@
     </div>
   </div>
 
+  <!-- Source-fout banner: verschijnt als ENTSO-E onbereikbaar was en sample-data wordt getoond.
+       In productie zou dit niet zichtbaar moeten zijn; het is een vangnet voor de eerste run
+       of wanneer het bewaren van oude data om een andere reden is mislukt. Default hidden. -->
+  <div id="source-alert" class="source-alert" role="status" aria-live="polite" hidden>
+    <div class="source-alert-inner container">
+      <span class="source-alert-icon" aria-hidden="true">⚠</span>
+      <p class="source-alert-text">Verbinding met ENTSO-E tijdelijk verbroken — getoonde prijzen zijn <strong>testdata</strong> en niet de echte day-ahead prijzen.</p>
+    </div>
+  </div>
+
   <!-- Stale-data banner: verschijnt als prices.json ouder is dan 6 uur. Default hidden. -->
   <div id="stale-alert" class="stale-alert" role="status" aria-live="polite" hidden>
     <div class="stale-alert-inner container">
