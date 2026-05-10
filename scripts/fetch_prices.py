@@ -36,6 +36,8 @@ import math
 import os
 import random
 import sys
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -98,6 +100,47 @@ def fetch_entsoe(token: str, start_utc: datetime, end_utc: datetime) -> list[dic
         body = resp.read().decode("utf-8")
 
     return parse_entsoe_xml(body, start_utc)
+
+
+def fetch_entsoe_with_retry(
+    token: str, start_utc: datetime, end_utc: datetime, max_retries: int = 3
+) -> list[dict]:
+    """Haal day-ahead prijzen op bij ENTSO-E, met retry bij tijdelijke serverfouten.
+
+    Probeert max_retries keer; bij HTTP 502/503/504 wacht de code steeds langer
+    (5 s → 15 s → 45 s) voordat hij het opnieuw probeert. Alle andere fouten
+    worden direct doorgegooid.
+    """
+    delays = [5, 15, 45]
+    last_exc: Exception = RuntimeError("geen pogingen gedaan")
+    for attempt in range(max_retries):
+        try:
+            return fetch_entsoe(token, start_utc, end_utc)
+        except urllib.error.HTTPError as exc:
+            last_exc = exc
+            if exc.code in (502, 503, 504) and attempt < max_retries - 1:
+                wait = delays[attempt]
+                print(
+                    f"[warn] ENTSO-E HTTP {exc.code} (poging {attempt + 1}/{max_retries}),"
+                    f" wacht {wait}s…",
+                    file=sys.stderr,
+                )
+                time.sleep(wait)
+            else:
+                raise
+        except Exception as exc:
+            last_exc = exc
+            if attempt < max_retries - 1:
+                wait = delays[attempt]
+                print(
+                    f"[warn] ENTSO-E fout (poging {attempt + 1}/{max_retries}): {exc},"
+                    f" wacht {wait}s…",
+                    file=sys.stderr,
+                )
+                time.sleep(wait)
+            else:
+                raise
+    raise last_exc
 
 
 def parse_entsoe_xml(xml_text: str, default_start_utc: datetime) -> list[dict]:
@@ -267,7 +310,7 @@ def main() -> int:
 
     if token:
         try:
-            raw_prices = fetch_entsoe(token, start_utc, end_utc)
+            raw_prices = fetch_entsoe_with_retry(token, start_utc, end_utc)
             source = "entsoe"
             print(f"[ok] {len(raw_prices)} ruwe prijspunten opgehaald van ENTSO-E.", file=sys.stderr)
             before = len(raw_prices)
@@ -283,9 +326,37 @@ def main() -> int:
                 print(f"[ok] {len(prices_15m)} PT15M-punten bewaard voor vandaag+morgen.", file=sys.stderr)
         except Exception as exc:  # noqa: BLE001
             error_msg = f"ENTSO-E fout: {exc}"
-            print(f"[warn] {error_msg} - terugval naar sample-data.", file=sys.stderr)
+            print(f"[warn] {error_msg}", file=sys.stderr)
 
     if not prices:
+        # Probeer de bestaande prices.json te bewaren als die echte ENTSO-E data bevat.
+        # Bezoekers krijgen dan verouderde echte data (met stale-banner na >6 uur)
+        # in plaats van neppe sample-data. Sample-data is alleen voor de eerste run
+        # of als er echt nog geen prices.json bestaat (ontwikkelmodus zonder token).
+        preserved = False
+        if OUTPUT_FILE.exists():
+            try:
+                existing = json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
+                if existing.get("source") == "entsoe":
+                    if error_msg:
+                        existing["last_error"] = error_msg
+                    OUTPUT_FILE.write_text(
+                        json.dumps(existing, indent=2, ensure_ascii=False),
+                        encoding="utf-8",
+                    )
+                    print(
+                        "[ok] ENTSO-E onbeschikbaar — bestaande prices.json met echte data "
+                        "bewaard en last_error bijgewerkt.",
+                        file=sys.stderr,
+                    )
+                    preserved = True
+            except Exception as read_exc:  # noqa: BLE001
+                print(f"[warn] Kon bestaande prices.json niet lezen: {read_exc}", file=sys.stderr)
+
+        if preserved:
+            return 0  # bestaande data is bewaard, niets meer te schrijven
+
+        # Geen bestaande echte data beschikbaar: genereer sample (eerste run / dev zonder token).
         prices = generate_sample_prices(now_ams)
         prices_15m = generate_sample_prices_15m(now_ams)
         has_pt15m = True  # sample-data heeft altijd PT15M voor dev-gebruik

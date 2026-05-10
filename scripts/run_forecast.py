@@ -374,6 +374,17 @@ def main() -> int:
         return 1
 
     prices_payload = json.loads(PRICES_FILE.read_text(encoding="utf-8"))
+
+    # Bewaar integriteit van de prediction_log: alleen echte ENTSO-E data mag
+    # als basis dienen voor voorspellingen en als actual worden weggeschreven.
+    if prices_payload.get("source") == "sample":
+        print(
+            "[warn] prices.json bevat sample-data — forecast.json en prediction_log "
+            "worden niet overschreven om vervuiling met nep-data te voorkomen.",
+            file=sys.stderr,
+        )
+        return 0
+
     history = prices_payload.get("prices", [])
     if not history:
         print("[err] prices.json bevat geen prijzen.", file=sys.stderr)

@@ -31,6 +31,17 @@ def main() -> int:
     # Lees prices.json
     prices_raw = PRICES_FILE.read_bytes().rstrip(b"\x00")
     prices_payload = json.loads(prices_raw)
+
+    # Alleen echte ENTSO-E prijzen mogen als 'actual' worden weggeschreven.
+    # Sample-data zijn nepprijzen en mogen de prediction_log niet vervuilen.
+    if prices_payload.get("source") == "sample":
+        print(
+            "[warn] prices.json bevat sample-data — prediction_log niet aangevuld "
+            "met nep-actuals.",
+            file=sys.stderr,
+        )
+        return 0
+
     prices_list = prices_payload.get("prices", [])
 
     # Bouw lookup: ISO-string (tz-naief, uur-afgerond) -> prijs
