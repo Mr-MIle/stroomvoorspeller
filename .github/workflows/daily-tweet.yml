@@ -7,8 +7,7 @@ name: Dagelijkse X-post
 #    fetch_prices.py-run (cron */3 op het hele uur) de prijzen al heeft binnengehaald.
 #  - Manueel via 'Run workflow' in de GitHub UI (workflow_dispatch).
 on:
-  schedule:
-    - cron: "0 13 * * *"
+
   workflow_dispatch:
 
 permissions:
