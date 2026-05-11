@@ -133,7 +133,10 @@
           </div>
         </div>
 
-        <!-- Vergelijking met vandaag -->
+        <!-- Morgen samengevat -->
+        <div id="morgen-summary-box" class="morgen-summary-box" aria-live="polite">Laden…</div>
+
+        <!-- Vergelijking met vandaag (one-liner badge) -->
         <p id="morgen-compare" class="morgen-compare" aria-live="polite"></p>
       </div>
     </section>
@@ -254,14 +257,30 @@
       </div>
     </section>
 
-    <!-- ── Waarom zijn de prijzen morgen zo? ── -->
+    <!-- ── Vandaag versus morgen ── -->
+    <section class="morgen-section" id="morgen-cmp-section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Vandaag versus morgen</h2>
+          <p class="section-sub">
+            Directe vergelijking van de belangrijkste prijskenmerken.
+            Weergegeven als <span data-mode-label>incl. belasting</span>.
+          </p>
+        </div>
+        <div id="morgen-today-vs-tomorrow" aria-live="polite">
+          <p>Laden…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Prijsanalyse (nieuwsbericht) ── -->
     <section class="morgen-section">
       <div class="container">
         <div class="section-head">
-          <h2>Waarom zijn de prijzen morgen zo?</h2>
+          <h2>Prijsanalyse voor morgen</h2>
           <p class="section-sub">
-            Automatisch gegenereerde analyse op basis van de day-ahead prijsdata
-            en het <a href="/over/voorspelling">transparante voorspellingsmodel</a>.
+            Wat verklaart het prijsniveau van morgen? Een korte analyse op basis van de officiële
+            day-ahead data en het <a href="/over/voorspelling">voorspellingsmodel</a>.
           </p>
         </div>
         <div id="morgen-why-content" aria-live="polite">

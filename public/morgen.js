@@ -392,12 +392,210 @@
     });
   }
 
-  // ---- Render: waarom-sectie ----
-  function renderWhy() {
-    const prices = state.tomorrowPrices;
+  // ---- Render: "Morgen samengevat" prose-box (hero) ----
+  function renderSummary() {
+    const el = document.getElementById("morgen-summary-box");
+    if (!el || !state.tomorrowPrices.length) return;
+
+    const prices   = state.tomorrowPrices;
+    const avgEpex  = prices.reduce((s, p) => s + p.price, 0) / prices.length;
+    const avgCt    = priceCents(avgEpex, "inclusive");
+    const negHours = prices.filter(p => priceCents(p.price, "inclusive") < 0);
+    const cheapHrs = prices.filter(p => { const c = classify(p.price); return c === "cheap" || c === "very_cheap"; });
+    const valley   = prices.reduce((a, b) => a.price <= b.price ? a : b);
+    const peak     = prices.reduce((a, b) => a.price >= b.price ? a : b);
+    const cls      = classify(avgEpex);
+    const bestM    = findBestMoments(prices, 1, 2)[0];
+
+    const levelZin = {
+      negative:   `Morgen worden de stroomprijzen uitzonderlijk laag — met negatieve uren.`,
+      very_cheap: `Morgen zijn de stroomprijzen uitstekend laag.`,
+      cheap:      `Morgen zijn de stroomprijzen relatief laag.`,
+      normal:     `Morgen liggen de stroomprijzen op een normaal niveau.`,
+      pricey:     `Morgen zijn de stroomprijzen aan de hoge kant.`,
+      very_pricey:`Morgen zijn de stroomprijzen hoog.`,
+    }[cls] || `Morgen liggen de stroomprijzen op een normaal niveau.`;
+
+    let parts = [
+      `${levelZin} Het daggemiddelde bedraagt <strong>${fmtNum(avgCt, 1)} ct/kWh</strong> all-in.`,
+    ];
+
+    if (negHours.length > 0) {
+      parts.push(`Bijzonder: <strong>${negHours.length} uur${negHours.length > 1 ? "en" : ""} met negatieve prijs</strong>
+        (${fmtTime(negHours[0].time)}–${endTime(negHours[negHours.length - 1].time)}) — stroom is dan gratis.`);
+    } else if (cheapHrs.length > 0) {
+      parts.push(`Er zijn <strong>${cheapHrs.length} goedkope uren</strong> (onder 22 ct/kWh),
+        waarvan het goedkoopste om <strong>${fmtTime(valley.time)}</strong>
+        (${fmtNum(priceCents(valley.price, "inclusive"), 1)} ct/kWh).`);
+    }
+
+    if (bestM) {
+      parts.push(`Het beste 2-uurs venster is van <strong>${fmtTime(bestM.startIso)} tot ${endTime(bestM.endIso)}</strong>
+        (gem. ${fmtNum(priceCents(bestM.avg, "inclusive"), 1)} ct/kWh)
+        — ideaal voor EV laden, wasmachine of warmtepomp.`);
+    }
+
+    if (priceCents(peak.price, "inclusive") > 28) {
+      parts.push(`Het duurste uur is om <strong>${fmtTime(peak.time)}</strong>
+        (${fmtNum(priceCents(peak.price, "inclusive"), 1)} ct/kWh) — zware apparaten dan liever uitstellen.`);
+    }
+
+    el.className = `morgen-summary-box morgen-summary-${cls}`;
+    el.innerHTML = parts.join(" ");
+  }
+
+  // ---- Render: vandaag vs. morgen vergelijkingstabel ----
+  function renderTodayVsTomorrow() {
+    const el = document.getElementById("morgen-today-vs-tomorrow");
+    if (!el) return;
+
+    if (!state.todayPrices.length) {
+      const sec = document.getElementById("morgen-cmp-section");
+      if (sec) sec.hidden = true;
+      return;
+    }
+
+    function priceStats(prices) {
+      const avg     = prices.reduce((s, p) => s + p.price, 0) / prices.length;
+      const cheapest = prices.reduce((a, b) => a.price <= b.price ? a : b);
+      const priciest = prices.reduce((a, b) => a.price >= b.price ? a : b);
+      const negHrs  = prices.filter(p => priceCents(p.price, "inclusive") < 0).length;
+      const cheapHrs = prices.filter(p => { const c = classify(p.price); return c === "cheap" || c === "very_cheap"; }).length;
+      const expHrs  = prices.filter(p => { const c = classify(p.price); return c === "pricey" || c === "very_pricey"; }).length;
+      const spread  = priceCents(priciest.price, "inclusive") - priceCents(cheapest.price, "inclusive");
+      return { avg, cheapest, priciest, negHrs, cheapHrs, expHrs, spread };
+    }
+
+    const T = priceStats(state.todayPrices);
+    const M = priceStats(state.tomorrowPrices);
+
+    const todAvgCt = priceCents(T.avg, "inclusive");
+    const tomAvgCt = priceCents(M.avg, "inclusive");
+    const diffCt   = tomAvgCt - todAvgCt;
+    const diffPct  = todAvgCt !== 0 ? Math.abs(diffCt / todAvgCt * 100) : 0;
+
+    // helper: richting-pijl (groen/rood)
+    function arrow(todNum, tomNum, lowerIsBetter) {
+      const d = tomNum - todNum;
+      if (Math.abs(d) < 0.05) return `<span class="cmp-neutral">≈</span>`;
+      const better = lowerIsBetter ? d < 0 : d > 0;
+      return `<span class="cmp-arrow ${better ? "cmp-better" : "cmp-worse"}">${d < 0 ? "↓" : "↑"}</span>`;
+    }
+
+    function diffStr(val, unit, lowerIsBetter) {
+      if (Math.abs(val) < 0.05) return "—";
+      const sign = val < 0 ? "−" : "+";
+      const better = lowerIsBetter ? val < 0 : val > 0;
+      return `<span class="${better ? "cmp-diff-better" : "cmp-diff-worse"}">${sign}${fmtNum(Math.abs(val), unit === "%" ? 0 : 1)} ${unit}</span>`;
+    }
+
+    const rows = [];
+
+    // Gemiddelde
+    rows.push({
+      label: "Daggemiddelde",
+      today: `${fmtNum(todAvgCt, 1)} ct/kWh`,
+      tomorrow: `${fmtNum(tomAvgCt, 1)} ct/kWh`,
+      arrow: arrow(todAvgCt, tomAvgCt, true),
+      diff: diffStr(diffCt < 0 ? -diffPct : diffPct, "%", true).replace(
+        fmtNum(diffPct, 0), fmtNum(diffPct, 0)
+      ) || (Math.abs(diffCt) > 0.5
+        ? `<span class="${diffCt < 0 ? "cmp-diff-better" : "cmp-diff-worse"}">${diffCt < 0 ? "−" : "+"}${fmtNum(diffPct, 0)}%</span>`
+        : `<span class="cmp-neutral">≈</span>`),
+    });
+
+    // Negatieve uren (alleen als minstens één dag ze heeft)
+    if (T.negHrs > 0 || M.negHrs > 0) {
+      rows.push({
+        label: "Negatieve uren ⚡",
+        today:    T.negHrs > 0 ? `${T.negHrs} uur` : "geen",
+        tomorrow: M.negHrs > 0 ? `${M.negHrs} uur` : "geen",
+        arrow:  arrow(T.negHrs, M.negHrs, false),
+        diff:   M.negHrs !== T.negHrs
+          ? `<span class="${M.negHrs > T.negHrs ? "cmp-diff-better" : "cmp-diff-worse"}">${M.negHrs > T.negHrs ? "+" : ""}${M.negHrs - T.negHrs} uur</span>`
+          : `<span class="cmp-neutral">≈</span>`,
+      });
+    }
+
+    // Goedkoopste uur
+    rows.push({
+      label: "Goedkoopste uur",
+      today: `${fmtTime(T.cheapest.time)} · ${fmtNum(priceCents(T.cheapest.price, "inclusive"), 1)} ct`,
+      tomorrow: `${fmtTime(M.cheapest.time)} · ${fmtNum(priceCents(M.cheapest.price, "inclusive"), 1)} ct`,
+      arrow: arrow(priceCents(T.cheapest.price, "inclusive"), priceCents(M.cheapest.price, "inclusive"), true),
+      diff: "",
+    });
+
+    // Duurste uur
+    rows.push({
+      label: "Duurste uur",
+      today: `${fmtTime(T.priciest.time)} · ${fmtNum(priceCents(T.priciest.price, "inclusive"), 1)} ct`,
+      tomorrow: `${fmtTime(M.priciest.time)} · ${fmtNum(priceCents(M.priciest.price, "inclusive"), 1)} ct`,
+      arrow: arrow(priceCents(T.priciest.price, "inclusive"), priceCents(M.priciest.price, "inclusive"), true),
+      diff: "",
+    });
+
+    // Spreiding
+    rows.push({
+      label: "Prijsspreiding (goedkoop↔duur)",
+      today:    `${fmtNum(T.spread, 1)} ct`,
+      tomorrow: `${fmtNum(M.spread, 1)} ct`,
+      arrow: arrow(T.spread, M.spread, true),
+      diff: "",
+    });
+
+    // Goedkope uren
+    rows.push({
+      label: "Goedkope uren (<22 ct)",
+      today:    `${T.cheapHrs} uur`,
+      tomorrow: `${M.cheapHrs} uur`,
+      arrow: arrow(T.cheapHrs, M.cheapHrs, false),
+      diff: M.cheapHrs !== T.cheapHrs
+        ? `<span class="${M.cheapHrs > T.cheapHrs ? "cmp-diff-better" : "cmp-diff-worse"}">${M.cheapHrs > T.cheapHrs ? "+" : ""}${M.cheapHrs - T.cheapHrs} uur</span>`
+        : `<span class="cmp-neutral">≈</span>`,
+    });
+
+    // Dure uren
+    rows.push({
+      label: "Dure uren (>28 ct)",
+      today:    `${T.expHrs} uur`,
+      tomorrow: `${M.expHrs} uur`,
+      arrow: arrow(T.expHrs, M.expHrs, true),
+      diff: M.expHrs !== T.expHrs
+        ? `<span class="${M.expHrs < T.expHrs ? "cmp-diff-better" : "cmp-diff-worse"}">${M.expHrs > T.expHrs ? "+" : ""}${M.expHrs - T.expHrs} uur</span>`
+        : `<span class="cmp-neutral">≈</span>`,
+    });
+
+    el.innerHTML = `
+      <div class="morgen-cmp-wrap">
+        <table class="morgen-cmp-table">
+          <thead>
+            <tr>
+              <th scope="col" class="cmp-th-label"></th>
+              <th scope="col" class="cmp-th-today">Vandaag</th>
+              <th scope="col" class="cmp-th-tomorrow">Morgen</th>
+              <th scope="col" class="cmp-th-diff">Verschil</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <th scope="row" class="cmp-row-label">${r.label}</th>
+                <td class="cmp-today">${r.today}</td>
+                <td class="cmp-tomorrow">${r.tomorrow} ${r.arrow}</td>
+                <td class="cmp-diff">${r.diff}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  // ---- Render: prijsanalyse als nieuwsbericht ----
+  function renderNewsArticle() {
     const el = document.getElementById("morgen-why-content");
     if (!el) return;
 
+    const prices   = state.tomorrowPrices;
     const avgEpex  = prices.reduce((s, p) => s + p.price, 0) / prices.length;
     const avgCt    = priceCents(avgEpex, "inclusive");
     const negHours = prices.filter(p => priceCents(p.price, "inclusive") < 0);
@@ -405,43 +603,85 @@
     const expHrs   = prices.filter(p => { const c = classify(p.price); return c === "pricey" || c === "very_pricey"; });
     const peak     = prices.reduce((a, b) => a.price >= b.price ? a : b);
     const valley   = prices.reduce((a, b) => a.price <= b.price ? a : b);
+    const cls      = classify(avgEpex);
+    const dateStr  = state.tomorrowDate.toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" });
 
-    let html = `<p class="morgen-why-intro">Morgen is stroom gemiddeld
-      <strong>${fmtNum(avgCt, 1)} ct/kWh</strong> all-in (incl. energiebelasting &amp; btw).</p>`;
+    // — Alinea 1: openingszin + vergelijking met vandaag —
+    const openingZin = {
+      negative:   `Met ${negHours.length} uur${negHours.length > 1 ? "en" : ""} negatieve consumentenprijs belooft morgen, ${dateStr}, een bijzondere dag te worden op de elektriciteitsmarkt.`,
+      very_cheap: `Morgen, ${dateStr}, zijn de stroomprijzen uitstekend laag — een goede dag om grote verbruikers in te plannen.`,
+      cheap:      `Morgen, ${dateStr}, liggen de stroomprijzen relatief laag, wat gunstige mogelijkheden biedt voor bewust verbruik.`,
+      normal:     `Morgen, ${dateStr}, zijn de stroomprijzen normaal — geen bijzondere uitslagen, maar timing blijft loont.`,
+      pricey:     `Morgen, ${dateStr}, zijn de stroomprijzen aan de hoge kant. Timing van zware verbruikers wordt dan extra relevant.`,
+      very_pricey:`Morgen, ${dateStr}, zijn de stroomprijzen hoog. Zware apparaten zijn het best te vermijden buiten de nachtdal.`,
+    }[cls] || `Morgen, ${dateStr}, liggen de stroomprijzen op een normaal niveau.`;
 
+    let para1 = openingZin;
     if (state.todayPrices.length) {
       const todayEpex = state.todayPrices.reduce((s, p) => s + p.price, 0) / state.todayPrices.length;
       const todayCt   = priceCents(todayEpex, "inclusive");
       const diff      = avgCt - todayCt;
-      const pct       = Math.abs((diff / todayCt) * 100);
-      if (Math.abs(diff) > 0.5) {
-        html += `<p>Dat is <strong>${diff < 0 ? fmtNum(pct, 0) + "% goedkoper" : fmtNum(pct, 0) + "% duurder"}</strong>
-          dan vandaag (vandaag gemiddeld ${fmtNum(todayCt, 1)} ct/kWh).</p>`;
+      const pct       = todayCt !== 0 ? Math.abs(diff / todayCt * 100) : 0;
+      if (Math.abs(diff) > 1) {
+        para1 += ` Het daggemiddelde van <strong>${fmtNum(avgCt, 1)} ct/kWh</strong> is
+          ${diff < 0 ? `<strong>${fmtNum(pct, 0)}% lager</strong>` : `<strong>${fmtNum(pct, 0)}% hoger</strong>`}
+          dan het gemiddelde van vandaag (${fmtNum(todayCt, 1)} ct/kWh).`;
       } else {
-        html += `<p>Dat is vergelijkbaar met vandaag (vandaag gemiddeld ${fmtNum(todayCt, 1)} ct/kWh).</p>`;
+        para1 += ` Met een daggemiddelde van <strong>${fmtNum(avgCt, 1)} ct/kWh</strong>
+          is dat vrijwel gelijk aan vandaag (${fmtNum(todayCt, 1)} ct/kWh).`;
       }
+    } else {
+      para1 += ` Het daggemiddelde bedraagt <strong>${fmtNum(avgCt, 1)} ct/kWh</strong> all-in.`;
     }
 
-    html += `<ul class="morgen-why-list">`;
-    html += `<li>🏔 <strong>Duurste uur:</strong> ${fmtTime(peak.time)} · ${fmtNum(priceCents(peak.price, "inclusive"), 1)} ct/kWh</li>`;
-    html += `<li>🌿 <strong>Goedkoopste uur:</strong> ${fmtTime(valley.time)} · ${fmtNum(priceCents(valley.price, "inclusive"), 1)} ct/kWh</li>`;
+    // — Alinea 2: goedkope uren / beste momenten —
+    let para2 = "";
+    const bestM = findBestMoments(prices, 1, 2)[0];
+    const valCt = fmtNum(priceCents(valley.price, "inclusive"), 1);
 
     if (negHours.length > 0) {
-      html += `<li>⚡ <strong>${negHours.length} negatief${negHours.length > 1 ? "e" : ""} uur${negHours.length > 1 ? " — rond" : ""} ${fmtTime(negHours[0].time)}–${endTime(negHours[negHours.length - 1].time)}:</strong>
-        stroom is dan gratis of je krijgt betaald voor afname.</li>`;
+      const negStart = fmtTime(negHours[0].time);
+      const negEnd   = endTime(negHours[negHours.length - 1].time);
+      para2 = `Bijzonder zijn de <strong>${negHours.length} uren met negatieve consumentenprijs</strong>
+        van ${negStart} tot ${negEnd}. In die uren kost stroom effectief niets — sommige leveranciers
+        betalen je zelfs voor afname. Het absolute dieptepunt valt om ${fmtTime(valley.time)}
+        (${valCt} ct/kWh). Dit zijn uitgelezen momenten voor intensief verbruik: EV volladen,
+        wasmachine, droger en warmtepomp op volle kracht.`;
+    } else if (cheapHrs.length >= 2) {
+      const bestCt = fmtNum(priceCents(bestM.avg, "inclusive"), 1);
+      para2 = `Er zijn morgen <strong>${cheapHrs.length} goedkope uren</strong> (onder 22 ct/kWh).
+        Het goedkoopste uur valt om ${fmtTime(valley.time)} (${valCt} ct/kWh). Het beste
+        aaneengesloten blok van twee uur loopt van <strong>${fmtTime(bestM.startIso)}
+        tot ${endTime(bestM.endIso)}</strong> met een gemiddelde van ${bestCt} ct/kWh —
+        het ideale moment voor je wasmachine, EV of warmtepomp.`;
     } else {
-      html += `<li>✅ Geen negatieve uren verwacht morgen.</li>`;
+      const bestCt = bestM ? fmtNum(priceCents(bestM.avg, "inclusive"), 1) : valCt;
+      para2 = `De goedkoopste uren morgen vallen rond ${fmtTime(valley.time)} (${valCt} ct/kWh).
+        Ook in een relatief duur scenario loont het om zware apparaten naar het goedkoopste
+        venster te verschuiven${bestM ? ` — het beste 2-uurs blok loopt van ${fmtTime(bestM.startIso)}
+        tot ${endTime(bestM.endIso)} (gem. ${bestCt} ct/kWh)` : ""}.`;
     }
 
-    if (cheapHrs.length > 0) {
-      html += `<li>✅ <strong>${cheapHrs.length} goedkope uren</strong> (onder 22 ct/kWh)</li>`;
-    }
+    // — Alinea 3: dure uren / spreiding —
+    let para3 = "";
     if (expHrs.length > 0) {
-      html += `<li>⚠ <strong>${expHrs.length} dure uren</strong> (boven 28 ct/kWh) — zware apparaten dan uitstellen.</li>`;
+      const peakCt = fmtNum(priceCents(peak.price, "inclusive"), 1);
+      const spread = fmtNum(priceCents(peak.price, "inclusive") - priceCents(valley.price, "inclusive"), 1);
+      para3 = `De piek concentreert zich rond <strong>${fmtTime(peak.time)}</strong>
+        (${peakCt} ct/kWh). Het prijsverschil tussen goedkoopste en duurste uur bedraagt
+        <strong>${spread} ct/kWh</strong> — ruim genoeg om bewust te timen.
+        Met name de droger, elektrische oven en het opladen van grote accu's zijn het
+        best te vermijden in het dure venster.`;
+    } else if (priceCents(peak.price, "inclusive") > 22) {
+      const peakCt = fmtNum(priceCents(peak.price, "inclusive"), 1);
+      const spread = fmtNum(priceCents(peak.price, "inclusive") - priceCents(valley.price, "inclusive"), 1);
+      para3 = `Het duurste uur valt om ${fmtTime(peak.time)} (${peakCt} ct/kWh),
+        met een spreiding van ${spread} ct/kWh ten opzichte van het goedkoopste uur.
+        Geen extreme pieken, maar tijdsbewust verbruik blijft de moeite waard.`;
     }
-    html += `</ul>`;
 
-    // Forecast-factoren (alleen als beschikbaar voor morgen)
+    // — Alinea 4: forecast-factoren als verhaal —
+    let para4 = "";
     if (state.tomorrowForecasts.length > 0) {
       const factorAcc = {};
       let hrs = 0;
@@ -455,25 +695,34 @@
       const factors = Object.values(factorAcc)
         .map(f => ({ ...f, avg: Math.round(f.pts / hrs) }))
         .filter(f => Math.abs(f.avg) >= 1)
-        .sort((a, b) => Math.abs(b.avg) - Math.abs(a.avg));
+        .sort((a, b) => Math.abs(b.avg) - Math.abs(a.avg))
+        .slice(0, 3);
 
       if (factors.length) {
-        const emoji = { zon: "☀️", wind: "💨", temperatuur: "🌡", gas: "🔥", dagtype: "📅", uurpatroon: "🕐" };
-        html += `<h3>Factoren die de prijs morgen sturen</h3>
-          <ul class="morgen-why-factors">`;
-        factors.forEach(f => {
-          const e    = emoji[f.name] || "•";
-          const sign = f.avg > 0 ? "🔴 duurder" : "🟢 goedkoper";
-          const pts  = f.avg > 0 ? `+${f.avg}` : String(f.avg);
-          html += `<li>${e} <strong>${f.name[0].toUpperCase() + f.name.slice(1)}:</strong>
-            ${sign} (${pts} punten) — ${f.reason || "—"}</li>`;
+        const factorZinnen = factors.map(f => {
+          const richting = f.avg > 0 ? "drukt de prijs omhoog" : "helpt de prijs laag houden";
+          const reden = f.reason ? f.reason.charAt(0).toLowerCase() + f.reason.slice(1) : f.name;
+          return `${reden} (${richting})`;
         });
-        html += `</ul>
-          <p class="morgen-why-note">Factoren zijn afkomstig uit het
-            <a href="/over/voorspelling">transparante voorspellingsmodel</a> van Stroomvoorspeller.nl.
-            Na publicatie van de officiële day-ahead prijs kan de werkelijke prijs hiervan afwijken.</p>`;
+        para4 = `Volgens het <a href="/over/voorspelling">transparante voorspellingsmodel</a>
+          van Stroomvoorspeller.nl spelen morgen de volgende factoren de hoofdrol:
+          ${factorZinnen.join("; ")}.
+          De combinatie van deze factoren verklaart het grootste deel van het prijsverloop morgen.`;
       }
     }
+
+    // Samenstellen
+    let html = `<div class="morgen-news-article">`;
+    html += `<p class="morgen-news-lead">${para1}</p>`;
+    if (para2) html += `<p>${para2}</p>`;
+    if (para3) html += `<p>${para3}</p>`;
+    if (para4) {
+      html += `<p class="morgen-news-model">${para4}</p>`;
+    } else {
+      html += `<p class="morgen-news-model">Meer weten over hoe de prijs tot stand komt?
+        Lees de uitleg over het <a href="/over/voorspelling">transparante voorspellingsmodel</a>.</p>`;
+    }
+    html += `</div>`;
 
     el.innerHTML = html;
   }
