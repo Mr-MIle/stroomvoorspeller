@@ -4,7 +4,7 @@ name: Dagelijkse X-post
 #  - 13:00 UTC = 14:00 CET (winter) / 15:00 CEST (zomer).
 #    Day-ahead-prijzen voor morgen worden door EPEX rond 13:00 CET vrijgegeven.
 #    We posten een halfuur tot anderhalf uur later, zodat de meest recente
-#    fetch_prices.py-run (cron */3 op het hele uur) de prijzen al heeft binnengehaald.
+#    wordt aangetrapt vanaf Pipedream dus geen cron job
 #  - Manueel via 'Run workflow' in de GitHub UI (workflow_dispatch).
 on:
 
