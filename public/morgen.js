@@ -14,9 +14,12 @@
 
   const state = {
     config:            null,
-    tomorrowPrices:    [],   // {time, price} voor morgen
+    tomorrowPrices:    [],   // {time, price} uurdata voor morgen
+    tomorrowPrices15m: [],   // {time, price} kwartierdata voor morgen (PT15M)
     todayPrices:       [],   // {time, price} voor vandaag (vergelijking)
     tomorrowForecasts: [],   // forecast-entries voor morgen (optioneel)
+    hasPt15m:          false,
+    chartRes:          "hourly",   // 'hourly' | 'quarter'
     mode:              "inclusive",
     supplierId:        "average",
     customMarkup:      0.025,
@@ -240,11 +243,13 @@
     const canvas = document.getElementById("morgenChart");
     if (!canvas || !window.Chart) return;
 
-    const prices = state.tomorrowPrices;
+    const isQuarter = state.chartRes === "quarter" && state.tomorrowPrices15m.length > 0;
+    const prices  = isQuarter ? state.tomorrowPrices15m : state.tomorrowPrices;
     const labels  = prices.map(p => fmtTime(p.time));
     const values  = prices.map(p => priceCents(p.price));
     const classes = prices.map(p => classify(p.price));
     const colors  = classes.map(c => CLASS_COLOR[c] || "#d4a017");
+    const intervalMs = isQuarter ? 900_000 : 3_600_000;
 
     if (state.chart) { state.chart.destroy(); state.chart = null; }
 
@@ -257,8 +262,8 @@
           data: values,
           backgroundColor: colors.map(c => c + "bb"),
           borderColor: colors,
-          borderWidth: 1.5,
-          borderRadius: 4,
+          borderWidth: isQuarter ? 0.5 : 1.5,
+          borderRadius: isQuarter ? 1 : 4,
         }],
       },
       options: {
@@ -270,7 +275,8 @@
             callbacks: {
               title: items => {
                 const i = items[0].dataIndex;
-                return `${labels[i]}–${endTime(prices[i].time)}`;
+                const end = new Date(new Date(prices[i].time).getTime() + intervalMs);
+                return `${labels[i]}–${end.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}`;
               },
               label: item => {
                 const i   = item.dataIndex;
@@ -289,7 +295,14 @@
         scales: {
           x: {
             grid: { display: false },
-            ticks: { font: { size: 11 }, maxRotation: 0 },
+            ticks: {
+              font: { size: 11 },
+              maxRotation: 0,
+              // Kwartier-modus: toon alleen uurlabels (elke 4e tick = elk heel uur)
+              callback: isQuarter
+                ? function(val, idx) { return idx % 4 === 0 ? this.getLabelForValue(val) : ""; }
+                : undefined,
+            },
           },
           y: {
             title: { display: true, text: `ct/kWh (${modeLabel()})` },
@@ -537,11 +550,50 @@
     }
   }
 
-  // ---- Render: leveranciersnota in subtitle ----
-  function renderSupplierNote() {
-    const s = getSupplier();
-    document.querySelectorAll("[data-supplier-note]").forEach(el => {
-      el.textContent = s.name || "Algemeen gemiddelde";
+  // ---- Render: aanbieder-keuzelijst ----
+  function renderSupplierSelect() {
+    const select = document.getElementById("morgen-supplier-select");
+    if (!select) return;
+    // Eenmalig vullen
+    if (!select.dataset.populated) {
+      (state.config.suppliers || [])
+        .filter(s => s.id !== "custom")
+        .forEach(s => {
+          const opt = document.createElement("option");
+          opt.value = s.id;
+          opt.textContent = `${s.name}  (€${fmtNum(s.markup_per_kwh, 4)}/kWh opslag)`;
+          select.appendChild(opt);
+        });
+      select.dataset.populated = "1";
+    }
+    select.value = state.supplierId;
+  }
+
+  // ---- Init: aanbieder-keuzelijst ----
+  function initSupplierSelect() {
+    const select = document.getElementById("morgen-supplier-select");
+    if (!select) return;
+    select.addEventListener("change", () => {
+      state.supplierId = select.value;
+      try { localStorage.setItem(STORAGE_KEYS.supplier, state.supplierId); } catch (e) {}
+      renderAll();
+    });
+  }
+
+  // ---- Init: kwartier-toggle (PT15M checkbox) ----
+  function initResolutionToggle() {
+    const wrap = document.getElementById("morgen-quarter-wrap");
+    const cb   = document.getElementById("morgen-quarter-toggle");
+    if (!cb) return;
+    // Verberg toggle als er geen PT15M-data beschikbaar is voor morgen
+    if (wrap) wrap.hidden = !(state.hasPt15m && state.tomorrowPrices15m.length > 0);
+    cb.addEventListener("change", () => {
+      state.chartRes = cb.checked ? "quarter" : "hourly";
+      const heading = document.getElementById("morgen-chart-heading");
+      if (heading) heading.textContent = cb.checked
+        ? "Stroomprijs per kwartier morgen"
+        : "Stroomprijs per uur morgen";
+      renderChart();
     });
   }
 
@@ -549,7 +601,7 @@
   function renderAll() {
     renderDateLabels();
     renderModeToggle();
-    renderSupplierNote();
+    renderSupplierSelect();
     renderHighlights();
     renderChart();
     renderMoments();
@@ -589,6 +641,11 @@
       state.tomorrowPrices = pricesData.prices.filter(p => isSameLocalDay(p.time, state.tomorrowDate));
       state.todayPrices    = pricesData.prices.filter(p => isSameLocalDay(p.time, today));
 
+      // PT15M kwartierdata (alleen vandaag + morgen, al gefilterd door backend)
+      state.hasPt15m          = pricesData.has_pt15m === true;
+      state.tomorrowPrices15m = (pricesData.prices_15m || [])
+        .filter(p => isSameLocalDay(p.time, state.tomorrowDate));
+
       // Forecast optioneel (geen harde fout als niet beschikbaar)
       try {
         const fc = await fetchJSON("/data/forecast.json");
@@ -598,6 +655,8 @@
       if (!state.tomorrowPrices.length) { showNoDataState(); return; }
 
       initModeToggle();
+      initSupplierSelect();
+      initResolutionToggle();
       renderAll();
 
     } catch (e) {
