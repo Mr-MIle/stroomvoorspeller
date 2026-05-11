@@ -324,6 +324,29 @@ def main() -> int:
                     if p["time"][:10] in (today_date, tomorrow_date)
                 ]
                 print(f"[ok] {len(prices_15m)} PT15M-punten bewaard voor vandaag+morgen.", file=sys.stderr)
+
+                # Aanvullen: voeg uurdata toe voor uren die geen kwartierdata hebben.
+                # ENTSO-E publiceert de PT15M dag-ahead soms partieel (bv. alleen de eerste
+                # N uur), waardoor de kwartier-grafiek halverwege afkapt. Voor ontbrekende
+                # uren pakken we het uurgemiddelde uit `prices` als fallback-punt, zodat de
+                # grafiek altijd de volledige dag toont — in die uren met uurresolutie ipv
+                # kwartierresolutie. [:13] geeft "YYYY-MM-DDTHH" ongeacht de tijdzone-suffix.
+                covered_hours = {p["time"][:13] for p in prices_15m}
+                hourly_today_tomorrow = [
+                    p for p in prices
+                    if p["time"][:10] in (today_date, tomorrow_date)
+                ]
+                supplemented = 0
+                for hp in hourly_today_tomorrow:
+                    if hp["time"][:13] not in covered_hours:
+                        prices_15m.append(hp)
+                        supplemented += 1
+                if supplemented:
+                    prices_15m.sort(key=lambda p: p["time"])
+                    print(
+                        f"[ok] {supplemented} ontbrekende uren aangevuld met uurdata in prices_15m.",
+                        file=sys.stderr,
+                    )
         except Exception as exc:  # noqa: BLE001
             error_msg = f"ENTSO-E fout: {exc}"
             print(f"[warn] {error_msg}", file=sys.stderr)
