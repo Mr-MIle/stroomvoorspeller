@@ -1492,27 +1492,108 @@ body.has-neg-alert .site-header { top: 56px; }
 .morgen-suppliers-wrap { min-height: auto; }
 .morgen-td-avg { text-align: right; font-weight: 600; }
 
-/* Waarom-sectie */
-.morgen-why-intro {
-  font-size: 1.05rem;
-  margin-top: 0;
-}
-.morgen-why-list,
-.morgen-why-factors {
-  list-style: none;
-  padding: 0;
-  margin: 16px 0;
-}
-.morgen-why-list li,
-.morgen-why-factors li {
-  padding: 10px 0;
-  border-bottom: 1px solid var(--c-border);
+/* ── Morgen samengevat (prose summary-box in hero) ── */
+.morgen-summary-box {
+  margin: 20px 0 4px;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  border-left: 4px solid var(--c-brand);
+  background: color-mix(in srgb, var(--c-brand) 6%, var(--c-bg));
   font-size: 0.95rem;
-  line-height: 1.5;
+  line-height: 1.65;
+  color: var(--c-text);
 }
-.morgen-why-list li:last-child,
-.morgen-why-factors li:last-child { border-bottom: none; }
-.morgen-why-factors h3 { margin: 20px 0 10px; }
+.morgen-summary-box strong { font-weight: 600; }
+/* Kleurvarianten per classificatie */
+.morgen-summary-negative  { border-left-color: #7048e8; background: color-mix(in srgb, #7048e8 7%, var(--c-bg)); }
+.morgen-summary-very_cheap { border-left-color: #1a7a31; background: color-mix(in srgb, #1a7a31 7%, var(--c-bg)); }
+.morgen-summary-cheap      { border-left-color: #2f9e44; background: color-mix(in srgb, #2f9e44 6%, var(--c-bg)); }
+.morgen-summary-normal     { border-left-color: var(--c-brand); background: color-mix(in srgb, var(--c-brand) 6%, var(--c-bg)); }
+.morgen-summary-pricey     { border-left-color: #c92a2a; background: color-mix(in srgb, #c92a2a 6%, var(--c-bg)); }
+.morgen-summary-very_pricey { border-left-color: #9c1a1a; background: color-mix(in srgb, #9c1a1a 7%, var(--c-bg)); }
+
+/* ── Vandaag vs. Morgen vergelijkingstabel ── */
+.morgen-cmp-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.morgen-cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.morgen-cmp-table thead th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--c-text-mute);
+  border-bottom: 2px solid var(--c-border);
+}
+.morgen-cmp-table thead .cmp-th-today,
+.morgen-cmp-table thead .cmp-th-tomorrow { text-align: right; }
+.morgen-cmp-table thead .cmp-th-diff { text-align: center; }
+
+.morgen-cmp-table tbody tr { border-bottom: 1px solid var(--c-border); }
+.morgen-cmp-table tbody tr:last-child { border-bottom: none; }
+.morgen-cmp-table tbody tr:hover { background: var(--c-surface); }
+
+.cmp-row-label {
+  padding: 11px 12px;
+  font-weight: 500;
+  color: var(--c-text);
+  text-align: left;
+  white-space: nowrap;
+}
+.cmp-today, .cmp-tomorrow {
+  padding: 11px 12px;
+  text-align: right;
+  color: var(--c-text);
+  white-space: nowrap;
+}
+.cmp-diff {
+  padding: 11px 12px;
+  text-align: center;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.cmp-arrow { font-size: 0.9rem; margin-left: 4px; font-weight: 700; }
+.cmp-better { color: #1e7b34; }
+.cmp-worse  { color: #c92a2a; }
+.cmp-neutral { color: var(--c-text-mute); }
+.cmp-diff-better { color: #1e7b34; font-weight: 600; }
+.cmp-diff-worse  { color: #c92a2a; font-weight: 600; }
+
+/* ── Prijsanalyse als nieuwsbericht ── */
+.morgen-news-article {
+  max-width: 72ch;
+}
+.morgen-news-lead {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: var(--c-text);
+}
+.morgen-news-article p {
+  font-size: 0.97rem;
+  line-height: 1.75;
+  margin-bottom: 14px;
+  color: var(--c-text);
+}
+.morgen-news-article strong { font-weight: 600; }
+.morgen-news-model {
+  font-size: 0.86rem !important;
+  color: var(--c-text-mute) !important;
+  border-top: 1px solid var(--c-border);
+  padding-top: 12px;
+  margin-top: 6px;
+}
+.morgen-news-model a { color: var(--c-brand); }
+
+/* Oude waarom-stijlen (backward compat, niet meer actief gebruikt) */
 .morgen-why-note {
   font-size: 0.82rem;
   color: var(--c-text-mute);
@@ -1715,4 +1796,15 @@ body.has-neg-alert .site-header { top: 56px; }
   .morgen-controls { flex-direction: column; align-items: flex-start; gap: 12px; }
   .morgen-supplier-select { max-width: 100%; width: 100%; }
   .morgen-chart-head { flex-direction: column; gap: 12px; }
+
+  /* Summary-box op mobiel */
+  .morgen-summary-box { font-size: 0.9rem; padding: 12px 14px; margin: 16px 0 4px; }
+
+  /* Vergelijkingstabel op mobiel: label smaller, kolommen compacter */
+  .cmp-row-label { font-size: 0.82rem; padding: 9px 8px; white-space: normal; }
+  .cmp-today, .cmp-tomorrow, .cmp-diff { font-size: 0.82rem; padding: 9px 6px; }
+
+  /* Nieuwsartikel op mobiel */
+  .morgen-news-lead { font-size: 0.97rem; }
+  .morgen-news-article { max-width: 100%; }
 }

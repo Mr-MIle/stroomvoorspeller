@@ -852,10 +852,12 @@
     renderModeToggle();
     renderSupplierSelect();
     renderHighlights();
+    renderSummary();
     renderChart();
     renderMoments();
     renderSupplierTable();
-    renderWhy();
+    renderTodayVsTomorrow();
+    renderNewsArticle();
     renderFAQ();
   }
 
