@@ -1328,3 +1328,280 @@ body.has-neg-alert .site-header { top: 56px; }
   .kb-grid { grid-template-columns: 1fr; }
   .kb-lees-ook-grid { grid-template-columns: 1fr; }
 }
+
+/* ══════════════════════════════════════════════════════════
+   Morgen-pagina (/morgen)
+   ══════════════════════════════════════════════════════════ */
+
+/* Hero */
+.morgen-hero {
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
+  padding: 32px 0 28px;
+}
+.morgen-breadcrumb {
+  font-size: 0.85rem;
+  color: var(--c-text-mute);
+  margin: 0 0 16px;
+}
+.morgen-breadcrumb a { color: var(--c-text-mute); }
+.morgen-breadcrumb a:hover { color: var(--c-brand); }
+
+#morgen-h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+.morgen-subtitle {
+  font-size: 0.9rem;
+  color: var(--c-text-soft);
+  margin: 0 0 20px;
+}
+.morgen-compare {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  color: var(--c-text-soft);
+  min-height: 1.4em;
+}
+.morgen-compare.is-cheaper { color: var(--c-cheap); }
+.morgen-compare.is-pricier { color: var(--c-pricey); }
+
+/* Highlight cards */
+.morgen-highlights {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 20px;
+}
+.morgen-highlight {
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  text-align: center;
+}
+.morgen-highlight.is-free {
+  background: var(--c-free-bg);
+  border-color: var(--c-free);
+}
+.morgen-highlight-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--c-text-mute);
+  margin: 0 0 6px;
+}
+.morgen-highlight-value {
+  display: block;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--c-text);
+  line-height: 1.1;
+}
+.morgen-hl-pricey { color: var(--c-pricey); }
+.morgen-highlight.is-free .morgen-highlight-value { color: var(--c-free); }
+.morgen-highlight-sub {
+  font-size: 0.78rem;
+  color: var(--c-text-soft);
+  margin: 5px 0 0;
+}
+
+/* Secties */
+.morgen-section {
+  padding: 40px 0;
+  border-bottom: 1px solid var(--c-border);
+}
+.morgen-section:last-child { border-bottom: none; }
+
+/* Chart */
+.morgen-chart-wrap {
+  position: relative;
+  height: 280px;
+  margin-top: 20px;
+}
+
+/* Legenda */
+.morgen-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: var(--c-text-soft);
+}
+.morgen-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.morgen-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* Tip-box */
+.morgen-tip-box {
+  background: var(--c-cheap-bg);
+  border: 1px solid var(--c-cheap);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  color: var(--c-text);
+  line-height: 1.5;
+}
+
+/* Apparaten-tips grid */
+.morgen-apparaten-tips { margin-top: 32px; }
+.morgen-apparaten-tips h3 { margin: 0 0 14px; font-size: 1rem; }
+.morgen-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.morgen-tip-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  font-size: 0.9rem;
+}
+.morgen-tip-card strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+.morgen-tip-card p {
+  margin: 0;
+  color: var(--c-text-soft);
+  line-height: 1.55;
+  font-size: 0.875rem;
+}
+.morgen-tip-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+/* Aanbieder-tabel (morgen-variant: geen actie-kolom) */
+.morgen-suppliers-wrap { min-height: auto; }
+.morgen-td-avg { text-align: right; font-weight: 600; }
+
+/* Waarom-sectie */
+.morgen-why-intro {
+  font-size: 1.05rem;
+  margin-top: 0;
+}
+.morgen-why-list,
+.morgen-why-factors {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+.morgen-why-list li,
+.morgen-why-factors li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--c-border);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.morgen-why-list li:last-child,
+.morgen-why-factors li:last-child { border-bottom: none; }
+.morgen-why-factors h3 { margin: 20px 0 10px; }
+.morgen-why-note {
+  font-size: 0.82rem;
+  color: var(--c-text-mute);
+  margin-top: 10px;
+}
+
+/* FAQ */
+.morgen-faq-item {
+  border-bottom: 1px solid var(--c-border);
+  padding: 20px 0;
+}
+.morgen-faq-item:first-child { padding-top: 0; }
+.morgen-faq-item:last-child { border-bottom: none; }
+.morgen-faq-item h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: var(--c-text);
+  font-weight: 600;
+}
+.morgen-faq-item p {
+  margin: 0;
+  color: var(--c-text-soft);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+/* Lees-ook / gerelateerd */
+.morgen-related { background: var(--c-bg); }
+.morgen-related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.morgen-related-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  display: block;
+  text-decoration: none;
+  color: var(--c-text);
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+.morgen-related-card:hover {
+  border-color: var(--c-brand);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+}
+.morgen-related-icon {
+  font-size: 1.4rem;
+  display: block;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.morgen-related-card strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.95rem;
+}
+.morgen-related-card p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--c-text-soft);
+  line-height: 1.5;
+}
+
+/* No-data state */
+.morgen-no-data {
+  text-align: center;
+  padding: 80px 20px;
+}
+.morgen-no-data-icon {
+  font-size: 3rem;
+  margin: 0 0 16px;
+}
+.morgen-no-data h2 { margin: 0 0 12px; }
+.morgen-no-data p { color: var(--c-text-soft); max-width: 480px; margin: 0 auto 12px; }
+
+/* ── Morgen mobiel ──── */
+@media (max-width: 880px) {
+  .morgen-tips-grid { grid-template-columns: 1fr 1fr; }
+  .morgen-related-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  #morgen-h1 { font-size: 1.35rem; }
+  .morgen-highlights { grid-template-columns: 1fr 1fr; }
+  .morgen-highlight-value { font-size: 1.3rem; }
+  .morgen-chart-wrap { height: 200px; }
+  .morgen-tips-grid { grid-template-columns: 1fr; }
+  .morgen-related-grid { grid-template-columns: 1fr; }
+  .morgen-section { padding: 28px 0; }
+}

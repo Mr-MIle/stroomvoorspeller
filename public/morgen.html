@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Stroomprijs morgen Nederland — alle 24 uren | Stroomvoorspeller.nl</title>
+  <meta name="description" content="Bekijk de stroomprijs per uur voor morgen in Nederland. Wanneer is stroom morgen goedkoop? Beste laadmoment voor je EV, wasmachine en warmtepomp — direct uit de officiële day-ahead markt." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/morgen" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Stroomprijs morgen — alle 24 uren voor Nederland" />
+  <meta property="og:description" content="Wanneer is stroom morgen goedkoop? Bekijk alle uurprijzen voor morgen, het beste laadmoment voor je EV of wasmachine, en een per-aanbieder vergelijking." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/morgen" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Stroomvoorspeller.nl — stroomprijs morgen Nederland" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Stroomprijs morgen — alle 24 uren voor Nederland" />
+  <meta name="twitter:description" content="Wanneer is stroom morgen goedkoop? Bekijk alle uurprijzen, slimste laadmomenten en een per-aanbieder vergelijking." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="alternate" type="application/rss+xml" title="Stroomvoorspeller.nl — day-ahead prijzen" href="/data/feed.xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script defer src="morgen.js"></script>
+
+  <!-- Structured data: WebPage + FAQPage (FAQ wordt door morgen.js dynamisch ingevuld) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://stroomvoorspeller.nl/morgen",
+        "url": "https://stroomvoorspeller.nl/morgen",
+        "name": "Stroomprijs morgen Nederland — alle 24 uren",
+        "description": "Bekijk de stroomprijs per uur voor morgen in Nederland. Wanneer is stroom morgen goedkoop?",
+        "inLanguage": "nl-NL",
+        "isPartOf": { "@id": "https://stroomvoorspeller.nl/#website" },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+            { "@type": "ListItem", "position": 2, "name": "Stroomprijs morgen", "item": "https://stroomvoorspeller.nl/morgen" }
+          ]
+        }
+      }
+    ]
+  }
+  </script>
+  <!-- FAQ JSON-LD wordt dynamisch ingevuld door morgen.js na het laden van de prijsdata -->
+  <script type="application/ld+json" id="faq-json-ld"></script>
+
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">⚡</span>
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/#prijzen">Prijzen</a>
+        <a href="/#voorspelling">Voorspelling</a>
+        <a href="/#tips">Tips</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank/">Kennisbank</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="morgen-content">
+
+    <!-- ── Hero ── -->
+    <section class="morgen-hero">
+      <div class="container">
+        <p class="morgen-breadcrumb"><a href="/">← Terug naar prijzen vandaag</a></p>
+
+        <h1 id="morgen-h1">Stroomprijs morgen</h1>
+        <p class="morgen-subtitle">
+          Day-ahead prijzen per uur, officieel gepubliceerd door ENTSO-E rond 13:00.
+          Gebaseerd op leverancier: <span data-supplier-note="1">laden…</span>
+        </p>
+
+        <!-- Mode toggle -->
+        <div class="mode-toggle" role="group" aria-label="Prijsweergave kiezen">
+          <span class="mode-toggle-label">Toon prijzen</span>
+          <div class="mode-toggle-buttons">
+            <button type="button" class="mode-btn is-active" data-mode-btn="inclusive" aria-pressed="true">Incl. belasting</button>
+            <button type="button" class="mode-btn" data-mode-btn="exclusive" aria-pressed="false">Excl. belasting</button>
+          </div>
+        </div>
+
+        <!-- Highlight cards -->
+        <div class="morgen-highlights" aria-label="Overzicht morgen">
+          <div class="morgen-highlight">
+            <p class="morgen-highlight-label">Goedkoopste uur</p>
+            <span class="morgen-highlight-value" id="hl-cheapest-val">—</span>
+            <p class="morgen-highlight-sub" id="hl-cheapest-time">—</p>
+          </div>
+          <div class="morgen-highlight">
+            <p class="morgen-highlight-label">Duurste uur</p>
+            <span class="morgen-highlight-value morgen-hl-pricey" id="hl-priciest-val">—</span>
+            <p class="morgen-highlight-sub" id="hl-priciest-time">—</p>
+          </div>
+          <div class="morgen-highlight">
+            <p class="morgen-highlight-label">Daggemiddelde</p>
+            <span class="morgen-highlight-value" id="hl-avg-val">—</span>
+            <p class="morgen-highlight-sub"><span data-mode-label>incl. belasting</span></p>
+          </div>
+          <div class="morgen-highlight" id="hl-neg-card">
+            <p class="morgen-highlight-label">Negatieve uren</p>
+            <span class="morgen-highlight-value" id="hl-neg-val">—</span>
+            <p class="morgen-highlight-sub">gratis stroom</p>
+          </div>
+        </div>
+
+        <!-- Vergelijking met vandaag -->
+        <p id="morgen-compare" class="morgen-compare" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- ── Grafiek: alle 24 uren ── -->
+    <section class="morgen-section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Stroomprijs per uur morgen</h2>
+          <p class="section-sub">
+            Alle 24 uur weergegeven als <span data-mode-label>incl. belasting</span>.
+            Hover of tik op een balk voor de volledige uitsplitsing.
+          </p>
+        </div>
+        <div class="morgen-chart-wrap">
+          <canvas id="morgenChart" aria-label="Staafdiagram met stroomprijzen per uur voor morgen"></canvas>
+        </div>
+        <!-- Legenda -->
+        <div class="morgen-legend" aria-label="Kleurlegende">
+          <span class="morgen-legend-item"><span class="morgen-legend-dot" style="background:#7048e8"></span>Negatief</span>
+          <span class="morgen-legend-item"><span class="morgen-legend-dot" style="background:#1a7a31"></span>Uitstekend</span>
+          <span class="morgen-legend-item"><span class="morgen-legend-dot" style="background:#2f9e44"></span>Goedkoop</span>
+          <span class="morgen-legend-item"><span class="morgen-legend-dot" style="background:#d4a017"></span>Normaal</span>
+          <span class="morgen-legend-item"><span class="morgen-legend-dot" style="background:#c92a2a"></span>Duur</span>
+          <span class="morgen-legend-item"><span class="morgen-legend-dot" style="background:#9c1a1a"></span>Extreem duur</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Wanneer is stroom morgen het goedkoopst? ── -->
+    <section class="morgen-section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Wanneer is stroom morgen goedkoopst?</h2>
+          <p class="section-sub">
+            Goedkoopste aaneengesloten vensters van twee uur — handig voor wasmachine,
+            droger, EV laden of warmtepomp. Prijzen als <span data-mode-label>incl. belasting</span>.
+          </p>
+        </div>
+
+        <!-- Beste tip -->
+        <div class="morgen-tip-box" id="morgen-best-tip" aria-live="polite">
+          Laden…
+        </div>
+
+        <ul class="moments-list" id="morgen-moments-list" aria-label="Goedkoopste momenten morgen">
+          <li class="moment-loading">Berekenen…</li>
+        </ul>
+
+        <!-- Tips voor apparaten -->
+        <div class="morgen-apparaten-tips">
+          <h3>Welk apparaat wanneer?</h3>
+          <div class="morgen-tips-grid">
+            <div class="morgen-tip-card">
+              <span class="morgen-tip-icon" aria-hidden="true">🚗</span>
+              <strong>EV laden</strong>
+              <p>Plan je laadsessie in het goedkoopste 2–4 uurs blok hierboven. Stel je auto in op "slim laden" of gebruik een timer.</p>
+            </div>
+            <div class="morgen-tip-card">
+              <span class="morgen-tip-icon" aria-hidden="true">🌀</span>
+              <strong>Wasmachine</strong>
+              <p>Start je wasmachine aan het begin van het goedkoopste venster — de meeste programma's duren 1,5–2 uur.</p>
+            </div>
+            <div class="morgen-tip-card">
+              <span class="morgen-tip-icon" aria-hidden="true">🍽</span>
+              <strong>Vaatwasser</strong>
+              <p>Gebruik de "uitgesteld starten"-functie om de vaatwasser in het goedkope blok te laten draaien. Gemiddeld verbruik: 0,8–1,2 kWh per beurt.</p>
+            </div>
+            <div class="morgen-tip-card">
+              <span class="morgen-tip-icon" aria-hidden="true">🌡</span>
+              <strong>Warmtepomp</strong>
+              <p>Stel je warmtepomp in op hogere inlaat tijdens het goedkope blok en laat het huis iets warm voorlopen. Dit verlaagt je gemiddelde kWh-kosten aanzienlijk.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Gemiddelde prijs per aanbieder morgen ── -->
+    <section class="morgen-section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Gemiddelde stroomprijs morgen per aanbieder</h2>
+          <p class="section-sub">
+            All-in daggemiddelde voor morgen (EPEX-gemiddelde + opslag + energiebelasting + btw).
+            Gesorteerd van goedkoopst naar duurste. <a href="/aanbieders">Meer over de aanbieders →</a>
+          </p>
+        </div>
+        <div class="suppliers-table-wrap morgen-suppliers-wrap">
+          <table class="suppliers-table">
+            <thead>
+              <tr>
+                <th scope="col" class="th-supplier">Aanbieder</th>
+                <th scope="col" class="th-price">Gem. morgen<br><small>ct/kWh incl. btw</small></th>
+                <th scope="col" class="th-markup">Opslag<br><small>€/kWh excl. btw</small></th>
+                <th scope="col" class="th-fixed">Vast<br><small>€/maand</small></th>
+              </tr>
+            </thead>
+            <tbody id="morgen-suppliers-tbody">
+              <tr><td colspan="4" class="suppliers-loading">Berekenen…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="suppliers-note">
+          Het vaste maandbedrag is niet verrekend in het gemiddelde. Bij laag verbruik weegt
+          dat zwaarder. Controleer tarieven altijd op de website van je eigen leverancier.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Waarom zijn de prijzen morgen zo? ── -->
+    <section class="morgen-section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Waarom zijn de prijzen morgen zo?</h2>
+          <p class="section-sub">
+            Automatisch gegenereerde analyse op basis van de day-ahead prijsdata
+            en het <a href="/over/voorspelling">transparante voorspellingsmodel</a>.
+          </p>
+        </div>
+        <div id="morgen-why-content" aria-live="polite">
+          <p>Laden…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FAQ ── -->
+    <section class="morgen-section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Veelgestelde vragen over stroomprijs morgen</h2>
+        </div>
+        <div id="morgen-faq-items" aria-live="polite">
+          <p>Laden…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Lees ook ── -->
+    <section class="morgen-section morgen-related">
+      <div class="container">
+        <div class="section-head">
+          <h2>Meer weten over dynamische stroomprijzen?</h2>
+        </div>
+        <div class="morgen-related-grid">
+          <a class="morgen-related-card" href="/">
+            <span class="morgen-related-icon" aria-hidden="true">⚡</span>
+            <strong>Live prijzen vandaag</strong>
+            <p>Actuele uurprijzen, grafiek en 5-daagse voorspelling.</p>
+          </a>
+          <a class="morgen-related-card" href="/kennisbank/negatieve-stroomprijzen">
+            <span class="morgen-related-icon" aria-hidden="true">📉</span>
+            <strong>Negatieve stroomprijzen</strong>
+            <p>Wat zijn ze en hoe bescherm je je rekening?</p>
+          </a>
+          <a class="morgen-related-card" href="/kennisbank/wateraccu">
+            <span class="morgen-related-icon" aria-hidden="true">🔋</span>
+            <strong>Wateraccu als thuisbatterij</strong>
+            <p>Goedkoper alternatief om zonnestroom op te slaan.</p>
+          </a>
+          <a class="morgen-related-card" href="/kennisbank/">
+            <span class="morgen-related-icon" aria-hidden="true">📚</span>
+            <strong>Kennisbank</strong>
+            <p>Alle uitlegartikelen over dynamische energie.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a> ·
+          <a href="/over/voorspelling">Over de voorspelling</a> ·
+          <a href="/aanbieders">Aanbieders</a>
+        </p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          Bron: <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E Transparency</a>
+        </p>
+        <p class="footer-meta-small">Hobby-project van één persoon.
+          <a href="https://github.com/mr-mile/stroomvoorspeller" rel="noopener">Code op GitHub</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+</body>
+</html>
