@@ -334,8 +334,13 @@ a:hover { text-decoration: underline; }
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--c-text-soft);
-  margin: 0 0 16px;
+  margin: 0 0 6px;
   letter-spacing: 0.01em;
+}
+.hero-sub {
+  font-size: 0.92rem;
+  color: var(--c-text-mute);
+  margin: 0 0 16px;
 }
 .now-card {
   background: var(--c-surface);
@@ -688,6 +693,73 @@ a:hover { text-decoration: underline; }
   }
   .primary-nav::-webkit-scrollbar { display: none; }
   .primary-nav a { white-space: nowrap; padding: 10px 10px; }
+}
+
+/* ----- Morgen-tip banner (proactief, verschijnt na ~13:00 als EPEX morgen-data beschikbaar) ----- */
+.tomorrow-tip {
+  width: 100%;
+  font-size: 0.92rem;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+.tomorrow-tip-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+}
+.tomorrow-tip-icon { flex-shrink: 0; font-size: 1.15rem; }
+.tomorrow-tip-text { margin: 0; flex: 1; line-height: 1.5; }
+.tomorrow-tip-text a { font-weight: 600; margin-left: 4px; }
+
+.tomorrow-tip--neg  {
+  background: #f0ebff;
+  border-color: #c4b5fd;
+  color: #3b1d8a;
+}
+.tomorrow-tip--neg .tomorrow-tip-text a { color: #5b21b6; }
+
+.tomorrow-tip--cheap {
+  background: #e6f4ea;
+  border-color: #86efac;
+  color: #14532d;
+}
+.tomorrow-tip--cheap .tomorrow-tip-text a { color: #15803d; }
+
+.tomorrow-tip--pricey {
+  background: #fff8e1;
+  border-color: #fde68a;
+  color: #78350f;
+}
+.tomorrow-tip--pricey .tomorrow-tip-text a { color: #92400e; }
+
+@media (max-width: 640px) {
+  .tomorrow-tip-inner { padding: 10px 12px; }
+  .tomorrow-tip-icon { font-size: 1rem; }
+}
+
+/* ----- Morgen-knop bij de grafiekkop ----- */
+.morgen-link-btn {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--c-brand);
+  border: 1.5px solid var(--c-brand);
+  border-radius: 999px;
+  padding: 5px 13px;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+  flex-shrink: 0;
+}
+.morgen-link-btn:hover {
+  background: var(--c-brand);
+  color: #fff;
+  text-decoration: none;
+}
+@media (max-width: 560px) {
+  .morgen-link-btn { font-size: 0.8rem; padding: 4px 11px; }
 }
 
 /* ----- Stale-data banner (subtiele waarschuwing als prices.json ouder is dan 6 uur) ----- */

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Stroomvoorspeller — actuele en voorspelde stroomprijzen voor Nederland</title>
-  <meta name="description" content="Bekijk de day-ahead stroomprijzen voor vandaag en morgen, plus een eigen voorspelling voor de komende dagen. Voor mensen met een dynamisch energiecontract." />
+  <meta name="description" content="Bekijk wanneer stroom morgen goedkoop is — actuele day-ahead prijzen, slimste laadmomenten voor je EV en wasmachine, en een 5-daagse voorspelling." />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E" />
   <meta name="google-site-verification" content="0HRoe9BYvP6T9f7w2NzVEJbv9rXI6yCferCZ_4hLLsE" />
@@ -72,6 +72,52 @@
           "name": "Nederland (NL bidding zone)"
         },
         "keywords": ["day-ahead", "EPEX", "stroomprijs", "elektriciteit", "ENTSO-E", "Nederland", "dynamisch energiecontract"]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://stroomvoorspeller.nl/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Wanneer is stroom morgen goedkoop?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De EPEX-beurs publiceert elke werkdag rond 13:00 de uurprijzen voor de volgende dag. Op stroomvoorspeller.nl zie je direct de goedkoopste uren van morgen en welke tijdvensters het best zijn voor je EV, wasmachine of warmtepomp."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Wanneer kan ik het beste mijn EV laden?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De 'Slimste momenten'-sectie toont de goedkoopste 2-uurs vensters van vandaag en morgen. Voor EV-laden zijn dat meestal de vroege ochtend (01:00–06:00) of de middag (11:00–15:00) wanneer er veel zon- en windstroom is."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Wat zijn negatieve stroomprijzen?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Soms produceren zonnepanelen en windmolens meer stroom dan er verbruikt wordt. De prijs daalt dan onder nul: energiebedrijven betalen om stroom kwijt te raken. Met een dynamisch contract profiteer jij mee: laden of verbruiken kost dan niets, of je krijgt zelfs geld terug."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Hoe werkt een dynamisch energiecontract?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bij een dynamisch contract betaal je per uur de actuele marktprijs (EPEX day-ahead) plus een vaste opslag van je leverancier, energiebelasting en btw. Je kunt je verbruik verschuiven naar goedkope uren en zo flink besparen, zeker met een EV of thuisbatterij."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Waar komen de stroomprijzen vandaan?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De prijzen zijn afkomstig van ENTSO-E Transparency Platform, de officiële bron voor Europese day-ahead elektriciteitsmarkten. Stroomvoorspeller.nl haalt de data elke paar uur op en toont de uurgemiddelden voor de Nederlandse biedzone."
+            }
+          }
+        ]
       }
     ]
   }
@@ -162,6 +208,7 @@
     <section id="prijzen" class="hero">
       <div class="container">
         <h1 class="hero-heading">Actuele en voorspelde stroomprijzen voor Nederland</h1>
+        <p class="hero-sub">Bekijk wanneer je het voordeligst je EV laadt, wasmachine draait of apparaten aanzet.</p>
         <div class="mode-toggle" role="group" aria-label="Prijsweergave kiezen">
           <span class="mode-toggle-label">Toon prijzen</span>
           <div class="mode-toggle-buttons">
@@ -207,6 +254,15 @@
       </div>
     </section>
 
+    <!-- Morgen-tip banner: verschijnt na ~13:00 als EPEX morgen-data beschikbaar is.
+         JS rendert de juiste variant (--neg / --cheap / --pricey) en toont de banner. -->
+    <div id="tomorrow-tip" class="tomorrow-tip" role="status" aria-live="polite" hidden>
+      <div class="tomorrow-tip-inner container">
+        <span class="tomorrow-tip-icon" aria-hidden="true">⚡</span>
+        <p class="tomorrow-tip-text" id="tomorrow-tip-text">—</p>
+      </div>
+    </div>
+
     <!-- Chart -->
     <section class="chart-section container">
       <div class="section-head chart-section-head">
@@ -214,6 +270,7 @@
           <h2 id="chart-heading">Vandaag &amp; morgen, per uur</h2>
           <p class="section-sub" id="chart-sub">Day-ahead prijzen van EPEX Spot, weergegeven als <span data-field="mode-label">incl. belasting</span>. Tooltip toont alle drie de varianten.</p>
         </div>
+        <a id="morgen-link-btn" href="/morgen" class="morgen-link-btn" hidden>Morgen in detail →</a>
         <div id="chart-res-toggle" class="res-toggle" hidden>
           <div class="res-toggle-buttons" role="group" aria-label="Grafiek resolutie">
             <button class="res-btn is-active" data-res-btn="hourly" aria-pressed="true">Per uur</button>
@@ -277,8 +334,8 @@
     <!-- Best moments -->
     <section id="tips" class="moments-section container">
       <div class="section-head">
-        <h2>Slimste momenten</h2>
-        <p class="section-sub">Goedkoopste vensters van twee uur, handig voor wasmachine, droger, EV laden of warmtepomp. Prijzen weergegeven als <span data-field="mode-label">incl. belasting</span>.</p>
+        <h2>Wanneer is stroom vandaag en morgen het goedkoopst?</h2>
+        <p class="section-sub">Goedkoopste vensters van twee uur — handig voor wasmachine, droger, EV laden of warmtepomp. Prijzen weergegeven als <span data-field="mode-label">incl. belasting</span>.</p>
       </div>
       <ul class="moments-list" data-field="best-moments">
         <li class="moment-loading">Berekenen…</li>

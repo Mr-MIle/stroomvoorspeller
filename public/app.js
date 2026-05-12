@@ -162,6 +162,20 @@
     });
   }
 
+  function findMostExpensiveBlock(prices, windowHours) {
+    if (prices.length < windowHours) return null;
+    let best = null;
+    for (let i = 0; i <= prices.length - windowHours; i++) {
+      let sum = 0;
+      for (let k = 0; k < windowHours; k++) sum += prices[i + k].price;
+      const avg = sum / windowHours;
+      if (!best || avg > best.avg) {
+        best = { startIso: prices[i].time, endIso: prices[i + windowHours - 1].time, avg };
+      }
+    }
+    return best;
+  }
+
   function findBestMoments(prices, fromIdx, count = 3, windowHours = 2) {
     const candidates = [];
     for (let i = fromIdx; i <= prices.length - windowHours; i++) {
@@ -280,12 +294,112 @@
     document.body.classList.add("has-neg-alert");
   }
 
+  // ---- Morgen-tip banner ----
+  // Verschijnt als morgen-data beschikbaar is (≥12 uren) met een opvallend scenario.
+  // Prioriteit: negatieve uren > goedkoop blok > duur spitsuur > geen banner.
+  // Verdwijnt vanzelf bij middernacht (morgen wordt vandaag, geen morgen-data meer).
+  function renderTomorrowTip() {
+    const banner = document.getElementById("tomorrow-tip");
+    if (!banner) return;
+
+    const now = new Date();
+    const tomorrowStart      = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
+    const dayAfterTomorrow   = new Date(tomorrowStart.getTime() + 24 * 3600 * 1000);
+
+    // Filter morgen-uren uit dayPrices (uurresolutie)
+    const tp = state.dayPrices.filter((p) => {
+      const t = new Date(p.time);
+      return t >= tomorrowStart && t < dayAfterTomorrow;
+    });
+
+    // Minimaal 12 uren nodig — anders nog niet gepubliceerd
+    if (tp.length < 12) {
+      banner.setAttribute("hidden", "");
+      renderMorgenLink(false);
+      return;
+    }
+
+    renderMorgenLink(true);
+
+    const tipTextEl = document.getElementById("tomorrow-tip-text");
+    if (!tipTextEl) return;
+
+    const t  = (state.config && state.config.thresholds_ct_kwh_inclusive) || {};
+    const cheapThreshold  = t.very_cheap ?? 14;
+    const priceyThreshold = t.pricey    ?? 28;
+
+    // 1. Negatieve uren?
+    const negHours = tp.filter((p) => priceCents(p.price, "inclusive") < 0);
+    if (negHours.length > 0) {
+      const first = negHours[0];
+      const last  = negHours[negHours.length - 1];
+      const endDate = new Date(new Date(last.time).getTime() + 3600000);
+      const startT = fmtTime(first.time);
+      const endT   = endDate.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+      banner.className = "tomorrow-tip tomorrow-tip--neg";
+      tipTextEl.innerHTML =
+        `<strong>Morgen negatieve prijzen</strong> tussen ${startT}–${endT} — gratis stroom, apparaten aan! ` +
+        `<a href="/morgen">Bekijk alle morgen-uren →</a>`;
+      banner.removeAttribute("hidden");
+      return;
+    }
+
+    // 2. Goedkoop 2-uurs blok (gem. < cheapThreshold ct incl. btw)?
+    const cheapMoments = findBestMoments(tp, 0, 1, 2);
+    if (cheapMoments.length > 0) {
+      const m = cheapMoments[0];
+      const avgCents = priceCents(m.avg, "inclusive");
+      if (avgCents < cheapThreshold) {
+        const endDate = new Date(new Date(m.endIso).getTime() + 3600000);
+        const startT = fmtTime(m.startIso);
+        const endT   = endDate.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+        banner.className = "tomorrow-tip tomorrow-tip--cheap";
+        tipTextEl.innerHTML =
+          `<strong>Morgen goedkoop laden</strong> tussen ${startT}–${endT} ` +
+          `(gem. ${fmtNum(avgCents, 1)} ct/kWh incl. btw). ` +
+          `<a href="/morgen">Bekijk alle morgen-uren →</a>`;
+        banner.removeAttribute("hidden");
+        return;
+      }
+    }
+
+    // 3. Duur spitsuur (gem. > priceyThreshold ct incl. btw)?
+    const expBlock = findMostExpensiveBlock(tp, 2);
+    if (expBlock && priceCents(expBlock.avg, "inclusive") > priceyThreshold) {
+      const endDate = new Date(new Date(expBlock.endIso).getTime() + 3600000);
+      const startT = fmtTime(expBlock.startIso);
+      const endT   = endDate.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+      banner.className = "tomorrow-tip tomorrow-tip--pricey";
+      tipTextEl.innerHTML =
+        `<strong>Morgen duur</strong> tussen ${startT}–${endT} — zware apparaten liever 's nachts. ` +
+        `<a href="/morgen">Bekijk alle morgen-uren →</a>`;
+      banner.removeAttribute("hidden");
+      return;
+    }
+
+    // Geen bijzonderheden — banner verbergen
+    banner.setAttribute("hidden", "");
+  }
+
+  // ---- Morgen-knop bij de grafiekkop ----
+  // Alleen zichtbaar als morgen-data beschikbaar is (≥12 uren).
+  function renderMorgenLink(hasTomorrowData) {
+    const btn = document.getElementById("morgen-link-btn");
+    if (!btn) return;
+    if (hasTomorrowData) {
+      btn.removeAttribute("hidden");
+    } else {
+      btn.setAttribute("hidden", "");
+    }
+  }
+
   // ---- Rendering ----
   function renderAll() {
     if (!state.config || !state.dayPrices.length) return;
     renderSourceAlert();
     renderNegativeAlert();
     checkStaleData();
+    renderTomorrowTip();
     renderSettingsPanel();
     renderSettingsToggle();
     renderModeBadges();
