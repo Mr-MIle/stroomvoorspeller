@@ -157,7 +157,7 @@ def compose_tweet(summary: dict) -> str:
         f"Goedkoopst: {cheap['hour']:02d}u → {cheap['ct']:.1f} ct\n"
         f"Duurst: {dear['hour']:02d}u → {dear['ct']:.1f} ct\n"
         f"{insight}\n\n"
-        f"→ {BRAND}\n\n"
+        f"→ stroomvoorspeller.nl/morgen\n\n"
         f"{tags}"
     )
 
