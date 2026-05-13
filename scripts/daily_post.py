@@ -35,6 +35,13 @@ HANDLE = "@stroomtarief"
 
 # ---- Image ----
 IMG_W, IMG_H = 1200, 675
+# Brand bar: licht blauw + amber accent, passend bij het nieuwe logo
+COLOR_BAR_BG     = (238, 246, 251)   # licht sky-blue (logo achtergrond)
+COLOR_BAR_BORDER = (212, 233, 245)   # subtiele rand
+COLOR_BRAND_TEXT = (15,  45,  74)    # donker navy (logo tekst)
+COLOR_HANDLE     = (3,  105, 161)    # medium blauw
+COLOR_AMBER      = (245, 158, 11)    # amber (logo accent)
+# Achterwaartse compatibiliteit — intern nog gebruikt in chart-render
 COLOR_BRAND = (15, 108, 189)
 COLOR_TEXT = (33, 41, 56)
 COLOR_TEXT_SOFT = (96, 110, 128)
@@ -222,13 +229,30 @@ def generate_image(summary: dict, output_path: Path) -> None:
     f_card_value = _try_font(FONT_PATHS_BOLD, 30)
     f_footer = _try_font(FONT_PATHS_REGULAR, 16)
 
-    # Top brand bar
-    draw.rectangle([(0, 0), (IMG_W, 70)], fill=COLOR_BRAND)
-    draw.text((40, 18), BRAND, fill="white", font=f_brand)
-    # rechts uitlijnen handle: meten
+    # Top brand bar — lichte achtergrond passend bij het logo
+    draw.rectangle([(0, 0), (IMG_W, 72)], fill=COLOR_BAR_BG)
+    draw.rectangle([(0, 72), (IMG_W, 73)], fill=COLOR_BAR_BORDER)
+    # Amber accent-streep links
+    draw.rectangle([(0, 0), (6, 72)], fill=COLOR_AMBER)
+    # Logo-icoon: lichte cirkel met amber curve (vereenvoudigd)
+    cx, cy, cr = 46, 36, 26
+    draw.ellipse([(cx-cr, cy-cr), (cx+cr, cy+cr)], fill=(238, 246, 251), outline=(14, 165, 233), width=2)
+    # Amber prijscurve (4 segmenten)
+    pts = [(cx-20, cy+12), (cx-10, cy+5), (cx+2, cy-2), (cx+14, cy-10), (cx+22, cy-16)]
+    for i in range(len(pts)-1):
+        draw.line([pts[i], pts[i+1]], fill=COLOR_AMBER, width=3)
+    # Nu-punt
+    draw.ellipse([(cx+10, cy-13), (cx+18, cy-5)], fill=COLOR_AMBER)
+    draw.ellipse([(cx+12, cy-11), (cx+16, cy-7)], fill=(238, 246, 251))
+    # Badge rechtsonder icoon
+    draw.ellipse([(cx+12, cy+10), (cx+26, cy+24)], fill=COLOR_AMBER)
+    bx, by = cx+19, cy+17
+    draw.polygon([(bx+2, by-5), (bx-3, by+1), (bx+1, by+1), (bx-2, by+6), (bx+4, by), (bx, by)], fill=(255,255,255))
+    # Brand naam en handle
+    draw.text((82, 15), BRAND, fill=COLOR_BRAND_TEXT, font=f_brand)
     handle_bbox = draw.textbbox((0, 0), HANDLE, font=f_handle)
     handle_w = handle_bbox[2] - handle_bbox[0]
-    draw.text((IMG_W - 40 - handle_w, 24), HANDLE, fill="white", font=f_handle)
+    draw.text((IMG_W - 40 - handle_w, 24), HANDLE, fill=COLOR_HANDLE, font=f_handle)
 
     # Title
     d = summary["date"]
