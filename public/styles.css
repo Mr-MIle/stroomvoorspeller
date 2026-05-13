@@ -81,8 +81,10 @@ a:hover { text-decoration: underline; }
   color: var(--c-text);
 }
 .brand-mark {
-  color: var(--c-brand);
-  font-size: 1.4rem;
+  display: block;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
 }
 .brand-tld { color: var(--c-text-mute); font-weight: 500; }
 .primary-nav { display: flex; gap: 18px; flex-wrap: wrap; }
