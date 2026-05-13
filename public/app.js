@@ -393,13 +393,16 @@
     }
   }
 
-  // ---- Hero-verdict: compacte morgen- of nu-samenvatting bovenaan (#58) ----
+  // ---- Hero-verdict: morgen/nu-samenvatting bovenaan (#58) ----
+  // Vervangt de voormalige tomorrow-tip banner — zelfde logica, zelfde kleurvarianten,
+  // maar boven de now-card in plaats van tussen hero en grafiek.
   function renderHeroVerdict() {
-    const el = document.getElementById("hero-verdict");
+    const el     = document.getElementById("hero-verdict");
+    const iconEl = document.getElementById("hero-verdict-icon");
     const textEl = document.getElementById("hero-verdict-text");
-    if (!el || !textEl || !state.config) return;
+    if (!el || !iconEl || !textEl || !state.config) return;
 
-    const now = new Date();
+    const now              = new Date();
     const tomorrowStart    = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
     const dayAfterTomorrow = new Date(tomorrowStart.getTime() + 24 * 3600 * 1000);
     const tp = state.dayPrices.filter((p) => {
@@ -407,41 +410,64 @@
       return t >= tomorrowStart && t < dayAfterTomorrow;
     });
 
-    const thr = (state.config.thresholds_ct_kwh_inclusive) || {};
-    const priceyThreshold = thr.pricey     ?? 28;
+    const thr             = state.config.thresholds_ct_kwh_inclusive || {};
     const cheapThreshold  = thr.very_cheap ?? 14;
+    const priceyThreshold = thr.pricey     ?? 28;
 
     function fmtEnd(isoEnd) {
       return new Date(new Date(isoEnd).getTime() + 3600000)
         .toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
     }
+    function setVariant(variant, icon) {
+      el.className = `hero-verdict hero-verdict--${variant}`;
+      iconEl.textContent = icon;
+    }
+
+    renderMorgenLink(tp.length >= 12);
 
     if (tp.length >= 12) {
-      // Morgen-data beschikbaar → toon morgen-verdict
+      // ── Morgen-data beschikbaar ────────────────────────────────────────────────
       const negHours = tp.filter((p) => priceCents(p.price, "inclusive") < 0);
+
       if (negHours.length > 0) {
         const first = negHours[0];
         const last  = negHours[negHours.length - 1];
-        textEl.textContent = `⚡ Morgen gratis stroom ${fmtTime(first.time)}–${fmtEnd(last.time)} · zet apparaten aan!`;
+        setVariant("neg", "⚡");
+        textEl.innerHTML =
+          `<strong>Morgen negatieve prijzen</strong> tussen ${fmtTime(first.time)}–${fmtEnd(last.time)} — gratis stroom, apparaten aan! ` +
+          `<a href="/morgen">Bekijk alle morgen-uren →</a>`;
+
       } else {
         const cheapMoments = findBestMoments(tp, 0, 1, 2);
         if (cheapMoments.length > 0 && priceCents(cheapMoments[0].avg, "inclusive") < cheapThreshold) {
-          const m = cheapMoments[0];
+          const m     = cheapMoments[0];
           const avgCt = fmtNum(priceCents(m.avg, "inclusive"), 1);
-          textEl.textContent = `✅ Morgen goedkoop · beste uren ${fmtTime(m.startIso)}–${fmtEnd(m.endIso)} · gem. ${avgCt} ct/kWh`;
+          setVariant("cheap", "⚡");
+          textEl.innerHTML =
+            `<strong>Morgen goedkoop laden</strong> tussen ${fmtTime(m.startIso)}–${fmtEnd(m.endIso)} ` +
+            `(gem. ${avgCt} ct/kWh incl. btw). ` +
+            `<a href="/morgen">Bekijk alle morgen-uren →</a>`;
+
         } else {
           const expBlock = findMostExpensiveBlock(tp, 2);
           if (expBlock && priceCents(expBlock.avg, "inclusive") > priceyThreshold) {
-            textEl.textContent = `⚠ Morgen duurste uren ${fmtTime(expBlock.startIso)}–${fmtEnd(expBlock.endIso)} — liever 's nachts laden`;
+            setVariant("pricey", "⚠");
+            textEl.innerHTML =
+              `<strong>Morgen duur</strong> tussen ${fmtTime(expBlock.startIso)}–${fmtEnd(expBlock.endIso)} — zware apparaten liever 's nachts. ` +
+              `<a href="/morgen">Bekijk alle morgen-uren →</a>`;
           } else {
             const avg = tp.reduce((s, p) => s + priceCents(p.price, "inclusive"), 0) / tp.length;
-            textEl.textContent = `📊 Morgen normaal · daggemiddelde ${fmtNum(avg, 1)} ct/kWh`;
+            setVariant("neutral", "📊");
+            textEl.innerHTML =
+              `Morgen normaal · daggemiddelde ${fmtNum(avg, 1)} ct/kWh. ` +
+              `<a href="/morgen">Bekijk alle morgen-uren →</a>`;
           }
         }
       }
       el.removeAttribute("hidden");
+
     } else {
-      // Nog geen morgen-data → toon huidige status + beste resterende venster vandaag
+      // ── Nog geen morgen-data → huidige status + beste venster vandaag ──────────
       const prices = state.dayPrices;
       if (!prices.length) { el.setAttribute("hidden", ""); return; }
       const nowIdx  = state.nowIdx >= 0 ? state.nowIdx : 0;
@@ -449,12 +475,13 @@
       const cls     = classify(current.price);
       const ct      = fmtNum(priceCents(current.price, "inclusive"), 1);
       const moments = findBestMoments(prices, nowIdx, 1, 2);
-      let text = `⚡ Nu ${statusLabel(cls)} · ${ct} ct/kWh`;
+      let text = `Nu ${statusLabel(cls)} · ${ct} ct/kWh`;
       if (moments.length > 0) {
-        const m = moments[0];
+        const m   = moments[0];
         const mCt = fmtNum(priceCents(m.avg, "inclusive"), 1);
         text += ` · goedkoopst ${fmtTime(m.startIso)}–${fmtEnd(m.endIso)} (${mCt} ct/kWh)`;
       }
+      setVariant("neutral", "⚡");
       textEl.textContent = text;
       el.removeAttribute("hidden");
     }
@@ -466,8 +493,7 @@
     renderSourceAlert();
     renderNegativeAlert();
     checkStaleData();
-    renderHeroVerdict();
-    renderTomorrowTip();
+    renderHeroVerdict(); // vervangt renderTomorrowTip — logica samengevoegd (#58)
     renderSettingsPanel();
     renderSettingsToggle();
     renderModeBadges();

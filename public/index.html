@@ -205,9 +205,12 @@
       </div>
     </section>
 
-    <!-- Hero-verdict: compacte morgen- of nu-samenvatting (#58) — door JS gevuld -->
-    <section id="hero-verdict" class="hero-verdict container" hidden aria-live="polite">
-      <p class="hero-verdict-text" id="hero-verdict-text">—</p>
+    <!-- Hero-verdict: morgen- of nu-samenvatting bovenaan — vervangt de oude tomorrow-tip banner (#58) -->
+    <section id="hero-verdict" class="hero-verdict" hidden aria-live="polite" role="status">
+      <div class="hero-verdict-inner container">
+        <span class="hero-verdict-icon" id="hero-verdict-icon" aria-hidden="true">⚡</span>
+        <p class="hero-verdict-text" id="hero-verdict-text">—</p>
+      </div>
     </section>
 
     <!-- Now-card -->
@@ -246,15 +249,6 @@
 
       </div>
     </section>
-
-    <!-- Morgen-tip banner: verschijnt na ~13:00 als EPEX morgen-data beschikbaar is.
-         JS rendert de juiste variant (--neg / --cheap / --pricey) en toont de banner. -->
-    <div id="tomorrow-tip" class="tomorrow-tip" role="status" aria-live="polite" hidden>
-      <div class="tomorrow-tip-inner container">
-        <span class="tomorrow-tip-icon" aria-hidden="true">⚡</span>
-        <p class="tomorrow-tip-text" id="tomorrow-tip-text">—</p>
-      </div>
-    </div>
 
     <!-- Chart -->
     <section class="chart-section container">

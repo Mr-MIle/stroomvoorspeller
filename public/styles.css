@@ -330,23 +330,64 @@ a:hover { text-decoration: underline; }
   padding-bottom: 40vh;
 }
 
-/* ----- Hero-verdict: compacte morgen-samenvatting bovenaan (#58) ----- */
+/* ----- Hero-verdict: morgen/nu-samenvatting bovenaan — vervangt tomorrow-tip (#58) ----- */
+/* Structuur zelfde als de voormalige tomorrow-tip banner, maar boven de now-card. */
 .hero-verdict {
-  padding: 12px 0 10px;
-  border-bottom: 1px solid var(--c-border);
-  background: var(--c-surface);
+  width: 100%;
+  font-size: 0.92rem;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
 }
 .hero-verdict[hidden] { display: none; }
-.hero-verdict-text {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--c-brand-deep);
-  margin: 0;
-  line-height: 1.4;
+.hero-verdict-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
 }
+.hero-verdict-icon { flex-shrink: 0; font-size: 1.15rem; }
+.hero-verdict-text {
+  margin: 0;
+  flex: 1;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.hero-verdict-text a { font-weight: 600; margin-left: 4px; text-decoration: none; }
+.hero-verdict-text a:hover { text-decoration: underline; }
+
+/* Kleurvarianten — identiek aan de voormalige tomorrow-tip */
+.hero-verdict--neg  {
+  background: #f0ebff;
+  border-color: #c4b5fd;
+  color: #3b1d8a;
+}
+.hero-verdict--neg .hero-verdict-text a { color: #5b21b6; }
+
+.hero-verdict--cheap {
+  background: #e6f4ea;
+  border-color: #86efac;
+  color: #14532d;
+}
+.hero-verdict--cheap .hero-verdict-text a { color: #15803d; }
+
+.hero-verdict--pricey {
+  background: #fff8e1;
+  border-color: #fde68a;
+  color: #78350f;
+}
+.hero-verdict--pricey .hero-verdict-text a { color: #92400e; }
+
+/* Neutraal (geen bijzonder scenario / no-data) */
+.hero-verdict--neutral {
+  background: var(--c-surface);
+  border-color: var(--c-border);
+  color: var(--c-text-soft);
+}
+.hero-verdict--neutral .hero-verdict-text a { color: var(--c-brand); }
+
 @media (max-width: 640px) {
-  .hero-verdict { padding: 10px 0 8px; }
-  .hero-verdict-text { font-size: 0.97rem; }
+  .hero-verdict-inner { padding: 10px 12px; }
+  .hero-verdict-icon  { font-size: 1rem; }
 }
 
 /* Hero / now-card */
