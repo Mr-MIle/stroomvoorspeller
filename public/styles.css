@@ -330,14 +330,44 @@ a:hover { text-decoration: underline; }
   padding-bottom: 40vh;
 }
 
+/* ----- Hero-verdict: compacte morgen-samenvatting bovenaan (#58) ----- */
+.hero-verdict {
+  padding: 12px 0 10px;
+  border-bottom: 1px solid var(--c-border);
+  background: var(--c-surface);
+}
+.hero-verdict[hidden] { display: none; }
+.hero-verdict-text {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--c-brand-deep);
+  margin: 0;
+  line-height: 1.4;
+}
+@media (max-width: 640px) {
+  .hero-verdict { padding: 10px 0 8px; }
+  .hero-verdict-text { font-size: 0.97rem; }
+}
+
 /* Hero / now-card */
 .hero { padding: 32px 0 8px; }
 .hero-heading {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--c-text-soft);
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   letter-spacing: 0.01em;
+}
+/* Tagline (#59): "De Buienradar voor stroomprijzen." */
+.hero-tagline {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--c-brand-deep);
+  margin: 0 0 10px;
+  letter-spacing: 0.005em;
+}
+@media (max-width: 640px) {
+  .hero-tagline { font-size: 0.95rem; }
 }
 .hero-sub {
   font-size: 0.92rem;
@@ -412,12 +442,12 @@ a:hover { text-decoration: underline; }
 .now-meta { color: var(--c-text-soft); font-size: 0.95rem; margin: 4px 0 0; }
 .dot-sep { margin: 0 8px; color: var(--c-text-mute); }
 
-/* Quick summary */
+/* Quick summary — staat nu na de grafiek (standalone, buiten de hero) (#56) */
 .quick-summary {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin: 18px 0 6px;
+  margin: 12px auto 24px;
 }
 .summary-item {
   background: var(--c-surface);

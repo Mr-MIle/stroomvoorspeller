@@ -181,6 +181,7 @@
   <main>
     <!-- Settings panel -->
     <section id="settings-panel" class="settings-panel container" hidden aria-label="Instellingen">
+
       <div class="settings-grid">
         <div class="settings-block">
           <label for="supplier-select"><strong>Mijn energieleverancier</strong></label>
@@ -204,10 +205,16 @@
       </div>
     </section>
 
+    <!-- Hero-verdict: compacte morgen- of nu-samenvatting (#58) — door JS gevuld -->
+    <section id="hero-verdict" class="hero-verdict container" hidden aria-live="polite">
+      <p class="hero-verdict-text" id="hero-verdict-text">—</p>
+    </section>
+
     <!-- Now-card -->
     <section id="prijzen" class="hero">
       <div class="container">
         <h1 class="hero-heading">Actuele en voorspelde stroomprijzen voor Nederland</h1>
+        <p class="hero-tagline">De Buienradar voor stroomprijzen.</p>
         <p class="hero-sub">Bekijk wanneer je het voordeligst je EV laadt, wasmachine draait of apparaten aanzet.</p>
         <div class="mode-toggle" role="group" aria-label="Prijsweergave kiezen">
           <span class="mode-toggle-label">Toon prijzen</span>
@@ -237,20 +244,6 @@
           </p>
         </div>
 
-        <div class="quick-summary">
-          <div class="summary-item">
-            <span class="summary-label">Goedkoopste uur vandaag</span>
-            <span class="summary-value" data-field="cheapest-today">—</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-label">Duurste uur vandaag</span>
-            <span class="summary-value" data-field="priciest-today">—</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-label">Gemiddelde vandaag</span>
-            <span class="summary-value" data-field="avg-today">—</span>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -283,6 +276,22 @@
       </div>
 <p class="chart-note">De schakelaar bovenaan wisselt tussen <strong>incl. belasting</strong> (energiebelasting + 21% btw erbij — wat je feitelijk betaalt) en <strong>excl. belasting</strong> (kale marktprijs + leveranciersopslag). De tooltip toont alle drie varianten per uur.</p>
     </section>
+
+    <!-- Quick-summary: goedkoopste/duurste/gemiddelde vandaag — na grafiek zodat grafiek direct zichtbaar is op mobiel (#56) -->
+    <div class="quick-summary container">
+      <div class="summary-item">
+        <span class="summary-label">Goedkoopste uur vandaag</span>
+        <span class="summary-value" data-field="cheapest-today">—</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Duurste uur vandaag</span>
+        <span class="summary-value" data-field="priciest-today">—</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Gemiddelde vandaag</span>
+        <span class="summary-value" data-field="avg-today">—</span>
+      </div>
+    </div>
 
     <!-- Forecast - geïntegreerd in dezelfde grafiek hierboven -->
     <section id="voorspelling" class="forecast-section container">

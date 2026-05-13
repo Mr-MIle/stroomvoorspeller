@@ -393,12 +393,80 @@
     }
   }
 
+  // ---- Hero-verdict: compacte morgen- of nu-samenvatting bovenaan (#58) ----
+  function renderHeroVerdict() {
+    const el = document.getElementById("hero-verdict");
+    const textEl = document.getElementById("hero-verdict-text");
+    if (!el || !textEl || !state.config) return;
+
+    const now = new Date();
+    const tomorrowStart    = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
+    const dayAfterTomorrow = new Date(tomorrowStart.getTime() + 24 * 3600 * 1000);
+    const tp = state.dayPrices.filter((p) => {
+      const t = new Date(p.time);
+      return t >= tomorrowStart && t < dayAfterTomorrow;
+    });
+
+    const thr = (state.config.thresholds_ct_kwh_inclusive) || {};
+    const priceyThreshold = thr.pricey     ?? 28;
+    const cheapThreshold  = thr.very_cheap ?? 14;
+
+    function fmtEnd(isoEnd) {
+      return new Date(new Date(isoEnd).getTime() + 3600000)
+        .toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    if (tp.length >= 12) {
+      // Morgen-data beschikbaar → toon morgen-verdict
+      const negHours = tp.filter((p) => priceCents(p.price, "inclusive") < 0);
+      if (negHours.length > 0) {
+        const first = negHours[0];
+        const last  = negHours[negHours.length - 1];
+        textEl.textContent = `⚡ Morgen gratis stroom ${fmtTime(first.time)}–${fmtEnd(last.time)} · zet apparaten aan!`;
+      } else {
+        const cheapMoments = findBestMoments(tp, 0, 1, 2);
+        if (cheapMoments.length > 0 && priceCents(cheapMoments[0].avg, "inclusive") < cheapThreshold) {
+          const m = cheapMoments[0];
+          const avgCt = fmtNum(priceCents(m.avg, "inclusive"), 1);
+          textEl.textContent = `✅ Morgen goedkoop · beste uren ${fmtTime(m.startIso)}–${fmtEnd(m.endIso)} · gem. ${avgCt} ct/kWh`;
+        } else {
+          const expBlock = findMostExpensiveBlock(tp, 2);
+          if (expBlock && priceCents(expBlock.avg, "inclusive") > priceyThreshold) {
+            textEl.textContent = `⚠ Morgen duurste uren ${fmtTime(expBlock.startIso)}–${fmtEnd(expBlock.endIso)} — liever 's nachts laden`;
+          } else {
+            const avg = tp.reduce((s, p) => s + priceCents(p.price, "inclusive"), 0) / tp.length;
+            textEl.textContent = `📊 Morgen normaal · daggemiddelde ${fmtNum(avg, 1)} ct/kWh`;
+          }
+        }
+      }
+      el.removeAttribute("hidden");
+    } else {
+      // Nog geen morgen-data → toon huidige status + beste resterende venster vandaag
+      const prices = state.dayPrices;
+      if (!prices.length) { el.setAttribute("hidden", ""); return; }
+      const nowIdx  = state.nowIdx >= 0 ? state.nowIdx : 0;
+      const current = prices[nowIdx];
+      const cls     = classify(current.price);
+      const ct      = fmtNum(priceCents(current.price, "inclusive"), 1);
+      const moments = findBestMoments(prices, nowIdx, 1, 2);
+      let text = `⚡ Nu ${statusLabel(cls)} · ${ct} ct/kWh`;
+      if (moments.length > 0) {
+        const m = moments[0];
+        const mCt = fmtNum(priceCents(m.avg, "inclusive"), 1);
+        text += ` · goedkoopst ${fmtTime(m.startIso)}–${fmtEnd(m.endIso)} (${mCt} ct/kWh)`;
+      }
+      textEl.textContent = text;
+      el.removeAttribute("hidden");
+    }
+  }
+
   // ---- Rendering ----
   function renderAll() {
     if (!state.config || !state.dayPrices.length) return;
     renderSourceAlert();
     renderNegativeAlert();
     checkStaleData();
+    renderHeroVerdict();
     renderTomorrowTip();
     renderSettingsPanel();
     renderSettingsToggle();
@@ -815,6 +883,31 @@
     },
   };
 
+  // ---- Prijszone-achtergrond plugin (#57) ----
+  // Tekent horizontale gekleurde zones achter de grafiek, gebaseerd op prijsdrempels.
+  // opacity 7-10%: voelbaar, niet dominant (Buienradar-principe).
+  const svPriceZonePlugin = {
+    id: "svPriceZone",
+    beforeDatasetsDraw(chart, _args, opts) {
+      const { ctx, chartArea, scales } = chart;
+      const y = scales.y;
+      if (!y || !chartArea || !opts.zones || !opts.zones.length) return;
+      ctx.save();
+      for (const zone of opts.zones) {
+        const yTop = zone.max !== null
+          ? Math.max(y.getPixelForValue(zone.max), chartArea.top)
+          : chartArea.top;
+        const yBot = zone.min !== null
+          ? Math.min(y.getPixelForValue(zone.min), chartArea.bottom)
+          : chartArea.bottom;
+        if (yTop >= yBot) continue;
+        ctx.fillStyle = zone.color;
+        ctx.fillRect(chartArea.left, yTop, chartArea.right - chartArea.left, yBot - yTop);
+      }
+      ctx.restore();
+    },
+  };
+
   // Regime-kleuren en plausibility-configuratie
   const REGIME_COLOR = { oversupply: "#f59e0b", schaarste: "#ef4444", normaal: "#0f6cbd" };
 
@@ -909,6 +1002,22 @@
     const holidays = buildHolidayLookup();
     const isQuarter = state.chartResolution === "quarter" && state.dayPrices15m.length > 0;
 
+    // ── Prijszones (#57): drempelwaarden altijd in inclusive ct, omrekenen naar huidige modus ──
+    function thToChart(ct_incl) {
+      if (state.mode === "inclusive") return ct_incl;
+      const taxes = state.config.taxes;
+      return ct_incl / (taxes.btw_factor || 1.21) - (taxes.energiebelasting_per_kwh || 0) * 100;
+    }
+    const thr = (state.config && state.config.thresholds_ct_kwh_inclusive) || {};
+    const priceZones = [
+      { min: null,                            max: thToChart(0),                       color: "rgba(112,72,232,0.10)" },
+      { min: thToChart(0),                    max: thToChart(thr.very_cheap ?? 14),    color: "rgba(26,122,49,0.08)"  },
+      { min: thToChart(thr.very_cheap ?? 14), max: thToChart(thr.cheap ?? 22),         color: "rgba(47,158,68,0.07)"  },
+      // normaal: geen kleur
+      { min: thToChart(thr.pricey ?? 28),     max: thToChart(thr.very_pricey ?? 38),   color: "rgba(201,42,42,0.08)"  },
+      { min: thToChart(thr.very_pricey ?? 38), max: null,                              color: "rgba(156,26,26,0.10)"  },
+    ];
+
     // ── Timeline opbouwen ──────────────────────────────────────────────────────
     let timeline, chartNowIdx, boundaries;
 
@@ -984,7 +1093,7 @@
     // ── Chart aanmaken ─────────────────────────────────────────────────────────
     state.chart = new Chart(canvas, {
       type: "line",
-      plugins: [dayBandPlugin, svBoundaryPlugin],
+      plugins: [svPriceZonePlugin, dayBandPlugin, svBoundaryPlugin],
       data: {
         labels,
         datasets: [
@@ -1040,6 +1149,7 @@
           },
         },
         plugins: {
+          svPriceZone: { zones: priceZones },
           svDayBand: { timeline, holidays },
           svBoundary: { boundaries, n },
           legend: { display: false },
