@@ -247,11 +247,15 @@
           </p>
         </div>
 
+        <!-- Scroll-nudge: subtiele ↓ richting grafiek, alleen mobiel (#61) -->
+        <div class="scroll-nudge" aria-hidden="true">
+          <a href="#grafiek" class="scroll-nudge-arrow" tabindex="-1">↓</a>
+        </div>
       </div>
     </section>
 
     <!-- Chart -->
-    <section class="chart-section container">
+    <section id="grafiek" class="chart-section container">
       <div class="section-head chart-section-head">
         <div class="chart-head-text">
           <h2 id="chart-heading">Vandaag &amp; morgen, per uur</h2>
@@ -293,7 +297,8 @@
         <h2>Voorspelling 5–7 dagen vooruit</h2>
         <p class="section-sub">In de grafiek hierboven verschijnt de voorspelling als <strong>gestippelde lijn</strong> met een lichte schaduwband eromheen. Tik of hover op een uur voor de factor-bijdrage (zon, wind, temperatuur, gas, dagtype, uurpatroon).</p>
       </div>
-      <div class="forecast-explainer">
+      <details class="forecast-explainer forecast-details">
+        <summary class="forecast-details-summary">Hoe werkt de voorspelling?</summary>
         <p>
           Het model kijkt naar <strong>historische patronen</strong> uit de afgelopen
           1–2 weken en corrigeert die met <strong>huidige inzichten</strong>:
@@ -305,7 +310,7 @@
         <p>
           <a href="/over/voorspelling">Lees de volledige uitleg →</a>
         </p>
-      </div>
+      </details>
     </section>
 
     <!-- Aanbieders-prijsvergelijking voor het huidige uur -->

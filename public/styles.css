@@ -327,7 +327,16 @@ a:hover { text-decoration: underline; }
 .moments-section,
 .explain-section {
   scroll-margin-top: 72px;
-  padding-bottom: 40vh;
+}
+
+/* Sectiestructuur (#62): consistente ruimte en visuele scheiding tussen blokken */
+.forecast-section,
+.suppliers-section,
+.moments-section,
+.explain-section {
+  padding-top: 36px;
+  padding-bottom: 48px;   /* was 40vh (360px+ op desktop) — teruggebracht */
+  border-top: 1px solid var(--c-border);
 }
 
 /* ----- Hero-verdict: morgen/nu-samenvatting bovenaan — vervangt tomorrow-tip (#58) ----- */
@@ -414,6 +423,29 @@ a:hover { text-decoration: underline; }
   font-size: 0.92rem;
   color: var(--c-text-mute);
   margin: 0 0 16px;
+}
+
+/* Scroll-nudge (#61): subtiele ↓ richting grafiek, alleen zichtbaar op mobiel */
+.scroll-nudge {
+  text-align: center;
+  padding: 12px 0 4px;
+  display: none; /* verborgen op desktop; grafiek is daar al in beeld */
+}
+.scroll-nudge-arrow {
+  display: inline-block;
+  font-size: 1.3rem;
+  color: var(--c-text-mute);
+  text-decoration: none;
+  line-height: 1;
+  animation: nudge-bounce 2.2s ease-in-out infinite;
+}
+.scroll-nudge-arrow:hover { color: var(--c-brand); }
+@keyframes nudge-bounce {
+  0%, 100% { transform: translateY(0);   opacity: 0.5; }
+  50%       { transform: translateY(5px); opacity: 1;   }
+}
+@media (max-width: 640px) {
+  .scroll-nudge { display: block; }
 }
 .now-card {
   background: var(--c-surface);
@@ -562,6 +594,40 @@ a:hover { text-decoration: underline; }
 .legend-pricey::before  { background: var(--c-pricey); }
 .legend-current::before { background: var(--c-brand); border-radius: 50%; }
 
+/* Collapsible details (#60) */
+.forecast-details {
+  cursor: default;
+}
+.forecast-details-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--c-brand-deep);
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--radius);
+}
+.forecast-details-summary::-webkit-details-marker { display: none; }
+.forecast-details-summary::before {
+  content: "▶";
+  font-size: 0.65rem;
+  color: var(--c-text-mute);
+  transition: transform 0.18s;
+  flex-shrink: 0;
+}
+.forecast-details[open] > .forecast-details-summary::before {
+  transform: rotate(90deg);
+}
+.forecast-details-summary:hover { color: var(--c-brand); }
+.forecast-details > p {
+  padding: 0 22px 14px;
+  margin: 0;
+}
+
 /* Forecast placeholder (legacy class, niet meer gebruikt sinds v1.6) */
 .forecast-placeholder {
   background: var(--c-surface);
@@ -572,6 +638,9 @@ a:hover { text-decoration: underline; }
 }
 .forecast-placeholder strong { color: var(--c-brand-deep); }
 .forecast-placeholder p { margin: 6px 0 0; }
+
+/* Subtiele achtergrond voor uitleg-secties (#62) */
+.explain-section { background: var(--c-surface); }
 
 /* Forecast explainer (live sinds v1.6 — uitleg onder de grafiek) */
 .forecast-explainer {
@@ -747,11 +816,11 @@ a:hover { text-decoration: underline; }
   .chart-wrapper { height: 300px; }
   .now-card { padding: 22px 20px 18px; }
 
-  /* #45 section-padding reduceren: 40vh (338px op iPhone 14) → 80px */
+  /* #45 section-padding reduceren op mobiel */
   .forecast-section,
   .suppliers-section,
   .moments-section,
-  .explain-section { padding-bottom: 80px; }
+  .explain-section { padding-top: 28px; padding-bottom: 64px; }
 
   /* #46 primaire nav: horizontaal scrollbaar op smal scherm */
   .primary-nav {
@@ -945,7 +1014,7 @@ body.has-neg-alert .site-header { top: 56px; }
 }
 
 /* ----- Aanbieders-prijsvergelijking (sectie #aanbieders) ----- */
-.suppliers-section { padding: 24px 0; }
+/* .suppliers-section padding wordt afgehandeld door het gezamenlijke sectie-blok hierboven (#62) */
 .suppliers-table-wrap {
   overflow-x: auto;
   background: var(--c-surface);
