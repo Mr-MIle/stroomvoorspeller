@@ -44,6 +44,8 @@
       no_data: 'Geen data beschikbaar',
       loading: 'Laden…',
       per_kwh: '/kWh',
+      toggle_incl: 'Incl. belasting',
+      toggle_excl: 'Excl. belasting',
       tomorrow_available: 'Morgen ook beschikbaar',
     },
     en: {
@@ -61,6 +63,8 @@
       no_data: 'No data available',
       loading: 'Loading…',
       per_kwh: '/kWh',
+      toggle_incl: 'Incl. tax',
+      toggle_excl: 'Excl. tax',
       tomorrow_available: 'Tomorrow also available',
     }
   };
@@ -148,11 +152,17 @@
       '.sv-source{font-size:10px;opacity:.5;}',
       '.sv-source a{opacity:1;}',
       '.sv-loading{padding:16px 12px;text-align:center;font-size:12px;opacity:.5;}',
+      /* toggle */
+      '.sv-toggle{display:flex;gap:0;border-radius:6px;overflow:hidden;border:1px solid rgba(0,0,0,.12);}',
+      '.sv-toggle-btn{flex:1;padding:3px 7px;font-size:10px;font-weight:600;cursor:pointer;background:transparent;border:none;color:inherit;opacity:.5;transition:background .15s,opacity .15s;white-space:nowrap;}',
+      '.sv-toggle-btn.sv-active{background:rgba(0,0,0,.08);opacity:1;}',
       /* dark */
       '.sv-widget.sv-dark{border-color:#374151;}',
       '.sv-widget.sv-dark .sv-header{border-bottom-color:rgba(255,255,255,.06);}',
       '.sv-widget.sv-dark .sv-divider{background:rgba(255,255,255,.06);}',
       '.sv-widget.sv-dark .sv-footer{border-top-color:rgba(255,255,255,.06);}',
+      '.sv-widget.sv-dark .sv-toggle{border-color:rgba(255,255,255,.15);}',
+      '.sv-widget.sv-dark .sv-toggle-btn.sv-active{background:rgba(255,255,255,.1);}',
     ].join('');
     var style = document.createElement('style');
     style.id = 'sv-widget-styles';
@@ -160,18 +170,27 @@
     document.head.appendChild(style);
   }
 
+  // ── Prijs berekenen ───────────────────────────────────────────────────────
+
+  function toExclCt(epexEurMwh, markup) {
+    // Excl. belasting: alleen EPEX + opslag, geen EB, geen btw
+    return (epexEurMwh / 1000 + markup) * 100;
+  }
+
   // ── Render ────────────────────────────────────────────────────────────────
 
-  function render(container, prices, config, opts) {
-    var lang   = opts.lang || 'nl';
-    var theme  = opts.theme || 'light';
-    var compact = opts.compact === 'true' || opts.compact === true;
+  function render(container, prices, config, opts, mode) {
+    var lang      = opts.lang || 'nl';
+    var theme     = opts.theme || 'light';
+    var compact   = opts.compact === 'true' || opts.compact === true;
     var supplierId = opts.supplier || 'average';
     var t = i18n[lang] || i18n.nl;
 
-    // Lookup supplier markup
-    // config.suppliers is een array van objecten met een 'id'-veld
-    var markup = 0.0175; // fallback: gemiddelde opslag
+    // mode: 'incl' (default) of 'excl'
+    mode = mode || 'incl';
+
+    // Lookup supplier markup (config.suppliers is een array)
+    var markup = 0.0175;
     var suppliersArr = Array.isArray(config.suppliers) ? config.suppliers : [];
     for (var si = 0; si < suppliersArr.length; si++) {
       if (suppliersArr[si].id === supplierId) {
@@ -185,7 +204,7 @@
       btw_factor: 1.21
     };
 
-    // Verwerk uurdata
+    // Verwerk uurdata — bereken beide varianten per uur
     var now = nowUtcHour();
     var today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
@@ -198,8 +217,12 @@
       var entry = allPrices[i];
       var dt = parseHour(entry.hour || entry.time || entry.timestamp || '');
       if (!dt || isNaN(dt.getTime())) continue;
-      var inclCt = toInclCt(entry.epex || entry.epex_eur_mwh || 0, markup, taxes);
-      entry._ct = inclCt;
+      var epexVal = (entry.price !== undefined) ? entry.price
+                  : (entry.epex  !== undefined) ? entry.epex
+                  : (entry.epex_eur_mwh || 0);
+      entry._epex = epexVal;
+      entry._inclCt = toInclCt(epexVal, markup, taxes);
+      entry._exclCt = toExclCt(epexVal, markup);
       entry._dt = dt;
 
       if (dt.getTime() === now.getTime()) currentEntry = entry;
@@ -207,30 +230,40 @@
       if (dt >= now) upcomingEntries.push(entry);
     }
 
-    // Goedkoopste uur vandaag
-    var cheapestToday = todayEntries.slice().sort(function (a, b) { return a._ct - b._ct; })[0];
-    // Goedkoopste komende 6 uur (exclusief het huidige uur)
-    var next6 = upcomingEntries.slice(1, 7).sort(function (a, b) { return a._ct - b._ct; })[0];
+    // Welke ct-waarde tonen we?
+    function ctFor(e) { return mode === 'excl' ? e._exclCt : e._inclCt; }
 
-    var currentCt = currentEntry ? currentEntry._ct : null;
-    var bucket = currentCt !== null ? classify(currentCt) : 'normal';
+    var cheapestToday = todayEntries.slice().sort(function (a, b) { return ctFor(a) - ctFor(b); })[0];
+    var next6 = upcomingEntries.slice(1, 7).sort(function (a, b) { return ctFor(a) - ctFor(b); })[0];
+
+    // Classificatie altijd op all-in consumentenprijs (incl.), ook als excl. getoond wordt
+    var currentInclCt = currentEntry ? currentEntry._inclCt : null;
+    var currentCt     = currentEntry ? ctFor(currentEntry)  : null;
+    var bucket  = currentInclCt !== null ? classify(currentInclCt) : 'normal';
     var palette = (theme === 'dark' ? COLORS_DARK : COLORS)[bucket];
     var statusLabel = t[bucket] || t.normal;
 
-    // Bouw HTML
+    // ── Bouw HTML ─────────────────────────────────────────────────────────
+
     var html = '';
 
     if (currentCt === null) {
       html = '<div class="sv-loading">' + t.no_data + '</div>';
     } else {
+      // Header: "NU" label + toggle rechts
       html += '<div class="sv-header" style="background:' + palette.bg + ';color:' + palette.text + '">';
       html +=   '<div class="sv-header-left">';
       html +=     '<span class="sv-dot" style="background:' + palette.dot + '"></span>';
-      html +=     '<span class="sv-label">' + t.now + '</span>';
+      html +=     '<span class="sv-label">' + t.now + ' · ' + formatHour(now) + 'u</span>';
       html +=   '</div>';
-      html +=   '<span class="sv-label" style="font-size:10px;opacity:.55">' + formatHour(now) + 'u</span>';
+      // Incl/excl toggle
+      html +=   '<div class="sv-toggle">';
+      html +=     '<button class="sv-toggle-btn' + (mode === 'incl' ? ' sv-active' : '') + '" data-sv-mode="incl">' + t.toggle_incl + '</button>';
+      html +=     '<button class="sv-toggle-btn' + (mode === 'excl' ? ' sv-active' : '') + '" data-sv-mode="excl">' + t.toggle_excl + '</button>';
+      html +=   '</div>';
       html += '</div>';
 
+      // Body: prijs + status + details
       html += '<div class="sv-body" style="background:' + palette.bg + ';color:' + palette.text + '">';
       html +=   '<div class="sv-price-row">';
       html +=     '<span class="sv-price">' + fmt(currentCt) + '</span>';
@@ -244,14 +277,14 @@
         if (cheapestToday) {
           html += '<div class="sv-row">';
           html +=   '<span class="sv-row-label">' + t.cheapest + '</span>';
-          html +=   '<span class="sv-row-value">' + fmt(cheapestToday._ct) + ' ' + t.at + ' ' + formatHour(cheapestToday._dt) + 'u</span>';
+          html +=   '<span class="sv-row-value">' + fmt(ctFor(cheapestToday)) + ' ' + t.at + ' ' + formatHour(cheapestToday._dt) + 'u</span>';
           html += '</div>';
         }
 
         if (next6 && next6._dt.getTime() !== now.getTime()) {
           html += '<div class="sv-row">';
           html +=   '<span class="sv-row-label">' + t.cheapest_upcoming + '</span>';
-          html +=   '<span class="sv-row-value">' + fmt(next6._ct) + ' ' + t.at + ' ' + formatHour(next6._dt) + 'u</span>';
+          html +=   '<span class="sv-row-value">' + fmt(ctFor(next6)) + ' ' + t.at + ' ' + formatHour(next6._dt) + 'u</span>';
           html += '</div>';
         }
       }
@@ -259,6 +292,7 @@
       html += '</div>';
     }
 
+    // Footer
     html += '<div class="sv-footer">';
     html +=   '<span class="sv-source">' + t.source + ': <a href="' + SITE_URL + '?utm_source=widget&utm_medium=embed&utm_campaign=sv-widget" target="_blank" rel="noopener">stroomvoorspeller.nl</a></span>';
     html +=   '<span class="sv-source">v' + VERSION + '</span>';
@@ -267,6 +301,13 @@
     container.innerHTML = html;
     container.className = 'sv-widget' + (theme === 'dark' ? ' sv-dark' : '');
     container.style.borderColor = palette.border;
+
+    // Toggle-knoppen: re-render met andere mode
+    container.querySelectorAll('[data-sv-mode]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        render(container, prices, config, opts, btn.getAttribute('data-sv-mode'));
+      });
+    });
   }
 
   // ── Initialiseer ──────────────────────────────────────────────────────────
