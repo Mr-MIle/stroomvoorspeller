@@ -543,21 +543,30 @@
       var container = document.getElementById(containerId);
       if (!container) return;
 
-      // Verwijder vorige widget-script als dat er al is
+      // Leeg de ANDERE container eerst zodat er nooit twee #sv-widget
+      // tegelijk in de DOM staan — anders pakt getElementById de verkeerde.
+      var allContainerIds = ['preview-container', 'preview-container-dark'];
+      allContainerIds.forEach(function(id) {
+        if (id !== containerId) {
+          document.getElementById(id).innerHTML = '';
+        }
+      });
+
+      // Verwijder vorige widget-script
       var oldScript = document.getElementById('sv-preview-script');
       if (oldScript) oldScript.remove();
 
-      // Reset sv-widget div
+      // Zet sv-widget div in de juiste container
       container.innerHTML = '<div id="sv-widget" style="max-width:320px;"></div>';
       var widgetDiv = container.querySelector('#sv-widget');
       widgetDiv.setAttribute('data-supplier', supplier);
       widgetDiv.setAttribute('data-theme', theme);
       widgetDiv.setAttribute('data-compact', compact ? 'true' : 'false');
 
-      // Laad widget.js opnieuw
+      // Laad widget.js opnieuw (cache bust)
       var script = document.createElement('script');
       script.id = 'sv-preview-script';
-      script.src = '/widget.js?t=' + Date.now(); // cache bust
+      script.src = '/widget.js?t=' + Date.now();
       document.body.appendChild(script);
     }
 

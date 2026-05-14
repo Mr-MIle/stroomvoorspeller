@@ -170,10 +170,14 @@
     var t = i18n[lang] || i18n.nl;
 
     // Lookup supplier markup
-    var markup = 0.021; // fallback: gemiddelde
-    var suppliers = config.suppliers || {};
-    if (suppliers[supplierId] && suppliers[supplierId].markup_per_kwh !== undefined) {
-      markup = suppliers[supplierId].markup_per_kwh;
+    // config.suppliers is een array van objecten met een 'id'-veld
+    var markup = 0.0175; // fallback: gemiddelde opslag
+    var suppliersArr = Array.isArray(config.suppliers) ? config.suppliers : [];
+    for (var si = 0; si < suppliersArr.length; si++) {
+      if (suppliersArr[si].id === supplierId) {
+        markup = suppliersArr[si].markup_per_kwh;
+        break;
+      }
     }
 
     var taxes = config.taxes || {
