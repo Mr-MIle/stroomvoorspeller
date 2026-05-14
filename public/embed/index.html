@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Stroomprijs widget embedden op jouw website — Stroomvoorspeller.nl</title>
+  <meta name="description" content="Zet de actuele stroomprijs op jouw website met één script-tag. Gratis, geen API-key, automatisch bijgewerkt. Ideaal voor energiebloggers en EV-communities." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/embed" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Stroomprijs widget embedden — Stroomvoorspeller.nl" />
+  <meta property="og:description" content="Zet de actuele stroomprijs op jouw website met één script-tag. Gratis, geen API-key, automatisch bijgewerkt." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/embed" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Stroomprijs widget embedden — Stroomvoorspeller.nl" />
+  <meta name="twitter:description" content="Gratis stroomprijs widget voor jouw website. Één script-tag, automatisch bijgewerkt." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+          { "@type": "ListItem", "position": 2, "name": "Widget embedden", "item": "https://stroomvoorspeller.nl/embed" }
+        ]
+      },
+      {
+        "@type": "TechArticle",
+        "headline": "Stroomprijs widget embedden op jouw website",
+        "description": "Documentatie voor de gratis embed widget van stroomvoorspeller.nl: één script-tag, automatisch bijgewerkt, geen API-key.",
+        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
+        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "datePublished": "2026-05-14",
+        "inLanguage": "nl-NL",
+        "image": "https://stroomvoorspeller.nl/og-image.png",
+        "mainEntityOfPage": "https://stroomvoorspeller.nl/embed",
+        "proficiencyLevel": "Beginner"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is de widget gratis?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Ja, volledig gratis. Geen registratie, geen API-key, geen limieten." }
+          },
+          {
+            "@type": "Question",
+            "name": "Hoe vaak wordt de widget bijgewerkt?",
+            "acceptedAnswer": { "@type": "Answer", "text": "De widget toont altijd de meest recente ENTSO-E day-ahead prijs. De data wordt elke 3 uur vernieuwd." }
+          },
+          {
+            "@type": "Question",
+            "name": "Werkt de widget op alle websites?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Ja, de widget werkt op elke HTML-website, WordPress, Wix of vergelijkbaar systeem. Plak gewoon de script-tag in je paginabron." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <style>
+    /* ── Embed-pagina stijlen ── */
+
+    .embed-hero {
+      background: var(--surface-2, #f4f8ff);
+      border-bottom: 1px solid var(--border, #dde4ee);
+      padding: 2rem 0 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .embed-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 700px) {
+      .embed-layout { grid-template-columns: 1fr; }
+      .embed-preview-col { order: -1; }
+    }
+
+    /* Code-blokken */
+    .code-block {
+      position: relative;
+      background: #1e1e2e;
+      color: #cdd6f4;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      margin: 0.8rem 0 1.5rem;
+    }
+
+    .code-block .kw  { color: #89b4fa; }
+    .code-block .str { color: #a6e3a1; }
+    .code-block .cm  { color: #6c7086; font-style: italic; }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      background: rgba(255,255,255,.1);
+      color: #cdd6f4;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 5px;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,.2); }
+    .copy-btn.copied { color: #a6e3a1; }
+
+    /* Optie-sectie */
+    .options-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin: 0.5rem 0 1.5rem;
+    }
+    .options-table th {
+      text-align: left;
+      padding: 0.5rem 0.7rem;
+      background: var(--surface-2, #f4f8ff);
+      border-bottom: 2px solid var(--border, #dde4ee);
+      font-weight: 600;
+    }
+    .options-table td {
+      padding: 0.5rem 0.7rem;
+      border-bottom: 1px solid var(--border, #dde4ee);
+      vertical-align: top;
+    }
+    .options-table code {
+      background: var(--surface-2, #f4f8ff);
+      padding: 0.1em 0.4em;
+      border-radius: 3px;
+      font-size: 0.8rem;
+    }
+
+    /* Preview live widget */
+    .preview-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--text-muted, #888);
+      margin-bottom: 0.5rem;
+    }
+
+    .preview-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Variant-tabs */
+    .variant-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .variant-tab {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid var(--border, #dde4ee);
+      background: var(--surface, #fff);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .variant-tab:hover, .variant-tab.active {
+      background: var(--accent, #0f6cbd);
+      color: #fff;
+      border-color: var(--accent, #0f6cbd);
+    }
+
+    /* Voordelen-grid */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0 2rem;
+    }
+    .benefit-card {
+      padding: 1rem;
+      background: var(--surface-2, #f4f8ff);
+      border-radius: 8px;
+      border: 1px solid var(--border, #dde4ee);
+    }
+    .benefit-card .icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+    .benefit-card strong { display: block; margin-bottom: 0.2rem; font-size: 0.9rem; }
+    .benefit-card span { font-size: 0.8rem; color: var(--text-muted, #666); }
+
+    /* Doelgroep-chips */
+    .audience-chips {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0.5rem 0 1.5rem;
+    }
+    .audience-chip {
+      padding: 0.3rem 0.8rem;
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: #0369a1;
+    }
+
+    /* Sectie-styling */
+    .embed-section {
+      margin-bottom: 2.5rem;
+    }
+    .embed-section h2 {
+      font-size: 1.15rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border, #dde4ee);
+      margin-bottom: 0.8rem;
+    }
+
+    /* Inline preview in code */
+    #preview-container {
+      min-height: 140px;
+    }
+
+    #preview-container-dark {
+      background: #111827;
+      border-radius: 10px;
+      padding: 12px;
+      min-height: 140px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/#prijzen">Prijzen</a>
+        <a href="/#voorspelling">Voorspelling</a>
+        <a href="/#tips">Tips</a>
+        <a href="/#uitleg">Uitleg</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank/">Kennisbank</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="embed-hero">
+    <div class="container">
+      <p class="legal-breadcrumb"><a href="/">← homepage</a></p>
+      <h1>Stroomprijs widget embedden</h1>
+      <p style="max-width:52ch;color:var(--text-muted,#555);margin:0.5rem 0 0.8rem;">
+        Zet de actuele Nederlandse stroomprijs op jouw website — met één script-tag.
+        Gratis, geen registratie, automatisch bijgewerkt.
+      </p>
+      <div class="audience-chips">
+        <span class="audience-chip">⚡ Energiebloggers</span>
+        <span class="audience-chip">🚗 EV-communities</span>
+        <span class="audience-chip">☀️ Zonnepanelen-sites</span>
+        <span class="audience-chip">🏠 Smart home forums</span>
+        <span class="audience-chip">📝 WordPress-blogs</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="container" style="max-width:900px;">
+
+    <div class="embed-layout">
+
+      <!-- ── Linkerkolom: uitleg & code ── -->
+      <div>
+
+        <section class="embed-section">
+          <h2>Voordelen</h2>
+          <div class="benefits-grid">
+            <div class="benefit-card">
+              <div class="icon">⚡</div>
+              <strong>Altijd actueel</strong>
+              <span>Elke 3 uur bijgewerkt met officiële ENTSO-E day-ahead prijzen.</span>
+            </div>
+            <div class="benefit-card">
+              <div class="icon">🔧</div>
+              <strong>Één regel code</strong>
+              <span>Geen API-key, geen account, geen backend nodig.</span>
+            </div>
+            <div class="benefit-card">
+              <div class="icon">🎨</div>
+              <strong>Aanpasbaar</strong>
+              <span>Licht of donker thema, jouw aanbieder, compact of uitgebreid.</span>
+            </div>
+            <div class="benefit-card">
+              <div class="icon">📱</div>
+              <strong>Responsive</strong>
+              <span>Past automatisch in elke kolombreedte.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Stap 1: basiscode ── -->
+        <section class="embed-section">
+          <h2>Stap 1 — Plak deze code in je pagina</h2>
+          <p style="font-size:0.88rem;color:var(--text-muted,#555);margin-bottom:0.3rem;">
+            Zet de <code style="background:var(--surface-2,#f4f8ff);padding:.1em .4em;border-radius:3px">&lt;div&gt;</code> op de plek waar je de widget wilt.
+            Het <code style="background:var(--surface-2,#f4f8ff);padding:.1em .4em;border-radius:3px">&lt;script&gt;</code>-tag mag onderaan je pagina staan.
+          </p>
+          <div class="code-block" id="code-basic">
+            <button class="copy-btn" onclick="copyCode('code-basic', this)">Kopieer</button>
+<span class="cm">&lt;!-- Stroomprijs widget --&gt;</span>
+<span class="kw">&lt;div</span> <span class="str">id</span>=<span class="str">"sv-widget"</span><span class="kw">&gt;&lt;/div&gt;</span>
+<span class="kw">&lt;script</span> <span class="str">src</span>=<span class="str">"https://stroomvoorspeller.nl/widget.js"</span><span class="kw">&gt;&lt;/script&gt;</span></div>
+
+          <p style="font-size:0.82rem;color:var(--text-muted,#666);">
+            Dat is alles. De widget laadt automatisch en toont de prijs voor het huidige uur.
+          </p>
+        </section>
+
+        <!-- ── Stap 2: aanpassingen ── -->
+        <section class="embed-section">
+          <h2>Stap 2 — Aanpassen (optioneel)</h2>
+          <p style="font-size:0.88rem;color:var(--text-muted,#555);margin-bottom:0.8rem;">
+            Voeg <code style="background:var(--surface-2,#f4f8ff);padding:.1em .4em;border-radius:3px">data-</code>-attributen toe aan de div voor extra opties:
+          </p>
+
+          <table class="options-table">
+            <thead>
+              <tr>
+                <th>Attribuut</th>
+                <th>Waarden</th>
+                <th>Omschrijving</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>data-supplier</code></td>
+                <td><code>average</code> (standaard)<br><code>tibber</code> · <code>frank</code><br><code>energyzero</code> · <code>anwb</code><br><code>vandebron</code> · <code>zonneplan</code><br><code>easy</code></td>
+                <td>Welke aanbieder-opslag meegerekend wordt. Bepaalt de prijs die je bezoekers te zien krijgen.</td>
+              </tr>
+              <tr>
+                <td><code>data-theme</code></td>
+                <td><code>light</code> (standaard)<br><code>dark</code></td>
+                <td>Licht of donker kleurthema. Kies <code>dark</code> als je widget op een donkere achtergrond staat.</td>
+              </tr>
+              <tr>
+                <td><code>data-lang</code></td>
+                <td><code>nl</code> (standaard)<br><code>en</code></td>
+                <td>Taal van de widget: Nederlands of Engels.</td>
+              </tr>
+              <tr>
+                <td><code>data-compact</code></td>
+                <td><code>false</code> (standaard)<br><code>true</code></td>
+                <td>Compact-modus: toont alleen de huidige prijs en status, zonder goedkoopste-uur-rij.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p style="font-size:0.85rem;color:var(--text-muted,#555);margin-bottom:0.4rem;"><strong>Voorbeeld met aanpassingen:</strong></p>
+          <div class="code-block" id="code-advanced">
+            <button class="copy-btn" onclick="copyCode('code-advanced', this)">Kopieer</button>
+<span class="cm">&lt;!-- Tibber-prijs, donker thema, compact --&gt;</span>
+<span class="kw">&lt;div</span>
+  <span class="str">id</span>=<span class="str">"sv-widget"</span>
+  <span class="str">data-supplier</span>=<span class="str">"tibber"</span>
+  <span class="str">data-theme</span>=<span class="str">"dark"</span>
+  <span class="str">data-compact</span>=<span class="str">"true"</span>
+<span class="kw">&gt;&lt;/div&gt;</span>
+<span class="kw">&lt;script</span> <span class="str">src</span>=<span class="str">"https://stroomvoorspeller.nl/widget.js"</span><span class="kw">&gt;&lt;/script&gt;</span></div>
+        </section>
+
+        <!-- ── WordPress ── -->
+        <section class="embed-section">
+          <h2>WordPress</h2>
+          <p style="font-size:0.88rem;color:var(--text-muted,#555);margin-bottom:0.5rem;">
+            Gebruik het blok <strong>Aangepaste HTML</strong> (in de blok-editor: <em>+ → Aangepaste HTML</em>)
+            en plak de twee regels daarin. De widget verschijnt direct op je pagina.
+          </p>
+          <p style="font-size:0.82rem;color:var(--text-muted,#666);">
+            Let op: sommige WordPress-themes filteren <code>&lt;script&gt;</code>-tags in de editor.
+            Gebruik in dat geval de <strong>Code-editor</strong>-weergave of voeg de script-tag toe via
+            <em>Uiterlijk → Theme-editor → footer.php</em>.
+          </p>
+        </section>
+
+        <!-- ── FAQ ── -->
+        <section class="embed-section">
+          <h2>Veelgestelde vragen</h2>
+
+          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+            <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Is de widget gratis?</summary>
+            <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
+              Ja, volledig gratis. Geen registratie, geen API-key, geen limieten. Wij vragen alleen dat je de "Bron: stroomvoorspeller.nl"-link zichtbaar laat staan.
+            </p>
+          </details>
+
+          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+            <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Hoe vaak wordt de prijs bijgewerkt?</summary>
+            <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
+              De data wordt elke 3 uur vernieuwd door onze server. De widget zelf haalt altijd de meest recente versie op bij het laden van je pagina.
+            </p>
+          </details>
+
+          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+            <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Welke prijs toont de widget?</summary>
+            <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
+              De officiële ENTSO-E day-ahead prijs voor het huidige uur, inclusief energiebelasting en btw.
+              Met <code>data-supplier</code> kun je de opslag van een specifieke aanbieder meenemen.
+            </p>
+          </details>
+
+          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+            <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Werkt de widget op mijn site?</summary>
+            <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
+              De widget werkt op elke website die reguliere HTML ondersteunt: WordPress, Wix, Squarespace, statische sites, custom HTML. De enige vereiste is dat je browser JavaScript ingeschakeld heeft.
+            </p>
+          </details>
+
+          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+            <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Kan ik de widget aanpassen aan mijn huisstijl?</summary>
+            <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
+              De widget heeft zijn eigen scoped CSS zodat hij niet botst met je site-stijlen. Geavanceerde aanpassingen (eigen kleuren, lettertype) zijn mogelijk door de widget in een container met eigen CSS te zetten. Neem contact op via <a href="mailto:contactstroomvoorspeller@gmail.com">contactstroomvoorspeller@gmail.com</a> voor maatwerk.
+            </p>
+          </details>
+
+          <details style="margin-bottom:0;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+            <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Zijn er privacybezwaren?</summary>
+            <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
+              De widget doet twee GET-requests naar stroomvoorspeller.nl (voor prijsdata en instellingen). Er worden geen cookies geplaatst en geen persoonlijke gegevens verstuurd. Je hoeft de widget niet te melden in je cookieverklaring.
+            </p>
+          </details>
+        </section>
+
+        <!-- ── Backlink verzoek ── -->
+        <section class="embed-section" style="background:var(--surface-2,#f4f8ff);border:1px solid var(--border,#dde4ee);border-radius:10px;padding:1.2rem 1.4rem;">
+          <h2 style="border:none;padding:0;margin-bottom:0.5rem;">Vermeld ons ook even?</h2>
+          <p style="font-size:0.88rem;color:var(--text-muted,#555);margin:0;">
+            Wij zijn een onafhankelijk hobby-project zonder budget voor advertenties.
+            Een vermelding of backlink helpt ons enorm om meer huishoudens met een dynamisch contract te bereiken.
+            Zoiets als: <em>"Stroomprijzen via <a href="https://stroomvoorspeller.nl">stroomvoorspeller.nl</a>"</em> is al geweldig.
+          </p>
+        </section>
+
+      </div>
+
+      <!-- ── Rechterkolom: live preview ── -->
+      <div class="embed-preview-col" style="position:sticky;top:80px;">
+        <p class="preview-label">Live preview</p>
+
+        <div class="variant-tabs" id="variant-tabs">
+          <button class="variant-tab active" onclick="switchVariant('light', this)">☀️ Licht</button>
+          <button class="variant-tab" onclick="switchVariant('dark', this)">🌙 Donker</button>
+          <button class="variant-tab" onclick="switchVariant('compact', this)">⚡ Compact</button>
+        </div>
+
+        <div id="preview-container">
+          <!-- widget wordt hier ingeladen door JS -->
+        </div>
+        <div id="preview-container-dark" style="display:none">
+          <!-- donkere versie -->
+        </div>
+
+        <p style="font-size:0.75rem;color:var(--text-muted,#888);margin-top:0.6rem;">
+          ↑ Dit is de echte widget met live data.
+        </p>
+
+        <div style="margin-top:1.5rem;padding:1rem;background:var(--surface-2,#f4f8ff);border-radius:8px;border:1px solid var(--border,#dde4ee);">
+          <p style="font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;">Probeer zelf:</p>
+          <select id="demo-supplier" style="width:100%;padding:0.4rem;border:1px solid var(--border,#dde4ee);border-radius:5px;font-size:0.82rem;margin-bottom:0.4rem;">
+            <option value="average">Gemiddelde (standaard)</option>
+            <option value="tibber">Tibber</option>
+            <option value="frank">Frank Energie</option>
+            <option value="energyzero">EnergyZero</option>
+            <option value="anwb">ANWB Energie</option>
+            <option value="vandebron">Vandebron</option>
+            <option value="zonneplan">Zonneplan</option>
+            <option value="easy">Easy Energy</option>
+          </select>
+          <button onclick="reloadPreview()" style="width:100%;padding:0.4rem;background:var(--accent,#0f6cbd);color:#fff;border:none;border-radius:5px;font-size:0.82rem;cursor:pointer;">Ververs preview</button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+        <p class="footer-meta">Dagelijkse updates: <a href="https://x.com/stroomtarief" rel="noopener noreferrer">@stroomtarief op X ↗</a></p>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a> ·
+          <a href="/over/voorspelling">Over de voorspelling</a> ·
+          <a href="/over/performance">Nauwkeurigheid</a> ·
+          <a href="/embed">Widget embedden</a>
+        </p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          Bron: <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E Transparency</a>
+        </p>
+        <p class="footer-meta-small">Hobby-project van één persoon.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Preview JS -->
+  <script>
+  (function () {
+    var currentTheme = 'light';
+    var currentSupplier = 'average';
+    var currentCompact = false;
+
+    function loadWidget(containerId, theme, supplier, compact) {
+      var container = document.getElementById(containerId);
+      if (!container) return;
+
+      // Verwijder vorige widget-script als dat er al is
+      var oldScript = document.getElementById('sv-preview-script');
+      if (oldScript) oldScript.remove();
+
+      // Reset sv-widget div
+      container.innerHTML = '<div id="sv-widget" style="max-width:320px;"></div>';
+      var widgetDiv = container.querySelector('#sv-widget');
+      widgetDiv.setAttribute('data-supplier', supplier);
+      widgetDiv.setAttribute('data-theme', theme);
+      widgetDiv.setAttribute('data-compact', compact ? 'true' : 'false');
+
+      // Laad widget.js opnieuw
+      var script = document.createElement('script');
+      script.id = 'sv-preview-script';
+      script.src = '/widget.js?t=' + Date.now(); // cache bust
+      document.body.appendChild(script);
+    }
+
+    window.switchVariant = function (variant, btn) {
+      // Update tabs
+      document.querySelectorAll('.variant-tab').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+
+      var lightContainer = document.getElementById('preview-container');
+      var darkContainer = document.getElementById('preview-container-dark');
+
+      if (variant === 'dark') {
+        lightContainer.style.display = 'none';
+        darkContainer.style.display = 'block';
+        currentTheme = 'dark';
+        currentCompact = false;
+        loadWidget('preview-container-dark', 'dark', currentSupplier, false);
+      } else if (variant === 'compact') {
+        lightContainer.style.display = 'block';
+        darkContainer.style.display = 'none';
+        currentTheme = 'light';
+        currentCompact = true;
+        loadWidget('preview-container', 'light', currentSupplier, true);
+      } else {
+        lightContainer.style.display = 'block';
+        darkContainer.style.display = 'none';
+        currentTheme = 'light';
+        currentCompact = false;
+        loadWidget('preview-container', 'light', currentSupplier, false);
+      }
+    };
+
+    window.reloadPreview = function () {
+      currentSupplier = document.getElementById('demo-supplier').value;
+      var darkVisible = document.getElementById('preview-container-dark').style.display !== 'none';
+      if (darkVisible) {
+        loadWidget('preview-container-dark', 'dark', currentSupplier, currentCompact);
+      } else {
+        loadWidget('preview-container', currentTheme, currentSupplier, currentCompact);
+      }
+    };
+
+    window.copyCode = function (blockId, btn) {
+      var block = document.getElementById(blockId);
+      var text = block.innerText.replace(/^Kopieer\n/, '').trim();
+      navigator.clipboard.writeText(text).then(function () {
+        btn.textContent = 'Gekopieerd!';
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.textContent = 'Kopieer';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    };
+
+    // Eerste load
+    loadWidget('preview-container', 'light', 'average', false);
+  })();
+  </script>
+
+</body>
+</html>
