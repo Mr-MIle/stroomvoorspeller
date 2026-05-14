@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Hoe nauwkeurig is de voorspelling? — Stroomvoorspeller.nl</title>
+  <meta name="description" content="Bekijk live hoe goed het voorspellingsmodel van stroomvoorspeller.nl presteert: gemiddelde foutmarge, nauwkeurigheid per dag en modelversies." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/over/performance" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Hoe nauwkeurig is de voorspelling? — Stroomvoorspeller.nl" />
+  <meta property="og:description" content="Live performance-dashboard van het voorspellingsmodel: foutmarge per dag, nauwkeurigheid per horizon en modelversies." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/over/performance" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Stroomvoorspeller.nl — nauwkeurigheid voorspellingsmodel" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Hoe nauwkeurig is de voorspelling? — Stroomvoorspeller.nl" />
+  <meta name="twitter:description" content="Live performance-dashboard van het voorspellingsmodel: foutmarge, richting-hit en modelversies." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+          { "@type": "ListItem", "position": 2, "name": "Hoe nauwkeurig is de voorspelling?", "item": "https://stroomvoorspeller.nl/over/performance" }
+        ]
+      },
+      {
+        "@type": "TechArticle",
+        "headline": "Hoe nauwkeurig is de stroomprijs-voorspelling van stroomvoorspeller.nl?",
+        "description": "Live performance-dashboard van het voorspellingsmodel: foutmarge per dag, nauwkeurigheid per horizon en modelversies.",
+        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
+        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "datePublished": "2026-05-14",
+        "inLanguage": "nl-NL",
+        "image": "https://stroomvoorspeller.nl/og-image.png",
+        "mainEntityOfPage": "https://stroomvoorspeller.nl/over/performance",
+        "proficiencyLevel": "Beginner"
+      }
+    ]
+  }
+  </script>
+
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <style>
+    /* ── Performance-pagina specifieke stijlen ── */
+
+    .perf-hero {
+      background: var(--surface-2, #f4f8ff);
+      border-bottom: 1px solid var(--border, #dde4ee);
+      padding: 2rem 0 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .score-card {
+      background: var(--surface, #fff);
+      border: 1px solid var(--border, #dde4ee);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      text-align: center;
+    }
+
+    .score-card .score-value {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--accent, #0f6cbd);
+    }
+
+    .score-card .score-label {
+      font-size: 0.78rem;
+      color: var(--text-muted, #666);
+      margin-top: 0.3rem;
+    }
+
+    .score-card.score-good  .score-value { color: #1a7f37; }
+    .score-card.score-mid   .score-value { color: #b45309; }
+    .score-card.score-note  .score-value { color: var(--accent, #0f6cbd); }
+
+    /* Grafiek-containers */
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      margin: 1.2rem 0 2rem;
+    }
+
+    .chart-wrap canvas {
+      max-width: 100%;
+    }
+
+    /* Horizon-tabel */
+    .horizon-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 1rem 0 2rem;
+    }
+
+    .horizon-table th {
+      text-align: left;
+      padding: 0.5rem 0.8rem;
+      background: var(--surface-2, #f4f8ff);
+      border-bottom: 2px solid var(--border, #dde4ee);
+      font-weight: 600;
+    }
+
+    .horizon-table td {
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid var(--border, #dde4ee);
+    }
+
+    .horizon-table tr:last-child td { border-bottom: none; }
+
+    .badge-better { color: #1a7f37; font-weight: 600; }
+    .badge-worse  { color: #b91c1c; font-weight: 600; }
+
+    /* Bucket-grid */
+    .bucket-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.8rem;
+      margin: 1rem 0 2rem;
+    }
+
+    .bucket-card {
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      font-size: 0.82rem;
+    }
+
+    .bucket-card strong { display: block; font-size: 1.3rem; margin-bottom: 0.2rem; }
+
+    .bucket-neg     { background: #f0ebff; border: 1px solid #c4b5fd; }
+    .bucket-vcheap  { background: #eff9f0; border: 1px solid #86efac; }
+    .bucket-cheap   { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .bucket-normal  { background: #f8f9fa; border: 1px solid #dee2e6; }
+    .bucket-pricey  { background: #fff8ed; border: 1px solid #fed7aa; }
+    .bucket-vpricey { background: #fff0f0; border: 1px solid #fca5a5; }
+
+    /* Modelversie-tijdlijn */
+    .version-timeline {
+      border-left: 3px solid var(--accent, #0f6cbd);
+      padding-left: 1.2rem;
+      margin: 1rem 0 2rem;
+    }
+
+    .version-item {
+      margin-bottom: 1.2rem;
+      position: relative;
+    }
+
+    .version-item::before {
+      content: "";
+      position: absolute;
+      left: -1.55rem;
+      top: 0.35rem;
+      width: 0.7rem;
+      height: 0.7rem;
+      border-radius: 50%;
+      background: var(--accent, #0f6cbd);
+    }
+
+    .version-tag {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--accent, #0f6cbd);
+    }
+
+    .version-date {
+      font-size: 0.78rem;
+      color: var(--text-muted, #666);
+      margin-left: 0.5rem;
+    }
+
+    .version-mae {
+      font-size: 0.82rem;
+      color: var(--text-muted, #555);
+    }
+
+    /* Uitleg-blokken */
+    .info-box {
+      background: var(--surface-2, #f4f8ff);
+      border-left: 4px solid var(--accent, #0f6cbd);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+
+    .loading-state {
+      color: var(--text-muted, #888);
+      font-style: italic;
+      padding: 1rem 0;
+    }
+
+    /* Sectie-divider */
+    .perf-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .perf-section h2 {
+      font-size: 1.15rem;
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border, #dde4ee);
+    }
+
+    .window-note {
+      font-size: 0.8rem;
+      color: var(--text-muted, #888);
+      margin-top: -0.2rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      .score-grid { grid-template-columns: repeat(2, 1fr); }
+      .bucket-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/#prijzen">Prijzen</a>
+        <a href="/#voorspelling">Voorspelling</a>
+        <a href="/#tips">Tips</a>
+        <a href="/#uitleg">Uitleg</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank/">Kennisbank</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="perf-hero">
+    <div class="container">
+      <p class="legal-breadcrumb"><a href="/">← homepage</a> / <a href="/over/voorspelling">Over de voorspelling</a></p>
+      <h1>Hoe nauwkeurig is de voorspelling?</h1>
+      <p style="max-width:52ch;color:var(--text-muted,#555);margin:0.5rem 0 0;">
+        Dit dashboard toont live hoe goed het voorspellingsmodel presteert.
+        Alle cijfers worden dagelijks automatisch bijgewerkt op basis van de werkelijke ENTSO-E-prijzen.
+      </p>
+    </div>
+  </div>
+
+  <main class="container" style="max-width:760px;">
+
+    <!-- ── Scorecards ── -->
+    <section class="perf-section" id="scores">
+      <div class="score-grid" id="score-grid">
+        <div class="score-card score-note">
+          <div class="score-value" id="sc-mae">–</div>
+          <div class="score-label">Gem. afwijking (MAE)<br>EUR/MWh</div>
+        </div>
+        <div class="score-card" id="sc-naive-card">
+          <div class="score-value" id="sc-naive">–</div>
+          <div class="score-label">Beter dan naïef<br>(zelfde uur vorige week)</div>
+        </div>
+        <div class="score-card" id="sc-dir-card">
+          <div class="score-value" id="sc-direction">–</div>
+          <div class="score-label">Richting correct<br>(duurder / goedkoper)</div>
+        </div>
+        <div class="score-card score-note">
+          <div class="score-value" id="sc-band">–</div>
+          <div class="score-label">Werkelijk binnen<br>de onzekerheidsband</div>
+        </div>
+      </div>
+      <p class="window-note" id="window-note">Berekend over de afgelopen 30 dagen · <span id="hours-count">–</span> uren geëvalueerd</p>
+    </section>
+
+    <!-- ── Uitlegblok scores ── -->
+    <div class="info-box">
+      <strong>Wat betekenen deze cijfers?</strong><br>
+      Een MAE van 12 EUR/MWh betekent dat de voorspelling gemiddeld 1,2 ct/kWh afwijkt van de werkelijke prijs.
+      "Beter dan naïef" vergelijkt het model met de simpelste benchmark: dezelfde dag vorige week.
+      Een positief percentage betekent dat het model het beter doet.
+      De richting-hit meet of het model correct voorspelt of een uur duurder of goedkoper wordt dan normaal.
+    </div>
+
+    <!-- ── Dagelijkse foutgrafiek ── -->
+    <section class="perf-section" id="daily-section">
+      <h2>Foutmarge per dag (afgelopen 30 dagen)</h2>
+      <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.6rem;">
+        Gemiddelde absolute afwijking tussen voorspelling en werkelijke prijs per dag. Een lagere lijn is beter.
+        Uitschieters komen vaak voor op dagen met extreme weersomstandigheden.
+      </p>
+      <div class="chart-wrap" style="height:200px;">
+        <canvas id="chart-daily" aria-label="Foutmarge per dag"></canvas>
+      </div>
+    </section>
+
+    <!-- ── Horizon-tabel ── -->
+    <section class="perf-section" id="horizon-section">
+      <h2>Nauwkeurigheid per horizon</h2>
+      <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.6rem;">
+        Hoe verder vooruit de voorspelling, hoe groter de onzekerheid. Dit is normaal —
+        ook professionele weersmodellen worden minder betrouwbaar naarmate ze verder kijken.
+        Dag 2 en 3 zijn het meest betrouwbaar.
+      </p>
+      <table class="horizon-table" id="horizon-table">
+        <thead>
+          <tr>
+            <th>Dag vooruit</th>
+            <th>Gem. afwijking</th>
+            <th>vs naïef</th>
+            <th>Richting correct</th>
+          </tr>
+        </thead>
+        <tbody id="horizon-tbody">
+          <tr><td colspan="4" class="loading-state">Laden…</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── Foutmarge per uur van de dag ── -->
+    <section class="perf-section" id="hourly-section">
+      <h2>Foutmarge per uur van de dag</h2>
+      <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.6rem;">
+        Sommige uren zijn lastiger te voorspellen dan andere. De ochtend- en avondspits (7–9u en 17–20u)
+        fluctueren meer dan nachtuuren.
+      </p>
+      <div class="chart-wrap" style="height:180px;">
+        <canvas id="chart-hourly" aria-label="Foutmarge per uur van de dag"></canvas>
+      </div>
+    </section>
+
+    <!-- ── Nauwkeurigheid per prijscategorie ── -->
+    <section class="perf-section" id="bucket-section">
+      <h2>Nauwkeurigheid per prijscategorie</h2>
+      <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.6rem;">
+        Recall = van alle uren die werkelijk in een categorie vielen, welk deel heeft het model correct ingedeeld?
+        Extreme categorieën (negatief, zeer duur) zijn het moeilijkst te voorspellen.
+      </p>
+      <div class="bucket-grid" id="bucket-grid">
+        <div class="loading-state">Laden…</div>
+      </div>
+
+      <div class="info-box">
+        <strong>Waarom zijn extreme prijzen zo lastig?</strong><br>
+        Negatieve prijzen ontstaan door een combinatie van veel zon, weinig wind, lage vraag én
+        beperkte exportmogelijkheden — een zeldzame samenloop. Hetzelfde geldt voor de hoogste
+        pieken: die worden vaak veroorzaakt door ongeplande uitval van centrales of een plotselinge
+        koude-snap. Zulke "zwarte zwanen" zijn inherent moeilijk te modelleren.
+      </div>
+    </section>
+
+    <!-- ── Modelversies ── -->
+    <section class="perf-section" id="versions-section">
+      <h2>Modelversies en verbeteringen</h2>
+      <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.8rem;">
+        Het model wordt continu verbeterd op basis van backtests en analyse van echte afwijkingen.
+        Elke versie is gedocumenteerd — zo kun je zien wat er veranderd is en waarom.
+      </p>
+      <div class="version-timeline" id="version-timeline">
+        <div class="loading-state">Laden…</div>
+      </div>
+      <p style="font-size:0.82rem;color:var(--text-muted,#666);">
+        Volledige methodologie: <a href="/over/voorspelling">hoe werkt de voorspelling?</a> ·
+        Broncode: <a href="https://github.com/mr-mile/stroomvoorspeller" target="_blank" rel="noopener">GitHub</a>
+      </p>
+    </section>
+
+    <!-- ── Eerlijkheid over beperkingen ── -->
+    <section class="perf-section" id="limitations-section">
+      <h2>Wat het model niet kan</h2>
+      <p>
+        Stroomvoorspeller.nl gebruikt een <strong>eenvoudig, transparant model</strong> gebaseerd op
+        historische patronen en weers- en marktfactoren. Dat is een bewuste keuze:
+        het model is uitlegbaar en reproduceerbaar.
+      </p>
+      <p>
+        Dat betekent ook dat het model structureel moeite heeft met:
+      </p>
+      <ul style="margin:0.5rem 0 1rem 1.2rem;line-height:1.8;">
+        <li><strong>Onverwachte centrale-uitval</strong> — een grote kerncentrale die plots uitvalt kan de prijs in uren verdubbelen.</li>
+        <li><strong>Geopolitieke events</strong> — een gascrisis of sancties werken direct door in day-ahead prijzen maar zijn niet modelleerbaar.</li>
+        <li><strong>Uitzonderlijke combinaties</strong> — extreem veel zon én wind tegelijk op een feestdag leidt tot negatieve prijzen die zelfs professionele modellen missen.</li>
+        <li><strong>Buurland-effecten</strong> — extra importcapaciteit of een windstorm in Duitsland heeft direct invloed op de NL-prijs.</li>
+      </ul>
+      <p style="font-size:0.85rem;color:var(--text-muted,#555);">
+        De onzekerheidsband (± een paar ct/kWh) die je in de grafiek ziet, beschrijft de <em>normale</em>
+        variatie. Bij bovenstaande uitzonderingen kan de werkelijke prijs ruim buiten die band vallen.
+        Gebruik de voorspelling als indicatie, niet als zekerheid.
+      </p>
+    </section>
+
+    <!-- ── Lees ook ── -->
+    <section class="perf-section">
+      <h2>Meer lezen</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+        <a href="/over/voorspelling" style="display:block;padding:1rem;background:var(--surface-2,#f4f8ff);border:1px solid var(--border,#dde4ee);border-radius:8px;text-decoration:none;color:inherit;">
+          <strong style="color:var(--accent,#0f6cbd);">⚡ Hoe werkt de voorspelling?</strong><br>
+          <span style="font-size:0.82rem;color:var(--text-muted,#666);">Uitleg van het model in begrijpelijke taal.</span>
+        </a>
+        <a href="/kennisbank/negatieve-stroomprijzen" style="display:block;padding:1rem;background:var(--surface-2,#f4f8ff);border:1px solid var(--border,#dde4ee);border-radius:8px;text-decoration:none;color:inherit;">
+          <strong style="color:var(--accent,#0f6cbd);">🔋 Negatieve stroomprijzen</strong><br>
+          <span style="font-size:0.82rem;color:var(--text-muted,#666);">Hoe ontstaan ze en wat kun je ermee?</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 stroomvoorspeller.nl</span>
+      <nav aria-label="footer">
+        <a href="/privacy">Privacy</a>
+        <a href="/cookies">Cookies</a>
+        <a href="/disclaimer">Disclaimer</a>
+        <a href="/over/voorspelling">Over de voorspelling</a>
+        <a href="/over/performance">Nauwkeurigheid</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+  <script>
+  (function () {
+    'use strict';
+
+    const DATA_URL = '/data/performance.json';
+
+    // ── Kleur-helpers ──
+    function maeColor(mae) {
+      if (mae === null) return '#aaa';
+      if (mae < 10) return '#1a7f37';
+      if (mae < 15) return '#b45309';
+      return '#b91c1c';
+    }
+
+    function naiveClass(pct) {
+      if (pct === null) return '';
+      return pct < 0 ? 'score-mid' : 'score-good';
+    }
+
+    function dirClass(rate) {
+      if (rate === null) return '';
+      return rate >= 0.55 ? 'score-good' : rate >= 0.50 ? '' : 'score-mid';
+    }
+
+    function fmtMae(v) {
+      return v !== null ? v.toFixed(1) + ' €' : '–';
+    }
+
+    function fmtPct(v) {
+      if (v === null) return '–';
+      return (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+    }
+
+    function fmtRate(v) {
+      return v !== null ? Math.round(v * 100) + '%' : '–';
+    }
+
+    // ── Render scores ──
+    function renderScores(d) {
+      const o = d.overall;
+
+      document.getElementById('sc-mae').textContent = fmtMae(o.mae_eur_mwh);
+      document.getElementById('sc-mae').style.color = maeColor(o.mae_eur_mwh);
+
+      const naiveEl = document.getElementById('sc-naive');
+      naiveEl.textContent = fmtPct(o.mae_vs_naive_pct ? -o.mae_vs_naive_pct : null);
+      document.getElementById('sc-naive-card').className = 'score-card ' + naiveClass(o.mae_vs_naive_pct ? -o.mae_vs_naive_pct : null);
+
+      const dirEl = document.getElementById('sc-direction');
+      dirEl.textContent = fmtRate(o.direction_hit_rate);
+      document.getElementById('sc-dir-card').className = 'score-card ' + dirClass(o.direction_hit_rate);
+
+      document.getElementById('sc-band').textContent = fmtRate(o.within_band_pct);
+
+      document.getElementById('hours-count').textContent = (o.n_hours || 0).toLocaleString('nl-NL') + ' uren';
+
+      if (d.first_date && d.last_date) {
+        document.getElementById('window-note').textContent =
+          `${d.first_date} t/m ${d.last_date} · ${(o.n_hours || 0).toLocaleString('nl-NL')} uren geëvalueerd`;
+      }
+    }
+
+    // ── Dagelijkse grafiek ──
+    function renderDailyChart(series) {
+      const labels = series.map(s => {
+        const d = new Date(s.date + 'T00:00:00Z');
+        return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
+      });
+      const values = series.map(s => s.mae_eur_mwh);
+
+      new Chart(document.getElementById('chart-daily'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'MAE (EUR/MWh)',
+            data: values,
+            backgroundColor: values.map(v => maeColor(v) + '99'),
+            borderColor: values.map(v => maeColor(v)),
+            borderWidth: 1,
+            borderRadius: 3,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => `Afwijking: ${ctx.parsed.y?.toFixed(1)} EUR/MWh`
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { font: { size: 10 }, maxRotation: 45 } },
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'EUR/MWh', font: { size: 10 } }
+            }
+          }
+        }
+      });
+    }
+
+    // ── Uurpatroon-grafiek ──
+    function renderHourlyChart(byHour) {
+      const labels = byHour.map(h => h.hour + 'u');
+      const values = byHour.map(h => h.mae_eur_mwh);
+
+      new Chart(document.getElementById('chart-hourly'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'MAE (EUR/MWh)',
+            data: values,
+            borderColor: '#0f6cbd',
+            backgroundColor: '#0f6cbd22',
+            borderWidth: 2,
+            pointRadius: 2,
+            fill: true,
+            tension: 0.3,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => `${ctx.label}: ${ctx.parsed.y?.toFixed(1)} EUR/MWh`
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { font: { size: 10 } } },
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'EUR/MWh', font: { size: 10 } }
+            }
+          }
+        }
+      });
+    }
+
+    // ── Horizon-tabel ──
+    function renderHorizonTable(byHorizon) {
+      const tbody = document.getElementById('horizon-tbody');
+      tbody.innerHTML = '';
+      for (const row of byHorizon) {
+        const pct = row.mae_vs_naive_pct;
+        const pctClass = pct !== null && pct < 0 ? 'badge-better' : 'badge-worse';
+        const pctLabel = pct !== null ? (pct < 0 ? '▼ ' : '▲ ') + Math.abs(pct).toFixed(1) + '%' : '–';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>Dag ${row.horizon_days}</td>
+          <td>${row.mae_eur_mwh !== null ? row.mae_eur_mwh.toFixed(1) + ' EUR/MWh' : '–'}</td>
+          <td><span class="${pctClass}">${pctLabel}</span></td>
+          <td>${fmtRate(row.direction_hit_rate)}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    // ── Bucket-kaarten ──
+    function renderBuckets(byBucket) {
+      const cfg = {
+        negatief:    { label: 'Negatief (gratis)',  cls: 'bucket-neg',     emoji: '⚡' },
+        very_cheap:  { label: 'Heel goedkoop',      cls: 'bucket-vcheap',  emoji: '🟢' },
+        cheap:       { label: 'Goedkoop',           cls: 'bucket-cheap',   emoji: '🟢' },
+        normal:      { label: 'Normaal',            cls: 'bucket-normal',  emoji: '⚪' },
+        pricey:      { label: 'Duur',               cls: 'bucket-pricey',  emoji: '🟠' },
+        very_pricey: { label: 'Heel duur',          cls: 'bucket-vpricey', emoji: '🔴' },
+      };
+      const grid = document.getElementById('bucket-grid');
+      grid.innerHTML = '';
+      for (const b of byBucket) {
+        const c = cfg[b.bucket] || { label: b.bucket, cls: 'bucket-normal', emoji: '⚪' };
+        const recallPct = b.recall !== null ? Math.round(b.recall * 100) + '%' : '–';
+        const div = document.createElement('div');
+        div.className = 'bucket-card ' + c.cls;
+        div.innerHTML = `
+          <strong>${recallPct}</strong>
+          ${c.emoji} ${c.label}<br>
+          <span style="color:#666;font-size:0.78rem;">${b.n_hours} uren · MAE ${b.mae_eur_mwh !== null ? b.mae_eur_mwh.toFixed(1) : '–'}</span>
+        `;
+        grid.appendChild(div);
+      }
+    }
+
+    // ── Versie-tijdlijn ──
+    function renderVersions(history) {
+      const tl = document.getElementById('version-timeline');
+      tl.innerHTML = '';
+      // Nieuwste bovenaan
+      const sorted = [...history].sort((a, b) => b.date.localeCompare(a.date));
+      for (const v of sorted) {
+        const div = document.createElement('div');
+        div.className = 'version-item';
+        const maeStr = v.mae_eur_mwh !== null
+          ? `· MAE ${v.mae_eur_mwh.toFixed(1)} EUR/MWh (30d)`
+          : '';
+        div.innerHTML = `
+          <span class="version-tag">v${v.version}</span>
+          <span class="version-date">${v.date}</span><br>
+          <span class="version-mae">${v.notes} ${maeStr}</span>
+        `;
+        tl.appendChild(div);
+      }
+    }
+
+    // ── Geen data ──
+    function renderEmpty() {
+      document.getElementById('score-grid').innerHTML =
+        '<p class="loading-state">Nog geen evaluatiedata beschikbaar. Het dashboard wordt actief zodra het forecast-archief genoeg historische data bevat (na ~2 weken).</p>';
+      document.getElementById('horizon-tbody').innerHTML =
+        '<tr><td colspan="4" class="loading-state">Nog geen data</td></tr>';
+      document.getElementById('bucket-grid').innerHTML =
+        '<p class="loading-state">Nog geen data</p>';
+      document.getElementById('version-timeline').innerHTML =
+        '<p class="loading-state">Laden mislukt</p>';
+    }
+
+    // ── Laden ──
+    fetch(DATA_URL)
+      .then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(d => {
+        renderScores(d);
+        if (d.daily_series && d.daily_series.length > 0) {
+          renderDailyChart(d.daily_series);
+        }
+        if (d.by_hour_of_day && d.by_hour_of_day.length > 0) {
+          renderHourlyChart(d.by_hour_of_day);
+        }
+        if (d.by_horizon && d.by_horizon.length > 0) {
+          renderHorizonTable(d.by_horizon);
+        }
+        if (d.by_price_bucket && d.by_price_bucket.length > 0) {
+          renderBuckets(d.by_price_bucket);
+        }
+        if (d.model_history && d.model_history.length > 0) {
+          renderVersions(d.model_history);
+        }
+      })
+      .catch(err => {
+        console.warn('Performance data niet beschikbaar:', err.message);
+        renderEmpty();
+      });
+
+  })();
+  </script>
+
+</body>
+</html>
