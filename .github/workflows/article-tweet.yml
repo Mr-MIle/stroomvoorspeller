@@ -1,0 +1,71 @@
+name: X-post bij nieuw kennisbank-artikel
+
+# Triggert bij een push naar main die een nieuw HTML-bestand toevoegt
+# onder public/kennisbank/. Edits van bestaande artikelen triggeren niets
+# (--diff-filter=A garandeert dat).
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/kennisbank/**.html"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: article-tweet
+  cancel-in-progress: false
+
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code (met vorige commit voor git diff)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2   # HEAD + HEAD^ nodig voor diff
+
+      - name: Vind nieuw toegevoegde kennisbank-artikelen
+        id: find
+        run: |
+          # --diff-filter=A = alleen Added bestanden (geen renames, edits of deletes)
+          NEW=$(git diff --diff-filter=A --name-only HEAD^ HEAD \
+                | grep '^public/kennisbank/.*\.html$' \
+                | grep -v '^public/kennisbank/index\.html$' \
+                || true)
+          echo "Nieuwe bestanden gevonden:"
+          echo "${NEW:-  (geen)"}"
+          # Sla op als multiline output-variabele
+          {
+            echo "files<<EOF"
+            echo "$NEW"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Setup Python
+        if: steps.find.outputs.files != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installeer dependencies
+        if: steps.find.outputs.files != ''
+        run: pip install tweepy
+
+      - name: Post artikel-tweet per nieuw bestand
+        if: steps.find.outputs.files != ''
+        continue-on-error: true   # X-API-fout stopt de deploy niet
+        env:
+          X_API_KEY:        ${{ secrets.X_API_KEY }}
+          X_API_SECRET:     ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN:   ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET:  ${{ secrets.X_ACCESS_SECRET }}
+        run: |
+          echo "${{ steps.find.outputs.files }}" | while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            echo "→ Verwerken: $file"
+            python scripts/article_tweet.py "$file"
+            # Kleine pauze bij meerdere artikelen tegelijk (X rate limit)
+            sleep 5
+          done
