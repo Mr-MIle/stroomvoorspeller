@@ -35,7 +35,7 @@ jobs:
                 | grep -v '^public/kennisbank/index\.html$' \
                 || true)
           echo "Nieuwe bestanden gevonden:"
-          echo "${NEW:-  (geen)"}"
+          echo "${NEW:-(geen)}"
           # Sla op als multiline output-variabele
           {
             echo "files<<EOF"
