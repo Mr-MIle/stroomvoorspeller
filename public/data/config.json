@@ -1,7 +1,7 @@
 {
   "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in ct/kWh consumentenprijs incl. energiebelasting + btw + leverancieropslag.",
-  "version": 6,
-  "updated": "2026-05-09",
+  "version": 7,
+  "updated": "2026-05-16",
   "taxes": {
     "energiebelasting_per_kwh": 0.0916,
     "btw_factor": 1.21,
@@ -71,11 +71,11 @@
     {
       "id": "average",
       "name": "Algemeen gemiddelde",
-      "markup_per_kwh": 0.0175,
+      "markup_per_kwh": 0.0178,
       "fixed_per_month": 0,
-      "verified": "2026-05-09",
-      "source": "Berekend gemiddelde van de tien onderstaande aanbieders",
-      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan = 0.018, gemiddelde = 0.0175."
+      "verified": "2026-05-16",
+      "source": "Berekend gemiddelde van de elf onderstaande aanbieders",
+      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan ≈ 0.018, gemiddelde = 0.0178."
     },
     {
       "id": "tibber",
@@ -176,6 +176,16 @@
       "source": "eneco.nl tarievenpagina, tarief per 1 mei 2026, geverifieerd mei 2026",
       "note": "Inkoopvergoeding excl. btw per 1 mei 2026. Vaste kosten €7,00/maand incl. btw = €5,79 excl. btw.",
       "website": "https://www.eneco.nl/duurzame-energie/dynamisch-energiecontract/"
+    },
+    {
+      "id": "om",
+      "name": "om | nieuwe energie",
+      "markup_per_kwh": 0.02066,
+      "fixed_per_month": 8.57,
+      "verified": "2026-05-16",
+      "source": "samenom.nl/tarieven — Dynamisch consumentencontract, geverifieerd mei 2026",
+      "note": "Inkoopvergoeding excl. btw. Vaste leveringskosten €0,281781/dag excl. btw (≈ €8,57/maand). Coöperatief, geen winstoogmerk. Vaste terugleveringskosten van toepassing.",
+      "website": "https://www.samenom.nl"
     },
     {
       "id": "custom",
