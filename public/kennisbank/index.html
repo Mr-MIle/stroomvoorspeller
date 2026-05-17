@@ -92,8 +92,8 @@
       <h1>⚡ Kennisbank</h1>
       <p class="kb-hero-sub">Uitleg, gidsen en achtergrond over dynamische energieprijzen en slim verbruik</p>
       <div class="kb-hero-chips">
-        <span class="kb-hero-chip">8 artikelen</span>
-        <span class="kb-hero-chip">3 categorieën</span>
+        <span class="kb-hero-chip">9 artikelen</span>
+        <span class="kb-hero-chip">4 categorieën</span>
         <span class="kb-hero-chip">Onafhankelijk</span>
       </div>
     </section>
@@ -107,14 +107,14 @@
           <span class="kb-leerpad-step-title">Negatieve prijzen begrijpen</span>
         </a>
         <span class="kb-leerpad-arrow" aria-hidden="true">→</span>
-        <a class="kb-leerpad-step" href="/kennisbank/salderingsregeling">
+        <a class="kb-leerpad-step" href="/kennisbank/energiebelasting-vaste-kosten-uitgelegd">
           <span class="kb-leerpad-step-n">Stap 2</span>
-          <span class="kb-leerpad-step-title">Salderingsregeling afschaffing</span>
+          <span class="kb-leerpad-step-title">Wat betaal je écht per kWh?</span>
         </a>
         <span class="kb-leerpad-arrow" aria-hidden="true">→</span>
-        <a class="kb-leerpad-step" href="/kennisbank/thuisbatterij-kosten">
+        <a class="kb-leerpad-step" href="/kennisbank/salderingsregeling">
           <span class="kb-leerpad-step-n">Stap 3</span>
-          <span class="kb-leerpad-step-title">Thuisbatterij overwegen?</span>
+          <span class="kb-leerpad-step-title">Salderingsregeling afschaffing</span>
         </a>
       </div>
     </div>
@@ -148,7 +148,7 @@
       <div class="kb-cat-header">
         <span class="kb-cat-icon" aria-hidden="true">⚡</span>
         <h2 class="kb-cat-title" id="cat-dynamisch">Dynamisch contract &amp; prijzen</h2>
-        <span class="kb-cat-count">4 artikelen</span>
+        <span class="kb-cat-count">3 artikelen</span>
       </div>
       <div class="kb-grid">
 
@@ -162,20 +162,6 @@
           <p class="kb-card-desc">Je ziet 5 cent op het scherm maar betaalt 22 cent op de rekening. Alle kostenlagen — energiebelasting, opslag, netwerk en de €629 belastingkorting — uitgelegd met rekenvoorbeelden.</p>
           <div class="kb-card-foot">
             <span class="kb-card-time">⏱ 6 min leestijd</span>
-            <span class="kb-card-cta">Lees artikel →</span>
-          </div>
-        </a>
-
-        <a class="kb-card" href="/kennisbank/p1-poort-uitlezen">
-          <div class="kb-card-head">
-            <span class="kb-card-tag">⚡ Dynamisch contract</span>
-            <span class="kb-level kb-level-begin">Beginner</span>
-          </div>
-          <span class="kb-card-icon" aria-hidden="true">🔌</span>
-          <p class="kb-card-title">Slimme meter P1 poort uitlezen: zo zie je je verbruik per uur</p>
-          <p class="kb-card-desc">Met een wifi-dongle van €35–€50 lees je je slimme meter realtime uit. Vergelijking van HomeWizard, Powerbaas, Homey dongle en SlimmemeterPortal.nl.</p>
-          <div class="kb-card-foot">
-            <span class="kb-card-time">⏱ 7 min leestijd</span>
             <span class="kb-card-cta">Lees artikel →</span>
           </div>
         </a>
@@ -309,16 +295,48 @@
       </div>
     </section>
 
+    <!-- ══════════════════════════════════════════════
+         CATEGORIE 4 — Slim besparen & meten
+         ══════════════════════════════════════════════ -->
+    <section class="kb-cat" aria-labelledby="cat-slim">
+      <div class="kb-cat-header">
+        <span class="kb-cat-icon" aria-hidden="true">💡</span>
+        <h2 class="kb-cat-title" id="cat-slim">Slim besparen &amp; meten</h2>
+        <span class="kb-cat-count">1 artikel</span>
+      </div>
+      <div class="kb-grid">
+
+        <a class="kb-card" href="/kennisbank/p1-poort-uitlezen">
+          <div class="kb-card-head">
+            <span class="kb-card-tag">💡 Slim besparen</span>
+            <span class="kb-level kb-level-begin">Beginner</span>
+          </div>
+          <span class="kb-card-icon" aria-hidden="true">🔌</span>
+          <p class="kb-card-title">Slimme meter P1 poort uitlezen: zo zie je je verbruik per uur</p>
+          <p class="kb-card-desc">Met een wifi-dongle van €35–€50 lees je je slimme meter realtime uit. Vergelijking van HomeWizard, Powerbaas, Homey dongle en SlimmemeterPortal.nl.</p>
+          <div class="kb-card-foot">
+            <span class="kb-card-time">⏱ 7 min leestijd</span>
+            <span class="kb-card-cta">Lees artikel →</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
     <!--
       ══════════════════════════════════════════════════════
       REDACTIE-INSTRUCTIE — nieuw artikel toevoegen:
 
-      1. Kies de categorie (⚡ Dynamisch / 🔋 Thuisbatterij / ☀️ Zonnepanelen)
-         of maak een nieuwe sectie aan als het artikel niet past.
+      1. Kies een van de vier categorieën:
+         ⚡ Dynamisch contract & prijzen  → id="cat-dynamisch"
+         🔋 Thuisbatterij & opslag        → id="cat-batterij"
+         ☀️ Zonnepanelen                  → id="cat-zon"
+         💡 Slim besparen & meten         → id="cat-slim"
+         Of maak een nieuwe sectie als het artikel in geen enkele past.
 
       2. Kopieer een <a class="kb-card"> blok en vul in:
          - href="/kennisbank/[slug]"
-         - kb-card-tag: emoji + categorienaam
+         - kb-card-tag: emoji + categorienaam (zie boven)
          - kb-level: kb-level-begin / kb-level-mid / kb-level-adv
          - kb-card-icon: passende emoji
          - kb-card-title: ongewijzigde artikeltitel
@@ -334,6 +352,8 @@
          toe achter de kb-card-title tekst.
 
       6. Overweeg het uitgelicht-artikel (kb-featured) te updaten.
+
+      7. Update de hero-chips (artikelen-teller + categorieën-teller) als nodig.
       ══════════════════════════════════════════════════════
     -->
 
