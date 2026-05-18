@@ -1,0 +1,44 @@
+name: Bereken bias-correcties (MOS)
+
+# Draait wekelijks op zondag 06:00 UTC — nadat prijzen van de afgelopen week beschikbaar
+# zijn en update_log.py de actuals heeft ingevuld in prediction_log.json.
+# Kan ook handmatig worden getriggerd via Run workflow in de GitHub UI.
+on:
+  schedule:
+    - cron: "0 6 * * 0"   # Zondag 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write   # nodig om bias_corrections.json te committen
+
+concurrency:
+  group: compute-bias
+  cancel-in-progress: false
+
+jobs:
+  compute-bias:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bereken MOS bias-correcties
+        run: |
+          python scripts/compute_bias.py
+
+      - name: Commit en push bias_corrections.json
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          git add 03-data/bias_corrections.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: bias-correcties bijgewerkt $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          else
+            echo "Geen wijzigingen in bias_corrections.json — niets te committen."
+          fi

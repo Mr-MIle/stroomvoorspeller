@@ -1,0 +1,77 @@
+name: Ververs voorspelling
+
+# Aangestuurd door Pipedream (3× per dag: ochtend, middag, avond).
+#
+# Haalt GEEN nieuwe ENTSO-E prijzen op — dat doet check-prices.yml.
+# Ververst alleen de weer/TTF-gebaseerde voorspelling op basis van de
+# prices.json die al op disk staat.
+#
+# Aanbevolen Pipedream-tijden (CEST / UTC+2):
+#   07:00 CEST = 05:00 UTC  — ochtendupdate vóór de dag begint
+#   13:30 CEST = 11:30 UTC  — middag, nadat check-prices de nieuwe prijzen
+#                              heeft verwerkt (geef het 30 min na publicatie)
+#   20:00 CEST = 18:00 UTC  — avondupdate met het meest actuele Open-Meteo weer
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-forecast
+  cancel-in-progress: false
+
+jobs:
+  forecast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Genereer voorspelling
+        # Leest prices.json voor history, haalt Open-Meteo + TTF op.
+        # Mag falen zonder dat downstream stappen stoppen.
+        continue-on-error: true
+        run: python scripts/run_forecast.py
+
+      - name: Vul actuals in prediction log
+        continue-on-error: true
+        run: python scripts/update_log.py
+
+      - name: Archiveer forecast-snapshot
+        continue-on-error: true
+        run: |
+          mkdir -p public/data/forecast_archive
+          DATE=$(date -u +%Y-%m-%d)
+          cp public/data/forecast.json public/data/forecast_archive/forecast_${DATE}.json
+
+      - name: Genereer RSS-feed
+        continue-on-error: true
+        run: python scripts/generate_feed.py
+
+      - name: Genereer performance-dashboard
+        continue-on-error: true
+        run: python scripts/generate_performance.py
+
+      - name: Commit en push als er iets veranderd is
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          git add public/data/forecast.json 2>/dev/null || true
+          git add public/data/feed.xml 2>/dev/null || true
+          git add public/data/performance.json 2>/dev/null || true
+          git add public/data/forecast_archive/ 2>/dev/null || true
+          git add 03-data/prediction_log.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: ververs voorspelling $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          else
+            echo "Geen wijzigingen — niets te committen."
+          fi
