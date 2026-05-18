@@ -70,10 +70,20 @@ MODEL_VERSION = "2.1"
 PROJECT_ROOT       = Path(__file__).resolve().parent.parent
 PRICES_FILE        = PROJECT_ROOT / "public" / "data" / "prices.json"
 FORECAST_FILE      = PROJECT_ROOT / "public" / "data" / "forecast.json"
-PREDICTION_LOG_FILE = PROJECT_ROOT / "03-data" / "prediction_log.json"
+PREDICTION_LOG_FILE    = PROJECT_ROOT / "03-data" / "prediction_log.json"
+BIAS_CORRECTIONS_FILE  = PROJECT_ROOT / "03-data" / "bias_corrections.json"
 
 # Hoeveel dagen we prediction-log bewaren (voor bias-correctie en analog search)
 PREDICTION_LOG_MAX_DAYS = 90
+
+# Maximale bias-correctie die wordt toegepast (cap ter veiligheid).
+BIAS_CORRECTION_MAX_EUR = 50.0
+
+# P_negative drempel: toon P_negative=0.0 als de voorspelde prijs >= dit niveau is.
+# Voorkomt UX-probleem waarbij P_negative > 0.2 bij predicted=90 EUR/MWh (bevinding 4,
+# analyse 13 mei 2026). P_negative wordt puur op severity berekend, onafhankelijk van
+# de eindprijs — zonder drempel leidt dit tot misleidende waarschuwingen.
+P_NEGATIVE_PRICE_THRESHOLD = 20.0   # EUR/MWh
 
 # ---------------------------------------------------------------------------
 # Externe endpoints
@@ -276,6 +286,99 @@ def compute_ttf_ratio(ttf_series: dict) -> float:
 
 
 # ---------------------------------------------------------------------------
+# Bias-correctie (MOS) — laden en toepassen
+# ---------------------------------------------------------------------------
+
+def load_bias_corrections(bias_file: Path) -> dict:
+    """Laad bias_corrections.json. Retourneer {} als bestand ontbreekt of corrupt is."""
+    if not bias_file.exists():
+        print(f"[info] {bias_file} ontbreekt — geen bias-correcties toegepast.",
+              file=sys.stderr)
+        return {}
+    try:
+        raw = bias_file.read_bytes().rstrip(b"\x00")
+        payload = json.loads(raw) if raw else {}
+        corrections = payload.get("corrections", {})
+        n_active = sum(1 for v in corrections.values() if v.get("apply"))
+        print(f"[info] bias_corrections geladen: {len(corrections)} cellen, "
+              f"{n_active} actief.", file=sys.stderr)
+        return corrections
+    except (json.JSONDecodeError, ValueError) as exc:
+        print(f"[warn] bias_corrections.json corrupt: {exc}", file=sys.stderr)
+        return {}
+
+
+def infer_regime_bucket_for_bias(fc_dict: dict) -> str:
+    """
+    Bepaal regime-bucket voor bias-cel-lookup op basis van een forecast-dict.
+
+    Gebruikt 'regime' veld als aanwezig (v2.1). Anders proxy via sw_ratio_h + uur
+    (v1.9-compatible logica, gelijk aan compute_bias.py).
+    """
+    regime = fc_dict.get("regime")
+    if regime in ("oversupply", "normaal"):
+        return regime
+    if regime in ("scarcity", "schaarste"):
+        return "scarcity"
+
+    # Proxy voor v1.9-stijl entries of ontbrekend regime-veld
+    t_str = fc_dict.get("time", "")
+    try:
+        hour = datetime.fromisoformat(t_str).hour
+    except (ValueError, TypeError):
+        hour = None
+
+    sw_ratio_h     = fc_dict.get("sw_ratio_h")
+    sw_ratio_daily = fc_dict.get("sw_ratio_daily")
+
+    if sw_ratio_h is not None and hour is not None and 8 <= hour <= 18 and sw_ratio_h >= 1.40:
+        return "oversupply"
+    if sw_ratio_daily is not None and sw_ratio_daily < 0.60:
+        return "scarcity"
+    return "normaal"
+
+
+def apply_bias_correction(fc_dict: dict, corrections: dict, target_dt: datetime) -> dict:
+    """
+    Pas bias-correctie toe op fc_dict (in-place mutatie).
+
+    - Laad cel-sleutel op basis van uur, regime_bucket, maand.
+    - Pas additief toe als apply == true; clip op +/-BIAS_CORRECTION_MAX_EUR.
+    - Voeg factor 'bias_correctie' toe aan fc_dict["factors"] voor transparantie.
+    - Retourneer fc_dict (ook gemuteerd in-place).
+    """
+    if not corrections:
+        return fc_dict
+
+    hour  = target_dt.hour
+    month = target_dt.month
+    regime_bucket = infer_regime_bucket_for_bias(fc_dict)
+    cell_key = f"{regime_bucket}_h{hour:02d}_m{month:02d}"
+
+    cell = corrections.get(cell_key)
+    if cell is None or not cell.get("apply"):
+        return fc_dict
+
+    bias_raw = float(cell["bias"])
+    # Cap op +/-BIAS_CORRECTION_MAX_EUR ter veiligheid
+    bias_applied = max(-BIAS_CORRECTION_MAX_EUR, min(BIAS_CORRECTION_MAX_EUR, bias_raw))
+
+    fc_dict["predicted"] = round(fc_dict["predicted"] + bias_applied, 2)
+    # Pas ook lower/upper grenzen aan
+    fc_dict["lower"] = round(fc_dict.get("lower", 0.0) + bias_applied, 2)
+    fc_dict["upper"] = round(fc_dict.get("upper", 0.0) + bias_applied, 2)
+
+    # Voeg factor toe voor transparantie in de UI
+    fc_dict.setdefault("factors", []).append({
+        "name":   "bias_correctie",
+        "points": 0,
+        "reason": f"MOS {bias_applied:+.1f} EUR/MWh ({cell_key}, n={cell.get('n', '?')})",
+    })
+
+    return fc_dict
+
+
+# ---------------------------------------------------------------------------
 # Prediction log (opslaan + lezen)
 # ---------------------------------------------------------------------------
 
@@ -434,6 +537,10 @@ def main() -> int:
     print(f"[info] {len(historical_log)} historische entries beschikbaar "
           f"voor analogie-zoekopdracht.", file=sys.stderr)
 
+    # MOS bias-correcties eenmalig laden voor de forecast-loop (v2.2).
+    print("[info] bias_corrections.json laden...", file=sys.stderr)
+    bias_corrections = load_bias_corrections(BIAS_CORRECTIONS_FILE)
+
     # ---------------------------------------------------------------------------
     # Seizoensnorm wind + temp als fallback bij ontbrekende Open-Meteo waarden.
     # Waarden zijn bewuste neutrale schattingen gebaseerd op KNMI De Bilt:
@@ -573,6 +680,18 @@ def main() -> int:
             }
             plausibility = compute_event_plausibility(plausibility_input, historical_log)
             fc_dict.update(plausibility)
+
+            # MOS bias-correctie (v2.2): additief toepassen na alle andere berekeningen.
+            # Corrigeert structurele modelfouten per (uur, regime, maand)-cel.
+            # De correctie wordt ook zichtbaar in fc_dict["factors"] voor transparantie.
+            apply_bias_correction(fc_dict, bias_corrections, target_dt)
+
+            # P_negative drempel (v2.2): toon P_negative=0.0 als de (gecorrigeerde)
+            # voorspelde prijs >= P_NEGATIVE_PRICE_THRESHOLD EUR/MWh is.
+            # Voorkomt misleidende negatieve-prijs-waarschuwingen bij hoge prijzen
+            # (bevinding 4, analyse 13 mei 2026: P_neg=0.60 bij pred=90 EUR/MWh).
+            if fc_dict.get("predicted", 0.0) >= P_NEGATIVE_PRICE_THRESHOLD:
+                fc_dict["P_negative"] = 0.0
 
             forecasts.append(fc_dict)
 
