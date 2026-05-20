@@ -25,6 +25,9 @@ concurrency:
 jobs:
   check-and-update:
     runs-on: ubuntu-latest
+    outputs:
+      # 'true' als er nieuwe prijzen zijn gecommit in deze run — gebruikt door de tweet-job.
+      nieuwe_prijzen: ${{ steps.commit.outputs.committed }}
 
     steps:
       - name: Checkout code
@@ -80,6 +83,7 @@ jobs:
         run: python scripts/generate_performance.py
 
       - name: Commit en push als er iets veranderd is
+        id: commit
         if: steps.check.outcome == 'success'
         run: |
           git config user.name "stroomvoorspeller-bot"
@@ -92,6 +96,18 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "auto: update prijzen + voorspelling $(date -u +%Y-%m-%dT%H:%MZ)"
             git push
+            echo "committed=true" >> $GITHUB_OUTPUT
           else
             echo "Geen wijzigingen — niets te committen."
+            echo "committed=false" >> $GITHUB_OUTPUT
           fi
+
+  tweet:
+    name: Post dagelijkse X-tweet
+    needs: check-and-update
+    # Alleen draaien als er in déze run daadwerkelijk nieuwe prijzen zijn gecommit.
+    # Zo tweet het systeem precies één keer per dag, zodra de morgen-prijzen voor
+    # het eerst beschikbaar zijn — en niet bij elke latere check.
+    if: needs.check-and-update.outputs.nieuwe_prijzen == 'true'
+    uses: ./.github/workflows/daily-tweet.yml
+    secrets: inherit
