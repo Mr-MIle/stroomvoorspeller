@@ -23,6 +23,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Bij workflow_call (aanroep vanuit check-prices.yml) bevat github.sha de
+          # triggering-SHA van de workflow_dispatch — dat is de commit VÓÓR de
+          # prijzen werden gepusht. ref: github.ref_name forceert checkout van de
+          # actuele HEAD van de branch, zodat prices.json de nieuwe prijzen bevat.
+          ref: ${{ github.ref_name }}
 
       - name: Setup Python
         uses: actions/setup-python@v5
