@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Historische stroomprijzen Nederland — per dag terugkijken | Stroomvoorspeller.nl</title>
+  <meta name="description" content="Bekijk historische day-ahead stroomprijzen per uur voor elke dag. Filter op aanbieder, zoek negatieve prijsmomenten en vergelijk maanden." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/historisch" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Historische stroomprijzen Nederland — per dag terugkijken" />
+  <meta property="og:description" content="Bekijk historische day-ahead stroomprijzen per uur voor elke dag. Filter op aanbieder, zoek negatieve prijsmomenten en vergelijk maanden." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/historisch" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Historische stroomprijzen Nederland — per dag terugkijken" />
+  <meta name="twitter:description" content="Day-ahead stroomprijzen per uur voor elke dag, filter op aanbieder en negatieve prijzen." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="alternate" type="application/rss+xml" title="Stroomvoorspeller.nl — day-ahead prijzen" href="/data/feed.xml" />
+  <link rel="stylesheet" href="/styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://stroomvoorspeller.nl/historisch",
+        "url": "https://stroomvoorspeller.nl/historisch",
+        "name": "Historische stroomprijzen Nederland — per dag terugkijken",
+        "description": "Bekijk historische day-ahead stroomprijzen per uur voor elke dag. Filter op aanbieder en negatieve prijsmomenten.",
+        "inLanguage": "nl-NL",
+        "isPartOf": { "@id": "https://stroomvoorspeller.nl/#website" },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+            { "@type": "ListItem", "position": 2, "name": "Historische prijzen", "item": "https://stroomvoorspeller.nl/historisch" }
+          ]
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* ── Historisch-specifieke stijlen ── */
+
+    .hist-hero {
+      background: var(--c-surface);
+      border-bottom: 1px solid var(--c-border);
+      padding: 28px 0 20px;
+    }
+    .hist-breadcrumb {
+      font-size: 0.85rem;
+      color: var(--c-text-mute);
+      margin: 0 0 8px;
+    }
+    .hist-breadcrumb a { color: var(--c-text-mute); }
+    .hist-hero h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .hist-hero p {
+      margin: 0;
+      color: var(--c-text-soft);
+      font-size: 0.95rem;
+    }
+
+    /* ── Controls ── */
+    .hist-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 0;
+    }
+    .month-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .month-nav button {
+      background: var(--c-surface);
+      border: 1.5px solid var(--c-border);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--c-text);
+      transition: background 0.15s;
+    }
+    .month-nav button:hover { background: var(--c-bg); }
+    .month-nav button:disabled { opacity: 0.35; cursor: default; }
+    .month-label {
+      font-weight: 600;
+      font-size: 1rem;
+      min-width: 120px;
+      text-align: center;
+      color: var(--c-text);
+    }
+    .hist-supplier-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+    .hist-supplier-wrap label {
+      font-size: 0.85rem;
+      color: var(--c-text-soft);
+      white-space: nowrap;
+    }
+    .hist-supplier-select {
+      border: 1.5px solid var(--c-border);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      font-size: 0.9rem;
+      background: var(--c-surface);
+      color: var(--c-text);
+      cursor: pointer;
+    }
+    .neg-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .neg-toggle-wrap label {
+      font-size: 0.85rem;
+      color: var(--c-text-soft);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .neg-toggle-wrap input[type=checkbox] {
+      width: 16px; height: 16px;
+      accent-color: var(--c-free);
+      cursor: pointer;
+    }
+
+    /* ── Kalender ── */
+    .hist-calendar-section {
+      padding: 8px 0 24px;
+    }
+    .cal-loading, .cal-no-data {
+      text-align: center;
+      padding: 48px 0;
+      color: var(--c-text-soft);
+      font-size: 0.95rem;
+    }
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+    .cal-weekday {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--c-text-mute);
+      padding: 4px 0;
+    }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-day {
+      aspect-ratio: 1;
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+      position: relative;
+      border: 2px solid transparent;
+      min-height: 44px;
+    }
+    .cal-day:hover { transform: scale(1.06); box-shadow: var(--shadow-md); }
+    .cal-day.selected { border-color: var(--c-brand); box-shadow: 0 0 0 2px rgba(15,108,189,0.25); }
+    .cal-day.empty { background: transparent; cursor: default; }
+    .cal-day.empty:hover { transform: none; box-shadow: none; }
+    .cal-day.hidden-neg { opacity: 0.15; pointer-events: none; }
+    .cal-day-num {
+      font-size: 0.8rem;
+      font-weight: 600;
+      line-height: 1;
+    }
+    .cal-day-price {
+      font-size: 0.65rem;
+      line-height: 1;
+      margin-top: 2px;
+      opacity: 0.85;
+    }
+    .cal-neg-badge {
+      position: absolute;
+      top: 3px;
+      right: 4px;
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--c-free);
+      background: var(--c-free-bg);
+      border-radius: 3px;
+      padding: 1px 3px;
+      line-height: 1.2;
+    }
+
+    /* Legenda */
+    .cal-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      color: var(--c-text-soft);
+    }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ── Dag-detail ── */
+    .hist-day-detail {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+    .hist-day-detail.hidden { display: none; }
+    .day-detail-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .day-detail-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--c-text);
+    }
+    .day-stat-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .day-chip {
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 99px;
+      border: 1px solid var(--c-border);
+      background: var(--c-bg);
+      color: var(--c-text-soft);
+      white-space: nowrap;
+    }
+    .day-chip strong { color: var(--c-text); }
+    .day-chip.neg-chip {
+      background: var(--c-free-bg);
+      border-color: var(--c-free);
+      color: var(--c-free);
+    }
+    .day-chart-wrap {
+      position: relative;
+      height: 220px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .hist-controls { gap: 8px; }
+      .hist-supplier-wrap { margin-left: 0; }
+      .cal-day-price { display: none; }
+      .day-chart-wrap { height: 180px; }
+      .hist-day-detail { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/#prijzen">Prijzen</a>
+        <a href="/#voorspelling">Voorspelling</a>
+        <a href="/#tips">Tips</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank/">Kennisbank</a>
+        <a href="/historisch" aria-current="page">Historisch</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ── Hero ── -->
+    <section class="hist-hero">
+      <div class="container">
+        <p class="hist-breadcrumb"><a href="/">← Terug naar vandaag</a></p>
+        <h1>Historische stroomprijzen</h1>
+        <p>Bekijk de day-ahead EPEX-prijzen per uur voor elke dag. Filter op aanbieder of zoek negatieve prijsmomenten.</p>
+      </div>
+    </section>
+
+    <!-- ── Controls + Kalender ── -->
+    <section class="hist-calendar-section">
+      <div class="container">
+
+        <div class="hist-controls">
+          <!-- Maand-navigatie -->
+          <div class="month-nav">
+            <button id="btn-prev" aria-label="Vorige maand">&#8249;</button>
+            <span class="month-label" id="month-label">—</span>
+            <button id="btn-next" aria-label="Volgende maand">&#8250;</button>
+          </div>
+
+          <!-- Negatief-filter -->
+          <div class="neg-toggle-wrap">
+            <label>
+              <input type="checkbox" id="neg-only-toggle" />
+              Alleen negatieve dagen
+            </label>
+          </div>
+
+          <!-- Aanbieder-selector -->
+          <div class="hist-supplier-wrap">
+            <label for="supplier-select">Aanbieder:</label>
+            <select id="supplier-select" class="hist-supplier-select" aria-label="Kies aanbieder"></select>
+          </div>
+        </div>
+
+        <!-- Weekdag-headers -->
+        <div class="cal-weekdays">
+          <div class="cal-weekday">Ma</div>
+          <div class="cal-weekday">Di</div>
+          <div class="cal-weekday">Wo</div>
+          <div class="cal-weekday">Do</div>
+          <div class="cal-weekday">Vr</div>
+          <div class="cal-weekday">Za</div>
+          <div class="cal-weekday">Zo</div>
+        </div>
+
+        <!-- Kalender-grid -->
+        <div id="cal-grid" class="cal-grid" role="grid" aria-label="Kalender"></div>
+
+        <!-- Legenda -->
+        <div class="cal-legend" aria-hidden="true">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--c-free-bg);border:1.5px solid var(--c-free)"></div> Negatief</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#b2f2bb"></div> Zeer goedkoop (&lt;14 ct)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#d3f9d8"></div> Goedkoop (&lt;22 ct)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--c-normal-bg)"></div> Normaal (&lt;28 ct)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--c-pricey-bg)"></div> Duur (&lt;38 ct)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#fcc"></div> Zeer duur (≥38 ct)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Dag-detail ── -->
+    <section class="container">
+      <div id="day-detail" class="hist-day-detail hidden">
+        <div class="day-detail-header">
+          <h2 class="day-detail-title" id="day-detail-title">—</h2>
+        </div>
+        <div class="day-stat-chips" id="day-stat-chips"></div>
+        <div class="day-chart-wrap">
+          <canvas id="day-chart" aria-label="Uurprijzen geselecteerde dag"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+        <p class="footer-meta">Dagelijkse updates: <a href="https://x.com/stroomtarief" rel="noopener noreferrer">@stroomtarief op X ↗</a></p>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a> ·
+          <a href="/over/voorspelling">Over de voorspelling</a> ·
+          <a href="/aanbieders">Aanbieders</a>
+        </p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          Bron: <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E Transparency</a>
+        </p>
+        <p class="footer-meta-small">Hobby-project van één persoon.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <script>
+  (function () {
+    'use strict';
+
+    // ── State ──────────────────────────────────────────────────────────────
+    let cfg = null;            // config.json
+    let archiveData = null;    // /data/archief/YYYY-MM.json
+    let currentMonth = null;   // "YYYY-MM"
+    let selectedDate = null;   // "YYYY-MM-DD"
+    let selectedSupplier = 'average';
+    let showOnlyNeg = false;
+    let dayChart = null;
+
+    const STORAGE_SUPPLIER = 'sv.supplierId';
+    const NL_MONTHS = ['januari','februari','maart','april','mei','juni',
+                       'juli','augustus','september','oktober','november','december'];
+    const NL_DAYS_ABBR = ['ma','di','wo','do','vr','za','zo'];
+
+    // Vroegste maand met verwachte data (de site draait pas vanaf ~april 2026)
+    const EARLIEST_MONTH = '2026-04';
+
+    // ── Hulpfuncties ───────────────────────────────────────────────────────
+
+    function getSupplier(id) {
+      return cfg.suppliers.find(s => s.id === id) || cfg.suppliers[0];
+    }
+
+    function toConsumerCt(epexEurMwh, supplierId) {
+      const s = getSupplier(supplierId);
+      const markup = Number(s.markup_per_kwh) || 0;
+      const eb = cfg.taxes.energiebelasting_per_kwh;
+      const btw = cfg.taxes.btw_factor;
+      return (epexEurMwh / 1000 + markup + eb) * btw * 100;
+    }
+
+    function getDayColor(avgCt) {
+      const t = cfg.thresholds_ct_kwh_inclusive;
+      if (avgCt < 0)           return { bg: 'var(--c-free-bg)',   text: 'var(--c-free)',   border: 'var(--c-free)' };
+      if (avgCt < t.very_cheap) return { bg: '#b2f2bb',            text: '#1a7a2e',         border: 'transparent' };
+      if (avgCt < t.cheap)      return { bg: '#d3f9d8',            text: '#2f9e44',         border: 'transparent' };
+      if (avgCt < t.pricey)     return { bg: 'var(--c-normal-bg)', text: 'var(--c-normal)', border: 'transparent' };
+      if (avgCt < t.very_pricey)return { bg: 'var(--c-pricey-bg)', text: 'var(--c-pricey)', border: 'transparent' };
+      return { bg: '#fcc', text: '#a00', border: 'transparent' };
+    }
+
+    function getBarColor(ct) {
+      const t = cfg.thresholds_ct_kwh_inclusive;
+      if (ct < 0)            return 'rgba(112,72,232,0.85)';
+      if (ct < t.very_cheap) return 'rgba(27,138,57,0.85)';
+      if (ct < t.cheap)      return 'rgba(47,158,68,0.75)';
+      if (ct < t.pricey)     return 'rgba(212,160,23,0.8)';
+      if (ct < t.very_pricey)return 'rgba(201,42,42,0.8)';
+      return 'rgba(160,0,0,0.9)';
+    }
+
+    function fmtCt(ct) {
+      return ct.toFixed(1) + ' ct';
+    }
+
+    function monthStr(ym) {
+      const [y, m] = ym.split('-');
+      return NL_MONTHS[parseInt(m, 10) - 1] + ' ' + y;
+    }
+
+    function prevMonth(ym) {
+      const [y, m] = ym.split('-').map(Number);
+      return m === 1
+        ? `${y - 1}-12`
+        : `${y}-${String(m - 1).padStart(2, '0')}`;
+    }
+
+    function nextMonth(ym) {
+      const [y, m] = ym.split('-').map(Number);
+      return m === 12
+        ? `${y + 1}-01`
+        : `${y}-${String(m + 1).padStart(2, '0')}`;
+    }
+
+    function todayYM() {
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    }
+
+    // ── Init ───────────────────────────────────────────────────────────────
+
+    async function init() {
+      try {
+        cfg = await fetch('/data/config.json').then(r => r.json());
+      } catch (e) {
+        document.getElementById('cal-grid').innerHTML =
+          '<p class="cal-no-data">Configuratie kon niet geladen worden.</p>';
+        return;
+      }
+
+      // Herstel aanbieder-keuze
+      const stored = localStorage.getItem(STORAGE_SUPPLIER);
+      if (stored && cfg.suppliers.find(s => s.id === stored)) {
+        selectedSupplier = stored;
+      } else {
+        selectedSupplier = cfg.default_supplier || 'average';
+      }
+
+      populateSupplierDropdown();
+      bindEvents();
+
+      // Start op huidige maand
+      currentMonth = todayYM();
+      await loadMonth(currentMonth);
+    }
+
+    // ── Dropdown ───────────────────────────────────────────────────────────
+
+    function populateSupplierDropdown() {
+      const sel = document.getElementById('supplier-select');
+      sel.innerHTML = '';
+      cfg.suppliers
+        .filter(s => s.id !== 'custom')   // "Eigen waarde" niet aanbieden in archief
+        .forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.textContent = s.name;
+          if (s.id === selectedSupplier) opt.selected = true;
+          sel.appendChild(opt);
+        });
+    }
+
+    // ── Events ─────────────────────────────────────────────────────────────
+
+    function bindEvents() {
+      document.getElementById('btn-prev').addEventListener('click', () => {
+        const prev = prevMonth(currentMonth);
+        if (prev >= EARLIEST_MONTH) loadMonth(prev);
+      });
+
+      document.getElementById('btn-next').addEventListener('click', () => {
+        const next = nextMonth(currentMonth);
+        if (next <= todayYM()) loadMonth(next);
+      });
+
+      document.getElementById('supplier-select').addEventListener('change', function () {
+        selectedSupplier = this.value;
+        try { localStorage.setItem(STORAGE_SUPPLIER, selectedSupplier); } catch (e) {}
+        renderCalendar();
+        if (selectedDate) renderDayDetail(selectedDate);
+      });
+
+      document.getElementById('neg-only-toggle').addEventListener('change', function () {
+        showOnlyNeg = this.checked;
+        renderCalendar();
+      });
+    }
+
+    // ── Data laden ─────────────────────────────────────────────────────────
+
+    async function loadMonth(month) {
+      currentMonth = month;
+
+      // Maand-label + knop-state
+      document.getElementById('month-label').textContent = monthStr(month);
+      document.getElementById('btn-prev').disabled = prevMonth(month) < EARLIEST_MONTH;
+      document.getElementById('btn-next').disabled = nextMonth(month) > todayYM();
+
+      const grid = document.getElementById('cal-grid');
+      grid.innerHTML = '<div class="cal-loading">Laden…</div>';
+
+      try {
+        const resp = await fetch(`/data/archief/${month}.json`);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        archiveData = await resp.json();
+      } catch (e) {
+        archiveData = null;
+      }
+
+      renderCalendar();
+
+      // Standaard selecteer vandaag (als die in deze maand valt), anders eerste beschikbare dag
+      const todayStr = new Date().toISOString().slice(0, 10);
+      if (archiveData && archiveData.prices.length > 0) {
+        const daysInArchive = [...new Set(archiveData.prices.map(p => p.time.slice(0, 10)))];
+        const defaultDay = daysInArchive.includes(todayStr) ? todayStr : daysInArchive[daysInArchive.length - 1];
+        selectDay(defaultDay);
+      } else {
+        hideDayDetail();
+      }
+    }
+
+    // ── Kalender renderen ──────────────────────────────────────────────────
+
+    function renderCalendar() {
+      const grid = document.getElementById('cal-grid');
+      grid.innerHTML = '';
+
+      if (!archiveData || !archiveData.prices.length) {
+        grid.innerHTML = '<p class="cal-no-data" style="grid-column:1/-1">Geen data beschikbaar voor deze maand. Prijzen worden verzameld zodra de site draait.</p>';
+        return;
+      }
+
+      // Groepeer per dag
+      const byDay = {};
+      for (const p of archiveData.prices) {
+        const day = p.time.slice(0, 10);
+        if (!byDay[day]) byDay[day] = [];
+        byDay[day].push(p);
+      }
+
+      // Bouw dag-statistieken
+      const dayStats = {};
+      for (const [day, entries] of Object.entries(byDay)) {
+        const cts = entries.map(p => toConsumerCt(p.price, selectedSupplier));
+        const avg = cts.reduce((a, b) => a + b, 0) / cts.length;
+        const min = Math.min(...cts);
+        const max = Math.max(...cts);
+        const negHours = cts.filter(c => c < 0).length;
+        dayStats[day] = { avg, min, max, negHours, cts };
+      }
+
+      // Bepaal eerste dag van de maand en welke weekdag dat is (maandag = 0)
+      const [y, m] = currentMonth.split('-').map(Number);
+      const firstDayDate = new Date(y, m - 1, 1);
+      let startOffset = firstDayDate.getDay() - 1; // zondag=0 → omzetten naar ma=0
+      if (startOffset < 0) startOffset = 6; // zondag → kolom 6
+
+      const daysInMonth = new Date(y, m, 0).getDate();
+
+      // Lege cellen vóór de eerste dag
+      for (let i = 0; i < startOffset; i++) {
+        const blank = document.createElement('div');
+        blank.className = 'cal-day empty';
+        grid.appendChild(blank);
+      }
+
+      // Dag-cellen
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${currentMonth}-${String(d).padStart(2, '0')}`;
+        const stats = dayStats[dateStr];
+
+        const cell = document.createElement('div');
+        cell.className = 'cal-day';
+        cell.setAttribute('role', 'gridcell');
+        cell.setAttribute('tabindex', '0');
+        cell.setAttribute('aria-label', `${d} ${monthStr(currentMonth)}`);
+
+        if (!stats) {
+          // Dag zonder data (toekomst of ontbrekend)
+          cell.style.background = 'var(--c-bg)';
+          cell.style.opacity = '0.4';
+          cell.style.cursor = 'default';
+          cell.innerHTML = `<span class="cal-day-num" style="color:var(--c-text-mute)">${d}</span>`;
+        } else {
+          const color = getDayColor(stats.avg);
+          cell.style.background = color.bg;
+          if (color.border !== 'transparent') {
+            cell.style.borderColor = color.border;
+          }
+          cell.dataset.date = dateStr;
+
+          // Markeer als geselecteerd
+          if (dateStr === selectedDate) cell.classList.add('selected');
+
+          // Verberg als "alleen negatief" aan staat en dag heeft geen negatieve uren
+          if (showOnlyNeg && stats.negHours === 0) cell.classList.add('hidden-neg');
+
+          cell.innerHTML = `
+            <span class="cal-day-num" style="color:${color.text}">${d}</span>
+            <span class="cal-day-price" style="color:${color.text}">${fmtCt(stats.avg)}</span>
+            ${stats.negHours > 0 ? `<span class="cal-neg-badge">−${stats.negHours}u</span>` : ''}
+          `;
+
+          cell.addEventListener('click', () => selectDay(dateStr));
+          cell.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDay(dateStr); }
+          });
+        }
+
+        grid.appendChild(cell);
+      }
+    }
+
+    // ── Dag selecteren ─────────────────────────────────────────────────────
+
+    function selectDay(dateStr) {
+      selectedDate = dateStr;
+
+      // Update selected-state in kalender
+      document.querySelectorAll('.cal-day.selected').forEach(el => el.classList.remove('selected'));
+      const cell = document.querySelector(`.cal-day[data-date="${dateStr}"]`);
+      if (cell) cell.classList.add('selected');
+
+      renderDayDetail(dateStr);
+    }
+
+    // ── Dag-detail ─────────────────────────────────────────────────────────
+
+    function renderDayDetail(dateStr) {
+      if (!archiveData) return;
+
+      const entries = archiveData.prices.filter(p => p.time.slice(0, 10) === dateStr);
+      if (!entries.length) { hideDayDetail(); return; }
+
+      entries.sort((a, b) => a.time.localeCompare(b.time));
+      const cts = entries.map(p => toConsumerCt(p.price, selectedSupplier));
+      const avg = cts.reduce((a, b) => a + b, 0) / cts.length;
+      const min = Math.min(...cts);
+      const max = Math.max(...cts);
+      const negHours = cts.filter(c => c < 0).length;
+
+      // Titel
+      const [, , dd] = dateStr.split('-');
+      const [y, mo] = dateStr.split('-').map(Number);
+      const titleEl = document.getElementById('day-detail-title');
+      titleEl.textContent = `${parseInt(dd, 10)} ${NL_MONTHS[mo - 1]} ${y}`;
+
+      // Stat-chips
+      const chips = document.getElementById('day-stat-chips');
+      chips.innerHTML = `
+        <span class="day-chip">Gem. <strong>${fmtCt(avg)}</strong></span>
+        <span class="day-chip">Min <strong>${fmtCt(min)}</strong></span>
+        <span class="day-chip">Max <strong>${fmtCt(max)}</strong></span>
+        ${negHours > 0
+          ? `<span class="day-chip neg-chip">⚡ ${negHours} uur negatief</span>`
+          : ''}
+      `;
+
+      // Labels (uur 0–23)
+      const labels = entries.map(p => {
+        const h = new Date(p.time).getHours();
+        return `${String(h).padStart(2, '0')}:00`;
+      });
+
+      // Grafiek
+      const canvas = document.getElementById('day-chart');
+      if (dayChart) { dayChart.destroy(); dayChart = null; }
+      dayChart = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'ct/kWh',
+            data: cts,
+            backgroundColor: cts.map(getBarColor),
+            borderRadius: 4,
+            borderSkipped: false,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: ctx => `${ctx[0].label} – ${String(parseInt(ctx[0].label) + 1).padStart(2,'0')}:00`,
+                label: ctx => `${fmtCt(ctx.parsed.y)} (${getSupplier(selectedSupplier).name})`,
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 10 }, maxRotation: 0 },
+            },
+            y: {
+              grid: { color: 'rgba(0,0,0,0.06)' },
+              ticks: {
+                font: { size: 11 },
+                callback: v => v.toFixed(0) + ' ct',
+              },
+            },
+          },
+        },
+      });
+
+      document.getElementById('day-detail').classList.remove('hidden');
+    }
+
+    function hideDayDetail() {
+      document.getElementById('day-detail').classList.add('hidden');
+      selectedDate = null;
+    }
+
+    // ── Start ──────────────────────────────────────────────────────────────
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+  })();
+  </script>
+</body>
+</html>
