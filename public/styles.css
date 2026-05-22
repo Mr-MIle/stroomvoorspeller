@@ -67,10 +67,10 @@ a:hover { text-decoration: underline; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
 }
 .brand {
   display: inline-flex;
@@ -87,8 +87,8 @@ a:hover { text-decoration: underline; }
   flex-shrink: 0;
 }
 .brand-tld { color: var(--c-text-mute); font-weight: 500; }
-.primary-nav { display: flex; gap: 18px; flex-wrap: wrap; }
-.primary-nav a { color: var(--c-text-soft); font-weight: 500; font-size: 0.95rem; padding: 10px 4px; }
+.primary-nav { display: flex; gap: 10px; flex-wrap: wrap; }
+.primary-nav a { color: var(--c-text-soft); font-weight: 500; font-size: 0.9rem; padding: 8px 4px; }
 .primary-nav a:hover { color: var(--c-brand); }
 
 /* Settings toggle button in header */
@@ -151,8 +151,10 @@ a:hover { text-decoration: underline; }
   transform: rotate(180deg);
   opacity: 1;
 }
-@media (max-width: 640px) {
+@media (max-width: 1100px) {
   .settings-toggle-prefix { display: none; }
+}
+@media (max-width: 640px) {
   .settings-toggle-value { max-width: 130px; }
 }
 
