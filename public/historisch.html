@@ -232,15 +232,31 @@
       flex-shrink: 0;
     }
 
+    /* ── Twee-koloms hoofdlayout ── */
+    .hist-main-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 28px;
+      align-items: start;
+      margin-bottom: 32px;
+    }
+    .hist-cal-col { min-width: 0; }
+
     /* ── Dag-detail ── */
     .hist-day-detail {
       background: var(--c-surface);
       border: 1px solid var(--c-border);
       border-radius: var(--radius);
       padding: 20px 24px;
-      margin-bottom: 32px;
     }
-    .hist-day-detail.hidden { display: none; }
+    .hist-day-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      color: var(--c-text-mute);
+      font-size: 0.9rem;
+    }
     .day-detail-header {
       display: flex;
       align-items: baseline;
@@ -283,7 +299,10 @@
     .cal-legend { max-width: 460px; }
 
     /* ── Responsive ── */
-    @media (max-width: 640px) {
+    @media (max-width: 720px) {
+      .hist-main-grid {
+        grid-template-columns: 1fr;
+      }
       .hist-controls { gap: 8px; }
       .hist-supplier-wrap { margin-left: 0; }
       .cal-wrap, .cal-weekdays, .cal-legend { max-width: 100%; }
@@ -348,43 +367,41 @@
           </div>
         </div>
 
-        <!-- Weekdag-headers + kalender-grid in compacte wrapper -->
-        <div class="cal-wrap">
-          <div class="cal-weekdays">
-            <div class="cal-weekday">Ma</div>
-            <div class="cal-weekday">Di</div>
-            <div class="cal-weekday">Wo</div>
-            <div class="cal-weekday">Do</div>
-            <div class="cal-weekday">Vr</div>
-            <div class="cal-weekday">Za</div>
-            <div class="cal-weekday">Zo</div>
+        <!-- Twee-koloms grid: kalender links, grafiek rechts -->
+        <div class="hist-main-grid">
+
+          <!-- Linker kolom: kalender + legenda -->
+          <div class="hist-cal-col">
+            <div class="cal-wrap">
+              <div class="cal-weekdays">
+                <div class="cal-weekday">Ma</div>
+                <div class="cal-weekday">Di</div>
+                <div class="cal-weekday">Wo</div>
+                <div class="cal-weekday">Do</div>
+                <div class="cal-weekday">Vr</div>
+                <div class="cal-weekday">Za</div>
+                <div class="cal-weekday">Zo</div>
+              </div>
+              <div id="cal-grid" class="cal-grid" role="grid" aria-label="Kalender"></div>
+            </div>
+            <div class="cal-legend" aria-hidden="true">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--c-free-bg);border:1.5px solid var(--c-free)"></div> Negatief &nbsp;<span style="font-size:0.7rem;color:var(--c-free)">⚡ = min. 1 uur negatief</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#b2f2bb"></div> Zeer goedkoop (&lt;14 ct)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#d3f9d8"></div> Goedkoop (&lt;22 ct)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--c-normal-bg)"></div> Normaal (&lt;28 ct)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--c-pricey-bg)"></div> Duur (&lt;38 ct)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#fcc"></div> Zeer duur (≥38 ct)</div>
+            </div>
           </div>
-          <!-- Kalender-grid -->
-          <div id="cal-grid" class="cal-grid" role="grid" aria-label="Kalender"></div>
-        </div>
 
-        <!-- Legenda -->
-        <div class="cal-legend" aria-hidden="true">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--c-free-bg);border:1.5px solid var(--c-free)"></div> Negatief &nbsp;<span style="font-size:0.7rem;color:var(--c-free)">⚡ = min. 1 uur negatief</span></div>
-          <div class="legend-item"><div class="legend-dot" style="background:#b2f2bb"></div> Zeer goedkoop (&lt;14 ct)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#d3f9d8"></div> Goedkoop (&lt;22 ct)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--c-normal-bg)"></div> Normaal (&lt;28 ct)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--c-pricey-bg)"></div> Duur (&lt;38 ct)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#fcc"></div> Zeer duur (≥38 ct)</div>
-        </div>
-      </div>
-    </section>
+          <!-- Rechter kolom: dag-detail -->
+          <div id="day-detail" class="hist-day-detail">
+            <div id="day-detail-inner">
+              <div class="hist-day-placeholder">Klik op een dag om de uurprijzen te bekijken.</div>
+            </div>
+          </div>
 
-    <!-- ── Dag-detail ── -->
-    <section class="container">
-      <div id="day-detail" class="hist-day-detail hidden">
-        <div class="day-detail-header">
-          <h2 class="day-detail-title" id="day-detail-title">—</h2>
-        </div>
-        <div class="day-stat-chips" id="day-stat-chips"></div>
-        <div class="day-chart-wrap">
-          <canvas id="day-chart" aria-label="Uurprijzen geselecteerde dag"></canvas>
-        </div>
+        </div><!-- /hist-main-grid -->
       </div>
     </section>
   </main>
@@ -709,7 +726,13 @@
     // ── Dag-detail ─────────────────────────────────────────────────────────
 
     function renderDayDetail(dateStr) {
-      if (!archiveData) return;
+      const inner = document.getElementById('day-detail-inner');
+
+      if (!archiveData) {
+        inner.innerHTML = '<div class="hist-day-placeholder">Geen data beschikbaar voor deze maand.</div>';
+        if (dayChart) { dayChart.destroy(); dayChart = null; }
+        return;
+      }
 
       const entries = archiveData.prices.filter(p => p.time.slice(0, 10) === dateStr);
       if (!entries.length) { hideDayDetail(); return; }
@@ -721,33 +744,34 @@
       const max = Math.max(...cts);
       const negHours = cts.filter(c => c < 0).length;
 
-      // Titel
       const [, , dd] = dateStr.split('-');
       const [y, mo] = dateStr.split('-').map(Number);
-      const titleEl = document.getElementById('day-detail-title');
-      titleEl.textContent = `${parseInt(dd, 10)} ${NL_MONTHS[mo - 1]} ${y}`;
+      const title = `${parseInt(dd, 10)} ${NL_MONTHS[mo - 1]} ${y}`;
 
-      // Stat-chips
-      const chips = document.getElementById('day-stat-chips');
-      chips.innerHTML = `
-        <span class="day-chip">Gem. <strong>${fmtCt(avg)}</strong></span>
-        <span class="day-chip">Min <strong>${fmtCt(min)}</strong></span>
-        <span class="day-chip">Max <strong>${fmtCt(max)}</strong></span>
-        ${negHours > 0
-          ? `<span class="day-chip neg-chip">⚡ ${negHours} uur negatief</span>`
-          : ''}
-      `;
-
-      // Labels (uur 0–23)
       const labels = entries.map(p => {
         const h = new Date(p.time).getHours();
         return `${String(h).padStart(2, '0')}:00`;
       });
 
+      // Vervang inner HTML (behoudt canvas-element voor Chart.js hergebruik)
+      inner.innerHTML = `
+        <div class="day-detail-header">
+          <h2 class="day-detail-title">${title}</h2>
+        </div>
+        <div class="day-stat-chips">
+          <span class="day-chip">Gem. <strong>${fmtCt(avg)}</strong></span>
+          <span class="day-chip">Min <strong>${fmtCt(min)}</strong></span>
+          <span class="day-chip">Max <strong>${fmtCt(max)}</strong></span>
+          ${negHours > 0 ? `<span class="day-chip neg-chip">⚡ ${negHours} uur negatief</span>` : ''}
+        </div>
+        <div class="day-chart-wrap">
+          <canvas id="day-chart" aria-label="Uurprijzen ${title}"></canvas>
+        </div>
+      `;
+
       // Grafiek
-      const canvas = document.getElementById('day-chart');
       if (dayChart) { dayChart.destroy(); dayChart = null; }
-      dayChart = new Chart(canvas, {
+      dayChart = new Chart(document.getElementById('day-chart'), {
         type: 'bar',
         data: {
           labels,
@@ -786,12 +810,12 @@
           },
         },
       });
-
-      document.getElementById('day-detail').classList.remove('hidden');
     }
 
     function hideDayDetail() {
-      document.getElementById('day-detail').classList.add('hidden');
+      if (dayChart) { dayChart.destroy(); dayChart = null; }
+      document.getElementById('day-detail-inner').innerHTML =
+        '<div class="hist-day-placeholder">Klik op een dag om de uurprijzen te bekijken.</div>';
       selectedDate = null;
     }
 
