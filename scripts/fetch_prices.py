@@ -56,6 +56,9 @@ ENTSOE_BASE = "https://web-api.tp.entsoe.eu/api"
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = PROJECT_ROOT / "public" / "data" / "prices.json"
 
+# Archief-map voor maandelijkse historische prijzen
+ARCHIVE_DIR = PROJECT_ROOT / "public" / "data" / "archief"
+
 # Amsterdam tijdzone (statisch want we draaien in UTC op CI)
 AMS_OFFSET_WINTER = timedelta(hours=1)
 AMS_OFFSET_SUMMER = timedelta(hours=2)
@@ -284,6 +287,68 @@ def generate_sample_prices_15m(now_ams: datetime) -> list[dict]:
     return prices
 
 
+def archive_prices(prices: list[dict]) -> None:
+    """Sla uurprijzen op in maandelijkse archief-bestanden (append-only).
+
+    Elk bestand in public/data/archief/ heeft de naam YYYY-MM.json en bevat
+    alle bekende uurprijzen voor die maand. Bestaande uren worden nooit
+    overschreven — alleen nieuwe tijdstempels worden toegevoegd. Toekomstige
+    uren (morgen) worden ook gearchiveerd; ze krijgen de komende dag al hun
+    definitieve day-ahead prijs mee.
+
+    Wordt alleen aangeroepen bij echte ENTSO-E data (niet bij sample-data).
+    """
+    ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Groepeer binnenkomende prijzen per maand (op basis van de eerste 7 tekens van time)
+    by_month: dict[str, list[dict]] = {}
+    for p in prices:
+        month_key = p["time"][:7]  # "YYYY-MM"
+        by_month.setdefault(month_key, []).append(p)
+
+    for month_key, new_entries in by_month.items():
+        archive_file = ARCHIVE_DIR / f"{month_key}.json"
+
+        # Laad bestaand archief (als het er is)
+        existing_times: set[str] = set()
+        existing_prices: list[dict] = []
+        if archive_file.exists():
+            try:
+                existing = json.loads(archive_file.read_text(encoding="utf-8"))
+                existing_prices = existing.get("prices", [])
+                # Normaliseer de tijdstempel-key voor de lookup (eerste 19 tekens = YYYY-MM-DDTHH:MM:SS)
+                existing_times = {p["time"][:19] for p in existing_prices}
+            except Exception as exc:  # noqa: BLE001
+                print(f"[warn] Kon archief {archive_file.name} niet lezen: {exc}", file=sys.stderr)
+
+        # Voeg alleen nieuwe uren toe (append-only, geen duplicaten)
+        added = 0
+        for entry in new_entries:
+            if entry["time"][:19] not in existing_times:
+                existing_prices.append(entry)
+                existing_times.add(entry["time"][:19])
+                added += 1
+
+        if added == 0 and archive_file.exists():
+            continue  # niets nieuws — bestand niet aanraken
+
+        existing_prices.sort(key=lambda x: x["time"])
+
+        payload = {
+            "month": month_key,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "prices": existing_prices,
+        }
+        archive_file.write_text(
+            json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+        print(
+            f"[ok] Archief {archive_file.name}: {added} nieuwe uren toegevoegd "
+            f"({len(existing_prices)} totaal).",
+            file=sys.stderr,
+        )
+
+
 def main() -> int:
     token = os.environ.get("ENTSOE_TOKEN", "").strip()
     now_ams = amsterdam_now()
@@ -350,6 +415,15 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001
             error_msg = f"ENTSO-E fout: {exc}"
             print(f"[warn] {error_msg}", file=sys.stderr)
+
+    # Archiveer alle opgehaalde uurprijzen (alleen bij echte ENTSO-E data).
+    # Dit gebeurt ook als prices leeg is na een fout — in dat geval is er niets te archiveren.
+    if prices and source == "entsoe":
+        try:
+            archive_prices(prices)
+        except Exception as exc:  # noqa: BLE001
+            # Archiveren mag de hoofdflow nooit breken.
+            print(f"[warn] Archiveren mislukt (niet kritiek): {exc}", file=sys.stderr)
 
     if not prices:
         # Probeer de bestaande prices.json te bewaren als die echte ENTSO-E data bevat.
