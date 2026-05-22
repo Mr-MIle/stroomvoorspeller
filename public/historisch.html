@@ -161,8 +161,9 @@
     .cal-weekdays {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      margin-bottom: 4px;
+      gap: 3px;
+      margin-bottom: 3px;
+      max-width: 460px;
     }
     .cal-weekday {
       text-align: center;
@@ -171,10 +172,14 @@
       color: var(--c-text-mute);
       padding: 4px 0;
     }
+    /* Kalender wordt beperkt in breedte zodat tegels compact blijven (~58px) */
+    .cal-wrap {
+      max-width: 460px;
+    }
     .cal-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
+      gap: 3px;
     }
     .cal-day {
       aspect-ratio: 1;
@@ -187,7 +192,6 @@
       transition: transform 0.1s, box-shadow 0.1s;
       position: relative;
       border: 2px solid transparent;
-      min-height: 44px;
     }
     .cal-day:hover { transform: scale(1.06); box-shadow: var(--shadow-md); }
     .cal-day.selected { border-color: var(--c-brand); box-shadow: 0 0 0 2px rgba(15,108,189,0.25); }
@@ -195,27 +199,17 @@
     .cal-day.empty:hover { transform: none; box-shadow: none; }
     .cal-day.hidden-neg { opacity: 0.15; pointer-events: none; }
     .cal-day-num {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 600;
       line-height: 1;
     }
-    .cal-day-price {
-      font-size: 0.65rem;
-      line-height: 1;
-      margin-top: 2px;
-      opacity: 0.85;
-    }
+    .cal-day-price { display: none; } /* te krap in compacte tegel */
     .cal-neg-badge {
       position: absolute;
       top: 3px;
-      right: 4px;
-      font-size: 0.55rem;
-      font-weight: 700;
-      color: var(--c-free);
-      background: var(--c-free-bg);
-      border-radius: 3px;
-      padding: 1px 3px;
-      line-height: 1.2;
+      right: 3px;
+      font-size: 0.6rem;
+      line-height: 1;
     }
 
     /* Legenda */
@@ -286,11 +280,13 @@
       height: 220px;
     }
 
+    .cal-legend { max-width: 460px; }
+
     /* ── Responsive ── */
     @media (max-width: 640px) {
       .hist-controls { gap: 8px; }
       .hist-supplier-wrap { margin-left: 0; }
-      .cal-day-price { display: none; }
+      .cal-wrap, .cal-weekdays, .cal-legend { max-width: 100%; }
       .day-chart-wrap { height: 180px; }
       .hist-day-detail { padding: 16px; }
     }
@@ -352,23 +348,24 @@
           </div>
         </div>
 
-        <!-- Weekdag-headers -->
-        <div class="cal-weekdays">
-          <div class="cal-weekday">Ma</div>
-          <div class="cal-weekday">Di</div>
-          <div class="cal-weekday">Wo</div>
-          <div class="cal-weekday">Do</div>
-          <div class="cal-weekday">Vr</div>
-          <div class="cal-weekday">Za</div>
-          <div class="cal-weekday">Zo</div>
+        <!-- Weekdag-headers + kalender-grid in compacte wrapper -->
+        <div class="cal-wrap">
+          <div class="cal-weekdays">
+            <div class="cal-weekday">Ma</div>
+            <div class="cal-weekday">Di</div>
+            <div class="cal-weekday">Wo</div>
+            <div class="cal-weekday">Do</div>
+            <div class="cal-weekday">Vr</div>
+            <div class="cal-weekday">Za</div>
+            <div class="cal-weekday">Zo</div>
+          </div>
+          <!-- Kalender-grid -->
+          <div id="cal-grid" class="cal-grid" role="grid" aria-label="Kalender"></div>
         </div>
-
-        <!-- Kalender-grid -->
-        <div id="cal-grid" class="cal-grid" role="grid" aria-label="Kalender"></div>
 
         <!-- Legenda -->
         <div class="cal-legend" aria-hidden="true">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--c-free-bg);border:1.5px solid var(--c-free)"></div> Negatief</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--c-free-bg);border:1.5px solid var(--c-free)"></div> Negatief &nbsp;<span style="font-size:0.7rem;color:var(--c-free)">⚡ = min. 1 uur negatief</span></div>
           <div class="legend-item"><div class="legend-dot" style="background:#b2f2bb"></div> Zeer goedkoop (&lt;14 ct)</div>
           <div class="legend-item"><div class="legend-dot" style="background:#d3f9d8"></div> Goedkoop (&lt;22 ct)</div>
           <div class="legend-item"><div class="legend-dot" style="background:var(--c-normal-bg)"></div> Normaal (&lt;28 ct)</div>
@@ -683,8 +680,7 @@
 
           cell.innerHTML = `
             <span class="cal-day-num" style="color:${color.text}">${d}</span>
-            <span class="cal-day-price" style="color:${color.text}">${fmtCt(stats.avg)}</span>
-            ${stats.negHours > 0 ? `<span class="cal-neg-badge">−${stats.negHours}u</span>` : ''}
+            ${stats.negHours > 0 ? `<span class="cal-neg-badge" aria-label="${stats.negHours} uur negatief">⚡</span>` : ''}
           `;
 
           cell.addEventListener('click', () => selectDay(dateStr));
