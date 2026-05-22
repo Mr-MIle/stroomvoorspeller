@@ -8,8 +8,6 @@ name: Update prijzen (handmatig / fallback)
 #  - na elke push naar main (handig om de cache direct te verversen)
 #  - handmatig, via Run workflow in de GitHub UI
 on:
-  schedule:
-    - cron: '0 */3 * * *'   # elke 3 uur (op het hele uur, UTC)
   push:
     branches: [main]
   workflow_dispatch:
@@ -88,6 +86,7 @@ jobs:
           git add public/data/feed.xml 2>/dev/null || true
           git add public/data/performance.json 2>/dev/null || true
           git add public/data/forecast_archive/ 2>/dev/null || true
+          git add public/data/archief/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "auto: update prijzen + voorspelling $(date -u +%Y-%m-%dT%H:%MZ)"
