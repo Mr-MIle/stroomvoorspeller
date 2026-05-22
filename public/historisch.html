@@ -320,9 +320,8 @@
         <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
       </a>
       <nav class="primary-nav" aria-label="hoofdmenu">
-        <a href="/#prijzen">Prijzen</a>
-        <a href="/#voorspelling">Voorspelling</a>
-        <a href="/#tips">Tips</a>
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
         <a href="/aanbieders">Aanbieders</a>
         <a href="/kennisbank/">Kennisbank</a>
         <a href="/historisch" aria-current="page">Historisch</a>
@@ -451,7 +450,8 @@
                        'juli','augustus','september','oktober','november','december'];
     const NL_DAYS_ABBR = ['ma','di','wo','do','vr','za','zo'];
 
-    // Vroegste maand met verwachte data (de site draait pas vanaf ~april 2026)
+    // Vroegste maand waarnaar terug genavigeerd kan worden.
+    // Maanden zonder archief-bestand tonen gewoon "Geen data beschikbaar".
     const EARLIEST_MONTH = '2026-02';
 
     // ── Hulpfuncties ───────────────────────────────────────────────────────
@@ -795,38 +795,4 @@
               }
             }
           },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { size: 10 }, maxRotation: 0 },
-            },
-            y: {
-              grid: { color: 'rgba(0,0,0,0.06)' },
-              ticks: {
-                font: { size: 11 },
-                callback: v => v.toFixed(0) + ' ct',
-              },
-            },
-          },
-        },
-      });
-    }
-
-    function hideDayDetail() {
-      if (dayChart) { dayChart.destroy(); dayChart = null; }
-      document.getElementById('day-detail-inner').innerHTML =
-        '<div class="hist-day-placeholder">Klik op een dag om de uurprijzen te bekijken.</div>';
-      selectedDate = null;
-    }
-
-    // ── Start ──────────────────────────────────────────────────────────────
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
-    }
-
-  })();
-  </script>
-</body>
-</html>
+   
