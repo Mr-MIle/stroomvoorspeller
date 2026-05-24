@@ -54,10 +54,10 @@ def load_prices():
         data = json.load(f)
 
     actuals = {}
-    # prices.json structuur: {"prices": [{"hour": "2026-04-14T08:00:00Z", "epex": 52.1, ...}, ...]}
+    # prices.json structuur: {"prices": [{"time": "2026-04-14T08:00:00+02:00", "price": 52.1, ...}, ...]}
     for entry in data.get("prices", []):
         hour_str = entry.get("hour") or entry.get("time") or entry.get("timestamp")
-        epex = entry.get("epex") or entry.get("epex_eur_mwh")
+        epex = entry.get("epex") or entry.get("epex_eur_mwh") or entry.get("price")
         if hour_str and epex is not None:
             # Normaliseer naar UTC ISO-string zonder subseconden
             try:
@@ -95,13 +95,13 @@ def load_archive():
                 print(f"[WARN] Ongeldig JSON: {path}")
                 continue
 
-        # forecast.json structuur: {"forecasts": [{"hour": "...", "epex_forecast": 55.0, "band_low": ..., "band_high": ...}]}
+        # forecast.json structuur: {"forecasts": [{"time": "...", "predicted": 55.0, "lower": ..., "upper": ...}]}
         fc_dict = {}
         for entry in data.get("forecasts", []):
             hour_str = entry.get("hour") or entry.get("time")
-            fc_val = entry.get("epex_forecast") or entry.get("forecast_eur_mwh")
-            band_low = entry.get("band_low")
-            band_high = entry.get("band_high")
+            fc_val = entry.get("epex_forecast") or entry.get("forecast_eur_mwh") or entry.get("predicted")
+            band_low = entry.get("band_low") or entry.get("lower")
+            band_high = entry.get("band_high") or entry.get("upper")
             if hour_str and fc_val is not None:
                 try:
                     dt = datetime.fromisoformat(hour_str.replace("Z", "+00:00"))
@@ -349,6 +349,11 @@ def compute_performance():
         json.dump(result, f, ensure_ascii=False, indent=2)
 
     print(f"[OK] performance.json geschreven ({len(pairs)} matched pairs, {len(dates)} dagen).")
+
+
+if __name__ == "__main__":
+    compute_performance()
+d pairs, {len(dates)} dagen).")
 
 
 if __name__ == "__main__":
