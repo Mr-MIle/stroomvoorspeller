@@ -276,7 +276,7 @@
       <div class="score-grid" id="score-grid">
         <div class="score-card score-note">
           <div class="score-value" id="sc-mae">–</div>
-          <div class="score-label">Gem. afwijking (MAE)<br>EUR/MWh</div>
+          <div class="score-label">Gem. afwijking (MAE)<br>ct/kWh</div>
         </div>
         <div class="score-card" id="sc-naive-card">
           <div class="score-value" id="sc-naive">–</div>
@@ -297,7 +297,7 @@
     <!-- ── Uitlegblok scores ── -->
     <div class="info-box">
       <strong>Wat betekenen deze cijfers?</strong><br>
-      Een MAE van 12 EUR/MWh betekent dat de voorspelling gemiddeld 1,2 ct/kWh afwijkt van de werkelijke prijs.
+      De MAE (gemiddelde absolute afwijking) geeft aan hoeveel ct/kWh de voorspelling gemiddeld afwijkt van de werkelijke prijs.
       "Beter dan naïef" vergelijkt het model met de simpelste benchmark: dezelfde dag vorige week.
       Een positief percentage betekent dat het model het beter doet.
       De richting-hit meet of het model correct voorspelt of een uur duurder of goedkoper wordt dan normaal.
@@ -448,11 +448,16 @@
 
     const DATA_URL = '/data/performance.json';
 
+    // ── Omrekening EUR/MWh → ct/kWh ──
+    function mwhToCt(v) {
+      return v !== null && v !== undefined ? v / 10 : null;
+    }
+
     // ── Kleur-helpers ──
-    function maeColor(mae) {
-      if (mae === null) return '#aaa';
-      if (mae < 10) return '#1a7f37';
-      if (mae < 15) return '#b45309';
+    function maeColor(mae_eur_mwh) {
+      if (mae_eur_mwh === null) return '#aaa';
+      if (mae_eur_mwh < 10) return '#1a7f37';
+      if (mae_eur_mwh < 15) return '#b45309';
       return '#b91c1c';
     }
 
@@ -466,8 +471,9 @@
       return rate >= 0.55 ? 'score-good' : rate >= 0.50 ? '' : 'score-mid';
     }
 
-    function fmtMae(v) {
-      return v !== null ? v.toFixed(1) + ' €' : '–';
+    function fmtMae(v_eur_mwh) {
+      const ct = mwhToCt(v_eur_mwh);
+      return ct !== null ? ct.toFixed(1) + ' ct' : '–';
     }
 
     function fmtPct(v) {
@@ -510,17 +516,18 @@
         const d = new Date(s.date + 'T00:00:00Z');
         return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
       });
-      const values = series.map(s => s.mae_eur_mwh);
+      const rawValues = series.map(s => s.mae_eur_mwh);
+      const values = rawValues.map(mwhToCt);
 
       new Chart(document.getElementById('chart-daily'), {
         type: 'bar',
         data: {
           labels,
           datasets: [{
-            label: 'MAE (EUR/MWh)',
+            label: 'MAE (ct/kWh)',
             data: values,
-            backgroundColor: values.map(v => maeColor(v) + '99'),
-            borderColor: values.map(v => maeColor(v)),
+            backgroundColor: rawValues.map(v => maeColor(v) + '99'),
+            borderColor: rawValues.map(v => maeColor(v)),
             borderWidth: 1,
             borderRadius: 3,
           }]
@@ -532,7 +539,7 @@
             legend: { display: false },
             tooltip: {
               callbacks: {
-                label: ctx => `Afwijking: ${ctx.parsed.y?.toFixed(1)} EUR/MWh`
+                label: ctx => `Afwijking: ${ctx.parsed.y?.toFixed(1)} ct/kWh`
               }
             }
           },
@@ -540,7 +547,7 @@
             x: { ticks: { font: { size: 10 }, maxRotation: 45 } },
             y: {
               beginAtZero: true,
-              title: { display: true, text: 'EUR/MWh', font: { size: 10 } }
+              title: { display: true, text: 'ct/kWh', font: { size: 10 } }
             }
           }
         }
@@ -550,14 +557,14 @@
     // ── Uurpatroon-grafiek ──
     function renderHourlyChart(byHour) {
       const labels = byHour.map(h => h.hour + 'u');
-      const values = byHour.map(h => h.mae_eur_mwh);
+      const values = byHour.map(h => mwhToCt(h.mae_eur_mwh));
 
       new Chart(document.getElementById('chart-hourly'), {
         type: 'line',
         data: {
           labels,
           datasets: [{
-            label: 'MAE (EUR/MWh)',
+            label: 'MAE (ct/kWh)',
             data: values,
             borderColor: '#0f6cbd',
             backgroundColor: '#0f6cbd22',
@@ -574,7 +581,7 @@
             legend: { display: false },
             tooltip: {
               callbacks: {
-                label: ctx => `${ctx.label}: ${ctx.parsed.y?.toFixed(1)} EUR/MWh`
+                label: ctx => `${ctx.label}: ${ctx.parsed.y?.toFixed(1)} ct/kWh`
               }
             }
           },
@@ -582,7 +589,7 @@
             x: { ticks: { font: { size: 10 } } },
             y: {
               beginAtZero: true,
-              title: { display: true, text: 'EUR/MWh', font: { size: 10 } }
+              title: { display: true, text: 'ct/kWh', font: { size: 10 } }
             }
           }
         }
@@ -600,7 +607,7 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>Dag ${row.horizon_days}</td>
-          <td>${row.mae_eur_mwh !== null ? row.mae_eur_mwh.toFixed(1) + ' EUR/MWh' : '–'}</td>
+          <td>${row.mae_eur_mwh !== null ? mwhToCt(row.mae_eur_mwh).toFixed(1) + ' ct/kWh' : '–'}</td>
           <td><span class="${pctClass}">${pctLabel}</span></td>
           <td>${fmtRate(row.direction_hit_rate)}</td>
         `;
@@ -628,7 +635,7 @@
         div.innerHTML = `
           <strong>${recallPct}</strong>
           ${c.emoji} ${c.label}<br>
-          <span style="color:#666;font-size:0.78rem;">${b.n_hours} uren · MAE ${b.mae_eur_mwh !== null ? b.mae_eur_mwh.toFixed(1) : '–'}</span>
+          <span style="color:#666;font-size:0.78rem;">${b.n_hours} uren · MAE ${b.mae_eur_mwh !== null ? mwhToCt(b.mae_eur_mwh).toFixed(1) + ' ct' : '–'}</span>
         `;
         grid.appendChild(div);
       }
@@ -644,7 +651,7 @@
         const div = document.createElement('div');
         div.className = 'version-item';
         const maeStr = v.mae_eur_mwh !== null
-          ? `· MAE ${v.mae_eur_mwh.toFixed(1)} EUR/MWh (30d)`
+          ? `· MAE ${mwhToCt(v.mae_eur_mwh).toFixed(1)} ct/kWh (30d)`
           : '';
         div.innerHTML = `
           <span class="version-tag">v${v.version}</span>
