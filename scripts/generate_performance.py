@@ -348,12 +348,10 @@ def compute_performance():
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
 
-    print(f"[OK] performance.json geschreven ({len(pairs)} matched pairs, {len(dates)} dagen).")
+    n_pairs = len(pairs)
+    n_dates = len(dates)
+    print(f"[OK] performance.json geschreven ({n_pairs} matched pairs, {n_dates} dagen).")
 
-
-if __name__ == "__main__":
-    compute_performance()
-d pairs, {len(dates)} dagen).")
 
 
 if __name__ == "__main__":
