@@ -582,6 +582,7 @@ def main() -> int:
         # seizoensfallback-mechanisme ook mislukt -- wat in de praktijk nooit
         # voorkomt omdat de normen altijd berekend kunnen worden.
         missing_fields = [k for k in ("shortwave_mj", "wind_ms", "temp_c") if wx.get(k) is None]
+        weather_is_fallback = bool(missing_fields)   # v2.3: bewaar of fallback-normen gebruikt zijn
         if missing_fields:
             for field in missing_fields:
                 if field == "shortwave_mj":
@@ -670,16 +671,26 @@ def main() -> int:
 
             # v2.1: EVENT_PLAUSIBILITY_LAYER
             # Wijzigt fc_dict["predicted"] NIET. Voegt plausibility-metadata toe.
-            plausibility_input = {
-                "target_time": fc_dict["time"],
-                "predicted":   fc_dict["predicted"],
-                "solar_ratio": fc_dict["sw_ratio_h"],
-                "wind_ms":     fc_dict["wind_ms"],
-                "temp_c":      fc_dict["temp_c"],
-                "P_negative":  fc_dict["P_negative"],
-            }
-            plausibility = compute_event_plausibility(plausibility_input, historical_log)
-            fc_dict.update(plausibility)
+            # v2.3: als weerdata ontbreekt (fallback-normen), sla analogie-zoek over.
+            # Fallback-waarden (wind=8 m/s, solar=seizoensnorm) liggen buiten de
+            # ±2 m/s windtolerantie van alle echte log-entries → anders altijd 0 analogen.
+            if weather_is_fallback:
+                fc_dict.update({
+                    "event_plausibility_score": None,
+                    "event_plausibility_label": "NORMAL",
+                    "analog_sample_size":       None,
+                })
+            else:
+                plausibility_input = {
+                    "target_time": fc_dict["time"],
+                    "predicted":   fc_dict["predicted"],
+                    "solar_ratio": fc_dict["sw_ratio_h"],
+                    "wind_ms":     fc_dict["wind_ms"],
+                    "temp_c":      fc_dict["temp_c"],
+                    "P_negative":  fc_dict["P_negative"],
+                }
+                plausibility = compute_event_plausibility(plausibility_input, historical_log)
+                fc_dict.update(plausibility)
 
             # MOS bias-correctie (v2.2): additief toepassen na alle andere berekeningen.
             # Corrigeert structurele modelfouten per (uur, regime, maand)-cel.
