@@ -1228,7 +1228,8 @@
                 const plText  = PLAUSIBILITY_TOOLTIP[plLabel] || PLAUSIBILITY_TOOLTIP.NORMAL;
                 lines.push(`Situatie: ${plText}`);
                 const plN = f.analog_sample_size;
-                if ((plLabel === "LOW" || plLabel === "VERY_RARE_EVENT") && plN !== undefined) {
+                // plN != null is false voor zowel null (fallback-weer) als undefined (pre-v2.1).
+                if ((plLabel === "LOW" || plLabel === "VERY_RARE_EVENT") && plN != null) {
                   lines.push(`Vergelijkbare uren in log: ${plN}`);
                 }
                 if (f.realistic_negative_probability !== undefined) {
