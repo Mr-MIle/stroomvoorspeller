@@ -8,6 +8,8 @@ name: Update prijzen (handmatig / fallback)
 #  - na elke push naar main (handig om de cache direct te verversen)
 #  - handmatig, via Run workflow in de GitHub UI
 on:
+  schedule:
+    - cron: "15 13,14,15 * * *"
   push:
     branches: [main]
   workflow_dispatch:
