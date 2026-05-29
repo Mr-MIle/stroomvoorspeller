@@ -612,7 +612,7 @@
     if (!payload.generated_at) return;
     const generatedAt = new Date(payload.generated_at);
     const ageMs = Date.now() - generatedAt.getTime();
-    const STALE_THRESHOLD_MS = 28 * 60 * 60 * 1000; // 28 uur (prijzen 1× per dag ~13:00 CEST)
+    const STALE_THRESHOLD_MS = 28 * 60 * 60 * 1000; // 28 uur (prijzen 1× per dag ~14:00 CEST)
     if (ageMs > STALE_THRESHOLD_MS) {
       const timeStr = generatedAt.toLocaleString("nl-NL", { hour: "2-digit", minute: "2-digit" });
       const dateStr = generatedAt.toLocaleString("nl-NL", { weekday: "short", day: "numeric", month: "short" });

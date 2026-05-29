@@ -161,7 +161,7 @@
       <div class="morgen-no-data container">
         <p class="morgen-no-data-icon" aria-hidden="true">⏳</p>
         <h2>Morgen-prijzen nog niet beschikbaar</h2>
-        <p>De day-ahead prijzen voor morgen worden elke dag rond <strong>13:00 uur</strong>
+        <p>De day-ahead prijzen voor morgen worden elke dag rond <strong>14:00 uur</strong>
            gepubliceerd door ENTSO-E. Kom dan terug voor het volledige overzicht.</p>
         <p><a href="/">← Bekijk de huidige stroomprijzen voor vandaag</a></p>
       </div>`);
