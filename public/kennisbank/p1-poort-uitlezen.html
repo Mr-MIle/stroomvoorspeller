@@ -46,10 +46,40 @@
         "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
         "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
         "datePublished": "2026-05-13",
-        "dateModified": "2026-05-13",
+        "dateModified": "2026-05-29",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/p1-poort-uitlezen"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Wat is de P1-poort van een slimme meter?",
+            "acceptedAnswer": { "@type": "Answer", "text": "De P1-poort is een kleine aansluiting aan de zij- of voorkant van je slimme meter. Via die poort stuurt de meter elke seconde gegevens over je verbruik en teruglevering, plus je gasverbruik elke 5 minuten. Het protocol heet DSMR; meters van na 2019 gebruiken DSMR 5.0." }
+          },
+          {
+            "@type": "Question",
+            "name": "Heb ik een abonnement nodig om de P1-poort uit te lezen?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Je hebt wettelijk recht op toegang tot de P1-poort en betaalt er niets extra voor aan je netbeheerder. Een eenmalige wifi-dongle van €35 tot €50 (zoals HomeWizard of Powerbaas) is genoeg. Sommige apps bieden optionele betaalde extra's, maar uitlezen zelf kan gratis en lokaal." }
+          },
+          {
+            "@type": "Question",
+            "name": "Welke P1-dongle kan ik het beste kopen?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Voor een makkelijke start zonder smarthome is de HomeWizard P1 Meter (~€35) de beste keuze. Wil je direct apparaten aansturen zonder extra hub, dan biedt de Powerbaas (~€49) een ingebouwde 433 MHz-zender. Gebruik je al Homey, dan past de Homey Energy Dongle (~€49) naadloos. Zonder hardware kun je via SlimmemeterPortal.nl gratis vertraagde data inzien." }
+          },
+          {
+            "@type": "Question",
+            "name": "Hoe sluit ik een P1-dongle aan?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Open het klepje van de poort op je slimme meter, steek de dongle in de RJ11-aansluiting (lijkt op een brede telefoonplug), download de bijbehorende app en volg de wizard om hem met je wifi te verbinden. Bij DSMR 5.0 krijgt de dongle meestal stroom via de poort. De hele installatie duurt minder dan 5 minuten." }
+          },
+          {
+            "@type": "Question",
+            "name": "Wie kan mijn P1-data zien?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Bij een lokale dongle blijft de verbinding tussen meter, dongle en je wifi-netwerk. Je netbeheerder of leverancier heeft geen toegang. Let wel: de HomeWizard- en Powerbaas-apps uploaden data naar hun cloud als je de app gebruikt. Voor maximale controle kies je een lokale dongle." }
+          }
+        ]
       }
     ]
   }
@@ -180,6 +210,25 @@
       <p>De P1-poort is de snelste en goedkoopste manier om grip te krijgen op je energieverbruik — zeker als je een dynamisch energiecontract hebt. Voor €35 weet je voortaan per seconde hoeveel je verbruikt, en per uur wat je daarvoor betaalt.</p>
       <p>Heb je geen smarthome-systeem? Kies de <strong>HomeWizard</strong> voor de makkelijkste start. Wil je direct apparaten aansturen zonder extra hub? Dan is de <strong>Powerbaas</strong> slimmer. Zit je al in het Homey-ecosysteem? De <strong>Homey Energy Dongle</strong> past er naadloos in. Wil je eerst kijken zonder investering? <strong>SlimmemeterPortal.nl</strong> geeft je een gratis kijkje via de netbeheerderdata.</p>
       <p>Wil je zien wat je P1-meter morgen te wachten staat aan uurprijzen? Bekijk de <a href="/morgen">actuele dag-ahead prijzen op stroomvoorspeller.nl</a> en plan je verbruik slim.</p>
+    </section>
+
+    <section>
+      <h2>Veelgestelde vragen</h2>
+
+      <h3>Wat is de P1-poort van een slimme meter?</h3>
+      <p>Een kleine aansluiting aan de zij- of voorkant van je slimme meter. Hij stuurt elke seconde gegevens over je verbruik en teruglevering, plus gasverbruik elke 5 minuten. Het protocol heet DSMR; meters van na 2019 gebruiken DSMR 5.0.</p>
+
+      <h3>Heb ik een abonnement nodig om de P1-poort uit te lezen?</h3>
+      <p>Nee. Je hebt wettelijk recht op toegang en betaalt er niets extra voor aan je netbeheerder. Een eenmalige wifi-dongle van €35 tot €50 is genoeg. Sommige apps bieden optionele betaalde extra's, maar uitlezen zelf kan gratis en lokaal.</p>
+
+      <h3>Welke P1-dongle kan ik het beste kopen?</h3>
+      <p>Makkelijke start zonder smarthome: HomeWizard (~€35). Direct apparaten aansturen zonder extra hub: Powerbaas (~€49). Gebruik je al Homey: de Homey Energy Dongle (~€49). Zonder hardware kun je via SlimmemeterPortal.nl gratis vertraagde data inzien.</p>
+
+      <h3>Hoe sluit ik een P1-dongle aan?</h3>
+      <p>Open het klepje, steek de dongle in de RJ11-aansluiting, download de app en verbind hem met je wifi. Bij DSMR 5.0 krijgt de dongle meestal stroom via de poort. De hele installatie duurt minder dan 5 minuten.</p>
+
+      <h3>Wie kan mijn P1-data zien?</h3>
+      <p>Bij een lokale dongle blijft de verbinding tussen meter, dongle en je wifi-netwerk; je netbeheerder of leverancier heeft geen toegang. Let wel: de HomeWizard- en Powerbaas-apps uploaden data naar hun cloud als je de app gebruikt. Voor maximale controle kies je een lokale dongle.</p>
     </section>
 
     <section class="kb-lees-ook">

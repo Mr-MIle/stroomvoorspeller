@@ -46,10 +46,40 @@
         "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
         "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
         "datePublished": "2026-05-02",
-        "dateModified": "2026-05-02",
+        "dateModified": "2026-05-29",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/zonnepanelen-uitzetten-negatieve-prijs"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Moet ik mijn zonnepanelen uitzetten bij een negatieve stroomprijs?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Het loont als je een dynamisch contract hebt en geen batterij, omdat je dan betaalt om terug te leveren. Heb je een thuisbatterij, stuur dan het hele systeem aan in plaats van alleen de panelen. Bij saldering (tot eind 2026) maakt het voor je jaarrekening geen verschil." }
+          },
+          {
+            "@type": "Question",
+            "name": "Wat is het verschil tussen uitzetten en dimmen van zonnepanelen?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Bij volledig uitzetten (Zero Export) produceert de omvormer tijdelijk niets. Bij dimmen beperkt de omvormer zijn vermogen tot wat je zelf verbruikt, zodat er netto niets naar het net gaat. Dimmen is technisch netter en spaart je omvormer, omdat frequente aan/uit-cycli de hardware sneller laten slijten." }
+          },
+          {
+            "@type": "Question",
+            "name": "Welke omvormers kunnen automatisch uitschakelen bij negatieve prijzen?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Merken als SolarEdge, Hoymiles, Huawei, Goodwe, Sungrow en Solis ondersteunen dit via hun eigen app of cloud. Fronius en Enphase hebben geen native prijskoppeling en vereisen een externe tool zoals Home Assistant of EVCC. Functionaliteit verschilt per firmware en regio-instelling." }
+          },
+          {
+            "@type": "Question",
+            "name": "Wat moet ik doen als ik naast zonnepanelen ook een thuisbatterij heb?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Stuur het hele systeem aan, niet alleen de panelen. Bij een hybride omvormer gaat dat automatisch goed: het systeem laadt de batterij met het zonneoverschot. Bij een AC-gekoppeld of standalone systeem heb je een slimme automatisering nodig (zoals Home Assistant of EVCC) die panelen én batterij tegelijk aanstuurt, anders kan het averechts werken." }
+          },
+          {
+            "@type": "Question",
+            "name": "Kan ik zelf instellen vanaf welke prijs de panelen uitgaan?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Niet bij elke oplossing. Diensten als Zonneplan Powerplay en Zonnedimmer.nl hanteren een vaste grens. Wil je de drempel zelf bepalen, dan zijn Home Assistant, EVCC of Homey de flexibele keuzes, maar die vereisen wat technische kennis." }
+          }
+        ]
       }
     ]
   }
@@ -240,6 +270,25 @@
       <p>Zonnepanelen automatisch uitzetten of dimmen bij negatieve prijzen is zinvol — maar alleen als je het goed aanpakt. Bij een hybride omvormer werkt het systeem als geheel en is de koppeling relatief eenvoudig. Bij een AC-gekoppeld systeem of een losstaande batterij is het aansturen van alleen de panelen onvoldoende en kun je averechts effect creëren.</p>
       <p>De keuze tussen een gebruiksklare dienst (Zonneplan Powerplay, Zonnedimmer.nl) of een flexibele zelf-beheer oplossing (Home Assistant, EVCC) hangt af van hoeveel controle je wilt en hoeveel technische kennis je bereid bent in te zetten. Wil je zelf de drempel bepalen, dan kom je al snel bij Home Assistant uit.</p>
       <p>Op <a href="/morgen">stroomvoorspeller.nl</a> zie je welke uren morgen naar verwachting negatief of erg goedkoop worden — handig om te controleren of jouw automatisering de komende dag iets te doen krijgt.</p>
+    </section>
+
+    <section>
+      <h2>Veelgestelde vragen</h2>
+
+      <h3>Moet ik mijn zonnepanelen uitzetten bij een negatieve stroomprijs?</h3>
+      <p>Het loont als je een dynamisch contract hebt en geen batterij, want dan betaal je om terug te leveren. Heb je een thuisbatterij, stuur dan het hele systeem aan in plaats van alleen de panelen. Bij <a href="/kennisbank/salderingsregeling">saldering</a> (tot eind 2026) maakt het voor je jaarrekening geen verschil.</p>
+
+      <h3>Wat is het verschil tussen uitzetten en dimmen?</h3>
+      <p>Bij volledig uitzetten (Zero Export) produceert de omvormer tijdelijk niets; bij dimmen beperkt hij zijn vermogen tot wat je zelf verbruikt. Dimmen is netter en spaart je omvormer, omdat frequente aan/uit-cycli de hardware sneller laten slijten.</p>
+
+      <h3>Welke omvormers kunnen dit automatisch?</h3>
+      <p>SolarEdge, Hoymiles, Huawei, Goodwe, Sungrow en Solis ondersteunen het via hun eigen app of cloud. Fronius en Enphase hebben geen native prijskoppeling en vereisen een externe tool zoals Home Assistant of EVCC. Functionaliteit verschilt per firmware en regio.</p>
+
+      <h3>Wat moet ik doen als ik ook een thuisbatterij heb?</h3>
+      <p>Stuur het hele systeem aan, niet alleen de panelen. Bij een hybride omvormer gaat dat automatisch goed; bij een AC-gekoppeld of standalone systeem heb je een automatisering nodig (Home Assistant, EVCC) die panelen én batterij tegelijk aanstuurt, anders kan het averechts werken.</p>
+
+      <h3>Kan ik zelf de prijsdrempel instellen?</h3>
+      <p>Niet bij elke oplossing. Zonneplan Powerplay en Zonnedimmer.nl hanteren een vaste grens. Wil je de drempel zelf bepalen, dan zijn Home Assistant, EVCC of Homey de flexibele keuzes — die vereisen wel wat technische kennis.</p>
     </section>
 
     <section class="kb-lees-ook">
