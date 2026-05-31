@@ -780,16 +780,19 @@
     // Pas de sectie-heading en subtitle aan op de actuele resolutie.
     const heading = document.getElementById("chart-heading");
     const sub = document.getElementById("chart-sub");
+    const note = document.getElementById("res-toggle-note");
     if (state.chartResolution === "quarter") {
       if (heading) heading.textContent = "Vandaag & morgen, per kwartier";
       if (sub) sub.innerHTML =
         `Kwartierlijkse day-ahead prijzen (EPEX Spot, v.a. okt&nbsp;2025), weergegeven als <span data-field="mode-label">${modeLabel()}</span>. ` +
-        `Tooltip toont alle varianten. <strong>Schakel naar "Per uur" voor de weekprognose.</strong>`;
+        `Tooltip toont alle varianten.`;
+      if (note) note.hidden = false;
     } else {
       if (heading) heading.textContent = "Vandaag & morgen";
       if (sub) sub.innerHTML =
         `Day-ahead prijzen van EPEX Spot, weergegeven als <span data-field="mode-label">${modeLabel()}</span>. ` +
         `Tooltip toont alle drie de varianten.`;
+      if (note) note.hidden = true;
     }
   }
 

@@ -302,10 +302,18 @@ a:hover { text-decoration: underline; }
   color: var(--c-brand-deep);
   box-shadow: 0 1px 2px rgba(0,0,0,0.08);
 }
+.res-toggle-note {
+  margin: 5px 0 0;
+  font-size: 0.75rem;
+  color: var(--c-text-mute);
+  text-align: center;
+  white-space: nowrap;
+}
 @media (max-width: 560px) {
   .chart-section-head { flex-direction: column; gap: 8px; }
   .res-toggle { padding-top: 0; }
   .res-btn { padding: 5px 11px; font-size: 0.82rem; }
+  .res-toggle-note { white-space: normal; text-align: left; }
 }
 
 /* Now-card aanpassing — extra mode-label en EPEX-regel */
