@@ -42,6 +42,7 @@ import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 # Nederland EIC-code (zie ENTSO-E EIC list)
@@ -59,25 +60,13 @@ OUTPUT_FILE = PROJECT_ROOT / "public" / "data" / "prices.json"
 # Archief-map voor maandelijkse historische prijzen
 ARCHIVE_DIR = PROJECT_ROOT / "public" / "data" / "archief"
 
-# Amsterdam tijdzone (statisch want we draaien in UTC op CI)
-AMS_OFFSET_WINTER = timedelta(hours=1)
-AMS_OFFSET_SUMMER = timedelta(hours=2)
+# Amsterdam tijdzone via IANA zoneinfo (DST automatisch correct)
+AMS_TZ = ZoneInfo("Europe/Amsterdam")
 
 
 def amsterdam_now() -> datetime:
-    """Huidige tijd in Amsterdam, simpele DST-benadering."""
-    now_utc = datetime.now(timezone.utc)
-    # DST: laatste zondag maart 01:00 UTC tot laatste zondag oktober 01:00 UTC
-    year = now_utc.year
-    march = datetime(year, 3, 31, 1, 0, tzinfo=timezone.utc)
-    while march.weekday() != 6:
-        march -= timedelta(days=1)
-    october = datetime(year, 10, 31, 1, 0, tzinfo=timezone.utc)
-    while october.weekday() != 6:
-        october -= timedelta(days=1)
-    is_dst = march <= now_utc < october
-    offset = AMS_OFFSET_SUMMER if is_dst else AMS_OFFSET_WINTER
-    return (now_utc + offset).replace(tzinfo=timezone(offset))
+    """Huidige tijd in Amsterdam (DST-correct via zoneinfo)."""
+    return datetime.now(AMS_TZ)
 
 
 def entsoe_period(dt: datetime) -> str:
@@ -186,19 +175,10 @@ def parse_entsoe_xml(xml_text: str, default_start_utc: datetime) -> list[dict]:
 
 
 def utc_to_amsterdam(dt_utc: datetime) -> datetime:
-    """Converteer UTC tijdstip naar Amsterdam met simpele DST-benadering."""
+    """Converteer UTC tijdstip naar Amsterdam (DST-correct via zoneinfo)."""
     if dt_utc.tzinfo is None:
         dt_utc = dt_utc.replace(tzinfo=timezone.utc)
-    dt_utc = dt_utc.astimezone(timezone.utc)
-    year = dt_utc.year
-    march = datetime(year, 3, 31, 1, 0, tzinfo=timezone.utc)
-    while march.weekday() != 6:
-        march -= timedelta(days=1)
-    october = datetime(year, 10, 31, 1, 0, tzinfo=timezone.utc)
-    while october.weekday() != 6:
-        october -= timedelta(days=1)
-    offset = AMS_OFFSET_SUMMER if march <= dt_utc < october else AMS_OFFSET_WINTER
-    return (dt_utc + offset).replace(tzinfo=timezone(offset))
+    return dt_utc.astimezone(AMS_TZ)
 
 
 def aggregate_to_hourly(prices: list[dict]) -> list[dict]:
