@@ -1,15 +1,15 @@
 name: Update prijzen (handmatig / fallback)
 
-# LET OP: de automatische prijs-updates worden aangestuurd door Pipedream via
-# check-prices.yml (elke 15 min, slim) en update-forecast.yml (3× per dag).
-# Deze workflow is bewaard als handmatige fallback en voor dev-gebruik.
+# Aangestuurd door Pipedream (dagelijks om 14:01 CEST via workflow_dispatch).
+# Na het ophalen wordt gecontroleerd of morgen-prijzen aanwezig zijn; zo ja,
+# wordt automatisch de dagelijkse tweet gestart (alleen bij workflow_dispatch,
+# niet bij push naar main om dubbele tweets te voorkomen).
 #
 # Wanneer draait deze workflow?
 #  - na elke push naar main (handig om de cache direct te verversen)
+#  - dagelijks om 14:01 CEST via Pipedream (workflow_dispatch)
 #  - handmatig, via Run workflow in de GitHub UI
 on:
-  schedule:
-    - cron: "15 13,14,15 * * *"
   push:
     branches: [main]
   workflow_dispatch:
@@ -24,6 +24,8 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    outputs:
+      morgen_aanwezig: ${{ steps.morgen_check.outputs.morgen_aanwezig }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -56,10 +58,9 @@ jobs:
           python scripts/update_log.py
 
       - name: Archiveer forecast-snapshot
-        # Slaat dagelijks één kopie van forecast.json op in forecast_archive/.
+        # Slaat dagelijks een kopie van forecast.json op in forecast_archive/.
         # Nodig voor het performance-dashboard (vergelijking voorspelling vs werkelijk).
-        # Overschrijft de snapshot van dezelfde dag als de workflow meerdere keren draait —
-        # de laatste run van de dag wint, wat acceptabel is.
+        # Overschrijft de snapshot van dezelfde dag als de workflow meerdere keren draait.
         continue-on-error: true
         run: |
           mkdir -p public/data/forecast_archive
@@ -96,3 +97,50 @@ jobs:
           else
             echo "Geen wijzigingen - niets te committen."
           fi
+
+      - name: Check of morgen-prijzen aanwezig zijn
+        # Kijkt of prices.json >=24 uurprijzen voor morgen bevat (Amsterdam-tijd).
+        # Uitkomst wordt als job output doorgegeven aan de tweet-job hieronder.
+        id: morgen_check
+        run: |
+          python -c "
+import json, sys
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+def amsterdam_offset():
+    now_utc = datetime.now(timezone.utc)
+    year = now_utc.year
+    march = datetime(year, 3, 31, 1, 0, tzinfo=timezone.utc)
+    while march.weekday() != 6:
+        march -= timedelta(days=1)
+    october = datetime(year, 10, 31, 1, 0, tzinfo=timezone.utc)
+    while october.weekday() != 6:
+        october -= timedelta(days=1)
+    return timedelta(hours=2) if march <= now_utc < october else timedelta(hours=1)
+
+offset = amsterdam_offset()
+now_ams = datetime.now(timezone.utc) + offset
+tomorrow = (now_ams + timedelta(days=1)).strftime('%Y-%m-%d')
+
+p = Path('public/data/prices.json')
+if not p.exists():
+    print('morgen_aanwezig=false')
+    sys.exit(0)
+
+data = json.loads(p.read_text())
+count = sum(1 for e in data.get('prices', []) if e.get('time', '')[:10] == tomorrow)
+result = 'true' if count >= 24 else 'false'
+print(f'[morgen_check] {count} uurprijzen gevonden voor {tomorrow} -> morgen_aanwezig={result}', file=sys.stderr)
+print(f'morgen_aanwezig={result}')
+" >> \$GITHUB_OUTPUT
+
+  tweet:
+    name: Post dagelijkse X-tweet
+    needs: update
+    # Alleen bij workflow_dispatch (Pipedream / handmatig), nooit bij push naar main.
+    # Zo tweet het systeem precies eenmaal per dag en worden code-pushes niet
+    # per ongeluk als tweet-aanleiding gebruikt.
+    if: github.event_name == 'workflow_dispatch' && needs.update.outputs.morgen_aanwezig == 'true'
+    uses: ./.github/workflows/daily-tweet.yml
+    secrets: inherit
