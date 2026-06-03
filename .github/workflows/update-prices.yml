@@ -101,39 +101,41 @@ jobs:
       - name: Check of morgen-prijzen aanwezig zijn
         # Kijkt of prices.json >=24 uurprijzen voor morgen bevat (Amsterdam-tijd).
         # Uitkomst wordt als job output doorgegeven aan de tweet-job hieronder.
+        # Gebruikt bash heredoc (python - <<'PYEOF') zodat de Python-code niet
+        # aan YAML-inspringing hoeft te voldoen en er geen syntax-fouten ontstaan.
         id: morgen_check
         run: |
-          python -c "
-import json, sys
-from datetime import datetime, timedelta, timezone
-from pathlib import Path
+          python - <<'PYEOF' >> $GITHUB_OUTPUT
+          import json, sys
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
 
-def amsterdam_offset():
-    now_utc = datetime.now(timezone.utc)
-    year = now_utc.year
-    march = datetime(year, 3, 31, 1, 0, tzinfo=timezone.utc)
-    while march.weekday() != 6:
-        march -= timedelta(days=1)
-    october = datetime(year, 10, 31, 1, 0, tzinfo=timezone.utc)
-    while october.weekday() != 6:
-        october -= timedelta(days=1)
-    return timedelta(hours=2) if march <= now_utc < october else timedelta(hours=1)
+          def amsterdam_offset():
+              now_utc = datetime.now(timezone.utc)
+              year = now_utc.year
+              march = datetime(year, 3, 31, 1, 0, tzinfo=timezone.utc)
+              while march.weekday() != 6:
+                  march -= timedelta(days=1)
+              october = datetime(year, 10, 31, 1, 0, tzinfo=timezone.utc)
+              while october.weekday() != 6:
+                  october -= timedelta(days=1)
+              return timedelta(hours=2) if march <= now_utc < october else timedelta(hours=1)
 
-offset = amsterdam_offset()
-now_ams = datetime.now(timezone.utc) + offset
-tomorrow = (now_ams + timedelta(days=1)).strftime('%Y-%m-%d')
+          offset = amsterdam_offset()
+          now_ams = datetime.now(timezone.utc) + offset
+          tomorrow = (now_ams + timedelta(days=1)).strftime('%Y-%m-%d')
 
-p = Path('public/data/prices.json')
-if not p.exists():
-    print('morgen_aanwezig=false')
-    sys.exit(0)
+          p = Path('public/data/prices.json')
+          if not p.exists():
+              print('morgen_aanwezig=false')
+              sys.exit(0)
 
-data = json.loads(p.read_text())
-count = sum(1 for e in data.get('prices', []) if e.get('time', '')[:10] == tomorrow)
-result = 'true' if count >= 24 else 'false'
-print(f'[morgen_check] {count} uurprijzen gevonden voor {tomorrow} -> morgen_aanwezig={result}', file=sys.stderr)
-print(f'morgen_aanwezig={result}')
-" >> \$GITHUB_OUTPUT
+          data = json.loads(p.read_text())
+          count = sum(1 for e in data.get('prices', []) if e.get('time', '')[:10] == tomorrow)
+          result = 'true' if count >= 24 else 'false'
+          print(f'[morgen_check] {count} uurprijzen gevonden voor {tomorrow} -> morgen_aanwezig={result}', file=sys.stderr)
+          print(f'morgen_aanwezig={result}')
+          PYEOF
 
   tweet:
     name: Post dagelijkse X-tweet
