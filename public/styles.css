@@ -2079,3 +2079,64 @@ body.has-neg-alert .site-header { top: 56px; }
 }
 .wa-cta-btn:hover { background: #1da851; }
 .wa-cta-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+/* ── Deelknoppen (share tip) ── */
+.share-tip { margin: 1.4rem 0; }
+.share-tip[hidden] { display: none; }
+.share-tip-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.share-tip-label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--c-text-soft);
+}
+.share-tip-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.share-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  background: var(--c-surface);
+  color: var(--c-text-soft);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+.share-btn:hover { background: #f0f6fc; }
+.share-btn:active { transform: scale(0.94); }
+.share-btn svg { width: 19px; height: 19px; fill: currentColor; }
+.share-btn.share-wa:hover { background: #25d366; border-color: #25d366; color: #fff; }
+.share-btn.share-x:hover { background: #000; border-color: #000; color: #fff; }
+.share-btn.share-native:hover { background: var(--c-brand); border-color: var(--c-brand); color: #fff; }
+.share-btn[hidden] { display: none; }
+/* Kopieer-bevestiging */
+.share-btn.is-copied { background: var(--c-cheap-bg); border-color: var(--c-cheap); color: var(--c-cheap); }
+.share-copied-toast {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--c-text);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.share-btn.is-copied .share-copied-toast { opacity: 1; }
