@@ -2031,4 +2031,51 @@ body.has-neg-alert .site-header { top: 56px; }
   /* Nieuwsartikel op mobiel */
   .morgen-news-lead { font-size: 0.97rem; }
   .morgen-news-article { max-width: 100%; }
+
+  .wa-cta-btn { width: 100%; justify-content: center; }
 }
+
+/* ── WhatsApp Community CTA ── */
+.wa-cta { margin: 1.6rem 0; }
+.wa-cta-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-left: 4px solid #25d366;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 1.1rem 1.4rem;
+}
+.wa-cta-icon {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #e7f8ee;
+}
+.wa-cta-icon svg { width: 26px; height: 26px; fill: #25d366; }
+.wa-cta-text { flex: 1 1 240px; }
+.wa-cta-text h2 { margin: 0 0 0.2rem; font-size: 1.08rem; }
+.wa-cta-text p { margin: 0; color: var(--c-text-soft); font-size: 0.92rem; }
+.wa-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #25d366;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.97rem;
+  padding: 0.72rem 1.35rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+.wa-cta-btn:hover { background: #1da851; }
+.wa-cta-btn svg { width: 20px; height: 20px; fill: currentColor; }
