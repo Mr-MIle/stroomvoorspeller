@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Integraties — gebruik onze stroomprijzen elders — Stroomvoorspeller.nl</title>
+  <meta name="description" content="Gebruik de day-ahead stroomprijzen van stroomvoorspeller.nl op je eigen plek: sluit de widget in op je website, koppel met Home Assistant, of lees de ruwe open data (JSON/RSS) uit." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/integraties" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Integraties — gebruik onze stroomprijzen elders" />
+  <meta property="og:description" content="Widget insluiten, Home Assistant koppelen of de ruwe open data gebruiken." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/integraties" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Stroomvoorspeller.nl — integraties" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Integraties — Stroomvoorspeller.nl" />
+  <meta name="twitter:description" content="Widget insluiten, Home Assistant koppelen of de ruwe open data gebruiken." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <style>
+    /* Kaarten — alleen op deze pagina nodig */
+    .int-grid { display: grid; gap: 16px; margin: 20px 0 8px; }
+    @media (min-width: 620px) { .int-grid { grid-template-columns: 1fr 1fr; } }
+    .int-card {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--c-border, #e2e8ef); border-radius: var(--radius-sm, 10px);
+      padding: 18px 20px; background: #fff; text-decoration: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .int-card:hover { border-color: var(--c-brand, #0f6cbd); box-shadow: 0 4px 16px rgba(15,108,189,.08); }
+    .int-card-icon { font-size: 1.6rem; line-height: 1; margin-bottom: 8px; }
+    .int-card-title { font-weight: 700; color: var(--c-brand-deep, #0b4f86); font-size: 1.08rem; margin: 0 0 4px; }
+    .int-card-desc { color: var(--c-text, #2a3340); font-size: 0.95rem; line-height: 1.55; margin: 0 0 12px; }
+    .int-card-cta { margin-top: auto; color: var(--c-brand, #0f6cbd); font-weight: 600; font-size: 0.92rem; }
+    .int-card-full { grid-column: 1 / -1; }
+    .int-data-links { margin: 6px 0 0; font-size: 0.92rem; }
+    .int-data-links code { background: #ecf1f6; padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+          { "@type": "ListItem", "position": 2, "name": "Integraties", "item": "https://stroomvoorspeller.nl/integraties" }
+        ]
+      },
+      {
+        "@type": "CollectionPage",
+        "name": "Integraties",
+        "description": "Manieren om de day-ahead stroomprijzen van stroomvoorspeller.nl elders te gebruiken: widget, Home Assistant en open data.",
+        "url": "https://stroomvoorspeller.nl/integraties",
+        "inLanguage": "nl-NL",
+        "isPartOf": { "@type": "WebSite", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" }
+      }
+    ]
+  }
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank/">Kennisbank</a>
+        <a href="/historisch">Historisch</a>
+        <a href="/integraties">Integraties</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="legal-page container">
+    <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
+    <h1>Integraties</h1>
+    <p class="legal-meta">Gebruik onze stroomprijzen op je eigen plek · gratis &amp; open</p>
+
+    <p class="legal-summary">
+      De day-ahead stroomprijzen van stroomvoorspeller.nl zijn vrij te gebruiken. Sluit de kant-en-klare
+      widget in op je eigen website, koppel de prijzen aan Home Assistant, of lees de ruwe data
+      rechtstreeks uit. Geen account, geen API-sleutel.
+    </p>
+
+    <div class="int-grid">
+      <a class="int-card" href="/embed">
+        <span class="int-card-icon" aria-hidden="true">🧩</span>
+        <p class="int-card-title">Widget insluiten</p>
+        <p class="int-card-desc">
+          Plaats een compacte prijzengrafiek op je eigen website of blog met één regel code.
+          Past zich aan je pagina aan en ververst automatisch.
+        </p>
+        <span class="int-card-cta">Naar de widget →</span>
+      </a>
+
+      <a class="int-card" href="/home-assistant">
+        <span class="int-card-icon" aria-hidden="true">🏠</span>
+        <p class="int-card-title">Home Assistant</p>
+        <p class="int-card-desc">
+          Lees de prijzen van vandaag en morgen uit met de ingebouwde RESTful sensor. Stuur je
+          wasmachine, EV of thuisbatterij op het goedkoopste uur. Geen custom integratie nodig.
+        </p>
+        <span class="int-card-cta">Naar de koppeling →</span>
+      </a>
+
+      <div class="int-card int-card-full">
+        <span class="int-card-icon" aria-hidden="true">📂</span>
+        <p class="int-card-title">Ruwe open data</p>
+        <p class="int-card-desc">
+          Bouw je eigen toepassing? Gebruik de bronbestanden rechtstreeks. Vrij te gebruiken onder
+          CC-BY 4.0 — vermeld stroomvoorspeller.nl als bron.
+        </p>
+        <p class="int-data-links">
+          <code><a href="/data/ha.json">/data/ha.json</a></code> — vandaag, morgen &amp; voorspelling (zie het
+          <a href="/data/ha.schema.json">schema</a>)<br>
+          <code><a href="/data/forecast.json">/data/forecast.json</a></code> — meerdaagse voorspelling met onzekerheid<br>
+          <code><a href="/data/feed.xml">/data/feed.xml</a></code> — RSS-feed met de dagelijkse prijzen
+        </p>
+      </div>
+    </div>
+
+    <section>
+      <h2>Iets gebouwd?</h2>
+      <p>
+        Leuk om te horen wat je ermee maakt, of als je een waarde mist. Stuur een mail naar
+        <a href="mailto:contactstroomvoorspeller@gmail.com">contactstroomvoorspeller@gmail.com</a>.
+      </p>
+    </section>
+
+    <p class="legal-related">
+      Zie ook: <a href="/over/voorspelling">Over de voorspelling</a> ·
+      <a href="/kennisbank/">Kennisbank</a> ·
+      <a href="/disclaimer">Disclaimer</a>
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a> ·
+          <a href="/integraties">Integraties</a> ·
+          <a href="/aanbieders">Aanbieders</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+</body>
+</html>
