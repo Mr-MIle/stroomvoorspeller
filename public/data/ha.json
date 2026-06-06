@@ -1,0 +1,368 @@
+{
+  "schema_version": 1,
+  "generated": "2026-06-06T14:47:43+00:00",
+  "source": "stroomvoorspeller.nl",
+  "docs": "https://stroomvoorspeller.nl/home-assistant",
+  "license": "CC-BY 4.0",
+  "price_unit": "EUR/kWh",
+  "timezone": "Europe/Amsterdam",
+  "price_types": {
+    "market": "Kale EPEX day-ahead marktprijs in EUR/kWh, excl. belasting en leverancieropslag.",
+    "all_in": "Indicatieve consumentenprijs in EUR/kWh incl. btw: (market + gemiddelde leverancieropslag + energiebelasting) x btw. Voor je exacte prijs: vervang de gemiddelde opslag door die van je eigen leverancier."
+  },
+  "tax": {
+    "energy_tax_per_kwh": 0.0916,
+    "vat_factor": 1.21,
+    "average_markup_per_kwh": 0.0178,
+    "year": 2026
+  },
+  "today": {
+    "date": "2026-06-06",
+    "complete": true,
+    "hours_count": 24,
+    "average_market": 0.0875,
+    "average_all_in": 0.23825,
+    "cheapest": {
+      "start": "2026-06-06T12:00:00+02:00",
+      "market": -1e-05,
+      "all_in": 0.13236
+    },
+    "most_expensive": {
+      "start": "2026-06-06T20:00:00+02:00",
+      "market": 0.14758,
+      "all_in": 0.31095
+    },
+    "negative_hours": 2,
+    "negative_hours_market": 2,
+    "negative_hours_all_in": 0,
+    "hours": [
+      {
+        "start": "2026-06-06T00:00:00+02:00",
+        "market": 0.14742,
+        "all_in": 0.31075
+      },
+      {
+        "start": "2026-06-06T01:00:00+02:00",
+        "market": 0.13384,
+        "all_in": 0.29432
+      },
+      {
+        "start": "2026-06-06T02:00:00+02:00",
+        "market": 0.12915,
+        "all_in": 0.28865
+      },
+      {
+        "start": "2026-06-06T03:00:00+02:00",
+        "market": 0.11914,
+        "all_in": 0.27653
+      },
+      {
+        "start": "2026-06-06T04:00:00+02:00",
+        "market": 0.12171,
+        "all_in": 0.27964
+      },
+      {
+        "start": "2026-06-06T05:00:00+02:00",
+        "market": 0.1202,
+        "all_in": 0.27782
+      },
+      {
+        "start": "2026-06-06T06:00:00+02:00",
+        "market": 0.11766,
+        "all_in": 0.27474
+      },
+      {
+        "start": "2026-06-06T07:00:00+02:00",
+        "market": 0.10647,
+        "all_in": 0.2612
+      },
+      {
+        "start": "2026-06-06T08:00:00+02:00",
+        "market": 0.08823,
+        "all_in": 0.23913
+      },
+      {
+        "start": "2026-06-06T09:00:00+02:00",
+        "market": 0.06289,
+        "all_in": 0.20847
+      },
+      {
+        "start": "2026-06-06T10:00:00+02:00",
+        "market": 0.02686,
+        "all_in": 0.16487
+      },
+      {
+        "start": "2026-06-06T11:00:00+02:00",
+        "market": 0.00011,
+        "all_in": 0.13251
+      },
+      {
+        "start": "2026-06-06T12:00:00+02:00",
+        "market": -1e-05,
+        "all_in": 0.13236
+      },
+      {
+        "start": "2026-06-06T13:00:00+02:00",
+        "market": -1e-05,
+        "all_in": 0.13236
+      },
+      {
+        "start": "2026-06-06T14:00:00+02:00",
+        "market": 9e-05,
+        "all_in": 0.13248
+      },
+      {
+        "start": "2026-06-06T15:00:00+02:00",
+        "market": 0.015,
+        "all_in": 0.15052
+      },
+      {
+        "start": "2026-06-06T16:00:00+02:00",
+        "market": 0.04216,
+        "all_in": 0.18339
+      },
+      {
+        "start": "2026-06-06T17:00:00+02:00",
+        "market": 0.09418,
+        "all_in": 0.24633
+      },
+      {
+        "start": "2026-06-06T18:00:00+02:00",
+        "market": 0.1191,
+        "all_in": 0.27648
+      },
+      {
+        "start": "2026-06-06T19:00:00+02:00",
+        "market": 0.13013,
+        "all_in": 0.28983
+      },
+      {
+        "start": "2026-06-06T20:00:00+02:00",
+        "market": 0.14758,
+        "all_in": 0.31095
+      },
+      {
+        "start": "2026-06-06T21:00:00+02:00",
+        "market": 0.14224,
+        "all_in": 0.30448
+      },
+      {
+        "start": "2026-06-06T22:00:00+02:00",
+        "market": 0.12646,
+        "all_in": 0.28539
+      },
+      {
+        "start": "2026-06-06T23:00:00+02:00",
+        "market": 0.10945,
+        "all_in": 0.26481
+      }
+    ],
+    "available": true
+  },
+  "tomorrow": {
+    "date": "2026-06-07",
+    "complete": true,
+    "hours_count": 24,
+    "average_market": 0.04015,
+    "average_all_in": 0.18096,
+    "cheapest": {
+      "start": "2026-06-07T14:00:00+02:00",
+      "market": -0.04471,
+      "all_in": 0.07827
+    },
+    "most_expensive": {
+      "start": "2026-06-07T22:00:00+02:00",
+      "market": 0.14234,
+      "all_in": 0.30461
+    },
+    "negative_hours": 10,
+    "negative_hours_market": 10,
+    "negative_hours_all_in": 0,
+    "hours": [
+      {
+        "start": "2026-06-07T00:00:00+02:00",
+        "market": 0.0981,
+        "all_in": 0.25107
+      },
+      {
+        "start": "2026-06-07T01:00:00+02:00",
+        "market": 0.08876,
+        "all_in": 0.23977
+      },
+      {
+        "start": "2026-06-07T02:00:00+02:00",
+        "market": 0.08211,
+        "all_in": 0.23173
+      },
+      {
+        "start": "2026-06-07T03:00:00+02:00",
+        "market": 0.07198,
+        "all_in": 0.21947
+      },
+      {
+        "start": "2026-06-07T04:00:00+02:00",
+        "market": 0.05903,
+        "all_in": 0.2038
+      },
+      {
+        "start": "2026-06-07T05:00:00+02:00",
+        "market": 0.03507,
+        "all_in": 0.17481
+      },
+      {
+        "start": "2026-06-07T06:00:00+02:00",
+        "market": 0.00506,
+        "all_in": 0.1385
+      },
+      {
+        "start": "2026-06-07T07:00:00+02:00",
+        "market": 0.00046,
+        "all_in": 0.13293
+      },
+      {
+        "start": "2026-06-07T08:00:00+02:00",
+        "market": -0.00073,
+        "all_in": 0.13149
+      },
+      {
+        "start": "2026-06-07T09:00:00+02:00",
+        "market": -0.00504,
+        "all_in": 0.12628
+      },
+      {
+        "start": "2026-06-07T10:00:00+02:00",
+        "market": -0.008,
+        "all_in": 0.12269
+      },
+      {
+        "start": "2026-06-07T11:00:00+02:00",
+        "market": -0.01405,
+        "all_in": 0.11537
+      },
+      {
+        "start": "2026-06-07T12:00:00+02:00",
+        "market": -0.01802,
+        "all_in": 0.11057
+      },
+      {
+        "start": "2026-06-07T13:00:00+02:00",
+        "market": -0.03592,
+        "all_in": 0.08891
+      },
+      {
+        "start": "2026-06-07T14:00:00+02:00",
+        "market": -0.04471,
+        "all_in": 0.07827
+      },
+      {
+        "start": "2026-06-07T15:00:00+02:00",
+        "market": -0.03642,
+        "all_in": 0.08831
+      },
+      {
+        "start": "2026-06-07T16:00:00+02:00",
+        "market": -0.01595,
+        "all_in": 0.11307
+      },
+      {
+        "start": "2026-06-07T17:00:00+02:00",
+        "market": -0.00111,
+        "all_in": 0.13103
+      },
+      {
+        "start": "2026-06-07T18:00:00+02:00",
+        "market": 0.04888,
+        "all_in": 0.19152
+      },
+      {
+        "start": "2026-06-07T19:00:00+02:00",
+        "market": 0.10252,
+        "all_in": 0.25642
+      },
+      {
+        "start": "2026-06-07T20:00:00+02:00",
+        "market": 0.12974,
+        "all_in": 0.28936
+      },
+      {
+        "start": "2026-06-07T21:00:00+02:00",
+        "market": 0.13789,
+        "all_in": 0.29922
+      },
+      {
+        "start": "2026-06-07T22:00:00+02:00",
+        "market": 0.14234,
+        "all_in": 0.30461
+      },
+      {
+        "start": "2026-06-07T23:00:00+02:00",
+        "market": 0.14168,
+        "all_in": 0.30381
+      }
+    ],
+    "available": true
+  },
+  "forecast": {
+    "available": true,
+    "model_version": "2.1",
+    "disclaimer": "Modelvoorspelling met onzekerheid — géén day-ahead feit. Gebruik dit niet voor automatiseringen die op exacte prijzen rekenen; gebruik daarvoor 'today' en (na ~14:00) 'tomorrow'.",
+    "days": [
+      {
+        "date": "2026-06-07",
+        "days_ahead": 1,
+        "average_market_estimate": 0.08618,
+        "lower": 0.0729,
+        "upper": 0.09946,
+        "negative_probability": 0.12
+      },
+      {
+        "date": "2026-06-08",
+        "days_ahead": 2,
+        "average_market_estimate": 0.11064,
+        "lower": 0.09184,
+        "upper": 0.12945,
+        "negative_probability": 0.0
+      },
+      {
+        "date": "2026-06-09",
+        "days_ahead": 3,
+        "average_market_estimate": 0.09124,
+        "lower": 0.07454,
+        "upper": 0.10795,
+        "negative_probability": 0.0
+      },
+      {
+        "date": "2026-06-10",
+        "days_ahead": 4,
+        "average_market_estimate": 0.08074,
+        "lower": 0.06393,
+        "upper": 0.09755,
+        "negative_probability": 0.0
+      },
+      {
+        "date": "2026-06-11",
+        "days_ahead": 5,
+        "average_market_estimate": 0.07817,
+        "lower": 0.06068,
+        "upper": 0.09566,
+        "negative_probability": 0.0
+      },
+      {
+        "date": "2026-06-12",
+        "days_ahead": 6,
+        "average_market_estimate": 0.10459,
+        "lower": 0.07899,
+        "upper": 0.13019,
+        "negative_probability": 0.0
+      },
+      {
+        "date": "2026-06-13",
+        "days_ahead": 7,
+        "average_market_estimate": 0.08504,
+        "lower": 0.06306,
+        "upper": 0.10701,
+        "negative_probability": 0.17
+      }
+    ]
+  }
+}
