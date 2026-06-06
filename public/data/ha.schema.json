@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stroomvoorspeller.nl/data/ha.schema.json",
+  "title": "Stroomvoorspeller Home Assistant feed",
+  "description": "Structuur van https://stroomvoorspeller.nl/data/ha.json — een kant-en-klaar bestand voor Home Assistant en andere huisautomatisering. Alle prijzen in EUR/kWh, alle tijdstempels ISO 8601 met Europe/Amsterdam-offset.",
+  "type": "object",
+  "required": ["schema_version", "generated", "price_unit", "today", "tomorrow"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "description": "Versie van dit formaat. Verhoogt alleen bij brekende wijzigingen.",
+      "const": 1
+    },
+    "generated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Moment waarop dit bestand is gegenereerd (Amsterdam-tijd)."
+    },
+    "source": { "type": "string" },
+    "docs": { "type": "string", "format": "uri" },
+    "license": { "type": "string" },
+    "price_unit": { "type": "string", "const": "EUR/kWh" },
+    "timezone": { "type": "string", "const": "Europe/Amsterdam" },
+    "price_types": {
+      "type": "object",
+      "description": "Uitleg van de twee prijssoorten die per uur worden geleverd.",
+      "properties": {
+        "market": { "type": "string" },
+        "all_in": { "type": "string" }
+      }
+    },
+    "tax": {
+      "type": "object",
+      "description": "Parameters waarmee 'all_in' uit 'market' is berekend: (market + average_markup_per_kwh + energy_tax_per_kwh) x vat_factor.",
+      "required": ["energy_tax_per_kwh", "vat_factor", "average_markup_per_kwh"],
+      "properties": {
+        "energy_tax_per_kwh": { "type": "number" },
+        "vat_factor": { "type": "number" },
+        "average_markup_per_kwh": { "type": "number" },
+        "year": { "type": "integer" }
+      }
+    },
+    "today": { "$ref": "#/$defs/day" },
+    "tomorrow": { "$ref": "#/$defs/day" },
+    "forecast": { "$ref": "#/$defs/forecast" }
+  },
+  "$defs": {
+    "hour": {
+      "type": "object",
+      "description": "Eén uur. 'start' is het begin van het uur (Amsterdam-tijd).",
+      "required": ["start", "market", "all_in"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "market": { "type": "number", "description": "Kale EPEX-marktprijs, EUR/kWh. Kan negatief zijn." },
+        "all_in": { "type": "number", "description": "Indicatieve consumentenprijs incl. belasting + btw, EUR/kWh." }
+      },
+      "additionalProperties": false
+    },
+    "pricepoint": {
+      "type": "object",
+      "description": "Verwijzing naar één bijzonder uur (goedkoopste / duurste).",
+      "required": ["start", "market", "all_in"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "market": { "type": "number" },
+        "all_in": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "day": {
+      "type": "object",
+      "description": "Eén dag. Als day-ahead-prijzen nog niet bekend zijn (morgen vóór ~14:00) bevat het object alleen 'date' en 'available': false.",
+      "required": ["date"],
+      "properties": {
+        "date": { "type": "string", "format": "date" },
+        "available": {
+          "type": "boolean",
+          "description": "true zodra de uurprijzen van deze dag bekend zijn."
+        },
+        "complete": { "type": "boolean", "description": "true bij >=23 uren (23 i.v.m. DST-overgangsdag)." },
+        "hours_count": { "type": "integer" },
+        "average_market": { "type": "number" },
+        "average_all_in": { "type": "number" },
+        "cheapest": { "$ref": "#/$defs/pricepoint" },
+        "most_expensive": { "$ref": "#/$defs/pricepoint" },
+        "negative_hours": {
+          "type": "integer",
+          "description": "Aantal uren met negatieve marktprijs (market < 0). Alias voor negative_hours_market."
+        },
+        "negative_hours_market": {
+          "type": "integer",
+          "description": "Aantal uren met negatieve kale marktprijs (market < 0): 'gratis stroom'-signaal."
+        },
+        "negative_hours_all_in": {
+          "type": "integer",
+          "description": "Aantal uren met negatieve consumentenprijs (all_in < 0). Zeldzamer, alleen bij flink negatieve markt."
+        },
+        "hours": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/hour" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "forecast": {
+      "type": "object",
+      "description": "Meerdaagse modelvoorspelling. INDICATIEF, met onzekerheid — geen day-ahead feit.",
+      "required": ["available"],
+      "properties": {
+        "available": { "type": "boolean" },
+        "model_version": { "type": "string" },
+        "disclaimer": { "type": "string" },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["date", "days_ahead", "average_market_estimate"],
+            "properties": {
+              "date": { "type": "string", "format": "date" },
+              "days_ahead": { "type": "integer" },
+              "average_market_estimate": { "type": "number", "description": "Verwacht daggemiddelde marktprijs, EUR/kWh." },
+              "lower": { "type": "number", "description": "Ondergrens onzekerheidsband, EUR/kWh." },
+              "upper": { "type": "number", "description": "Bovengrens onzekerheidsband, EUR/kWh." },
+              "negative_probability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Ruwe indicatie: aandeel uren waarvan de onzekerheidsband tot onder nul reikt."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
