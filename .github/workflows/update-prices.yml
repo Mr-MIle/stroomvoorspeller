@@ -74,6 +74,14 @@ jobs:
         run: |
           python scripts/generate_feed.py
 
+      - name: Genereer Home Assistant feed
+        # Schrijft public/data/ha.json: vandaag + morgen + voorspelling,
+        # klaar voor de RESTful sensor van Home Assistant. Mag falen zonder
+        # dat de rest van de workflow stopt.
+        continue-on-error: true
+        run: |
+          python scripts/generate_ha.py
+
       - name: Genereer performance-dashboard
         # Schrijft public/data/performance.json op basis van gearchiveerde forecasts
         # en werkelijke prijzen. Heeft pas zinvolle output na ~14 dagen archief.
@@ -87,6 +95,7 @@ jobs:
           git config user.email "bot@stroomvoorspeller.nl"
           git add public/data/prices.json public/data/forecast.json 2>/dev/null || true
           git add public/data/feed.xml 2>/dev/null || true
+          git add public/data/ha.json 2>/dev/null || true
           git add public/data/performance.json 2>/dev/null || true
           git add public/data/forecast_archive/ 2>/dev/null || true
           git add public/data/archief/ 2>/dev/null || true

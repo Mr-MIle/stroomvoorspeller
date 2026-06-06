@@ -56,6 +56,10 @@ jobs:
         continue-on-error: true
         run: python scripts/generate_feed.py
 
+      - name: Genereer Home Assistant feed
+        continue-on-error: true
+        run: python scripts/generate_ha.py
+
       - name: Genereer performance-dashboard
         continue-on-error: true
         run: python scripts/generate_performance.py
@@ -66,6 +70,7 @@ jobs:
           git config user.email "bot@stroomvoorspeller.nl"
           git add public/data/forecast.json 2>/dev/null || true
           git add public/data/feed.xml 2>/dev/null || true
+          git add public/data/ha.json 2>/dev/null || true
           git add public/data/performance.json 2>/dev/null || true
           git add public/data/forecast_archive/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
