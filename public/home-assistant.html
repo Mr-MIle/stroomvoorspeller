@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Home Assistant koppeling — Stroomvoorspeller.nl</title>
+  <meta name="description" content="Koppel de day-ahead stroomprijzen van stroomvoorspeller.nl aan Home Assistant. Gratis open JSON-feed, kant-en-klare RESTful sensor en automatiseringen voor goedkoopste uur, EV-laden en negatieve prijzen." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/home-assistant" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Home Assistant koppeling — Stroomvoorspeller.nl" />
+  <meta property="og:description" content="Gratis open JSON-feed met day-ahead stroomprijzen voor Home Assistant. Kant-en-klare RESTful sensor en automatiseringen." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/home-assistant" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Stroomvoorspeller.nl — Home Assistant koppeling" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Home Assistant koppeling — Stroomvoorspeller.nl" />
+  <meta name="twitter:description" content="Koppel day-ahead stroomprijzen aan Home Assistant met een gratis open JSON-feed." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <style>
+    /* Codeblokken — alleen op deze pagina nodig */
+    .ha-code {
+      background: #0f1b2a;
+      color: #e6edf3;
+      border-radius: var(--radius-sm, 8px);
+      padding: 16px 18px;
+      overflow-x: auto;
+      font-size: 0.86rem;
+      line-height: 1.55;
+      margin: 12px 0 6px;
+      -webkit-text-size-adjust: 100%;
+    }
+    .ha-code code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; white-space: pre; }
+    .ha-code-label {
+      font-size: 0.8rem; color: var(--c-text-mute); margin: 18px 0 0;
+      font-weight: 600; letter-spacing: 0.01em;
+    }
+    .ha-url {
+      display: inline-block; background: #ecf1f6; border: 1px solid var(--c-border, #d6dee6);
+      border-radius: 6px; padding: 6px 12px; font-size: 0.95rem;
+      font-family: ui-monospace, Menlo, Consolas, monospace; word-break: break-all;
+    }
+    .ha-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.93rem; }
+    .ha-table th, .ha-table td {
+      text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--c-border, #e2e8ef);
+      vertical-align: top;
+    }
+    .ha-table th { color: var(--c-brand-deep, #0b4f86); font-weight: 600; }
+    .ha-table td code { background: #ecf1f6; padding: 1px 5px; border-radius: 4px; font-size: 0.86em; }
+    .ha-note {
+      background: #f3f7fb; border-left: 4px solid var(--c-brand, #0f6cbd);
+      border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0;
+    }
+    .ha-warn {
+      background: #fbf5ec; border-left: 4px solid #c98a16;
+      border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0;
+    }
+    .ha-steps { counter-reset: step; list-style: none; padding-left: 0; }
+    .ha-steps > li {
+      counter-increment: step; position: relative; padding-left: 40px; margin: 14px 0;
+    }
+    .ha-steps > li::before {
+      content: counter(step); position: absolute; left: 0; top: 0;
+      width: 26px; height: 26px; border-radius: 50%; background: var(--c-brand, #0f6cbd);
+      color: #fff; font-size: 0.85rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+          { "@type": "ListItem", "position": 2, "name": "Home Assistant koppeling", "item": "https://stroomvoorspeller.nl/home-assistant" }
+        ]
+      },
+      {
+        "@type": "TechArticle",
+        "headline": "Home Assistant koppeling",
+        "description": "Koppel de day-ahead stroomprijzen van stroomvoorspeller.nl aan Home Assistant via een gratis open JSON-feed en een RESTful sensor.",
+        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
+        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "datePublished": "2026-06-06",
+        "dateModified": "2026-06-06",
+        "inLanguage": "nl-NL",
+        "image": "https://stroomvoorspeller.nl/og-image.png",
+        "mainEntityOfPage": "https://stroomvoorspeller.nl/home-assistant",
+        "proficiencyLevel": "Intermediate"
+      }
+    ]
+  }
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank/">Kennisbank</a>
+        <a href="/historisch">Historisch</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="legal-page container">
+    <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
+    <h1>Stroomprijzen in Home Assistant</h1>
+    <p class="legal-meta">Gratis open data · geen account · bijgewerkt 6 juni 2026</p>
+
+    <p class="legal-summary">
+      Stroomvoorspeller.nl publiceert een vast JSON-bestand met de day-ahead stroomprijzen van
+      vandaag en morgen, plus een meerdaagse voorspelling. Je leest het rechtstreeks uit met de
+      <strong>ingebouwde RESTful sensor</strong> van Home Assistant — geen custom integratie, geen
+      account, geen API-sleutel. Kopieer de YAML hieronder, pas eventueel de namen aan, klaar.
+    </p>
+
+    <section>
+      <h2>De data-URL</h2>
+      <p>Alle waarden staan in één bestand:</p>
+      <p><span class="ha-url">https://stroomvoorspeller.nl/data/ha.json</span></p>
+      <p>
+        Het bestand wordt een paar keer per dag ververst, telkens als er nieuwe day-ahead data
+        binnenkomt (de prijzen van morgen verschijnen rond 14:00). Het is een statisch bestand achter
+        een CDN, dus je mag het gerust elke 30 minuten ophalen. De prijzen zelf veranderen gedurende
+        de dag niet meer zodra ze bekend zijn.
+      </p>
+      <div class="ha-note">
+        <strong>Twee prijzen per uur, beide in EUR/kWh.</strong>
+        <code>market</code> is de kale beursprijs (EPEX), zonder belasting of leverancieropslag.
+        <code>all_in</code> is een indicatieve consumentenprijs: market + gemiddelde leverancieropslag
+        + energiebelasting, maal 21% btw. Elk uur én elke dagsamenvatting bevat <strong>beide</strong>
+        prijzen, zodat je zelf kiest waar je op stuurt — de kale markt of de all-in prijs. Wil je je
+        <em>exacte</em> prijs? Gebruik <code>market</code> en tel in Home Assistant je eigen opslag,
+        belasting en btw erbij op.
+      </div>
+    </section>
+
+    <section>
+      <h2>Stap voor stap</h2>
+      <ol class="ha-steps">
+        <li>Open <code>configuration.yaml</code> (via de File editor- of Studio Code Server-add-on).</li>
+        <li>Plak het <code>rest:</code>-blok hieronder erin. Staat er al een <code>rest:</code> of <code>template:</code> in je config? Voeg dan alleen de regels eronder toe — niet de sleutel zelf nog een keer.</li>
+        <li>Controleer je config via <em>Instellingen → Systeem → Herstarten → Configuratie controleren</em>.</li>
+        <li>Herstart Home Assistant. De sensoren verschijnen onder <em>Instellingen → Apparaten &amp; services → Entiteiten</em>.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>1. De basis: één ophaalactie, meerdere sensoren</h2>
+      <p>
+        Met het top-level <code>rest:</code>-platform haal je het bestand <strong>één keer</strong> op
+        en maak je er meteen meerdere sensoren van. Dat is netjes voor de server én voor je setup.
+      </p>
+      <p class="ha-code-label">configuration.yaml</p>
+      <div class="ha-code"><code>rest:
+  - resource: https://stroomvoorspeller.nl/data/ha.json
+    scan_interval: 1800        # elke 30 minuten; de data ververst maar enkele keren per dag
+    sensor:
+      # Goedkoopste uur van vandaag (tijdstip)
+      - name: "Stroom goedkoopste uur vandaag"
+        unique_id: sv_cheapest_today
+        value_template: "{{ value_json.today.cheapest.start }}"
+        device_class: timestamp
+
+      # Goedkoopste prijs van vandaag (all-in EUR/kWh)
+      - name: "Stroom goedkoopste prijs vandaag"
+        unique_id: sv_cheapest_price_today
+        value_template: "{{ value_json.today.cheapest.all_in }}"
+        unit_of_measurement: "EUR/kWh"
+        state_class: measurement
+
+      # Daggemiddelde van vandaag (all-in EUR/kWh)
+      - name: "Stroom gemiddelde vandaag"
+        unique_id: sv_avg_today
+        value_template: "{{ value_json.today.average_all_in }}"
+        unit_of_measurement: "EUR/kWh"
+      # Aantal negatieve uren morgen (0 als morgen nog niet bekend is)
+      - name: "Stroom negatieve uren morgen"
+        unique_id: sv_neg_tomorrow
+        value_template: "{{ value_json.tomorrow.negative_hours | default(0) }}"
+
+      # 'Drager'-sensor: houdt de volledige uurlijsten als attributen vast.
+      # De template-sensoren hieronder rekenen hierop verder.
+      - name: "Stroomprijzen data"
+        unique_id: sv_data
+        value_template: "{{ value_json.generated }}"
+        device_class: timestamp
+        json_attributes:
+          - today
+          - tomorrow
+          - forecast</code></div>
+      <div class="ha-note">
+        <strong>Belangrijk:</strong> de <em>state</em> van een sensor moet een korte, enkele waarde zijn
+        (getal of tekst). De volledige uurlijst van 24 prijzen hoort daarom in de <code>json_attributes</code>
+        van een drager-sensor, niet in de state. Dat is precies wat de laatste sensor hierboven doet.
+      </div>
+    </section>
+
+    <section>
+      <h2>2. De huidige prijs (altijd actueel)</h2>
+      <p>
+        De drager-sensor wordt maar een paar keer per dag opgehaald. Toch wil je een sensor die <em>elk
+        uur</em> de juiste prijs toont. Dat los je lokaal op met een <code>template</code>-sensor: die
+        kiest elke minuut het juiste uur uit de attributen — zonder opnieuw te downloaden.
+      </p>
+      <p class="ha-code-label">configuration.yaml</p>
+      <div class="ha-code"><code>template:
+  - sensor:
+      - name: "Stroom huidige prijs"
+        unique_id: sv_now_price
+        unit_of_measurement: "EUR/kWh"
+        state: >
+          {% set hours = state_attr('sensor.stroomprijzen_data', 'today').hours %}
+          {% set ns = namespace(price='unknown') %}
+          {% if hours %}
+            {% for h in hours %}
+              {% if as_timestamp(h.start) <= as_timestamp(now()) < as_timestamp(h.start) + 3600 %}
+                {% set ns.price = h.all_in %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+          {{ ns.price }}
+
+      - name: "Stroom huidige prijs (markt)"
+        unique_id: sv_now_price_market
+        unit_of_measurement: "EUR/kWh"
+        state: >
+          {% set hours = state_attr('sensor.stroomprijzen_data', 'today').hours %}
+          {% set ns = namespace(price='unknown') %}
+          {% if hours %}
+            {% for h in hours %}
+              {% if as_timestamp(h.start) <= as_timestamp(now()) < as_timestamp(h.start) + 3600 %}
+                {% set ns.price = h.market %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+          {{ ns.price }}</code></div>
+      <div class="ha-note">
+        Wil je je <strong>eigen</strong> exacte tarief? Vervang in de eerste sensor <code>h.all_in</code>
+        door een eigen berekening op <code>h.market</code>, bijvoorbeeld:
+        <code>{{ (h.market + 0.0182 + 0.0916) * 1.21 }}</code> waarbij <code>0.0182</code> de
+        leverancieropslag van jóuw contract is (incl. btw delen door 1,21 als je excl. btw rekent).
+      </div>
+    </section>
+
+    <section>
+      <h2>3. Voorbeeld-automatiseringen</h2>
+
+      <p class="ha-code-label">Apparaat starten op het goedkoopste uur van de dag</p>
+      <div class="ha-code"><code>alias: Wasmachine op goedkoopste uur
+trigger:
+  # Elk heel uur kijken of dit hét goedkoopste uur van vandaag is.
+  - platform: time_pattern
+    minutes: "0"
+condition:
+  - condition: template
+    value_template: >
+      {{ now().strftime('%Y-%m-%dT%H') ==
+         as_timestamp(state_attr('sensor.stroomprijzen_data', 'today').cheapest.start)
+         | timestamp_custom('%Y-%m-%dT%H', true) }}
+action:
+  - service: switch.turn_on
+    target:
+      entity_id: switch.wasmachine</code></div>
+
+      <p class="ha-code-label">EV alleen laden als de prijs onder 15 ct/kWh ligt</p>
+      <div class="ha-code"><code>alias: EV laden bij lage prijs
+trigger:
+  - platform: state
+    entity_id: sensor.stroom_huidige_prijs
+condition:
+  - condition: numeric_state
+    entity_id: sensor.stroom_huidige_prijs
+    below: 0.15
+action:
+  - service: switch.turn_on
+    target:
+      entity_id: switch.laadpaal</code></div>
+
+      <p class="ha-code-label">Melding bij negatieve prijzen morgen</p>
+      <div class="ha-code"><code>alias: Melding negatieve stroomprijs morgen
+trigger:
+  - platform: numeric_state
+    entity_id: sensor.stroom_negatieve_uren_morgen
+    above: 0
+action:
+  - service: notify.mobile_app_jouw_telefoon
+    data:
+      title: "Gratis stroom morgen ⚡"
+      message: >
+        Morgen zijn er {{ states('sensor.stroom_negatieve_uren_morgen') }}
+        uren met een negatieve marktprijs.</code></div>
+    </section>
+
+    <section>
+      <h2>Welke waarden kun je ophalen?</h2>
+      <p>Dit zijn de meest gebruikte velden. Het pad begint telkens met <code>value_json.</code> (in een RESTful sensor) of je leest het uit de attributen van de drager-sensor.</p>
+      <table class="ha-table">
+        <thead>
+          <tr><th>Pad</th><th>Betekenis</th><th>Voorbeeld</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>today.cheapest.start</code></td><td>Begintijd goedkoopste uur vandaag</td><td>2026-04-30T10:00:00+02:00</td></tr>
+          <tr><td><code>today.cheapest.all_in</code></td><td>All-in prijs op dat uur (EUR/kWh)</td><td>0.1298</td></tr>
+          <tr><td><code>today.most_expensive.start</code></td><td>Begintijd duurste uur vandaag</td><td>2026-04-30T19:00:00+02:00</td></tr>
+          <tr><td><code>today.average_all_in</code></td><td>Daggemiddelde all-in (EUR/kWh)</td><td>0.2054</td></tr>
+          <tr><td><code>today.average_market</code></td><td>Daggemiddelde marktprijs (EUR/kWh)</td><td>0.0604</td></tr>
+          <tr><td><code>today.negative_hours_market</code></td><td>Aantal uren met negatieve <em>marktprijs</em> ('gratis stroom')</td><td>1</td></tr>
+          <tr><td><code>today.negative_hours_all_in</code></td><td>Aantal uren met negatieve <em>consumentenprijs</em> (incl. belasting)</td><td>0</td></tr>
+          <tr><td><code>today.hours[].market</code> / <code>.all_in</code></td><td>Volledige uurlijst (24 stuks)</td><td>array</td></tr>
+          <tr><td><code>tomorrow.available</code></td><td>true zodra de prijzen van morgen bekend zijn (~14:00)</td><td>true / false</td></tr>
+          <tr><td><code>tomorrow.cheapest.start</code></td><td>Goedkoopste uur morgen</td><td>2026-05-01T04:00:00+02:00</td></tr>
+          <tr><td><code>forecast.days[].average_market_estimate</code></td><td>Verwacht daggemiddelde (indicatief)</td><td>0.0603</td></tr>
+          <tr><td><code>forecast.days[].negative_probability</code></td><td>Ruwe kans op negatieve uren (0–1)</td><td>0.29</td></tr>
+        </tbody>
+      </table>
+      <p>
+        De volledige structuur staat beschreven in het
+        <a href="/data/ha.schema.json">JSON Schema</a>. Het databestand zelf kun je hier bekijken:
+        <a href="/data/ha.json">/data/ha.json</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2>Over de voorspelling: gebruik 'm met mate</h2>
+      <div class="ha-warn">
+        Het <code>forecast</code>-blok is een <strong>modelvoorspelling met onzekerheid</strong>, geen
+        zekerheid. Bouw automatiseringen die op exacte prijzen rekenen daarom op <code>today</code> en —
+        na ongeveer 14:00 — <code>tomorrow</code>; dat zijn harde day-ahead prijzen. Gebruik
+        <code>forecast</code> alleen voor losse planning, bijvoorbeeld "wordt het later deze week
+        goedkoper?". Lees meer op <a href="/over/voorspelling">Over de voorspelling</a>.
+      </div>
+    </section>
+
+    <section>
+      <h2>Open data &amp; bron</h2>
+      <p>
+        De feed is vrij te gebruiken onder <strong>CC-BY 4.0</strong> — vermeld
+        <a href="https://stroomvoorspeller.nl">stroomvoorspeller.nl</a> als bron. Onderliggende prijzen:
+        ENTSO-E day-ahead (EPEX Spot, NL-biedzone). De voorspelling gebruikt Open-Meteo (weer) en
+        TTF-gasprijzen.
+      </p>
+      <p>
+        Bouw je iets leuks met deze feed, of mis je een waarde? Laat het weten via
+        <a href="mailto:contactstroomvoorspeller@gmail.com">contactstroomvoorspeller@gmail.com</a> —
+        ik hoor graag wat je ermee maakt.
+      </p>
+    </section>
+
+    <p class="legal-related">
+      Zie ook: <a href="/over/voorspelling">Over de voorspelling</a> ·
+      <a href="/kennisbank/p1-poort-uitlezen">P1-poort uitlezen</a> ·
+      <a href="/disclaimer">Disclaimer</a>
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a> ·
+          <a href="/over/voorspelling">Voorspelling</a> ·
+          <a href="/home-assistant">Home Assistant</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+</body>
+</html>
