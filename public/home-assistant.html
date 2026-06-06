@@ -40,7 +40,15 @@
       margin: 12px 0 6px;
       -webkit-text-size-adjust: 100%;
     }
-    .ha-code code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; white-space: pre; }
+    .ha-code code {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      white-space: pre;
+      background: transparent;   /* overschrijf .legal-page code (lichte achtergrond) */
+      color: #e6edf3;            /* lichte tekst, leesbaar op de donkere achtergrond */
+      padding: 0;
+      border-radius: 0;
+      font-size: inherit;
+    }
     .ha-code-label {
       font-size: 0.8rem; color: var(--c-text-mute); margin: 18px 0 0;
       font-weight: 600; letter-spacing: 0.01em;
