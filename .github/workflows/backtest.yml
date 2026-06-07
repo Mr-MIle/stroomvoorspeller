@@ -34,6 +34,19 @@ on:
         required: false
         default: true
         type: boolean
+      seasonal:
+        description: "Experimentele seizoensfactor aanzetten (archief vorige jaren). Voor A/B-test."
+        required: false
+        default: false
+        type: boolean
+      seasonal_years:
+        description: "Seizoensfactor: aantal jaren terug (default 3)."
+        required: false
+        default: "3"
+      seasonal_window:
+        description: "Seizoensfactor: venster in dagen rond dezelfde datum (default 10)."
+        required: false
+        default: "10"
 
 permissions:
   contents: read
@@ -69,6 +82,9 @@ jobs:
           fi
           if [ "${{ github.event.inputs.apply_bias }}" = "true" ]; then
             EXTRA="$EXTRA --apply-bias"
+          fi
+          if [ "${{ github.event.inputs.seasonal }}" = "true" ]; then
+            EXTRA="$EXTRA --seasonal --seasonal-years ${{ github.event.inputs.seasonal_years }} --seasonal-window ${{ github.event.inputs.seasonal_window }}"
           fi
           python scripts/backtest.py \
             --days "${{ github.event.inputs.days }}" \
