@@ -91,9 +91,13 @@ from fetch_prices import (  # noqa: E402
 
 # Archief-lezer: maakt backtests over meerdere jaren mogelijk (load_archive.py).
 try:
-    from load_archive import load_range as _archive_load_range
+    from load_archive import (
+        load_range as _archive_load_range,
+        load_same_period as _archive_same_period,
+    )
 except Exception:  # noqa: BLE001
     _archive_load_range = None
+    _archive_same_period = None
 
 # Live MOS bias-correctie hergebruiken zodat de backtest de productie-pijplijn weerspiegelt.
 try:
@@ -457,6 +461,7 @@ def run_backtest(
     horizons: list[int],
     thresholds: dict,
     bias_corrections: dict | None = None,
+    seasonal_fn=None,
 ) -> list[dict]:
     """Voor elke forecast_date x horizon x uur: forecast vs actual.
 
@@ -493,6 +498,8 @@ def run_backtest(
             wind = wx["wind_ms"]
             temp = wx["temp_c"]
 
+            seasonal_history = seasonal_fn(target_day) if seasonal_fn else None
+
             for hour in range(24):
                 target_dt = target_day.replace(hour=hour, minute=0, second=0, microsecond=0)
 
@@ -509,6 +516,7 @@ def run_backtest(
                     temp_c=temp,
                     ttf_ratio=ttf_ratio,
                     days_ahead=h,
+                    seasonal_history=seasonal_history,
                 )
                 if fc is None:
                     skipped_no_baseline += 1
@@ -975,6 +983,13 @@ def main() -> int:
     parser.add_argument("--apply-bias", action="store_true",
                         help="Pas dezelfde MOS bias-correctie toe als de live-site (run_forecast.py). "
                              "Maakt de backtest representatief voor wat bezoekers werkelijk zien.")
+    parser.add_argument("--seasonal", action="store_true",
+                        help="Zet de experimentele seizoensfactor aan (archief van voorgaande jaren). "
+                             "Voor A/B: draai dezelfde periode met en zonder deze vlag.")
+    parser.add_argument("--seasonal-years", type=int, default=3,
+                        help="Aantal voorgaande jaren voor de seizoensbaseline (default 3).")
+    parser.add_argument("--seasonal-window", type=int, default=10,
+                        help="Venster in dagen rond dezelfde kalenderdatum (default 10).")
     parser.add_argument("--output-dir", type=str, default=None,
                         help="Schrijf rapport en JSON naar deze map (handig in CI). "
                              "Default: rapport naar 01-documenten/, JSON naar 03-data/.")
@@ -1011,6 +1026,26 @@ def main() -> int:
             n_active = sum(1 for v in bias_corrections.values() if v.get("apply"))
             print(f"[info] MOS bias-correctie AAN: {len(bias_corrections)} cellen, "
                   f"{n_active} actief.", file=sys.stderr)
+
+    seasonal_fn = None
+    if getattr(args, "seasonal", False):
+        if _archive_same_period is None:
+            print("[warn] --seasonal gevraagd, maar load_archive niet beschikbaar; "
+                  "seizoensfactor blijft uit.", file=sys.stderr)
+        else:
+            import forecast as _fc_mod
+            _fc_mod.ENABLED_FACTORS.add("seizoen")
+            _seasonal_cache: dict = {}
+
+            def seasonal_fn(target_day, _yb=args.seasonal_years, _wd=args.seasonal_window):
+                key = target_day.strftime("%Y-%m-%d")
+                if key not in _seasonal_cache:
+                    _seasonal_cache[key] = _archive_same_period(
+                        target_day, years_back=_yb, window_days=_wd)
+                return _seasonal_cache[key]
+
+            print(f"[info] Seizoensfactor AAN: {args.seasonal_years} jaar terug, "
+                  f"+/-{args.seasonal_window} dagen venster.", file=sys.stderr)
 
     now = amsterdam_now()
     # Periode: testperiode = laatste `test_days` dagen, eindigend gisteren.
@@ -1119,13 +1154,15 @@ def main() -> int:
 
     if bias_corrections:
         source = source + " + MOS bias-correctie"
+    if seasonal_fn:
+        source = source + f" + seizoensfactor (Nj={args.seasonal_years}, w={args.seasonal_window})"
 
     # Forecast-dates: elke dag in de testperiode
     forecast_dates = [test_start_day + timedelta(days=i) for i in range(test_days)]
 
     print(f"[info] Forecasts uitvoeren ({len(forecast_dates)} forecast-dagen x {len(horizons)} horizons x 24 uur)...",
           file=sys.stderr)
-    results = run_backtest(prices, weather, ttf, forecast_dates, horizons, thresholds, bias_corrections=bias_corrections)
+    results = run_backtest(prices, weather, ttf, forecast_dates, horizons, thresholds, bias_corrections=bias_corrections, seasonal_fn=seasonal_fn)
 
     if not results:
         print("[err] Geen resultaten; rapport wordt niet geschreven.", file=sys.stderr)

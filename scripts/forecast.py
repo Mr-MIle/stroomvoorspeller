@@ -391,7 +391,7 @@ def factor_uurpatroon(dt: datetime) -> FactorScore:
 # prijzen wordt vaak gevolgd door een dag met relatief hoge prijzen (aanhoudend
 # weerregime, gasprijsniveau, marktomstandigheden veranderen niet van dag op dag).
 #
-# Deze factor benut de bekende D+1-prijzen (gepubliceerd ~13:00) als signaal voor
+# Deze factor benut de bekende D+1-prijzen (gepubliceerd ~14:00) als signaal voor
 # D+2, het eerste te voorspellen uur. Voor D+3 en verder ontbreken de vorige-dag-
 # prijzen en geeft de factor 0 (neutraal).
 #
@@ -434,6 +434,67 @@ def factor_vorige_dag(prior_ratio: Optional[float]) -> FactorScore:
     else:
         pts, reason = +2, f"vorige dag duur ({prior_ratio:.2f}×)"
     return FactorScore("vorige_dag", pts, reason)
+
+
+# ---- Factor 9: Seizoen (v3.0, experimenteel, standaard UIT) ----
+# Niveaucorrectie op basis van het prijspatroon in dezelfde kalenderperiode van
+# voorgaande jaren. Vult een gat dat de MOS bias-correctie niet kan dichten: MOS
+# corrigeert alleen maanden die het live-model al heeft gezien, terwijl deze factor
+# uit jaren archief leert voor ELKE maand. seasonal_history wordt aangeleverd door
+# de orchestrator (run_forecast/backtest) via load_archive.load_same_period().
+#
+# Telt alleen mee als "seizoen" in ENABLED_FACTORS staat (default: niet). Zo blijft
+# de live-voorspelling ongewijzigd tot een backtest de waarde bevestigt.
+
+def seasonal_baseline(target_dt: datetime, seasonal_history: list[dict]) -> Optional[float]:
+    """Mediaan-prijs voor hetzelfde uur en dagtype uit historische seizoensdata.
+
+    seasonal_history: prijzen rond dezelfde kalenderperiode in voorgaande jaren.
+    Filtert op gelijk uur + dagtype (werkdag/weekend/feestdag) en neemt de mediaan.
+    None als er geen match is.
+    """
+    target_hour = target_dt.hour
+    target_type = dagtype(target_dt)
+    matches: list[float] = []
+    for entry in seasonal_history:
+        try:
+            t = datetime.fromisoformat(entry["time"])
+        except (ValueError, KeyError, TypeError):
+            continue
+        if t.hour != target_hour:
+            continue
+        if dagtype(t) != target_type:
+            continue
+        matches.append(entry["price"])
+    if not matches:
+        return None
+    srt = sorted(matches)
+    n = len(srt)
+    mid = n // 2
+    return srt[mid] if n % 2 else (srt[mid - 1] + srt[mid]) / 2
+
+
+def factor_seizoen(seasonal_ratio: Optional[float]) -> FactorScore:
+    """Niveaucorrectie uit het seizoenspatroon van voorgaande jaren.
+
+    seasonal_ratio = (seizoens-mediaan voor dit uur/dagtype) / (recente baseline).
+    > 1 → deze tijd van het jaar is historisch duurder dan het recente venster
+    suggereert (duw omhoog); < 1 → goedkoper (duw omlaag). Bewust begrensd op ±2
+    punten (±6% bij POINT_WEIGHT 0.03), net als factor_gas en factor_vorige_dag.
+    """
+    if seasonal_ratio is None:
+        return FactorScore("seizoen", 0, "geen seizoensdata")
+    if seasonal_ratio < 0.80:
+        pts, reason = -2, f"seizoen historisch goedkoper ({seasonal_ratio:.2f}x baseline)"
+    elif seasonal_ratio < 0.93:
+        pts, reason = -1, f"seizoen iets goedkoper ({seasonal_ratio:.2f}x)"
+    elif seasonal_ratio <= 1.07:
+        pts, reason = 0, f"seizoen normaal ({seasonal_ratio:.2f}x)"
+    elif seasonal_ratio <= 1.25:
+        pts, reason = +1, f"seizoen iets duurder ({seasonal_ratio:.2f}x)"
+    else:
+        pts, reason = +2, f"seizoen historisch duurder ({seasonal_ratio:.2f}x)"
+    return FactorScore("seizoen", pts, reason)
 
 
 # ---- Regime detectie (v1.7 sectie 5) ----
@@ -559,6 +620,7 @@ def forecast_one(
     ttf_ratio: float,
     days_ahead: int,
     prior_day_price: Optional[float] = None,
+    seasonal_history: Optional[list[dict]] = None,
 ) -> Optional[Forecast]:
     """
     Voorspel de prijs voor een specifiek toekomstig uur.
@@ -600,6 +662,14 @@ def forecast_one(
             f"geblokkeerd (bewolkt: sw_h={shortwave_ratio:.2f}<0.30)"
         )
 
+    # v3.0: seizoensratio uit voorgaande jaren (alleen als de orchestrator
+    # seasonal_history meegeeft). Telt pas mee als "seizoen" in ENABLED_FACTORS staat.
+    seasonal_ratio: Optional[float] = None
+    if seasonal_history:
+        s_anchor = seasonal_baseline(target_dt, seasonal_history)
+        if s_anchor is not None and baseline:
+            seasonal_ratio = s_anchor / baseline
+
     factors = [
         factor_zon(shortwave_ratio),
         factor_wind(wind_ms),
@@ -609,6 +679,7 @@ def forecast_one(
         _uurpatroon,
         factor_vorige_dag(prior_ratio),
         nonlinear_correction(shortwave_ratio, wind_ms, regime),  # v1.7
+        factor_seizoen(seasonal_ratio),                          # v3.0 (default uit)
     ]
 
     # v1.6: zondag-boost. Op zondag tellen zon en wind ZWAARDER (×ZONDAG_BOOST)
@@ -707,11 +778,11 @@ if __name__ == "__main__":
     # Test v1.7: baseline sluit 1 mei uit
     target_vr = datetime(2026, 5, 8, 13, 0)
     history_met_mei1 = [
-        {"time": "2026-04-27T13:00:00", "price": 50.0},
-        {"time": "2026-04-28T13:00:00", "price": 50.0},
-        {"time": "2026-04-29T13:00:00", "price": 50.0},
-        {"time": "2026-04-30T13:00:00", "price": 50.0},
-        {"time": "2026-05-01T13:00:00", "price": -300.0},  # EU-feestdag: moet worden uitgesloten
+        {"time": "2026-04-27T14:00:00", "price": 50.0},
+        {"time": "2026-04-28T14:00:00", "price": 50.0},
+        {"time": "2026-04-29T14:00:00", "price": 50.0},
+        {"time": "2026-04-30T14:00:00", "price": 50.0},
+        {"time": "2026-05-01T14:00:00", "price": -300.0},  # EU-feestdag: moet worden uitgesloten
     ]
     baseline_vr = compute_baseline(target_vr, history_met_mei1)
     assert baseline_vr is not None
