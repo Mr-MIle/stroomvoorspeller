@@ -77,14 +77,15 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Over de voorspelling</h1>
-    <p class="legal-meta">Modelversie 2.1 · Bijgewerkt: 7 mei 2026</p>
+    <p class="legal-meta">Modelversie 3.0 · Bijgewerkt: 7 juni 2026</p>
 
     <section>
       <h2>Kort samengevat</h2>
       <p class="legal-summary">
         De voorspelling kijkt naar <strong>wat de prijs de afgelopen 1–2 weken op hetzelfde uur deed</strong>
-        en past dat aan op basis van het verwachte weer (zon, wind, temperatuur), de gasprijs en het
-        type dag. Daarbovenop herkent het model drie <strong>marktregimes</strong>: een gewone dag,
+        en past dat aan op basis van het verwachte weer (zon, wind, temperatuur), de gasprijs, het
+        type dag en hoe de prijs in dezelfde periode van voorgaande jaren lag. Daarbovenop herkent
+        het model drie <strong>marktregimes</strong>: een gewone dag,
         een dag met veel hernieuwbare energie (oversupply) en een schaarse dag. Bij oversupply — veel
         zon en wind tegelijk, zeker in het weekend — kunnen prijzen negatief worden tot ver onder nul;
         dat is ook het moment waarop de fout het grootst is. We tonen daarom altijd een onzekerheidsband.
@@ -120,15 +121,15 @@
         mediaan van vorige week geeft dan een te hoge startprijs.
       </p>
 
-      <h3>Stap 2 — Acht factoren stellen bij</h3>
+      <h3>Stap 2 — Negen factoren stellen bij</h3>
       <p>
-        Acht factoren geven elk een score in <strong>punten</strong>. Het totaal verschuift de
+        Negen factoren geven elk een score in <strong>punten</strong>. Het totaal verschuift de
         basisprijs met 3% per punt:
       </p>
       <p class="legal-formula">
         voorspelling = basisprijs × (1 + totaalpunten × 3%)
       </p>
-      <p>De acht factoren:</p>
+      <p>De negen factoren:</p>
       <ol>
         <li>
           <strong>Zonproductie</strong> — bewolkt geeft plus (duurder), zonnig geeft min.
@@ -165,6 +166,13 @@
           Als zon én wind gelijktijdig piekeren terwijl de vraag laag is, versterkt het model de
           neerwaartse bijstelling extra, want lineaire factoren onderschatten dan systematisch hoe
           ver de prijs kan zakken.
+        </li>
+        <li>
+          <strong>Seizoen</strong> — vergelijkt het huidige niveau met dezelfde periode (zelfde uur
+          en dagtype) in de twee voorgaande jaren uit ons prijsarchief. Zo corrigeert het model voor
+          het patroon over het jaar heen: ligt deze tijd van het jaar historisch hoger of lager dan
+          de afgelopen weken suggereren, dan stelt het de prijs navenant bij. Deze factor verlaagde
+          in onze backtest de winterafwijking aanzienlijk.
         </li>
       </ol>
       <p>Klik in de grafiek op een voorspeld uur om te zien hoe elke factor bijdraagt.</p>
