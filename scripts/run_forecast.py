@@ -57,12 +57,25 @@ from pathlib import Path
 # Importeer modelmodules
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from forecast import forecast_one, POINT_WEIGHT          # noqa: E402
+import forecast as _forecast_mod                          # noqa: E402  (v3.0 seizoenstoggle)
 from fetch_prices import amsterdam_now                   # noqa: E402
 from event_plausibility import compute_event_plausibility  # noqa: E402  (v2.1)
+try:
+    from load_archive import load_same_period as _load_same_period  # noqa: E402
+except Exception:  # noqa: BLE001
+    _load_same_period = None
 
 # Modelversie — komt mee in de output zodat de frontend hem kan tonen.
 # v2.1: EVENT_PLAUSIBILITY_LAYER toegevoegd als post-processing stap.
-MODEL_VERSION = "2.1"
+MODEL_VERSION = "3.0"   # v3.0: seizoensfactor live
+
+# Seizoensfactor (v3.0): niveaucorrectie uit het prijsarchief van de voorgaande
+# jaren. Nj=2 gekozen na backtest winter+zomer 2024/25 (verslaat de naïeve baseline
+# op vrijwel alle horizonten; winterbias +8 -> +3). Kill-switch: zet ENABLE_SEASONAL
+# op False om de factor uit te zetten zonder verdere code te wijzigen.
+ENABLE_SEASONAL = True
+SEASONAL_YEARS = 2
+SEASONAL_WINDOW = 10
 
 # ---------------------------------------------------------------------------
 # Paden
@@ -494,6 +507,17 @@ def main() -> int:
         return 1
     print(f"[info] {len(history)} prijzen ingelezen uit prices.json", file=sys.stderr)
 
+    # v3.0: seizoensfactor aanzetten (alleen hier, in main, zodat het importeren van
+    # run_forecast door andere scripts de globale ENABLED_FACTORS niet muteert).
+    seasonal_enabled = ENABLE_SEASONAL and _load_same_period is not None
+    if seasonal_enabled:
+        _forecast_mod.ENABLED_FACTORS.add("seizoen")
+        print(f"[info] Seizoensfactor AAN (Nj={SEASONAL_YEARS}, w={SEASONAL_WINDOW}).",
+              file=sys.stderr)
+    elif ENABLE_SEASONAL:
+        print("[warn] Seizoensfactor gewenst maar load_archive niet beschikbaar; uit.",
+              file=sys.stderr)
+
     now_ams     = amsterdam_now()
     today_start = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
     horizon_start = today_start + timedelta(days=1)
@@ -614,6 +638,16 @@ def main() -> int:
         temp           = wx["temp_c"]
         days_ahead     = (cursor.replace(hour=0) - today_start).days
 
+        # v3.0: seizoensdata uit het archief voor deze target-dag (1x per dag).
+        seasonal_history = None
+        if seasonal_enabled:
+            try:
+                seasonal_history = _load_same_period(
+                    cursor, years_back=SEASONAL_YEARS, window_days=SEASONAL_WINDOW)
+            except Exception as exc:  # noqa: BLE001
+                print(f"[warn] seizoensdata laden mislukt ({day_key}): {exc}", file=sys.stderr)
+                seasonal_history = None
+
         for hour in range(24):
             target_dt = cursor.replace(hour=hour, minute=0, second=0, microsecond=0)
 
@@ -641,6 +675,7 @@ def main() -> int:
                 ttf_ratio=ttf_ratio,
                 days_ahead=days_ahead,
                 prior_day_price=prior_day_price,
+                seasonal_history=seasonal_history,
             )
             if fc is None:
                 skipped += 1
