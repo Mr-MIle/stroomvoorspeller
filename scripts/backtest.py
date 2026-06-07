@@ -89,6 +89,12 @@ from fetch_prices import (  # noqa: E402
     utc_to_amsterdam,
 )
 
+# Archief-lezer: maakt backtests over meerdere jaren mogelijk (load_archive.py).
+try:
+    from load_archive import load_range as _archive_load_range
+except Exception:  # noqa: BLE001
+    _archive_load_range = None
+
 
 # ---- Paden ----
 
@@ -114,6 +120,48 @@ MONTHLY_SOLAR_NORM_MJ = {
     1: 2.5, 2: 5.0, 3: 9.0, 4: 14.0, 5: 17.5, 6: 18.5,
     7: 18.0, 8: 15.5, 9: 11.0, 10: 6.5, 11: 3.0, 12: 2.0,
 }
+
+
+def derive_eur_mwh_thresholds(config: dict) -> dict:
+    """Leid kale-EPEX drempels (EUR/MWh) af voor categorisatie.
+
+    De config bewaart drempels als consumentenprijs in ct/kWh incl. energiebelasting,
+    btw en leverancieropslag (`thresholds_ct_kwh_inclusive`). De backtest werkt op
+    kale EPEX-prijzen in EUR/MWh, dus we rekenen terug:
+
+        consument_eur_kwh = (EPEX_eur_mwh/1000 + opslag + energiebelasting) * btw_factor
+        => EPEX_eur_mwh    = (drempel_ct/100 / btw_factor - energiebelasting - opslag) * 1000
+
+    Als de config al een expliciete `thresholds_eur_per_mwh` bevat, krijgt die voorrang.
+    """
+    if "thresholds_eur_per_mwh" in config:
+        return config["thresholds_eur_per_mwh"]
+
+    ct = config["thresholds_ct_kwh_inclusive"]
+    taxes = config.get("taxes", {})
+    energiebelasting = float(taxes.get("energiebelasting_per_kwh", 0.0916))
+    btw = float(taxes.get("btw_factor", 1.21))
+
+    # Gemiddelde leverancieropslag uit de 'average'-supplier (anders eerste, anders fallback).
+    markup = 0.0178
+    for sup in config.get("suppliers", []):
+        if sup.get("id") == "average":
+            markup = float(sup.get("markup_per_kwh", markup))
+            break
+    else:
+        sups = config.get("suppliers", [])
+        if sups:
+            markup = float(sups[0].get("markup_per_kwh", markup))
+
+    def to_epex(drempel_ct: float) -> float:
+        return round((drempel_ct / 100.0 / btw - energiebelasting - markup) * 1000.0, 2)
+
+    return {
+        "very_cheap": to_epex(ct["very_cheap"]),
+        "cheap":      to_epex(ct["cheap"]),
+        "pricey":     to_epex(ct["pricey"]),
+        "very_pricey": to_epex(ct["very_pricey"]),
+    }
 
 
 # ---- ENTSO-E historie (uitgebreide range) ----
@@ -149,6 +197,22 @@ def fetch_entsoe_range(token: str, start_ams: datetime, end_ams: datetime) -> li
         cursor = chunk_end
 
     return aggregate_to_hourly(all_prices)
+
+
+def load_prices_from_archive(start_ams: datetime, end_ams: datetime) -> list[dict]:
+    """Lees uurprijzen uit het historische archief (public/data/archief/).
+
+    Maakt backtests over willekeurige historische periodes mogelijk zonder ENTSO-E
+    opnieuw te bevragen. end_ams is exclusief.
+    """
+    if _archive_load_range is None:
+        raise RuntimeError(
+            "load_archive.py niet gevonden naast backtest.py; kan het archief niet lezen."
+        )
+    prices = _archive_load_range(start_ams, end_ams)
+    print(f"[info] {len(prices)} uurprijzen uit archief geladen "
+          f"({start_ams.date()} t/m {(end_ams - timedelta(days=1)).date()}).", file=sys.stderr)
+    return prices
 
 
 # ---- Open-Meteo Historical Weather ----
@@ -872,6 +936,13 @@ def main() -> int:
                         help="Comma-gescheiden lijst horizonten in dagen (default 1,3,5,7).")
     parser.add_argument("--sample", action="store_true",
                         help="Gebruik synthetische data - voor mechanica-test zonder API-keys.")
+    parser.add_argument("--source", choices=["entsoe", "archive", "sample"], default=None,
+                        help="Prijsbron: 'archive' = historisch archief (meerjarig), "
+                             "'entsoe' = live ENTSO-E (recent), 'sample' = synthetisch. "
+                             "Default: archive als beschikbaar, anders entsoe.")
+    parser.add_argument("--end-date", type=str, default=None,
+                        help="Anker het einde van de testperiode op YYYY-MM-DD "
+                             "(default gisteren). Handig om een specifieke winter/zomer te testen.")
     parser.add_argument("--output-dir", type=str, default=None,
                         help="Schrijf rapport en JSON naar deze map (handig in CI). "
                              "Default: rapport naar 01-documenten/, JSON naar 03-data/.")
@@ -889,13 +960,21 @@ def main() -> int:
         raw_path = DEFAULT_RAW_FILE
 
     config = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
-    thresholds = config["thresholds_eur_per_mwh"]
+    thresholds = derive_eur_mwh_thresholds(config)
+    # Zorg dat het rapport (dat config["thresholds_eur_per_mwh"] leest) dezelfde waarden toont.
+    config["thresholds_eur_per_mwh"] = thresholds
+    print(f"[info] Categorisatie-drempels (EUR/MWh): goedkoop<{thresholds['cheap']}, "
+          f"duur>{thresholds['pricey']}.", file=sys.stderr)
 
     now = amsterdam_now()
     # Periode: testperiode = laatste `test_days` dagen, eindigend gisteren.
     # We hebben prijzen nodig vanaf (test_start - 7d) zodat de eerste forecast_date
     # 7 dagen baseline-history heeft. En het laatste target_day ligt op test_end + max(horizons).
-    test_end_day = now.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+    if args.end_date:
+        test_end_day = datetime.fromisoformat(args.end_date).replace(
+            hour=0, minute=0, second=0, microsecond=0, tzinfo=now.tzinfo)
+    else:
+        test_end_day = now.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
     test_start_day = test_end_day - timedelta(days=test_days - 1)
 
     # Prijzen: ENTSO-E publiceert day-ahead, dus we kunnen tot test_end_day + 1 vragen
@@ -907,9 +986,14 @@ def main() -> int:
     # 14 dagen pre-history zodat de v1.4 weekend-baseline (14d window) genoeg
     # datapunten heeft voor de eerste forecast-dagen in de testperiode.
     fetch_prices_from = test_start_day - timedelta(days=14)
-    fetch_prices_to = test_end_day + timedelta(days=2)
-    weather_end_day = test_end_day
-    ttf_end_day = test_end_day
+    _max_h = max(horizons) if horizons else 7
+    fetch_prices_to = test_end_day + timedelta(days=_max_h + 1)
+    # Bij een historische testperiode liggen de target-dagen (test_end + horizon) ook in het
+    # verleden; haal weer/TTF dan t/m die laatste target-dag op, gecapt op gisteren omdat het
+    # Open-Meteo archive enkele dagen achterloopt op realtime.
+    _yesterday0 = now.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+    weather_end_day = min(test_end_day + timedelta(days=_max_h), _yesterday0)
+    ttf_end_day = min(test_end_day + timedelta(days=_max_h), _yesterday0)
 
     print(f"[info] Testperiode: {test_start_day.date()} t/m {test_end_day.date()} ({test_days} dagen)",
           file=sys.stderr)
@@ -919,25 +1003,43 @@ def main() -> int:
           file=sys.stderr)
 
     token = os.environ.get("ENTSOE_TOKEN", "").strip()
-    use_sample = args.sample or not token
 
-    if use_sample:
+    # Kies prijsbron. Default: archief als beschikbaar (meerjarig, reproduceerbaar),
+    # anders live ENTSO-E. --source overschrijft; --sample blijft werken.
+    if args.source:
+        source_mode = args.source
+    elif args.sample:
+        source_mode = "sample"
+    elif _archive_load_range is not None:
+        source_mode = "archive"
+    else:
+        source_mode = "entsoe"
+    if source_mode == "entsoe" and not token:
+        print("[warn] Geen ENTSOE_TOKEN voor entsoe-bron - val terug op sample-modus.",
+              file=sys.stderr)
+        source_mode = "sample"
+
+    if source_mode == "sample":
         if not token and not args.sample:
             print("[warn] Geen ENTSOE_TOKEN - val terug op sample-modus. "
                   "Resultaten zeggen alleen iets over mechanica.", file=sys.stderr)
         prices = synth_prices(fetch_prices_from, days=(fetch_prices_to - fetch_prices_from).days + 1)
         all_days = date_range(fetch_prices_from, (fetch_prices_to - fetch_prices_from).days + 1)
-        # TTF: 30 dagen voor het oudste forecast-moment ophalen
         all_days_ttf = date_range(fetch_prices_from - timedelta(days=30),
                                   (fetch_prices_to - fetch_prices_from).days + 31)
         weather = synth_weather(all_days)
         ttf = synth_ttf(all_days_ttf)
         source = "sample (synthetisch)"
     else:
-        # Echte data
-        print("[info] ENTSO-E historie ophalen...", file=sys.stderr)
-        prices = fetch_entsoe_range(token, fetch_prices_from, fetch_prices_to)
-        print(f"[info] {len(prices)} prijspunten verkregen.", file=sys.stderr)
+        if source_mode == "archive":
+            print("[info] Prijzen uit historisch archief laden...", file=sys.stderr)
+            prices = load_prices_from_archive(fetch_prices_from, fetch_prices_to)
+            price_label = "Archief"
+        else:
+            print("[info] ENTSO-E historie ophalen...", file=sys.stderr)
+            prices = fetch_entsoe_range(token, fetch_prices_from, fetch_prices_to)
+            print(f"[info] {len(prices)} prijspunten verkregen.", file=sys.stderr)
+            price_label = "ENTSO-E"
         if not prices:
             print("[err] Geen prijsdata; afbreken.", file=sys.stderr)
             return 1
@@ -967,7 +1069,7 @@ def main() -> int:
             print(f"[warn] Yahoo Finance fout: {exc}; geen TTF-data - backtest stopt.", file=sys.stderr)
             return 1
         print(f"[info] {len(ttf)} TTF-koersen.", file=sys.stderr)
-        source = "ENTSO-E + Open-Meteo Archive + Yahoo Finance TTF=F"
+        source = f"{price_label} + Open-Meteo Archive + Yahoo Finance TTF=F"
 
     # Forecast-dates: elke dag in de testperiode
     forecast_dates = [test_start_day + timedelta(days=i) for i in range(test_days)]
