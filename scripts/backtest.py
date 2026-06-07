@@ -95,6 +95,17 @@ try:
 except Exception:  # noqa: BLE001
     _archive_load_range = None
 
+# Live MOS bias-correctie hergebruiken zodat de backtest de productie-pijplijn weerspiegelt.
+try:
+    from run_forecast import (
+        apply_bias_correction as _rf_apply_bias,
+        load_bias_corrections as _rf_load_bias,
+        BIAS_CORRECTIONS_FILE as _RF_BIAS_FILE,
+    )
+    _HAS_BIAS = True
+except Exception:  # noqa: BLE001
+    _HAS_BIAS = False
+
 
 # ---- Paden ----
 
@@ -445,6 +456,7 @@ def run_backtest(
     forecast_dates: list[datetime],
     horizons: list[int],
     thresholds: dict,
+    bias_corrections: dict | None = None,
 ) -> list[dict]:
     """Voor elke forecast_date x horizon x uur: forecast vs actual.
 
@@ -505,6 +517,23 @@ def run_backtest(
                 # Naieve baseline (geen factoren) = compute_baseline output zonder punten
                 naive = fc.baseline
 
+                # Optioneel: dezelfde MOS bias-correctie als de live-pijplijn (run_forecast.py),
+                # zodat de backtest het model meet zoals bezoekers het zien.
+                predicted_val = fc.predicted
+                if bias_corrections:
+                    _fcd = {
+                        "time": target_dt.isoformat(),
+                        "predicted": fc.predicted,
+                        "lower": fc.lower,
+                        "upper": fc.upper,
+                        "regime": fc.regime,
+                        "sw_ratio_h": sw_ratio,
+                        "sw_ratio_daily": sw_ratio,
+                        "factors": [],
+                    }
+                    _rf_apply_bias(_fcd, bias_corrections, target_dt)
+                    predicted_val = _fcd["predicted"]
+
                 results.append({
                     "forecast_date": fc_date.strftime("%Y-%m-%d"),
                     "target_iso": target_dt.isoformat(),
@@ -513,7 +542,7 @@ def run_backtest(
                     "weekday": target_dt.weekday(),
                     "is_feestdag": is_feestdag(target_dt),
                     "actual": round(actual, 2),
-                    "predicted": fc.predicted,
+                    "predicted": predicted_val,
                     "naive_baseline": round(naive, 2),
                     "total_points": fc.total_points,
                     "factors": [
@@ -521,7 +550,7 @@ def run_backtest(
                     ],
                     "uncertainty_pct": fc.uncertainty_pct,
                     "actual_cat": categorize(actual, thresholds),
-                    "predicted_cat": categorize(fc.predicted, thresholds),
+                    "predicted_cat": categorize(predicted_val, thresholds),
                     "regime": fc.regime,                             # v1.7
                     "extreme_event_prob": fc.extreme_event_prob,     # v1.7
                 })
@@ -943,6 +972,9 @@ def main() -> int:
     parser.add_argument("--end-date", type=str, default=None,
                         help="Anker het einde van de testperiode op YYYY-MM-DD "
                              "(default gisteren). Handig om een specifieke winter/zomer te testen.")
+    parser.add_argument("--apply-bias", action="store_true",
+                        help="Pas dezelfde MOS bias-correctie toe als de live-site (run_forecast.py). "
+                             "Maakt de backtest representatief voor wat bezoekers werkelijk zien.")
     parser.add_argument("--output-dir", type=str, default=None,
                         help="Schrijf rapport en JSON naar deze map (handig in CI). "
                              "Default: rapport naar 01-documenten/, JSON naar 03-data/.")
@@ -965,6 +997,20 @@ def main() -> int:
     config["thresholds_eur_per_mwh"] = thresholds
     print(f"[info] Categorisatie-drempels (EUR/MWh): goedkoop<{thresholds['cheap']}, "
           f"duur>{thresholds['pricey']}.", file=sys.stderr)
+
+    bias_corrections: dict = {}
+    if getattr(args, "apply_bias", False):
+        if not _HAS_BIAS:
+            print("[warn] --apply-bias gevraagd, maar run_forecast-bias-functies niet "
+                  "beschikbaar; backtest draait zonder bias-correctie.", file=sys.stderr)
+        else:
+            try:
+                bias_corrections = _rf_load_bias(_RF_BIAS_FILE)
+            except Exception as exc:  # noqa: BLE001
+                print(f"[warn] bias-correcties laden mislukt: {exc}", file=sys.stderr)
+            n_active = sum(1 for v in bias_corrections.values() if v.get("apply"))
+            print(f"[info] MOS bias-correctie AAN: {len(bias_corrections)} cellen, "
+                  f"{n_active} actief.", file=sys.stderr)
 
     now = amsterdam_now()
     # Periode: testperiode = laatste `test_days` dagen, eindigend gisteren.
@@ -1071,12 +1117,15 @@ def main() -> int:
         print(f"[info] {len(ttf)} TTF-koersen.", file=sys.stderr)
         source = f"{price_label} + Open-Meteo Archive + Yahoo Finance TTF=F"
 
+    if bias_corrections:
+        source = source + " + MOS bias-correctie"
+
     # Forecast-dates: elke dag in de testperiode
     forecast_dates = [test_start_day + timedelta(days=i) for i in range(test_days)]
 
     print(f"[info] Forecasts uitvoeren ({len(forecast_dates)} forecast-dagen x {len(horizons)} horizons x 24 uur)...",
           file=sys.stderr)
-    results = run_backtest(prices, weather, ttf, forecast_dates, horizons, thresholds)
+    results = run_backtest(prices, weather, ttf, forecast_dates, horizons, thresholds, bias_corrections=bias_corrections)
 
     if not results:
         print("[err] Geen resultaten; rapport wordt niet geschreven.", file=sys.stderr)
