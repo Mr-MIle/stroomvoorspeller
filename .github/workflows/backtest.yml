@@ -29,6 +29,11 @@ on:
         description: "Einddatum testperiode YYYY-MM-DD (leeg = gisteren). Voor historische winters/zomers."
         required: false
         default: ""
+      apply_bias:
+        description: "MOS bias-correctie toepassen (zoals live). Aan = eerlijke vergelijking met productie."
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -61,6 +66,9 @@ jobs:
           fi
           if [ -n "${{ github.event.inputs.end_date }}" ]; then
             EXTRA="$EXTRA --end-date ${{ github.event.inputs.end_date }}"
+          fi
+          if [ "${{ github.event.inputs.apply_bias }}" = "true" ]; then
+            EXTRA="$EXTRA --apply-bias"
           fi
           python scripts/backtest.py \
             --days "${{ github.event.inputs.days }}" \
