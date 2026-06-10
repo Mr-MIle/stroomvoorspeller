@@ -1,0 +1,45 @@
+name: Genereer sitemap
+
+# Regenereert public/sitemap.xml bij elke push naar main en commit hem terug
+# als er iets veranderd is. Zo loopt de sitemap nooit meer achter op nieuwe
+# pagina's of artikelen.
+#
+# - paths-ignore op sitemap.xml + push via GITHUB_TOKEN voorkomen een
+#   oneindige trigger-lus (een commit door deze Action start geen nieuwe run).
+# - fetch-depth: 0 is nodig zodat git per bestand de echte laatste-wijzig-
+#   datum kent (gebruikt als <lastmod>).
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'public/sitemap.xml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Genereer sitemap.xml
+        run: bash scripts/generate-sitemap.sh
+
+      - name: Commit indien gewijzigd
+        run: |
+          if git diff --quiet -- public/sitemap.xml; then
+            echo "Sitemap ongewijzigd — niets te committen."
+          else
+            git config user.name  "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add public/sitemap.xml
+            git commit -m "chore: sitemap automatisch bijgewerkt"
+            git push
+            echo "Sitemap bijgewerkt en gepusht."
+          fi
