@@ -1,8 +1,19 @@
 name: IndexNow ping
 
 # Wordt getriggerd bij elke push naar main (= nieuwe Vercel-deploy).
-# Wacht 60 seconden zodat Vercel klaar is, pingt daarna alle pagina's
-# bij Bing IndexNow zodat ze snel opnieuw gecrawld worden.
+# Bouwt de URL-lijst DYNAMISCH uit alle .html-bestanden in public/,
+# wacht tot Vercel klaar is en pingt daarna alle pagina's bij Bing
+# IndexNow zodat ze snel opnieuw gecrawld worden.
+#
+# Mapping public/ -> URL:
+#   public/index.html            -> https://stroomvoorspeller.nl/
+#   public/aanbieders.html       -> https://stroomvoorspeller.nl/aanbieders
+#   public/kennisbank/index.html -> https://stroomvoorspeller.nl/kennisbank/
+#   public/kennisbank/foo.html   -> https://stroomvoorspeller.nl/kennisbank/foo
+#   public/over/voorspelling.html-> https://stroomvoorspeller.nl/over/voorspelling
+#
+# Hierdoor hoeft de lijst nooit meer handmatig bijgewerkt te worden bij
+# een nieuw artikel of een nieuwe pagina.
 
 on:
   push:
@@ -13,28 +24,30 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Bouw URL-lijst uit public/
+        run: |
+          find public -type f -name '*.html' -printf '%P\n' \
+            | sed -E 's#\.html$##; s#(^|/)index$#\1#' \
+            | sed 's#^#https://stroomvoorspeller.nl/#' \
+            | sort -u > urls.txt
+          echo "Aantal URL's: $(wc -l < urls.txt)"
+          cat urls.txt
+
       - name: Wacht op Vercel-deploy
         run: sleep 60
 
       - name: Ping IndexNow
         run: |
+          body=$(jq -Rn \
+            --arg key "dcb0c2ee8d921232a20090825313a646" \
+            --arg kl "https://stroomvoorspeller.nl/dcb0c2ee8d921232a20090825313a646.txt" \
+            '{host:"stroomvoorspeller.nl", key:$key, keyLocation:$kl, urlList:[inputs]}' \
+            urls.txt)
+          echo "$body"
           curl -s -o /dev/null -w "HTTP %{http_code}\n" \
             -X POST "https://api.indexnow.org/indexnow" \
             -H "Content-Type: application/json; charset=utf-8" \
-            -d '{
-              "host": "stroomvoorspeller.nl",
-              "key": "dcb0c2ee8d921232a20090825313a646",
-              "keyLocation": "https://stroomvoorspeller.nl/dcb0c2ee8d921232a20090825313a646.txt",
-              "urlList": [
-                "https://stroomvoorspeller.nl/",
-                "https://stroomvoorspeller.nl/aanbieders",
-                "https://stroomvoorspeller.nl/over/voorspelling",
-                "https://stroomvoorspeller.nl/kennisbank",
-                "https://stroomvoorspeller.nl/kennisbank/wateraccu",
-                "https://stroomvoorspeller.nl/kennisbank/salderingsregeling",
-                "https://stroomvoorspeller.nl/kennisbank/zonnepanelen-uitzetten-negatieve-prijs",
-                "https://stroomvoorspeller.nl/privacy",
-                "https://stroomvoorspeller.nl/cookies",
-                "https://stroomvoorspeller.nl/disclaimer"
-              ]
-            }'
+            --data "$body"
