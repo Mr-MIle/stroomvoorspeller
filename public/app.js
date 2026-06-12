@@ -887,16 +887,14 @@
         else {
           const wd = dObj.toLocaleDateString("nl-NL", { weekday: "short" }).replace(".", "");
           text = `${wd} ${dObj.getDate()}`;
-          color = isWeekend ? "rgba(79, 70, 170, 0.95)" : "rgba(71, 85, 105, 0.82)";
+          color = isWeekend ? "rgba(67, 56, 202, 0.98)" : "rgba(51, 65, 85, 0.95)";
           minW = 30;
         }
         if (bandW < minW) return;
 
-        const bold = isWeekend || isNL || isCB;
-        ctx.font = (bold ? "bold " : "600 ") + "10px system-ui, -apple-system, sans-serif";
-        const tw = ctx.measureText(text).width;
-        ctx.fillStyle = "rgba(255,255,255,0.70)";   // licht plaatje boven de prijslijn
-        ctx.fillRect(cx - tw / 2 - 3, chartArea.top + 3, tw + 6, 13);
+        // Geen witte achtergrond — de tekst gaat op in de grafiek. Contrast komt uit
+        // een zwaardere, donkere letter in de bovenmarge, waar de prijslijn zelden komt.
+        ctx.font = "bold 11px system-ui, -apple-system, sans-serif";
         ctx.fillStyle = color;
         ctx.fillText(text, cx, chartArea.top + 4);
       });
@@ -957,7 +955,8 @@
           ctx.font = "bold 10px system-ui, -apple-system, sans-serif";
           ctx.textAlign = labelSide === "left" ? "right" : "left";
           ctx.textBaseline = "top";
-          ctx.fillText(label, textX, chartArea.top + 6);
+          // Eigen regel onder de dag-labels, zodat "Voorspelling" nooit door een dagnaam loopt.
+          ctx.fillText(label, textX, chartArea.top + 22);
         }
       }
       ctx.restore();
