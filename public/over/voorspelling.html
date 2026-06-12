@@ -77,7 +77,7 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Over de voorspelling</h1>
-    <p class="legal-meta">Modelversie 3.0 · Bijgewerkt: 12 juni 2026</p>
+    <p class="legal-meta">Modelversie 3.1 · Bijgewerkt: 13 juni 2026</p>
 
     <section>
       <h2>Kort samengevat</h2>
@@ -147,15 +147,15 @@
         mediaan van vorige week geeft dan een te hoge startprijs.
       </p>
 
-      <h3>Stap 2 — Negen factoren stellen bij</h3>
+      <h3>Stap 2 — Tien factoren stellen bij</h3>
       <p>
-        Negen factoren geven elk een score in <strong>punten</strong>. Het totaal verschuift de
+        Tien factoren geven elk een score in <strong>punten</strong>. Het totaal verschuift de
         basisprijs met 3% per punt:
       </p>
       <p class="legal-formula">
         voorspelling = basisprijs × (1 + totaalpunten × 3%)
       </p>
-      <p>De negen factoren:</p>
+      <p>De tien factoren:</p>
       <ol>
         <li>
           <strong>Zonproductie</strong> — bewolkt geeft plus (duurder), zonnig geeft min.
@@ -192,6 +192,13 @@
           Als zon én wind gelijktijdig piekeren terwijl de vraag laag is, versterkt het model de
           neerwaartse bijstelling extra, want lineaire factoren onderschatten dan systematisch hoe
           ver de prijs kan zakken.
+        </li>
+        <li>
+          <strong>Schaarste-cap</strong> — het spiegelbeeld van de oversupply-cap, maar omhoog. Bij
+          een winterse Dunkelflaute (weinig zon, windstil én koud) zet gas de prijs en schiet die
+          niet-lineair omhoog. De lineaire zon- en windfactoren vangen dat niet, dus versterkt het
+          model de opwaartse bijstelling extra, zwaarder naarmate het kouder en windstiller is en de
+          gasprijs hoger ligt. Werkt alleen in dat schaarste-regime; in alle andere uren staat hij op nul.
         </li>
         <li>
           <strong>Seizoen</strong> — vergelijkt het huidige niveau met dezelfde periode (zelfde uur
@@ -334,10 +341,11 @@
         </li>
         <li>
           <strong>Winterse Dunkelflaute:</strong> koude, windstille dagen met weinig zon. Het model
-          herkent de schaarste, maar de prijspiek valt doorgaans hoger uit dan het schat — in onze
-          winter-backtest gemiddeld zo'n 4 à 5 ct/kWh te laag. De seizoensfactor (factor 9) trekt het
-          niveau juist iets omlaag en loste deze onderschatting daarom niet op; een gerichte
-          schaarste-correctie staat op de verbeterlijst.
+          herkent de schaarste en duwt de prijs sinds v3.1 met de schaarste-cap (factor 9) gericht
+          omhoog. Dat halveert de structurele onderschatting in onze winter-backtest ruwweg, maar
+          haalt 'm niet helemaal weg: bij de diepste pieken valt de werkelijke prijs nog steeds hoger
+          uit dan het model schat. De seizoensfactor (factor 10) trekt het niveau juist iets omlaag
+          en werkt hier dus tegen de schaarste-cap in.
         </li>
         <li>
           <strong>Plotselinge marktschokken:</strong> een aardgasleiding die uitvalt, geopolitieke
