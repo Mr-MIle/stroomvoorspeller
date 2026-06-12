@@ -1140,6 +1140,21 @@
             spanGaps: false,
           },
           ...(isQuarter ? [] : buildBandDatasets(timeline)),
+          // Referentielijn (#63): 30-daags gemiddelde, mode-correct via thToChart.
+          ...(state.avg30d != null ? [{
+            label: `Gem. 30 dagen (${fmtNum(state.avg30d, 1)} ct)`,
+            data: Array(n).fill(thToChart(state.avg30d)),
+            type: "line",
+            borderColor: "rgba(120,120,120,0.55)",
+            borderWidth: 1.5,
+            borderDash: [5, 4],
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            fill: false,
+            tension: 0,
+            order: 10,           // achter de prijslijn renderen
+            _isRef: true,        // interne markering — niet in tooltip
+          }] : []),
           ...(isQuarter ? [] : [{
             label: "voorspelling",
             data: forecastPredicted,
@@ -1183,7 +1198,7 @@
           svBoundary: { boundaries, n },
           legend: { display: false },
           tooltip: {
-            filter: (item) => !item.dataset.label || !item.dataset.label.startsWith("_"),
+            filter: (item) => !item.dataset._isRef && (!item.dataset.label || !item.dataset.label.startsWith("_")),
             callbacks: {
               title: (items) => {
                 const t = timeline[items[0].dataIndex];
@@ -1259,12 +1274,19 @@
         `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
         `<span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></span>` +
         `<strong>${label}</strong></span>`;
+      // Stippellijn-swatch voor de 30-daagse referentielijn (#63).
+      const refLine = (label) =>
+        `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
+        `<svg width="18" height="10" aria-hidden="true" style="flex-shrink:0;">` +
+        `<line x1="0" y1="5" x2="18" y2="5" stroke="rgba(120,120,120,0.65)" stroke-width="1.5" stroke-dasharray="5 4"/></svg>` +
+        `<strong>${label}</strong></span>`;
       wrap.innerHTML =
         dot("#7048e8", "Gratis/negatief") +
         dot("#2f9e44", "Goedkoop") +
         dot("#d4a017", "Normaal") +
         dot("#c92a2a", "Duur") +
         dot("#0f6cbd", "Nu") +
+        (state.avg30d != null ? refLine("Gem. 30 dagen") : "") +
         (isQuarter
           ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Kwartierlijkse day-ahead prijzen voor vandaag en morgen. Schakel naar "Per uur" voor de prognose tot volgende week.</span>`
           : `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag.</span>`
@@ -1382,6 +1404,10 @@
       state.prices    = payload.prices || [];
       state.hasPt15m  = payload.has_pt15m === true;
       state.prices15m = payload.prices_15m || [];
+
+      // Referentielijn 'wat is normaal' (#63): 30-daags gemiddelde consumentenprijs (ct incl. btw).
+      state.avg30d       = (typeof payload.avg_30d_inclusive_ct === "number") ? payload.avg_30d_inclusive_ct : null;
+      state.avg30dWindow = payload.avg_30d_window || null;
 
       const now = new Date();
       state.dayPrices   = filterTodayTomorrow(state.prices, now);
