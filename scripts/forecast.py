@@ -580,6 +580,79 @@ def nonlinear_correction(solar_ratio: float, wind_ms: float, regime: str) -> Fac
     return FactorScore("nonlinear", pts, reason)
 
 
+# ---- Factor 10: Schaarste-amplifier (v3.1, experimenteel, standaard UIT) ----
+# Spiegelbeeld van de niet-lineaire oversupply-correctie (factor 8), maar OMHOOG.
+# Achtergrond: backtest winter 2024/25 toonde dat het model tijdens Dunkelflaute
+# (REGIME_SCARCITY: weinig zon + windstil + koud) de prijspieken structureel met
+# ~-43 tot -48 EUR/MWh ONDERschat. De lineaire factoren zon (+3 max) en wind (+3 max)
+# vangen de exponentiele opwaartse prijsdruk niet: bij windstil + koud zet gas de
+# marginale prijs en schiet die niet-lineair omhoog. De seizoensfactor v3.0 loste dit
+# niet op (die trekt het niveau juist omlaag).
+#
+# Deze correctie is STRIKT beperkt tot REGIME_SCARCITY; in elk ander regime geeft hij
+# 0 punten. Daardoor kan het dominante normaal-regime (>89% van de uren) per definitie
+# niet verslechteren. De factor staat bovendien standaard NIET in ENABLED_FACTORS, dus
+# de live-voorspelling verandert pas nadat een backtest de waarde bevestigt en
+# run_forecast hem expliciet aanzet (zelfde uitrolpad als de seizoensfactor v3.0).
+#
+# Severity (kwadratisch, mirror van factor 8) uit de drie regime-drempels:
+#   wind_term  = (5.0 - wind_ms)^2  * K_WIND    [windstil is de bepalende driver]
+#   cold_term  = (8.0 - temp_c)^2   * K_COLD    [koude verhoogt verwarmingsvraag]
+#   solar_term = (0.60 - solar)^2   * K_SOLAR   [donker, kleinste bijdrage]
+# Gas-hefboom: severity *= (1 + max(0, ttf_ratio - 1) * K_GAS) — duur gas versterkt
+# de piek omdat gas in Dunkelflaute de marginale prijs zet.
+# Plafond SCARCITY_MAX_POINTS voorkomt runaway bij extreme kou.
+#
+# Voorbeeld diepe Dunkelflaute (solar 0.30, wind 2 m/s, temp -2C, ttf 1.20):
+#   wind  = (3.0)^2 * 0.9  = 8.1
+#   cold  = (10.0)^2 * 0.04 = 4.0
+#   solar = (0.30)^2 * 6.0 = 0.54
+#   severity = 12.64; gas_mult = 1 + 0.20*1.0 = 1.20 -> 15.2 -> +15 punten
+#   bij baseline ~90 EUR/MWh: +90 * 15 * 0.03 = +40.5 EUR/MWh (dicht bij de ~45 gap)
+# Voorbeeld milde schaarste (solar 0.50, wind 4 m/s, temp 6C, ttf 1.00):
+#   wind 0.9 + cold 0.16 + solar 0.06 = 1.12; gas_mult 1.0 -> +1 punt (klein, gewenst)
+#
+# De multipliers zijn tunables; backtest stelt ze bij via SCARCITY_SCALE (globale knop).
+SCARCITY_SCALE      = 1.0    # globale schaal (backtest A/B-knop: --scarcity-scale)
+SCARCITY_K_WIND     = 0.9    # windstil:  (5.0 - wind_ms)^2  * K
+SCARCITY_K_COLD     = 0.04   # koud:      (8.0 - temp_c)^2   * K
+SCARCITY_K_SOLAR    = 6.0    # donker:    (0.60 - solar)^2   * K
+SCARCITY_K_GAS      = 1.0    # gas-hefboom: severity *= (1 + max(0, ttf-1) * K)
+SCARCITY_MAX_POINTS = 18     # veiligheidsplafond op de bijdrage in punten
+
+
+def scarcity_correction(
+    solar_ratio: float,
+    wind_ms: float,
+    temp_c: float,
+    ttf_ratio: float,
+    regime: str,
+) -> FactorScore:
+    """Niet-lineaire opwaartse correctie voor Dunkelflaute (v3.1). Mirror van factor 8."""
+    if regime != REGIME_SCARCITY:
+        return FactorScore("scarcity", 0, "n.v.t.")
+
+    wind_term  = (max(0.0, 5.0 - wind_ms) ** 2) * SCARCITY_K_WIND
+    cold_term  = (max(0.0, 8.0 - temp_c) ** 2) * SCARCITY_K_COLD
+    solar_term = (max(0.0, 0.60 - solar_ratio) ** 2) * SCARCITY_K_SOLAR
+    severity   = wind_term + cold_term + solar_term
+    gas_mult   = 1.0 + max(0.0, ttf_ratio - 1.0) * SCARCITY_K_GAS
+    total_float = severity * gas_mult * SCARCITY_SCALE
+    pts = min(round(total_float), SCARCITY_MAX_POINTS)
+
+    parts = []
+    if wind_term > 0.05:
+        parts.append(f"windstil +{wind_term:.1f}p")
+    if cold_term > 0.05:
+        parts.append(f"koud +{cold_term:.1f}p")
+    if solar_term > 0.05:
+        parts.append(f"donker +{solar_term:.1f}p")
+    if gas_mult > 1.001:
+        parts.append(f"×{gas_mult:.2f} gas")
+    reason = "schaarste-amplifier: " + (", ".join(parts) if parts else "grensgeval")
+    return FactorScore("scarcity", pts, reason)
+
+
 # ---- Extreme event probabiliteit (v1.7 sectie 9) ----
 
 def calc_extreme_event_prob(solar_ratio: float, wind_ms: float, regime: str) -> float:
@@ -679,6 +752,7 @@ def forecast_one(
         _uurpatroon,
         factor_vorige_dag(prior_ratio),
         nonlinear_correction(shortwave_ratio, wind_ms, regime),  # v1.7
+        scarcity_correction(shortwave_ratio, wind_ms, temp_c, ttf_ratio, regime),  # v3.1 (default uit)
         factor_seizoen(seasonal_ratio),                          # v3.0 (default uit)
     ]
 
@@ -776,7 +850,8 @@ if __name__ == "__main__":
     print(f"\n[ok] factor_dagtype 1 mei: {score.points} ({score.reason})")
 
     # Test v1.7: baseline sluit 1 mei uit
-    target_vr = datetime(2026, 5, 8, 13, 0)
+    # (uur 14:00 zodat target en history-uren matchen — anders geen baseline-match)
+    target_vr = datetime(2026, 5, 8, 14, 0)
     history_met_mei1 = [
         {"time": "2026-04-27T14:00:00", "price": 50.0},
         {"time": "2026-04-28T14:00:00", "price": 50.0},
@@ -891,4 +966,55 @@ if __name__ == "__main__":
     assert f_oversupply.extreme_event_prob > 0.3, f"Verwachtte EP > 0.3, kreeg {f_oversupply.extreme_event_prob}"
     print(f"[ok] forecast_one oversupply: regime={f_oversupply.regime}, EP={f_oversupply.extreme_event_prob:.2f}")
 
-    print("\n[ok] Self-test geslaagd; v1.12 hour-restricted oversupply + korter solar-piek window.")
+    # Test v3.1: scarcity_correction (mirror van factor 8, omhoog)
+    # Buiten REGIME_SCARCITY altijd 0:
+    assert scarcity_correction(0.3, 2.0, -2.0, 1.2, REGIME_NORMAL).points == 0
+    assert scarcity_correction(0.3, 2.0, -2.0, 1.2, REGIME_OVERSUPPLY).points == 0
+    assert scarcity_correction(1.0, 8.0, 12.0, 1.0, REGIME_SCARCITY).points == 0, "geen severity -> 0"
+    # Diepe Dunkelflaute: wind=(3)^2*0.9=8.1, cold=(10)^2*0.04=4.0, solar=(0.3)^2*6=0.54
+    # severity=12.64; gas_mult=1+0.2=1.2 -> 15.17 -> +15
+    deep = scarcity_correction(0.30, 2.0, -2.0, 1.20, REGIME_SCARCITY)
+    assert deep.points == 15, f"Verwachtte +15 in diepe Dunkelflaute, kreeg {deep.points}"
+    assert deep.points > 0, "schaarste moet OMHOOG corrigeren"
+    # Milde schaarste aan de regime-rand: wind=(1)^2*0.9=0.9, cold=(2)^2*0.04=0.16,
+    # solar=(0.1)^2*6=0.06 -> 1.12; gas_mult 1.0 -> +1
+    mild = scarcity_correction(0.50, 4.0, 6.0, 1.00, REGIME_SCARCITY)
+    assert mild.points == 1, f"Verwachtte +1 bij milde schaarste, kreeg {mild.points}"
+    # Plafond: extreme kou mag niet exploderen
+    capped = scarcity_correction(0.0, 0.0, -20.0, 2.0, REGIME_SCARCITY)
+    assert capped.points == SCARCITY_MAX_POINTS, f"Verwachtte plafond {SCARCITY_MAX_POINTS}, kreeg {capped.points}"
+    # SCARCITY_SCALE-knop schaalt lineair (backtest A/B): scale 0 -> 0 punten
+    _saved_scale = SCARCITY_SCALE
+    globals()["SCARCITY_SCALE"] = 0.0
+    assert scarcity_correction(0.30, 2.0, -2.0, 1.20, REGIME_SCARCITY).points == 0, "scale 0 -> 0"
+    globals()["SCARCITY_SCALE"] = _saved_scale
+    print(f"[ok] scarcity_correction: gated op schaarste, diep={deep.points:+d}, mild={mild.points:+d}, plafond={capped.points:+d}")
+
+    # Integratie: scarcity telt alleen mee als 'scarcity' in ENABLED_FACTORS staat.
+    # Default staat hij UIT, dus een Dunkelflaute-forecast mag NIET extra omhoog.
+    dunkel_dt = datetime(2025, 12, 11, 18, 0)  # do winter avond
+    dunkel_hist = [
+        {"time": datetime(2025, 12, d, 18, 0).isoformat(), "price": 90.0}
+        for d in (4, 5, 8, 9, 10)
+    ]
+    f_off = forecast_one(dunkel_dt, dunkel_hist, shortwave_ratio=0.3, wind_ms=2.0,
+                         temp_c=-2.0, ttf_ratio=1.2, days_ahead=2)
+    assert f_off is not None and f_off.regime == REGIME_SCARCITY
+    sc_off = next(x for x in f_off.factors if x.name == "scarcity")
+    assert sc_off.points == 15, "factor zichtbaar in uitleg, ook als uit"
+    # 'scarcity' staat NIET in ENABLED_FACTORS -> draagt niet bij aan total
+    points_zonder = f_off.total_points
+    ENABLED_FACTORS.add("scarcity")
+    try:
+        f_on = forecast_one(dunkel_dt, dunkel_hist, shortwave_ratio=0.3, wind_ms=2.0,
+                            temp_c=-2.0, ttf_ratio=1.2, days_ahead=2)
+        assert f_on is not None
+        assert f_on.total_points == points_zonder + 15, (
+            f"Met scarcity AAN moet total +15 hoger zijn: {f_on.total_points} vs {points_zonder}")
+        assert f_on.predicted > f_off.predicted, "scarcity AAN moet voorspelling omhoog duwen"
+    finally:
+        ENABLED_FACTORS.discard("scarcity")
+    print(f"[ok] forecast_one schaarste: uit={points_zonder:+d}p ({f_off.predicted}), "
+          f"aan=+{15}p toggle werkt, default UIT bevestigd")
+
+    print("\n[ok] Self-test geslaagd; v3.1 schaarste-amplifier (mirror factor 8, default uit).")

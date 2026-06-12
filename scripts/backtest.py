@@ -990,6 +990,15 @@ def main() -> int:
                         help="Aantal voorgaande jaren voor de seizoensbaseline (default 3).")
     parser.add_argument("--seasonal-window", type=int, default=10,
                         help="Venster in dagen rond dezelfde kalenderdatum (default 10).")
+    parser.add_argument("--scarcity", action="store_true",
+                        help="Zet de experimentele schaarste-amplifier (v3.1) aan: "
+                             "niet-lineaire opwaartse correctie tijdens Dunkelflaute "
+                             "(REGIME_SCARCITY). Voor A/B: draai dezelfde periode met en "
+                             "zonder deze vlag en vergelijk de bias in het regime-overzicht.")
+    parser.add_argument("--scarcity-scale", type=float, default=1.0,
+                        help="Globale schaal op de schaarste-amplifier (default 1.0). "
+                             "Tuning-knop: 0.5 = halve correctie, 1.5 = sterker. Alleen "
+                             "actief samen met --scarcity.")
     parser.add_argument("--output-dir", type=str, default=None,
                         help="Schrijf rapport en JSON naar deze map (handig in CI). "
                              "Default: rapport naar 01-documenten/, JSON naar 03-data/.")
@@ -1046,6 +1055,16 @@ def main() -> int:
 
             print(f"[info] Seizoensfactor AAN: {args.seasonal_years} jaar terug, "
                   f"+/-{args.seasonal_window} dagen venster.", file=sys.stderr)
+
+    # v3.1: schaarste-amplifier (mirror van de oversupply-correctie, omhoog).
+    # Strikt gated op REGIME_SCARCITY; raakt het normaal-regime per definitie niet.
+    if getattr(args, "scarcity", False):
+        import forecast as _fc_mod
+        _fc_mod.ENABLED_FACTORS.add("scarcity")
+        _fc_mod.SCARCITY_SCALE = args.scarcity_scale
+        print(f"[info] Schaarste-amplifier AAN (scale={args.scarcity_scale}). "
+              f"A/B: vergelijk de bias bij 'Schaarste / Dunkelflaute' in het "
+              f"regime-overzicht met de run zonder --scarcity.", file=sys.stderr)
 
     now = amsterdam_now()
     # Periode: testperiode = laatste `test_days` dagen, eindigend gisteren.
@@ -1156,6 +1175,8 @@ def main() -> int:
         source = source + " + MOS bias-correctie"
     if seasonal_fn:
         source = source + f" + seizoensfactor (Nj={args.seasonal_years}, w={args.seasonal_window})"
+    if getattr(args, "scarcity", False):
+        source = source + f" + schaarste-amplifier (scale={args.scarcity_scale})"
 
     # Forecast-dates: elke dag in de testperiode
     forecast_dates = [test_start_day + timedelta(days=i) for i in range(test_days)]

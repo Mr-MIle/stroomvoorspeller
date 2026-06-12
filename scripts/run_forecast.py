@@ -77,6 +77,16 @@ ENABLE_SEASONAL = True
 SEASONAL_YEARS = 2
 SEASONAL_WINDOW = 10
 
+# Schaarste-amplifier (v3.1): niet-lineaire opwaartse correctie tijdens Dunkelflaute
+# (REGIME_SCARCITY), spiegelbeeld van de oversupply-correctie. Lost de structurele
+# winteronderschatting (~-45 EUR/MWh in schaarste) gericht op zonder het normaal-regime
+# te raken (factor is strikt gated op REGIME_SCARCITY). STANDAARD UIT: eerst valideren
+# met `backtest.py --scarcity` op meerdere winters (zie 04-notities/backlog.md). Zet
+# op True zodra de backtest de winst bevestigt; SCARCITY_SCALE is de tuning-knop.
+# Kill-switch: terug op False.
+ENABLE_SCARCITY = False
+SCARCITY_SCALE = 1.0
+
 # ---------------------------------------------------------------------------
 # Paden
 # ---------------------------------------------------------------------------
@@ -517,6 +527,14 @@ def main() -> int:
     elif ENABLE_SEASONAL:
         print("[warn] Seizoensfactor gewenst maar load_archive niet beschikbaar; uit.",
               file=sys.stderr)
+
+    # v3.1: schaarste-amplifier (default uit). Zelfde uitrolpad als de seizoensfactor:
+    # alleen hier in main() aanzetten zodat het importeren van run_forecast door andere
+    # scripts de globale ENABLED_FACTORS niet muteert.
+    if ENABLE_SCARCITY:
+        _forecast_mod.ENABLED_FACTORS.add("scarcity")
+        _forecast_mod.SCARCITY_SCALE = SCARCITY_SCALE
+        print(f"[info] Schaarste-amplifier AAN (scale={SCARCITY_SCALE}).", file=sys.stderr)
 
     now_ams     = amsterdam_now()
     today_start = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
