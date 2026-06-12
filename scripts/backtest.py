@@ -995,8 +995,8 @@ def main() -> int:
                              "niet-lineaire opwaartse correctie tijdens Dunkelflaute "
                              "(REGIME_SCARCITY). Voor A/B: draai dezelfde periode met en "
                              "zonder deze vlag en vergelijk de bias in het regime-overzicht.")
-    parser.add_argument("--scarcity-scale", type=float, default=1.0,
-                        help="Globale schaal op de schaarste-amplifier (default 1.0). "
+    parser.add_argument("--scarcity-scale", type=float, default=1.5,
+                        help="Globale schaal op de schaarste-amplifier (default 1.5 = live). "
                              "Tuning-knop: 0.5 = halve correctie, 1.5 = sterker. Alleen "
                              "actief samen met --scarcity.")
     parser.add_argument("--output-dir", type=str, default=None,

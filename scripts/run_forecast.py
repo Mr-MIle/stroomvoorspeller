@@ -67,7 +67,7 @@ except Exception:  # noqa: BLE001
 
 # Modelversie — komt mee in de output zodat de frontend hem kan tonen.
 # v2.1: EVENT_PLAUSIBILITY_LAYER toegevoegd als post-processing stap.
-MODEL_VERSION = "3.0"   # v3.0: seizoensfactor live
+MODEL_VERSION = "3.1"   # v3.1: schaarste-amplifier (factor 10) live; v3.0: seizoensfactor
 
 # Seizoensfactor (v3.0): niveaucorrectie uit het prijsarchief van de voorgaande
 # jaren. Nj=2 gekozen na backtest winter+zomer 2024/25 (verslaat de naïeve baseline
@@ -80,12 +80,12 @@ SEASONAL_WINDOW = 10
 # Schaarste-amplifier (v3.1): niet-lineaire opwaartse correctie tijdens Dunkelflaute
 # (REGIME_SCARCITY), spiegelbeeld van de oversupply-correctie. Lost de structurele
 # winteronderschatting (~-45 EUR/MWh in schaarste) gericht op zonder het normaal-regime
-# te raken (factor is strikt gated op REGIME_SCARCITY). STANDAARD UIT: eerst valideren
-# met `backtest.py --scarcity` op meerdere winters (zie 04-notities/backlog.md). Zet
-# op True zodra de backtest de winst bevestigt; SCARCITY_SCALE is de tuning-knop.
+# te raken (factor is strikt gated op REGIME_SCARCITY). LIVE sinds v3.1 (13 juni 2026)
+# na archief-backtest winter 24/25 + 23/24: schaarste-bias -52 -> -24 (24/25), MAE 65 -> 59,
+# normaal-regime ongewijzigd, bias nooit positief. SCARCITY_SCALE 1.5 = MAE-optimum.
 # Kill-switch: terug op False.
-ENABLE_SCARCITY = False
-SCARCITY_SCALE = 1.0
+ENABLE_SCARCITY = True
+SCARCITY_SCALE = 1.5
 
 # ---------------------------------------------------------------------------
 # Paden

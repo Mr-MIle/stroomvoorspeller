@@ -613,7 +613,10 @@ def nonlinear_correction(solar_ratio: float, wind_ms: float, regime: str) -> Fac
 #   wind 0.9 + cold 0.16 + solar 0.06 = 1.12; gas_mult 1.0 -> +1 punt (klein, gewenst)
 #
 # De multipliers zijn tunables; backtest stelt ze bij via SCARCITY_SCALE (globale knop).
-SCARCITY_SCALE      = 1.0    # globale schaal (backtest A/B-knop: --scarcity-scale)
+SCARCITY_SCALE      = 1.5    # globale schaal (backtest A/B-knop: --scarcity-scale).
+                             # v3.1: 1.5 gekozen na archief-backtest winter 24/25 + 23/24:
+                             # MAE-minimum in de zware winter (schaarste-MAE 65->59, bias
+                             # -52->-24), normaal-regime ongewijzigd, bias nooit positief.
 SCARCITY_K_WIND     = 0.9    # windstil:  (5.0 - wind_ms)^2  * K
 SCARCITY_K_COLD     = 0.04   # koud:      (8.0 - temp_c)^2   * K
 SCARCITY_K_SOLAR    = 6.0    # donker:    (0.60 - solar)^2   * K
