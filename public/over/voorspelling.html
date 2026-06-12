@@ -45,7 +45,7 @@
         "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
         "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
         "datePublished": "2026-04-29",
-        "dateModified": "2026-06-09",
+        "dateModified": "2026-06-12",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/over/voorspelling",
@@ -77,7 +77,7 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Over de voorspelling</h1>
-    <p class="legal-meta">Modelversie 3.0 · Bijgewerkt: 9 juni 2026</p>
+    <p class="legal-meta">Modelversie 3.0 · Bijgewerkt: 12 juni 2026</p>
 
     <section>
       <h2>Kort samengevat</h2>
@@ -222,9 +222,10 @@
           Gemiddelde fout: ±5 ct/kWh.
         </li>
         <li>
-          <strong style="color:#ef4444;">Schaarste ❄️</strong> — koud weer met weinig zon en wind.
-          Prijzen liggen dan structureel hoger. Relatief goed te voorspellen.
-          Gemiddelde fout: ±2 ct/kWh.
+          <strong style="color:#ef4444;">Schaarste ❄️</strong> — koud weer met weinig zon en wind
+          (Dunkelflaute). Prijzen liggen dan structureel hoger. Het normale niveau schat het model
+          redelijk, maar de scherpe winterpieken onderschat het systematisch — zie
+          <a href="#klopt-niet">Wanneer klopt de voorspelling niet?</a> hieronder.
         </li>
       </ul>
       <p>
@@ -324,12 +325,19 @@
       </p>
     </section>
 
-    <section>
+    <section id="klopt-niet">
       <h2>Wanneer klopt de voorspelling niet?</h2>
       <ul>
         <li>
           <strong>Extreme zonnige middagen:</strong> een heldere lentedag in het weekend kan de
           prijs naar −200 of zelfs −500 EUR/MWh drukken. Het model ziet de richting, niet de diepte.
+        </li>
+        <li>
+          <strong>Winterse Dunkelflaute:</strong> koude, windstille dagen met weinig zon. Het model
+          herkent de schaarste, maar de prijspiek valt doorgaans hoger uit dan het schat — in onze
+          winter-backtest gemiddeld zo'n 4 à 5 ct/kWh te laag. De seizoensfactor (factor 9) trekt het
+          niveau juist iets omlaag en loste deze onderschatting daarom niet op; een gerichte
+          schaarste-correctie staat op de verbeterlijst.
         </li>
         <li>
           <strong>Plotselinge marktschokken:</strong> een aardgasleiding die uitvalt, geopolitieke
