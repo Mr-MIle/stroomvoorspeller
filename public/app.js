@@ -875,6 +875,23 @@
   // Gebruikt voor: vandaag→morgen-grens (quarter mode) en day-ahead→prognose-grens (hourly mode).
   const svBoundaryPlugin = {
     id: "svBoundary",
+    // Achtergrond-tint voor het voorspelgebied — vóór de data getekend, zodat de
+    // curve en stippen er bovenop blijven liggen. Markeert "vanaf hier schatting"
+    // zonder een tweede stippellijn (die botste met de referentielijn, #63).
+    beforeDatasetsDraw(chart, _args, opts) {
+      const { ctx, chartArea } = chart;
+      const { boundaries = [], n } = opts;
+      if (!boundaries.length || !n || !chartArea) return;
+      const step = (chartArea.right - chartArea.left) / n;
+      ctx.save();
+      for (const b of boundaries) {
+        if (!b.tint || b.index < 0 || b.index > n) continue;
+        const x = chartArea.left + b.index * step;
+        ctx.fillStyle = "rgba(100, 116, 139, 0.07)";
+        ctx.fillRect(x, chartArea.top, chartArea.right - x, chartArea.bottom - chartArea.top);
+      }
+      ctx.restore();
+    },
     afterDatasetsDraw(chart, _args, opts) {
       const { ctx, chartArea } = chart;
       const { boundaries = [], n } = opts;
@@ -883,21 +900,23 @@
       const step = (chartArea.right - chartArea.left) / n;
 
       ctx.save();
-      for (const { index, label, labelSide = "right" } of boundaries) {
+      for (const { index, label, labelSide = "right", tint = false } of boundaries) {
         if (index < 0 || index > n) continue;
         const x = chartArea.left + index * step;
 
-        // Verticale stippellijn
+        // Grens-edge. Een tint-grens (voorspelling) krijgt een dunne SOLIDE lijn als
+        // rand van het waasje; een gewone grens (bv. 'Morgen') blijft gestippeld.
+        // Zo is "gestippeld" voortaan exclusief van de horizontale referentielijn.
         ctx.beginPath();
         ctx.strokeStyle = "rgba(100, 116, 139, 0.38)";
-        ctx.lineWidth = 1.5;
-        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = tint ? 1 : 1.5;
+        ctx.setLineDash(tint ? [] : [4, 4]);
         ctx.moveTo(x, chartArea.top + 2);
         ctx.lineTo(x, chartArea.bottom);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Optioneel label (bv. "Morgen" of "Voorspelling →")
+        // Optioneel label (bv. "Morgen" of "Voorspelling")
         if (label) {
           const pad = 5;
           const textX = labelSide === "left" ? x - pad : x + pad;
@@ -908,6 +927,33 @@
           ctx.fillText(label, textX, chartArea.top + 6);
         }
       }
+      ctx.restore();
+    },
+  };
+
+  // ---- Referentielijn-eindlabel (#63) ----
+  // Tekent "⌀ 30 dgn · N ct" aan het rechteruiteinde van de referentielijn, zodat de
+  // betekenis op de lijn zelf staat en niet alleen in de legenda.
+  const svRefLinePlugin = {
+    id: "svRefLine",
+    afterDatasetsDraw(chart, _args, opts) {
+      const { ctx, chartArea, scales } = chart;
+      if (!opts || opts.value == null || !chartArea || !scales.y) return;
+      const y = scales.y.getPixelForValue(opts.value);
+      if (y < chartArea.top + 10 || y > chartArea.bottom) return;
+      const text = opts.text || "";
+      ctx.save();
+      ctx.font = "bold 10px system-ui, -apple-system, sans-serif";
+      const w = ctx.measureText(text).width;
+      const padX = 4;
+      const right = chartArea.right - 4;
+      // Licht wit plaatje achter de tekst voor leesbaarheid boven de prijszones.
+      ctx.fillStyle = "rgba(255,255,255,0.72)";
+      ctx.fillRect(right - w - padX, y - 13, w + padX, 12);
+      ctx.fillStyle = "rgba(120,113,108,0.98)";
+      ctx.textAlign = "right";
+      ctx.textBaseline = "bottom";
+      ctx.fillText(text, right, y - 2);
       ctx.restore();
     },
   };
@@ -1075,7 +1121,7 @@
       // Grens tussen actuals en prognose markeren (enkel als er beide zijn).
       const boundaryIdx = state.dayPrices.length;
       boundaries = state.forecasts.length > 0
-        ? [{ index: boundaryIdx, label: "Voorspelling", labelSide: "right" }]
+        ? [{ index: boundaryIdx, label: "Voorspelling", labelSide: "right", tint: true }]
         : [];
     }
 
@@ -1122,7 +1168,7 @@
     // ── Chart aanmaken ─────────────────────────────────────────────────────────
     state.chart = new Chart(canvas, {
       type: "line",
-      plugins: [svPriceZonePlugin, dayBandPlugin, svBoundaryPlugin],
+      plugins: [svPriceZonePlugin, dayBandPlugin, svBoundaryPlugin, svRefLinePlugin],
       data: {
         labels,
         datasets: [
@@ -1145,9 +1191,9 @@
             label: `Gem. 30 dagen (${fmtNum(state.avg30d, 1)} ct)`,
             data: Array(n).fill(thToChart(state.avg30d)),
             type: "line",
-            borderColor: "rgba(120,120,120,0.55)",
+            borderColor: "rgba(120,113,108,0.85)",   // taupe — eigen identiteit, los van het grijs van de grens
             borderWidth: 1.5,
-            borderDash: [5, 4],
+            borderDash: [6, 4],
             pointRadius: 0,
             pointHoverRadius: 0,
             fill: false,
@@ -1196,6 +1242,9 @@
           svPriceZone: { zones: priceZones },
           svDayBand: { timeline, holidays },
           svBoundary: { boundaries, n },
+          svRefLine: state.avg30d != null
+            ? { value: thToChart(state.avg30d), text: `⌀ 30 dgn · ${fmtNum(thToChart(state.avg30d), 0)} ct` }
+            : {},
           legend: { display: false },
           tooltip: {
             filter: (item) => !item.dataset._isRef && (!item.dataset.label || !item.dataset.label.startsWith("_")),
@@ -1278,7 +1327,7 @@
       const refLine = (label) =>
         `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
         `<svg width="18" height="10" aria-hidden="true" style="flex-shrink:0;">` +
-        `<line x1="0" y1="5" x2="18" y2="5" stroke="rgba(120,120,120,0.65)" stroke-width="1.5" stroke-dasharray="5 4"/></svg>` +
+        `<line x1="0" y1="5" x2="18" y2="5" stroke="rgba(120,113,108,0.9)" stroke-width="1.5" stroke-dasharray="6 4"/></svg>` +
         `<strong>${label}</strong></span>`;
       wrap.innerHTML =
         dot("#7048e8", "Gratis/negatief") +
