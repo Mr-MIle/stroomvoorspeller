@@ -798,74 +798,107 @@
 
   // ---- Chart: plugins ----
 
-  // Kleurt daglintbanden (feestdagen, weekenden) en "Vandaag / Morgen" labels in kwartier-modus.
+  // Dag-indeling: per kalenderdag de eerste/laatste timeline-index.
+  function svBuildDayMap(timeline) {
+    const m = Object.create(null);
+    timeline.forEach((pt, i) => {
+      const date = pt.time.slice(0, 10);
+      if (!m[date]) m[date] = { first: i, last: i };
+      else m[date].last = i;
+    });
+    return m;
+  }
+  function svDayMeta(date, holidays) {
+    const dObj = new Date(date + "T12:00:00");
+    const dow = dObj.getDay();
+    return {
+      dObj,
+      isNL: holidays.nl.has(date),
+      isCB: holidays.crossborder.has(date),
+      isWeekend: dow === 0 || dow === 6,
+    };
+  }
+
+  // Daglint-plugin (variant B): weekend-/feestdagbanden + middernacht-scheidslijnen
+  // achter de data, en weekdag-/feestdaglabels bovenin (bóven de data, met licht
+  // plaatje voor leesbaarheid). Zo zijn de dagen los van de uur-as af te lezen.
   const dayBandPlugin = {
     id: "svDayBand",
     beforeDatasetsDraw(chart, _args, opts) {
       const { ctx, chartArea } = chart;
-      const timeline = opts.timeline;
-      const holidays = opts.holidays;
+      const { timeline, holidays } = opts;
       if (!timeline || timeline.length < 2 || !chartArea) return;
-
-      const n = timeline.length;
-      const step = (chartArea.right - chartArea.left) / n;
-
-      const dayMap = Object.create(null);
-      timeline.forEach((pt, i) => {
-        const date = pt.time.slice(0, 10);
-        if (!dayMap[date]) dayMap[date] = { first: i, last: i };
-        else dayMap[date].last = i;
-      });
+      const step = (chartArea.right - chartArea.left) / timeline.length;
+      const dayMap = svBuildDayMap(timeline);
+      const h = chartArea.bottom - chartArea.top;
 
       ctx.save();
+      let dayIdx = 0;
       Object.entries(dayMap).forEach(([date, { first, last }]) => {
-        const isNL = holidays.nl.has(date);
-        const isCB = holidays.crossborder.has(date);
-        const dow  = new Date(date + "T12:00:00").getDay();
-        const isWeekend = dow === 0 || dow === 6;
-
-        let bg, label, labelColor;
-        if (isNL && isCB) {
-          bg = "rgba(255, 193, 7, 0.18)";
-          label = "NL + EU feestdag";
-          labelColor = "rgba(110, 70, 0, 0.82)";
-        } else if (isNL) {
-          bg = "rgba(255, 193, 7, 0.13)";
-          label = "NL feestdag";
-          labelColor = "rgba(110, 70, 0, 0.78)";
-        } else if (isCB) {
-          bg = "rgba(255, 140, 0, 0.13)";
-          label = "EU-feestdag (NL open)";
-          labelColor = "rgba(140, 70, 0, 0.80)";
-        } else if (isWeekend) {
-          bg = "rgba(100, 100, 180, 0.06)";
-          label = null;
-        } else {
-          bg = null;
-          label = null;
-        }
+        const { isNL, isCB, isWeekend } = svDayMeta(date, holidays);
+        let bg = null;
+        if (isNL && isCB) bg = "rgba(255, 193, 7, 0.18)";
+        else if (isNL)    bg = "rgba(255, 193, 7, 0.13)";
+        else if (isCB)    bg = "rgba(255, 140, 0, 0.13)";
+        else if (isWeekend) bg = "rgba(99, 102, 170, 0.13)";   // duidelijker weekend
 
         const x1 = chartArea.left + first * step;
         const x2 = chartArea.left + (last + 1) * step;
-        const bandW = x2 - x1;
-
         if (bg) {
           ctx.fillStyle = bg;
-          ctx.fillRect(x1, chartArea.top, bandW, chartArea.bottom - chartArea.top);
+          ctx.fillRect(x1, chartArea.top, x2 - x1, h);
         }
-
-        if (label && bandW > 50) {
-          ctx.save();
+        // Middernacht-scheidslijn aan het begin van elke dag behalve de eerste.
+        if (dayIdx > 0) {
           ctx.beginPath();
-          ctx.rect(x1 + 2, chartArea.top, bandW - 4, chartArea.bottom - chartArea.top);
-          ctx.clip();
-          ctx.fillStyle = labelColor;
-          ctx.font = "bold 9px system-ui, -apple-system, sans-serif";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "top";
-          ctx.fillText(label, (x1 + x2) / 2, chartArea.top + 5);
-          ctx.restore();
+          ctx.strokeStyle = "rgba(100, 116, 139, 0.22)";
+          ctx.lineWidth = 1;
+          ctx.setLineDash([2, 3]);
+          ctx.moveTo(x1, chartArea.top);
+          ctx.lineTo(x1, chartArea.bottom);
+          ctx.stroke();
+          ctx.setLineDash([]);
         }
+        dayIdx++;
+      });
+      ctx.restore();
+    },
+    afterDatasetsDraw(chart, _args, opts) {
+      const { ctx, chartArea } = chart;
+      const { timeline, holidays } = opts;
+      if (!timeline || timeline.length < 2 || !chartArea) return;
+      const step = (chartArea.right - chartArea.left) / timeline.length;
+      const dayMap = svBuildDayMap(timeline);
+
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      Object.entries(dayMap).forEach(([date, { first, last }]) => {
+        const { dObj, isNL, isCB, isWeekend } = svDayMeta(date, holidays);
+        const x1 = chartArea.left + first * step;
+        const x2 = chartArea.left + (last + 1) * step;
+        const bandW = x2 - x1;
+        const cx = (x1 + x2) / 2;
+
+        let text, color, minW;
+        if (isNL && isCB) { text = "NL + EU feestdag"; color = "rgba(110, 70, 0, 0.90)"; minW = 92; }
+        else if (isNL)    { text = "NL feestdag";      color = "rgba(110, 70, 0, 0.88)"; minW = 64; }
+        else if (isCB)    { text = "EU-feestdag";      color = "rgba(140, 70, 0, 0.90)"; minW = 60; }
+        else {
+          const wd = dObj.toLocaleDateString("nl-NL", { weekday: "short" }).replace(".", "");
+          text = `${wd} ${dObj.getDate()}`;
+          color = isWeekend ? "rgba(79, 70, 170, 0.95)" : "rgba(71, 85, 105, 0.82)";
+          minW = 30;
+        }
+        if (bandW < minW) return;
+
+        const bold = isWeekend || isNL || isCB;
+        ctx.font = (bold ? "bold " : "600 ") + "10px system-ui, -apple-system, sans-serif";
+        const tw = ctx.measureText(text).width;
+        ctx.fillStyle = "rgba(255,255,255,0.70)";   // licht plaatje boven de prijslijn
+        ctx.fillRect(cx - tw / 2 - 3, chartArea.top + 3, tw + 6, 13);
+        ctx.fillStyle = color;
+        ctx.fillText(text, cx, chartArea.top + 4);
       });
       ctx.restore();
     },
@@ -1152,8 +1185,11 @@
     );
 
     // ── X-as tick-configuratie per modus ──────────────────────────────────────
-    // In quarter-mode: toon alleen labels op volle uren (elke 4de punt).
-    // autoSkip handelt verdere verdunning op smalle schermen.
+    // Hourly-mode (variant B): alleen kloktijden op vaste stappen — geen weekdag,
+    // want de dag staat nu bovenin als label. 12u op breed scherm, 24u op smal.
+    // De weekdag/datum komt uit dayBandPlugin; de uur-as blijft daardoor rustig.
+    const narrow = typeof window !== "undefined" && window.innerWidth < 640;
+    const hStep = narrow ? 24 : 12;
     const xTickCallback = isQuarter
       ? function (value, index) {
           const iso = timeline[index] && timeline[index].time;
@@ -1161,9 +1197,14 @@
           const d = new Date(iso);
           return d.getMinutes() === 0 ? fmtTime(iso) : "";
         }
-      : function(value, index) { return labels[index] || ""; };  // index → label-string (Chart.js 3 geeft index als value)
+      : function (value, index) {
+          const iso = timeline[index] && timeline[index].time;
+          if (!iso) return "";
+          const d = new Date(iso);
+          return (d.getMinutes() === 0 && d.getHours() % hStep === 0) ? fmtTime(iso) : "";
+        };
 
-    const maxTicksLimit = isQuarter ? 24 : 14;
+    const maxTicksLimit = isQuarter ? 24 : undefined;
 
     // ── Chart aanmaken ─────────────────────────────────────────────────────────
     state.chart = new Chart(canvas, {
@@ -1225,13 +1266,17 @@
         scales: {
           x: {
             ticks: {
-              autoSkip: true,
+              autoSkip: isQuarter,        // hourly: vaste 12u-stappen, geen autoSkip-misalignment
               maxTicksLimit,
+              maxRotation: 0,             // nooit kantelen — voorkomt de chaotische schuine labels
+              minRotation: 0,
               color: "#7c8a99",
               font: { size: 11 },
               callback: xTickCallback,
             },
-            grid: { color: "rgba(0,0,0,0.04)" },
+            // Geen per-categorie gridlijnen meer (zou met autoSkip:false 100+ lijntjes
+            // geven). De middernacht-scheidslijnen uit dayBandPlugin geven de structuur.
+            grid: { display: false, drawTicks: false },
           },
           y: {
             ticks: { color: "#7c8a99", font: { size: 11 }, callback: (v) => v + " ct" },
