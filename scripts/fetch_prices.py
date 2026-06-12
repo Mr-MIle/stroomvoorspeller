@@ -60,6 +60,13 @@ OUTPUT_FILE = PROJECT_ROOT / "public" / "data" / "prices.json"
 # Archief-map voor maandelijkse historische prijzen
 ARCHIVE_DIR = PROJECT_ROOT / "public" / "data" / "archief"
 
+# Config met belasting/opslag — gebruikt voor de 30-daagse referentieprijs (#63)
+CONFIG_FILE = PROJECT_ROOT / "public" / "data" / "config.json"
+
+# Map met de scripts zelf, voor sibling-imports (load_archive). Zelfde patroon als
+# run_forecast.py / backtest.py.
+_SCRIPT_DIR = Path(__file__).resolve().parent
+
 # Amsterdam tijdzone via IANA zoneinfo (DST automatisch correct)
 AMS_TZ = ZoneInfo("Europe/Amsterdam")
 
@@ -329,6 +336,75 @@ def archive_prices(prices: list[dict]) -> None:
         )
 
 
+def compute_avg_30d(now_ams: datetime, prices: list[dict]) -> tuple[float | None, str | None]:
+    """Bereken het 30-daags gemiddelde van de consumentenprijs (ct/kWh incl. btw).
+
+    Voor de referentielijn 'wat is normaal' (#63). Combineert het historische
+    archief met de uurprijzen die in deze run zijn opgehaald, zodat er ook zonder
+    volledig archief een zinvol getal ontstaat. De toekomst (vandaag + morgen)
+    telt bewust niet mee: dit is een achterwaarts gemiddelde t/m gisteren.
+
+    Retourneert (None, None) bij te weinig data of een leesfout — het veld wordt
+    dan weggelaten en de frontend toont simpelweg geen referentielijn.
+    """
+    try:
+        cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+    except Exception as exc:  # noqa: BLE001
+        print(f"[warn] avg_30d: config niet leesbaar ({exc})", file=sys.stderr)
+        return None, None
+
+    taxes = cfg.get("taxes", {})
+    eb_per_kwh = float(taxes.get("energiebelasting_per_kwh", 0.0))
+    btw = float(taxes.get("btw_factor", 1.21))
+    # Gemiddelde leverancieropslag uit de 'average'-aanbieder.
+    markup = 0.0
+    for s in cfg.get("suppliers", []):
+        if s.get("id") == "average":
+            markup = float(s.get("markup_per_kwh", 0.0))
+            break
+
+    end_ams = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
+    start_ams = end_ams - timedelta(days=30)
+
+    # Dedup per uur ("YYYY-MM-DDTHH"); in-memory data overschrijft archief.
+    hourly: dict[str, float] = {}
+
+    # 1) Archief (historische uurprijzen EUR/MWh).
+    try:
+        if str(_SCRIPT_DIR) not in sys.path:
+            sys.path.insert(0, str(_SCRIPT_DIR))
+        from load_archive import load_range  # noqa: E402
+        for p in load_range(start_ams, end_ams):
+            hourly[p["time"][:13]] = float(p["price"])
+    except Exception as exc:  # noqa: BLE001
+        print(f"[info] avg_30d: archief niet bruikbaar ({exc}); val terug op run-data.",
+              file=sys.stderr)
+
+    # 2) In-memory historie uit deze run (vult/overschrijft recente uren; geen toekomst).
+    for p in prices:
+        try:
+            dt = datetime.fromisoformat(p["time"])
+        except (ValueError, KeyError):
+            continue
+        dt = dt.astimezone(AMS_TZ) if dt.tzinfo else dt.replace(tzinfo=AMS_TZ)
+        if start_ams <= dt < end_ams:
+            hourly[p["time"][:13]] = float(p["price"])
+
+    vals = list(hourly.values())
+    if len(vals) < 48:  # minder dan twee dagen data: niet zinvol als 'normaal'
+        print(f"[info] avg_30d: te weinig data ({len(vals)} uur) — veld overgeslagen.",
+              file=sys.stderr)
+        return None, None
+
+    avg_eur_mwh = sum(vals) / len(vals)
+    # EUR/MWh -> ct/kWh kale beursprijs: /10. Opslag + energiebelasting in ct, dan btw.
+    avg_incl_ct = (avg_eur_mwh / 10.0 + markup * 100.0 + eb_per_kwh * 100.0) * btw
+    window = f"{start_ams:%Y-%m-%d} – {end_ams:%Y-%m-%d}"
+    print(f"[ok] avg_30d: {round(avg_incl_ct, 1)} ct/kWh over {len(vals)} uur "
+          f"({window}).", file=sys.stderr)
+    return round(avg_incl_ct, 1), window
+
+
 def main() -> int:
     token = os.environ.get("ENTSOE_TOKEN", "").strip()
     now_ams = amsterdam_now()
@@ -450,6 +526,19 @@ def main() -> int:
         "prices": prices,
         "prices_15m": prices_15m,  # Kwartierdata voor vandaag+morgen (leeg als PT60M of fout)
     }
+
+    # Referentielijn 'wat is normaal' (#63): 30-daags gemiddelde consumentenprijs.
+    # Alleen bij echte ENTSO-E data — over sample-data is het gemiddelde betekenisloos.
+    if source == "entsoe":
+        try:
+            avg_30d, avg_window = compute_avg_30d(now_ams, prices)
+            if avg_30d is not None:
+                payload["avg_30d_inclusive_ct"] = avg_30d
+                payload["avg_30d_window"] = avg_window
+        except Exception as exc:  # noqa: BLE001
+            # Mag de hoofdflow nooit breken.
+            print(f"[warn] avg_30d berekenen mislukt (niet kritiek): {exc}", file=sys.stderr)
+
     if error_msg:
         payload["last_error"] = error_msg
 
