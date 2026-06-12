@@ -1348,7 +1348,7 @@
           : `Vandaag en morgen liggen gemiddeld ${Math.abs(pct)}% ${pct < 0 ? "onder" : "boven"} het gemiddelde van de afgelopen 30 dagen (${avgTxt} ct/kWh, incl. belasting).`;
         const ctxEl = document.createElement("p");
         ctxEl.id = "chart-ref-context";
-        ctxEl.style.cssText = "margin:8px 0 0;font-size:12px;color:#6b7280;";
+        ctxEl.style.cssText = "margin:8px 0 18px;font-size:12px;color:#6b7280;";
         ctxEl.textContent = zin;
         wrap.insertAdjacentElement("afterend", ctxEl);
       }
