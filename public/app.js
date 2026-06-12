@@ -963,33 +963,6 @@
     },
   };
 
-  // ---- Referentielijn-eindlabel (#63) ----
-  // Tekent "⌀ 30 dgn · N ct" aan het rechteruiteinde van de referentielijn, zodat de
-  // betekenis op de lijn zelf staat en niet alleen in de legenda.
-  const svRefLinePlugin = {
-    id: "svRefLine",
-    afterDatasetsDraw(chart, _args, opts) {
-      const { ctx, chartArea, scales } = chart;
-      if (!opts || opts.value == null || !chartArea || !scales.y) return;
-      const y = scales.y.getPixelForValue(opts.value);
-      if (y < chartArea.top + 10 || y > chartArea.bottom) return;
-      const text = opts.text || "";
-      ctx.save();
-      ctx.font = "bold 10px system-ui, -apple-system, sans-serif";
-      const w = ctx.measureText(text).width;
-      const padX = 4;
-      const right = chartArea.right - 4;
-      // Licht wit plaatje achter de tekst voor leesbaarheid boven de prijszones.
-      ctx.fillStyle = "rgba(255,255,255,0.72)";
-      ctx.fillRect(right - w - padX, y - 13, w + padX, 12);
-      ctx.fillStyle = "rgba(120,113,108,0.98)";
-      ctx.textAlign = "right";
-      ctx.textBaseline = "bottom";
-      ctx.fillText(text, right, y - 2);
-      ctx.restore();
-    },
-  };
-
   // ---- Prijszone-achtergrond plugin (#57) ----
   // Tekent horizontale gekleurde zones achter de grafiek, gebaseerd op prijsdrempels.
   // opacity 7-10%: voelbaar, niet dominant (Buienradar-principe).
@@ -1208,7 +1181,7 @@
     // ── Chart aanmaken ─────────────────────────────────────────────────────────
     state.chart = new Chart(canvas, {
       type: "line",
-      plugins: [svPriceZonePlugin, dayBandPlugin, svBoundaryPlugin, svRefLinePlugin],
+      plugins: [svPriceZonePlugin, dayBandPlugin, svBoundaryPlugin],
       data: {
         labels,
         datasets: [
@@ -1226,21 +1199,6 @@
             spanGaps: false,
           },
           ...(isQuarter ? [] : buildBandDatasets(timeline)),
-          // Referentielijn (#63): 30-daags gemiddelde, mode-correct via thToChart.
-          ...(state.avg30d != null ? [{
-            label: `Gem. 30 dagen (${fmtNum(state.avg30d, 1)} ct)`,
-            data: Array(n).fill(thToChart(state.avg30d)),
-            type: "line",
-            borderColor: "rgba(120,113,108,0.85)",   // taupe — eigen identiteit, los van het grijs van de grens
-            borderWidth: 1.5,
-            borderDash: [6, 4],
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            fill: false,
-            tension: 0,
-            order: 10,           // achter de prijslijn renderen
-            _isRef: true,        // interne markering — niet in tooltip
-          }] : []),
           ...(isQuarter ? [] : [{
             label: "voorspelling",
             data: forecastPredicted,
@@ -1286,9 +1244,6 @@
           svPriceZone: { zones: priceZones },
           svDayBand: { timeline, holidays },
           svBoundary: { boundaries, n },
-          svRefLine: state.avg30d != null
-            ? { value: thToChart(state.avg30d), text: `⌀ 30 dgn · ${fmtNum(thToChart(state.avg30d), 0)} ct` }
-            : {},
           legend: { display: false },
           tooltip: {
             filter: (item) => !item.dataset._isRef && (!item.dataset.label || !item.dataset.label.startsWith("_")),
@@ -1367,24 +1322,36 @@
         `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
         `<span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></span>` +
         `<strong>${label}</strong></span>`;
-      // Stippellijn-swatch voor de 30-daagse referentielijn (#63).
-      const refLine = (label) =>
-        `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
-        `<svg width="18" height="10" aria-hidden="true" style="flex-shrink:0;">` +
-        `<line x1="0" y1="5" x2="18" y2="5" stroke="rgba(120,113,108,0.9)" stroke-width="1.5" stroke-dasharray="6 4"/></svg>` +
-        `<strong>${label}</strong></span>`;
       wrap.innerHTML =
         dot("#7048e8", "Gratis/negatief") +
         dot("#2f9e44", "Goedkoop") +
         dot("#d4a017", "Normaal") +
         dot("#c92a2a", "Duur") +
         dot("#0f6cbd", "Nu") +
-        (state.avg30d != null ? refLine("Gem. 30 dagen") : "") +
         (isQuarter
           ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Kwartierlijkse day-ahead prijzen voor vandaag en morgen. Schakel naar "Per uur" voor de prognose tot volgende week.</span>`
           : `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag.</span>`
         );
       (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", wrap);
+
+      // Context-zin (#63, optie 2): hoe liggen vandaag+morgen t.o.v. het 30-daags
+      // gemiddelde? Vervangt de oude referentielijn — concreter en zonder grafiek-ruis.
+      const _existingCtx = document.getElementById("chart-ref-context");
+      if (_existingCtx) _existingCtx.remove();
+      const avgSup = (state.config.suppliers || []).find((s) => s.id === "average");
+      if (state.avg30d != null && state.dayPrices.length && avgSup) {
+        const wk = state.dayPrices.reduce((a, p) => a + priceCentsForSupplier(p.price, avgSup), 0) / state.dayPrices.length;
+        const pct = Math.round((wk - state.avg30d) / state.avg30d * 100);
+        const avgTxt = fmtNum(state.avg30d, 0);
+        const zin = Math.abs(pct) < 3
+          ? `Vandaag en morgen liggen rond het gemiddelde van de afgelopen 30 dagen (${avgTxt} ct/kWh, incl. belasting).`
+          : `Vandaag en morgen liggen gemiddeld ${Math.abs(pct)}% ${pct < 0 ? "onder" : "boven"} het gemiddelde van de afgelopen 30 dagen (${avgTxt} ct/kWh, incl. belasting).`;
+        const ctxEl = document.createElement("p");
+        ctxEl.id = "chart-ref-context";
+        ctxEl.style.cssText = "margin:8px 0 0;font-size:12px;color:#6b7280;";
+        ctxEl.textContent = zin;
+        wrap.insertAdjacentElement("afterend", ctxEl);
+      }
     }
   }
 
