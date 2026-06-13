@@ -36,9 +36,11 @@ MODEL_HISTORY = [
     {"version": "1.6", "date": "2026-04-29", "mae_eur_mwh": 14.8,  "notes": "Zondag-boost, plafond bereikt"},
     {"version": "2.0", "date": "2026-05-06", "mae_eur_mwh": 13.1,  "notes": "Gewicht 1,5%→3%, regime-detectie v1.12"},
     {"version": "2.1", "date": "2026-05-07", "mae_eur_mwh": None,  "notes": "Mediaan baseline, zon-blokkering uurpatroon"},
+    {"version": "3.0", "date": "2026-06-07", "mae_eur_mwh": None,  "notes": "Seizoensfactor + herziene factorset (v3.0-backtest)"},
+    {"version": "3.1", "date": "2026-06-13", "mae_eur_mwh": None,  "notes": "Dunkelflaute-amplifier (schaarste-correctie); winterbias −52 → −24"},
 ]
 
-CURRENT_MODEL_VERSION = "2.1"
+CURRENT_MODEL_VERSION = "3.1"
 
 # Evaluatievenster: afgelopen N dagen
 EVAL_WINDOW_DAYS = 30
