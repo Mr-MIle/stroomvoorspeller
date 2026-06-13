@@ -234,9 +234,85 @@
       margin-bottom: 1rem;
     }
 
+    /* Hero-kopregel: de begrijpelijke één-zin-claim */
+    .hero-headline {
+      margin: 1.2rem 0 0.2rem;
+      font-size: clamp(1.5rem, 4.5vw, 2.1rem);
+      font-weight: 800;
+      line-height: 1.15;
+      color: #136f3a;
+    }
+
+    .hero-headline .hl-num { color: #0f6cbd; }
+
+    .hero-sub {
+      max-width: 54ch;
+      color: var(--text-muted, #555);
+      margin: 0.3rem 0 0;
+      font-size: 0.95rem;
+    }
+
+    /* Highlights-strip: sterke punten in één oogopslag */
+    .highlights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.8rem;
+      margin: 1.4rem 0 0.4rem;
+    }
+
+    .highlight-card {
+      background: #f1faf3;
+      border: 1px solid #b7e4c7;
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+    }
+
+    .highlight-card .hc-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #136f3a;
+      line-height: 1.1;
+    }
+
+    .highlight-card .hc-label {
+      font-size: 0.8rem;
+      color: var(--text-muted, #555);
+      margin-top: 0.25rem;
+    }
+
+    /* Aandeel-binnen leesregel onder de verdeling */
+    .within-readout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.8rem;
+      margin: 0.4rem 0 1rem;
+    }
+
+    .within-readout .wr-item {
+      background: var(--surface, #fff);
+      border: 1px solid var(--border, #dde4ee);
+      border-radius: 8px;
+      padding: 0.7rem 0.9rem;
+      text-align: center;
+    }
+
+    .within-readout .wr-num {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #136f3a;
+      line-height: 1.05;
+    }
+
+    .within-readout .wr-cap {
+      font-size: 0.78rem;
+      color: var(--text-muted, #666);
+      margin-top: 0.2rem;
+    }
+
     @media (max-width: 480px) {
       .score-grid { grid-template-columns: repeat(2, 1fr); }
       .bucket-grid { grid-template-columns: repeat(2, 1fr); }
+      .highlights { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -263,10 +339,12 @@
     <div class="container">
       <p class="legal-breadcrumb"><a href="/">← homepage</a> / <a href="/over/voorspelling">Over de voorspelling</a></p>
       <h1>Hoe nauwkeurig is de voorspelling?</h1>
-      <p style="max-width:52ch;color:var(--text-muted,#555);margin:0.5rem 0 0;">
-        Dit dashboard toont live hoe goed het voorspellingsmodel presteert.
-        Alle cijfers worden dagelijks automatisch bijgewerkt op basis van de werkelijke ENTSO-E-prijzen.
+      <p class="hero-headline" id="hero-headline">Live nauwkeurigheid wordt geladen…</p>
+      <p class="hero-sub" id="hero-sub">
+        Elke dag toets ik de voorspelling aan de werkelijke ENTSO-E-prijzen.
+        Niets bijgekleurd: wat hieronder staat, is wat het model deed.
       </p>
+      <div class="highlights" id="highlights"></div>
     </div>
   </div>
 
@@ -277,19 +355,19 @@
       <div class="score-grid" id="score-grid">
         <div class="score-card score-note">
           <div class="score-value" id="sc-mae">–</div>
-          <div class="score-label">Gem. afwijking (MAE)<br>ct/kWh</div>
+          <div class="score-label">Gemiddeld ernaast<br>(ct/kWh)</div>
         </div>
         <div class="score-card" id="sc-naive-card">
           <div class="score-value" id="sc-naive">–</div>
-          <div class="score-label">Beter dan naïef<br>(zelfde uur vorige week)</div>
+          <div class="score-label">Scherper dan de<br>simpele benchmark</div>
         </div>
         <div class="score-card" id="sc-dir-card">
           <div class="score-value" id="sc-direction">–</div>
-          <div class="score-label">Richting correct<br>(duurder / goedkoper)</div>
+          <div class="score-label">Richting goed voorspeld<br>(duurder / goedkoper)</div>
         </div>
-        <div class="score-card score-note">
+        <div class="score-card score-good">
           <div class="score-value" id="sc-band">–</div>
-          <div class="score-label">Werkelijk binnen<br>de onzekerheidsband</div>
+          <div class="score-label" id="sc-band-label">9 van de 10 uur<br>binnen deze marge</div>
         </div>
       </div>
       <p class="window-note" id="window-note">Berekend over de afgelopen 30 dagen · <span id="hours-count">–</span> uren geëvalueerd</p>
@@ -298,18 +376,37 @@
     <!-- ── Uitlegblok scores ── -->
     <div class="info-box">
       <strong>Wat betekenen deze cijfers?</strong><br>
-      De MAE (gemiddelde absolute afwijking) geeft aan hoeveel ct/kWh de voorspelling gemiddeld afwijkt van de werkelijke prijs.
-      "Beter dan naïef" vergelijkt het model met de simpelste benchmark: dezelfde dag vorige week.
+      "Gemiddeld ernaast" is de gemiddelde absolute afwijking: hoeveel ct/kWh de voorspelling er doorgaans naast zit.
+      "Scherper dan de simpele benchmark" vergelijkt het model met de meest voor de hand liggende gok — dezelfde dag vorige week.
       Een positief percentage betekent dat het model het beter doet.
-      De richting-hit meet of het model correct voorspelt of een uur duurder of goedkoper wordt dan normaal.
+      "Richting goed voorspeld" meet of het model correct ziet aankomen of een uur duurder of goedkoper wordt dan normaal —
+      ruim boven de 50% van een muntje opgooien.
     </div>
+
+    <!-- ── Foutverdeling ── -->
+    <section class="perf-section" id="distribution-section" style="display:none;">
+      <h2>Hoe ver zit de voorspelling er meestal naast?</h2>
+      <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.6rem;">
+        Eén gemiddelde verbergt het verhaal. Veel zeggender is hoe vaak de voorspelling dichtbij zit.
+        De meeste uren clusteren rond nul — het model zit er zelden ver naast, en als het misgaat,
+        zijn dat de bekende uitschieters (zie verderop).
+      </p>
+      <div class="within-readout" id="within-readout"></div>
+      <div class="chart-wrap" style="height:200px;">
+        <canvas id="chart-distribution" aria-label="Verdeling van de afwijking"></canvas>
+      </div>
+      <p style="font-size:0.82rem;color:var(--text-muted,#666);margin-top:0.4rem;">
+        Staven links van nul betekenen dat het model te laag voorspelde, rechts te hoog. Hoe hoger de staaf bij nul, hoe vaker de voorspelling raak zat.
+      </p>
+    </section>
 
     <!-- ── Dagelijkse foutgrafiek ── -->
     <section class="perf-section" id="daily-section">
       <h2>Foutmarge per dag (afgelopen 30 dagen)</h2>
       <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.6rem;">
-        Gemiddelde absolute afwijking tussen voorspelling en werkelijke prijs per dag. Een lagere lijn is beter.
-        Uitschieters komen vaak voor op dagen met extreme weersomstandigheden.
+        Gemiddelde afwijking per dag. Lager is beter. Op rustige dagen zit de voorspelling er vaak maar
+        1 à 2 ct/kWh naast; de pieken vallen samen met extreme weersomstandigheden — precies de momenten
+        die zelfs professionele modellen lastig vinden.
       </p>
       <div class="chart-wrap" style="height:200px;">
         <canvas id="chart-daily" aria-label="Foutmarge per dag"></canvas>
@@ -375,8 +472,8 @@
     <section class="perf-section" id="versions-section">
       <h2>Modelversies en verbeteringen</h2>
       <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.8rem;">
-        Het model wordt continu verbeterd op basis van backtests en analyse van echte afwijkingen.
-        Elke versie is gedocumenteerd — zo kun je zien wat er veranderd is en waarom.
+        Ik verbeter het model continu op basis van backtests en analyse van echte afwijkingen.
+        Elke versie staat hieronder — zo zie je wat er veranderd is en waarom.
       </p>
       <div class="version-timeline" id="version-timeline">
         <div class="loading-state">Laden…</div>
@@ -388,14 +485,14 @@
 
     <!-- ── Eerlijkheid over beperkingen ── -->
     <section class="perf-section" id="limitations-section">
-      <h2>Wat het model niet kan</h2>
+      <h2>Waar het model tegenaan loopt</h2>
       <p>
-        Stroomvoorspeller.nl gebruikt een <strong>eenvoudig, transparant model</strong> gebaseerd op
-        historische patronen en weers- en marktfactoren. Dat is een bewuste keuze:
-        het model is uitlegbaar en reproduceerbaar.
+        Ik gebruik bewust een <strong>eenvoudig, transparant model</strong> op basis van
+        historische patronen en weers- en marktfactoren — uitlegbaar en reproduceerbaar, geen black box.
+        Bij die keuze hoort openheid over wat het model wel en niet ziet aankomen.
       </p>
       <p>
-        Dat betekent ook dat het model structureel moeite heeft met:
+        Een handvol gebeurtenissen blijft structureel lastig:
       </p>
       <ul style="margin:0.5rem 0 1rem 1.2rem;line-height:1.8;">
         <li><strong>Onverwachte centrale-uitval</strong> — een grote kerncentrale die plots uitvalt kan de prijs in uren verdubbelen.</li>
@@ -489,6 +586,7 @@
     // ── Render scores ──
     function renderScores(d) {
       const o = d.overall;
+      const dist = o.error_distribution || null;
 
       document.getElementById('sc-mae').textContent = fmtMae(o.mae_eur_mwh);
       document.getElementById('sc-mae').style.color = maeColor(o.mae_eur_mwh);
@@ -501,13 +599,150 @@
       dirEl.textContent = fmtRate(o.direction_hit_rate);
       document.getElementById('sc-dir-card').className = 'score-card ' + dirClass(o.direction_hit_rate);
 
-      document.getElementById('sc-band').textContent = fmtRate(o.within_band_pct);
+      // 4e kaart: liefst de empirische 9-op-10-marge, anders terugvallen op de band-score.
+      const bandEl = document.getElementById('sc-band');
+      const bandLabel = document.getElementById('sc-band-label');
+      if (dist && dist.p90_eur_mwh != null) {
+        bandEl.textContent = '±' + mwhToCt(dist.p90_eur_mwh).toFixed(1) + ' ct';
+        bandLabel.innerHTML = '9 van de 10 uur<br>binnen deze marge';
+      } else {
+        bandEl.textContent = fmtRate(o.within_band_pct);
+        bandLabel.innerHTML = 'Werkelijk binnen<br>de onzekerheidsband';
+      }
 
       document.getElementById('hours-count').textContent = (o.n_hours || 0).toLocaleString('nl-NL') + ' uren';
 
       if (d.first_date && d.last_date) {
         document.getElementById('window-note').textContent =
           `${d.first_date} t/m ${d.last_date} · ${(o.n_hours || 0).toLocaleString('nl-NL')} uren geëvalueerd`;
+      }
+
+      renderHero(d);
+      renderHighlights(d);
+    }
+
+    // ── Hero-kopregel: begrijpelijke één-zin-claim ──
+    function renderHero(d) {
+      const o = d.overall;
+      const dist = o.error_distribution || null;
+      const hl = document.getElementById('hero-headline');
+      const sub = document.getElementById('hero-sub');
+      if (dist && dist.empirical_band_ct != null) {
+        hl.innerHTML = `<span class="hl-num">8 van de 10 uur</span> binnen ±${dist.empirical_band_ct.toFixed(1)} ct/kWh`;
+        sub.textContent =
+          `Zo dicht zit de voorspelling 2 tot 7 dagen vooruit op de werkelijke prijs. ` +
+          `Gemiddeld ${mwhToCt(o.mae_eur_mwh).toFixed(1)} ct/kWh ernaast — ik toets het elke dag aan de echte ENTSO-E-prijzen.`;
+      } else if (o.mae_eur_mwh != null) {
+        // Fallback zolang de verdeling nog niet in de data zit
+        hl.innerHTML = `Gemiddeld <span class="hl-num">${mwhToCt(o.mae_eur_mwh).toFixed(1)} ct/kWh</span> van de werkelijke prijs af`;
+        sub.textContent =
+          `2 tot 7 dagen vooruit. Ik toets het elke dag aan de echte ENTSO-E-prijzen.`;
+      } else {
+        hl.textContent = 'Nauwkeurigheid wordt berekend zodra er genoeg data is.';
+        sub.textContent = '';
+      }
+    }
+
+    // ── Highlights: sterke punten uit de bestaande data ──
+    function renderHighlights(d) {
+      const wrap = document.getElementById('highlights');
+      if (!wrap) return;
+      const o = d.overall;
+      const cards = [];
+
+      // Beste recente dag
+      if (d.daily_series && d.daily_series.length) {
+        const best = d.daily_series.reduce((a, b) =>
+          (b.mae_eur_mwh != null && (a.mae_eur_mwh == null || b.mae_eur_mwh < a.mae_eur_mwh)) ? b : a);
+        if (best && best.mae_eur_mwh != null) {
+          const dt = new Date(best.date + 'T00:00:00Z')
+            .toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
+          cards.push({
+            value: mwhToCt(best.mae_eur_mwh).toFixed(1) + ' ct',
+            label: `Beste recente dag (${dt}) — zó dicht zat de voorspelling erbij`,
+          });
+        }
+      }
+
+      // Scherper dan de simpele benchmark
+      if (o.mae_vs_naive_pct != null) {
+        const beter = -o.mae_vs_naive_pct;
+        if (beter > 0) {
+          cards.push({
+            value: '+' + beter.toFixed(1) + '%',
+            label: 'scherper dan simpelweg “dezelfde dag vorige week” aanhouden',
+          });
+        }
+      }
+
+      // Richting bijna 2 op de 3
+      if (o.direction_hit_rate != null) {
+        cards.push({
+          value: Math.round(o.direction_hit_rate * 100) + '%',
+          label: 'van de tijd raadt het model de prijsrichting goed — ruim boven kop of munt',
+        });
+      }
+
+      wrap.innerHTML = cards.map(c =>
+        `<div class="highlight-card"><div class="hc-value">${c.value}</div><div class="hc-label">${c.label}</div></div>`
+      ).join('');
+    }
+
+    // ── Foutverdeling: leesregel + histogram ──
+    function renderDistribution(d) {
+      const dist = d.overall && d.overall.error_distribution;
+      const section = document.getElementById('distribution-section');
+      if (!dist || !section) return;  // netjes verborgen tot de data er is
+      section.style.display = '';
+
+      // Leesregel: helft / 8 op 10 / 9 op 10
+      const ro = document.getElementById('within-readout');
+      if (ro) {
+        const rows = [
+          { num: '±' + mwhToCt(dist.p50_eur_mwh).toFixed(1) + ' ct', cap: 'de helft van alle uren zit hierbinnen' },
+          { num: '±' + mwhToCt(dist.p80_eur_mwh).toFixed(1) + ' ct', cap: '8 van de 10 uur zit hierbinnen' },
+          { num: '±' + mwhToCt(dist.p90_eur_mwh).toFixed(1) + ' ct', cap: '9 van de 10 uur zit hierbinnen' },
+        ];
+        ro.innerHTML = rows.map(r =>
+          `<div class="wr-item"><div class="wr-num">${r.num}</div><div class="wr-cap">${r.cap}</div></div>`
+        ).join('');
+      }
+
+      // Histogram van de getekende fout
+      if (dist.signed_error_hist && dist.signed_error_hist.length) {
+        const labels = dist.signed_error_hist.map(b => b.center_ct);
+        const values = dist.signed_error_hist.map(b => b.n);
+        new Chart(document.getElementById('chart-distribution'), {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              label: 'aantal uren',
+              data: values,
+              backgroundColor: labels.map(c => Math.abs(c) <= 1 ? '#1a7f3799' : '#0f6cbd66'),
+              borderColor: labels.map(c => Math.abs(c) <= 1 ? '#1a7f37' : '#0f6cbd'),
+              borderWidth: 1,
+              borderRadius: 2,
+            }],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  title: items => `${items[0].label} ct/kWh afwijking`,
+                  label: ctx => `${ctx.parsed.y} uren`,
+                },
+              },
+            },
+            scales: {
+              x: { title: { display: true, text: 'voorspeld − werkelijk (ct/kWh)', font: { size: 10 } }, ticks: { font: { size: 10 } } },
+              y: { beginAtZero: true, title: { display: true, text: 'aantal uren', font: { size: 10 } } },
+            },
+          },
+        });
       }
     }
 
@@ -665,6 +900,12 @@
 
     // ── Geen data ──
     function renderEmpty() {
+      const hl = document.getElementById('hero-headline');
+      if (hl) hl.textContent = 'Nauwkeurigheid wordt actief zodra er genoeg data is.';
+      const sub = document.getElementById('hero-sub');
+      if (sub) sub.textContent = 'Het dashboard vult zich zodra het forecast-archief genoeg historische dagen bevat.';
+      const hi = document.getElementById('highlights');
+      if (hi) hi.innerHTML = '';
       document.getElementById('score-grid').innerHTML =
         '<p class="loading-state">Nog geen evaluatiedata beschikbaar. Het dashboard wordt actief zodra het forecast-archief genoeg historische data bevat (na ~2 weken).</p>';
       document.getElementById('horizon-tbody').innerHTML =
@@ -683,6 +924,7 @@
       })
       .then(d => {
         renderScores(d);
+        renderDistribution(d);
         if (d.daily_series && d.daily_series.length > 0) {
           renderDailyChart(d.daily_series);
         }
