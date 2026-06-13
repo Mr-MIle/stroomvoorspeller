@@ -262,6 +262,71 @@ def compute_performance():
             return None
         return round(sum(1 for p in ps if p["within_band"]) / len(ps), 3)
 
+    def percentile(sorted_vals, q):
+        """Lineair-geïnterpoleerde percentiel (q in 0..1) op een gesorteerde lijst."""
+        if not sorted_vals:
+            return None
+        if len(sorted_vals) == 1:
+            return sorted_vals[0]
+        idx = q * (len(sorted_vals) - 1)
+        lo = int(idx)
+        hi = min(lo + 1, len(sorted_vals) - 1)
+        frac = idx - lo
+        return sorted_vals[lo] * (1 - frac) + sorted_vals[hi] * frac
+
+    def error_distribution(ps):
+        """Verdeling van de absolute fout: percentielen, aandeel-binnen-drempels,
+        empirische band en histogram van de getekende fout. Alles in EUR/MWh.
+        Dit voedt de begrijpelijke kopregel ('8 op de 10 uur binnen X ct')."""
+        if not ps:
+            return None
+        abs_errs = sorted(p["error"] for p in ps)
+        signed = [p["signed_error"] for p in ps]
+        n = len(abs_errs)
+
+        # Aandeel binnen vaste ct-drempels (1 ct = 10 EUR/MWh)
+        share_within = []
+        for ct in (2, 3, 4, 5):
+            thr = ct * 10
+            cnt = sum(1 for e in abs_errs if e <= thr)
+            share_within.append({"ct": ct, "pct": round(cnt / n, 3)})
+
+        p50 = percentile(abs_errs, 0.50)
+        p80 = percentile(abs_errs, 0.80)
+        p90 = percentile(abs_errs, 0.90)
+
+        # Histogram van de getekende fout (voorspeld − werkelijk), bins van 10 EUR/MWh.
+        # Negatief = model voorspelde te laag, positief = te hoog.
+        edges = list(range(-50, 60, 10))  # -50..50
+        hist = []
+        # Onderste overflow
+        hist.append({
+            "label": "< -5 ct", "center_ct": -5.5,
+            "n": sum(1 for s in signed if s < edges[0]),
+        })
+        for i in range(len(edges) - 1):
+            lo, hi = edges[i], edges[i + 1]
+            hist.append({
+                "label": f"{lo/10:.0f}..{hi/10:.0f} ct",
+                "center_ct": round((lo + hi) / 2 / 10, 1),
+                "n": sum(1 for s in signed if lo <= s < hi),
+            })
+        # Bovenste overflow
+        hist.append({
+            "label": "> 5 ct", "center_ct": 5.5,
+            "n": sum(1 for s in signed if s >= edges[-1]),
+        })
+
+        return {
+            "n_hours": n,
+            "p50_eur_mwh": round(p50, 2),
+            "p80_eur_mwh": round(p80, 2),
+            "p90_eur_mwh": round(p90, 2),
+            "empirical_band_ct": round(p80 / 10, 1),  # ± band die ~80% dekt
+            "share_within": share_within,
+            "signed_error_hist": hist,
+        }
+
     # Overall
     overall = {
         "n_hours": len(pairs),
@@ -269,6 +334,7 @@ def compute_performance():
         "mae_vs_naive_pct": mae_vs_naive_pct(pairs),
         "direction_hit_rate": direction_hit(pairs),
         "within_band_pct": within_band_pct(pairs),
+        "error_distribution": error_distribution(pairs),
     }
 
     # Per horizon
