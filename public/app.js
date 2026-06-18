@@ -467,23 +467,11 @@
       el.removeAttribute("hidden");
 
     } else {
-      // ── Nog geen morgen-data → huidige status + beste venster vandaag ──────────
-      const prices = state.dayPrices;
-      if (!prices.length) { el.setAttribute("hidden", ""); return; }
-      const nowIdx  = state.nowIdx >= 0 ? state.nowIdx : 0;
-      const current = prices[nowIdx];
-      const cls     = classify(current.price);
-      const ct      = fmtNum(priceCents(current.price, "inclusive"), 1);
-      const moments = findBestMoments(prices, nowIdx, 1, 2);
-      let text = `Nu ${statusLabel(cls)} · ${ct} ct/kWh`;
-      if (moments.length > 0) {
-        const m   = moments[0];
-        const mCt = fmtNum(priceCents(m.avg, "inclusive"), 1);
-        text += ` · goedkoopst ${fmtTime(m.startIso)}–${fmtEnd(m.endIso)} (${mCt} ct/kWh)`;
-      }
-      setVariant("neutral", "⚡");
-      textEl.textContent = text;
-      el.removeAttribute("hidden");
+      // ── Nog geen morgen-data → banner verbergen ────────────────────────────────
+      // De huidige status + advies staat al in de now-card (zie renderNowAdvice).
+      // Een "Nu ..."-regel hier zou die kaart dubbelen, dus tonen we niets tot
+      // morgen-data beschikbaar is (dan verschijnt de morgen-vooruitblik hierboven).
+      el.setAttribute("hidden", "");
     }
   }
 
@@ -528,6 +516,58 @@
     setText("now-epex", `Kale EPEX: ${fmtNum(priceCentsRaw(current.price), 2)} ct/kWh`);
     const statusEl = document.querySelector(".status-value");
     if (statusEl) statusEl.textContent = statusLabel(cls);
+    renderNowAdvice(prices, nowIdx, current, cls);
+  }
+
+  // ---- Instap-advies: vertaalt de prijsstatus naar een concrete actie in gewone taal ----
+  // Bewust géén nieuw blok of dubbele cijfers: één advieszin + een optionele vooruitwijzing.
+  // Verdict volgt classify() (altijd op de incl.-prijs), zodat de kaart de grafiek niet tegenspreekt.
+  function renderNowAdvice(prices, nowIdx, current, cls) {
+    const adviceEl = document.querySelector('[data-field="now-advice"]');
+    const nextEl   = document.querySelector('[data-field="now-advice-next"]');
+    if (!adviceEl) return;
+
+    const advice = {
+      negative:    "Stroom kost nu niets — een goed moment om wasmachine, droger of auto tegelijk aan te zetten.",
+      very_cheap:  "Uitstekend moment. Wasmachine, droger, vaatwasser of auto laden kan nu.",
+      cheap:       "Goed moment voor wasmachine, droger of auto laden.",
+      normal:      "Prima moment. Kan het wachten, dan is het straks vaak goedkoper.",
+      pricey:      "Aan de dure kant — stel zware apparaten liever even uit.",
+      very_pricey: "Nu duur. Stel wasmachine, droger en auto laden uit tot een goedkoper uur.",
+    };
+    adviceEl.textContent = advice[cls] || advice.normal;
+
+    if (!nextEl) return;
+    const fromIdx     = nowIdx >= 0 ? nowIdx : 0;
+    const isCheapNow  = (cls === "negative" || cls === "very_cheap" || cls === "cheap");
+    const fmtEnd2 = (isoEnd) =>
+      new Date(new Date(isoEnd).getTime() + 3600000)
+        .toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+
+    let html = "";
+    if (!isCheapNow) {
+      // Wijs naar het eerstvolgende goedkopere 2-uurs venster — alleen als het écht goedkoper is.
+      const upcoming = findBestMoments(prices, Math.min(fromIdx + 1, prices.length - 1), 1, 2);
+      if (upcoming.length && upcoming[0].avg < current.price) {
+        const m = upcoming[0];
+        html = `Goedkoper rond ${fmtTime(m.startIso)}–${fmtEnd2(m.endIso)} · ${fmtCents(m.avg)} ct/kWh`;
+      }
+    } else {
+      // Goedkoop nu: waarschuw alleen als er straks vandaag nog een duur uur aankomt.
+      const rest = prices.filter(
+        (p) => isSameLocalDay(p.time, current.time) && new Date(p.time) > new Date(current.time)
+      );
+      if (rest.length) {
+        const peak = rest.reduce((a, b) => (a.price >= b.price ? a : b));
+        const pc = classify(peak.price);
+        if (pc === "pricey" || pc === "very_pricey") {
+          html = `Duurste moment straks: ${fmtTime(peak.time)} · ${fmtCents(peak.price)} ct/kWh`;
+        }
+      }
+    }
+
+    if (html) { nextEl.textContent = html; nextEl.hidden = false; }
+    else      { nextEl.hidden = true; }
   }
 
   function renderSummary() {

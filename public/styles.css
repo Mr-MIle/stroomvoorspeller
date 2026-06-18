@@ -525,6 +525,37 @@ a:hover { text-decoration: underline; }
 .now-meta { color: var(--c-text-soft); font-size: 0.95rem; margin: 4px 0 0; }
 .dot-sep { margin: 0 8px; color: var(--c-text-mute); }
 
+/* Instap-advies — vertaalt de prijsstatus naar een concrete actie in gewone taal.
+   Eén leesbare zin (now-advice) + optionele vooruitwijzing (now-advice-next).
+   Grid-gap van .now-card (8px) regelt de verticale ritmiek; geen extra blok. */
+.now-advice {
+  margin: 2px 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--c-text);
+  max-width: 48ch;
+}
+.now-advice-next {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--c-text-soft);
+  line-height: 1.4;
+  padding-left: 18px;
+  position: relative;
+}
+.now-advice-next[hidden] { display: none; }
+.now-advice-next::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--c-text-mute);
+}
+@media (max-width: 640px) {
+  .now-advice { font-size: 1.02rem; }
+  .now-advice-next { font-size: 0.9rem; }
+}
+
 /* Quick summary — staat nu na de grafiek (standalone, buiten de hero) (#56) */
 .quick-summary {
   display: grid;
