@@ -1330,20 +1330,40 @@
     const priceZones = buildPriceZones();
     const isQuarter  = state.chartResolution === "quarter" && state.dayPrices15m.length > 0;
 
-    // Alleen actuals (vandaag + morgen). De voorspelling staat in een eigen grafiek (#voorspelling).
+    // Actuals: vandaag + morgen (voor zover gepubliceerd).
     const timeline = isQuarter
       ? state.dayPrices15m.map((p) => ({ kind: "actual", time: p.time, price: p.price }))
       : state.dayPrices.map((p) => ({ kind: "actual", time: p.time, price: p.price }));
     const chartNowIdx = isQuarter ? state.nowIdx15m : state.nowIdx;
 
-    // Grens tussen vandaag en morgen markeren.
+    // Is morgen nog niet bekend? Dan de voorspelling voor morgen erachter tonen,
+    // zodat de bezoeker toch een beeld van morgen heeft (duidelijk als schatting).
+    // De kwartier-modus kent geen prognose, dus alleen in uur-modus.
+    const tomorrowForecast = state.tomorrowForecast || [];
+    if (!isQuarter && tomorrowForecast.length) {
+      tomorrowForecast.forEach((f) => timeline.push({ kind: "forecast", time: f.time, forecast: f }));
+    }
+
+    // Grens tussen vandaag en morgen markeren. Is morgen een voorspelling, dan met
+    // tint + label "Morgen · voorspelling"; anders de normale "Morgen"-scheidslijn.
     const tomorrowStr = (() => {
       const d = new Date();
       d.setDate(d.getDate() + 1);
       return d.toISOString().slice(0, 10);
     })();
     const tomorrowIdx = timeline.findIndex((pt) => pt.time.slice(0, 10) === tomorrowStr);
-    const boundaries = tomorrowIdx >= 0 ? [{ index: tomorrowIdx, label: "Morgen" }] : [];
+    let boundaries = [];
+    if (tomorrowIdx >= 0) {
+      const isForecastBoundary = timeline[tomorrowIdx].kind === "forecast";
+      boundaries = [{
+        index: tomorrowIdx,
+        label: isForecastBoundary ? "Morgen · voorspelling" : "Morgen",
+        labelSide: "right",
+        tint: isForecastBoundary,
+      }];
+    }
+
+    const dayHasForecast = timeline.some((t) => t.kind === "forecast");
 
     state.chart = buildPriceChart(canvas, { timeline, isQuarter, chartNowIdx, boundaries, holidays, priceZones });
 
@@ -1368,7 +1388,10 @@
         (isQuarter
           ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Kwartierlijkse day-ahead prijzen voor vandaag en morgen.</span>`
           : `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag.</span>`
-        );
+        ) +
+        (dayHasForecast
+          ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">De <strong>gestippelde lijn</strong> rechts is de voorspelling voor morgen — de day-ahead prijzen voor morgen zijn nog niet gepubliceerd.</span>`
+          : ``);
       (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", wrap);
 
       // Context-zin (#63, optie 2): hoe liggen vandaag+morgen t.o.v. het 30-daags
@@ -1380,9 +1403,10 @@
         const wk = state.dayPrices.reduce((a, p) => a + priceCentsForSupplier(p.price, avgSup), 0) / state.dayPrices.length;
         const pct = Math.round((wk - state.avg30d) / state.avg30d * 100);
         const avgTxt = fmtNum(state.avg30d, 0);
+        const dagLabel = state.hasTomorrowActuals ? "Vandaag en morgen liggen" : "Vandaag ligt";
         const zin = Math.abs(pct) < 3
-          ? `Vandaag en morgen liggen rond het gemiddelde van de afgelopen 30 dagen (${avgTxt} ct/kWh, incl. belasting).`
-          : `Vandaag en morgen liggen gemiddeld ${Math.abs(pct)}% ${pct < 0 ? "onder" : "boven"} het gemiddelde van de afgelopen 30 dagen (${avgTxt} ct/kWh, incl. belasting).`;
+          ? `${dagLabel} rond het gemiddelde van de afgelopen 30 dagen (${avgTxt} ct/kWh, incl. belasting).`
+          : `${dagLabel} gemiddeld ${Math.abs(pct)}% ${pct < 0 ? "onder" : "boven"} het gemiddelde van de afgelopen 30 dagen (${avgTxt} ct/kWh, incl. belasting).`;
         const ctxEl = document.createElement("p");
         ctxEl.id = "chart-ref-context";
         ctxEl.style.cssText = "margin:8px 0 18px;font-size:12px;color:#6b7280;";
@@ -1557,7 +1581,7 @@
       state.dayPrices15m = state.prices15m;
       state.nowIdx15m    = findCurrentIndex(state.dayPrices15m, now);
 
-      // Prognoses: dag 2+ (skip morgen als morgenochtend 00:00 al in dayPrices zit).
+      // Prognoses splitsen over twee grafieken.
       const allForecasts = (forecastPayload && forecastPayload.forecasts) || [];
       const tomorrowStart       = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
       const dayAfterTomorrowStart = new Date(tomorrowStart.getTime() + 24 * 3600 * 1000);
@@ -1565,9 +1589,19 @@
         const t = new Date(p.time);
         return t >= tomorrowStart && t < dayAfterTomorrowStart;
       });
-      state.forecasts = hasTomorrowActuals
-        ? allForecasts.filter((f) => new Date(f.time) >= dayAfterTomorrowStart)
-        : allForecasts;
+      state.hasTomorrowActuals = hasTomorrowActuals;
+
+      // Onderste grafiek: altijd vanaf overmorgen.
+      state.forecasts = allForecasts.filter((f) => new Date(f.time) >= dayAfterTomorrowStart);
+
+      // Bovenste grafiek: voorspelling vóór morgen alleen tonen zolang de day-ahead
+      // prijzen voor morgen nog niet gepubliceerd zijn (meestal vóór ~14:00 op werkdagen).
+      state.tomorrowForecast = hasTomorrowActuals
+        ? []
+        : allForecasts.filter((f) => {
+            const t = new Date(f.time);
+            return t >= tomorrowStart && t < dayAfterTomorrowStart;
+          });
 
       applyConfigDefaults();
       wireUI();
