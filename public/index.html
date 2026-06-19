@@ -292,7 +292,7 @@
             <button class="res-btn is-active" data-res-btn="hourly" aria-pressed="true">Per uur</button>
             <button class="res-btn" data-res-btn="quarter" aria-pressed="false">Per kwartier</button>
           </div>
-          <p id="res-toggle-note" class="res-toggle-note" hidden>Weekprognose alleen in "Per uur"</p>
+          <p id="res-toggle-note" class="res-toggle-note" hidden></p>
         </div>
       </div>
       <div class="chart-wrapper">
@@ -317,11 +317,14 @@
       </div>
     </div>
 
-    <!-- Forecast - geïntegreerd in dezelfde grafiek hierboven -->
+    <!-- Forecast - eigen grafiek (dag 2 t/m 7), los van de vandaag/morgen-grafiek -->
     <section id="voorspelling" class="forecast-section container">
       <div class="section-head">
         <h2>Voorspelling 5–7 dagen vooruit</h2>
-        <p class="section-sub">In de grafiek hierboven verschijnt de voorspelling als <strong>gestippelde lijn</strong> met een lichte schaduwband eromheen. Tik of hover op een uur voor de factor-bijdrage (zon, wind, temperatuur, gas, dagtype, uurpatroon).</p>
+        <p class="section-sub">Eigen model-voorspelling voor de dagen ná morgen: een <strong>gestippelde lijn</strong> met een onzekerheidsband eromheen. Tik of hover op een uur voor de factor-bijdrage (zon, wind, temperatuur, gas, dagtype, uurpatroon).</p>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="forecastChart" aria-label="Lijngrafiek met voorspelde stroomprijzen voor de komende 5 tot 7 dagen"></canvas>
       </div>
       <details class="forecast-explainer forecast-details">
         <summary class="forecast-details-summary">Hoe werkt de voorspelling?</summary>

@@ -492,6 +492,7 @@
     renderFooterMeta();
     renderResolutionToggle();
     renderChart();
+    renderForecastChart();
   }
 
   function renderModeBadges() {
@@ -826,7 +827,7 @@
       if (sub) sub.innerHTML =
         `Kwartierlijkse day-ahead prijzen (EPEX Spot, v.a. okt&nbsp;2025), weergegeven als <span data-field="mode-label">${modeLabel()}</span>. ` +
         `Tooltip toont alle varianten.`;
-      if (note) note.hidden = false;
+      if (note) note.hidden = true;
     } else {
       if (heading) heading.textContent = "Vandaag & morgen";
       if (sub) sub.innerHTML =
@@ -1113,23 +1114,15 @@
     renderChart();
   }
 
-  // ---- Hoofd chart-renderer ----
-  function renderChart() {
-    const canvas = document.getElementById("dayChart");
-    if (!canvas || typeof Chart === "undefined") return;
-    if (state.chart) { state.chart.destroy(); state.chart = null; }
-
-    const holidays = buildHolidayLookup();
-    const isQuarter = state.chartResolution === "quarter" && state.dayPrices15m.length > 0;
-
-    // ── Prijszones (#57): drempelwaarden altijd in inclusive ct, omrekenen naar huidige modus ──
+  // ---- Prijszones (#57): drempelwaarden altijd in inclusive ct, omrekenen naar huidige modus ----
+  function buildPriceZones() {
     function thToChart(ct_incl) {
       if (state.mode === "inclusive") return ct_incl;
       const taxes = state.config.taxes;
       return ct_incl / (taxes.btw_factor || 1.21) - (taxes.energiebelasting_per_kwh || 0) * 100;
     }
     const thr = (state.config && state.config.thresholds_ct_kwh_inclusive) || {};
-    const priceZones = [
+    return [
       { min: null,                            max: thToChart(0),                       color: "rgba(112,72,232,0.10)" },
       { min: thToChart(0),                    max: thToChart(thr.very_cheap ?? 14),    color: "rgba(26,122,49,0.08)"  },
       { min: thToChart(thr.very_cheap ?? 14), max: thToChart(thr.cheap ?? 22),         color: "rgba(47,158,68,0.07)"  },
@@ -1137,39 +1130,13 @@
       { min: thToChart(thr.pricey ?? 28),     max: thToChart(thr.very_pricey ?? 38),   color: "rgba(201,42,42,0.08)"  },
       { min: thToChart(thr.very_pricey ?? 38), max: null,                              color: "rgba(156,26,26,0.10)"  },
     ];
+  }
 
-    // ── Timeline opbouwen ──────────────────────────────────────────────────────
-    let timeline, chartNowIdx, boundaries;
-
-    if (isQuarter) {
-      // Quarter-mode: alleen vandaag + morgen in PT15M, geen prognose.
-      timeline = state.dayPrices15m.map((p) => ({ kind: "actual", time: p.time, price: p.price }));
-      chartNowIdx = state.nowIdx15m;
-
-      // Grens tussen vandaag en morgen markeren.
-      const tomorrowStr = (() => {
-        const d = new Date();
-        d.setDate(d.getDate() + 1);
-        return d.toISOString().slice(0, 10);
-      })();
-      const tomorrowIdx = timeline.findIndex((pt) => pt.time.slice(0, 10) === tomorrowStr);
-      boundaries = tomorrowIdx >= 0 ? [{ index: tomorrowIdx, label: "Morgen" }] : [];
-
-    } else {
-      // Hourly-mode: vandaag + morgen actueel + prognose dag 2+
-      timeline = [
-        ...state.dayPrices.map((p) => ({ kind: "actual", time: p.time, price: p.price })),
-        ...state.forecasts.map((f) => ({ kind: "forecast", time: f.time, forecast: f })),
-      ];
-      chartNowIdx = state.nowIdx;
-
-      // Grens tussen actuals en prognose markeren (enkel als er beide zijn).
-      const boundaryIdx = state.dayPrices.length;
-      boundaries = state.forecasts.length > 0
-        ? [{ index: boundaryIdx, label: "Voorspelling", labelSide: "right", tint: true }]
-        : [];
-    }
-
+  // ---- Gedeelde grafiek-builder ----
+  // Tekent één prijs-grafiek (dag óf voorspelling) op het opgegeven canvas en geeft
+  // de Chart-instance terug. De aanroeper levert de timeline + opties; legenda en
+  // context-zin worden door de aanroeper toegevoegd.
+  function buildPriceChart(canvas, { timeline, isQuarter, chartNowIdx, boundaries, holidays, priceZones }) {
     const n = timeline.length;
     const labels = timeline.map((t) => fmtChartLabel(t.time, isQuarter));
 
@@ -1219,7 +1186,7 @@
     const maxTicksLimit = isQuarter ? 24 : undefined;
 
     // ── Chart aanmaken ─────────────────────────────────────────────────────────
-    state.chart = new Chart(canvas, {
+    const chart = new Chart(canvas, {
       type: "line",
       plugins: [svPriceZonePlugin, dayBandPlugin, svBoundaryPlugin],
       data: {
@@ -1350,6 +1317,36 @@
       },
     });
 
+    return chart;
+  }
+
+  // ---- Dag-grafiek: alleen vandaag & morgen ----
+  function renderChart() {
+    const canvas = document.getElementById("dayChart");
+    if (!canvas || typeof Chart === "undefined") return;
+    if (state.chart) { state.chart.destroy(); state.chart = null; }
+
+    const holidays   = buildHolidayLookup();
+    const priceZones = buildPriceZones();
+    const isQuarter  = state.chartResolution === "quarter" && state.dayPrices15m.length > 0;
+
+    // Alleen actuals (vandaag + morgen). De voorspelling staat in een eigen grafiek (#voorspelling).
+    const timeline = isQuarter
+      ? state.dayPrices15m.map((p) => ({ kind: "actual", time: p.time, price: p.price }))
+      : state.dayPrices.map((p) => ({ kind: "actual", time: p.time, price: p.price }));
+    const chartNowIdx = isQuarter ? state.nowIdx15m : state.nowIdx;
+
+    // Grens tussen vandaag en morgen markeren.
+    const tomorrowStr = (() => {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      return d.toISOString().slice(0, 10);
+    })();
+    const tomorrowIdx = timeline.findIndex((pt) => pt.time.slice(0, 10) === tomorrowStr);
+    const boundaries = tomorrowIdx >= 0 ? [{ index: tomorrowIdx, label: "Morgen" }] : [];
+
+    state.chart = buildPriceChart(canvas, { timeline, isQuarter, chartNowIdx, boundaries, holidays, priceZones });
+
     // ── Legenda onder de grafiek ───────────────────────────────────────────────
     const _existingLegend = document.getElementById("chart-regime-legend");
     if (_existingLegend) _existingLegend.remove();
@@ -1369,7 +1366,7 @@
         dot("#c92a2a", "Duur") +
         dot("#0f6cbd", "Nu") +
         (isQuarter
-          ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Kwartierlijkse day-ahead prijzen voor vandaag en morgen. Schakel naar "Per uur" voor de prognose tot volgende week.</span>`
+          ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Kwartierlijkse day-ahead prijzen voor vandaag en morgen.</span>`
           : `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag.</span>`
         );
       (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", wrap);
@@ -1392,6 +1389,49 @@
         ctxEl.textContent = zin;
         wrap.insertAdjacentElement("afterend", ctxEl);
       }
+    }
+  }
+
+  // ---- Voorspellingsgrafiek: dag 2 t/m 7 ----
+  function renderForecastChart() {
+    const canvas = document.getElementById("forecastChart");
+    if (!canvas || typeof Chart === "undefined") return;
+    if (state.forecastChart) { state.forecastChart.destroy(); state.forecastChart = null; }
+
+    const wrapper = canvas.closest(".chart-wrapper");
+    if (!state.forecasts || state.forecasts.length === 0) {
+      // Geen prognose beschikbaar — grafiek verbergen, de uitleg eronder blijft staan.
+      if (wrapper) wrapper.hidden = true;
+      return;
+    }
+    if (wrapper) wrapper.hidden = false;
+
+    const holidays   = buildHolidayLookup();
+    const priceZones = buildPriceZones();
+    const timeline   = state.forecasts.map((f) => ({ kind: "forecast", time: f.time, forecast: f }));
+
+    // Dag-scheidslijnen (middernacht) tekent dayBandPlugin al; losse boundary niet nodig.
+    state.forecastChart = buildPriceChart(canvas, {
+      timeline, isQuarter: false, chartNowIdx: -1, boundaries: [], holidays, priceZones,
+    });
+
+    // ── Legenda onder de voorspellingsgrafiek ──────────────────────────────────
+    const _existingFc = document.getElementById("forecast-regime-legend");
+    if (_existingFc) _existingFc.remove();
+    {
+      const wrap = document.createElement("div");
+      wrap.id = "forecast-regime-legend";
+      wrap.setAttribute("aria-hidden", "true");
+      wrap.style.cssText = "margin:6px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;line-height:1.8;";
+      wrap.innerHTML =
+        `<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#374151;">` +
+        `<span style="width:18px;border-top:2px dashed rgba(46,117,182,0.7);flex-shrink:0;"></span>` +
+        `<strong>Voorspelde prijs</strong></span>` +
+        `<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#374151;">` +
+        `<span style="width:14px;height:10px;border-radius:2px;background:rgba(147,197,253,0.45);flex-shrink:0;"></span>` +
+        `<strong>Onzekerheidsband</strong></span>` +
+        `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Eigen model voor de dagen ná morgen. Hoe verder vooruit, hoe breder de band. Geen garantie — bij extreme situaties (PV-overschot, gascrisis, centrale-uitval) kan de prijs erbuiten vallen.</span>`;
+      (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", wrap);
     }
   }
 
