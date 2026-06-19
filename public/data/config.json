@@ -1,6 +1,6 @@
 {
-  "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in ct/kWh consumentenprijs incl. energiebelasting + btw + leverancieropslag.",
-  "version": 8,
+  "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in ct/kWh consumentenprijs incl. energiebelasting + btw + leverancieropslag. Per v9: suppliers bevatten ook weergavevelden (score, flags, app_text, wie_text, opzeg, let_op) voor de aanbieders-pagina. De homepage gebruikt alleen id/name/markup_per_kwh/fixed_per_month.",
+  "version": 9,
   "updated": "2026-06-19",
   "taxes": {
     "energiebelasting_per_kwh": 0.0916,
@@ -25,6 +25,11 @@
     "_note": "Banner verschijnt op de homepage zodra één of meer uren in vandaag/morgen onder deze drempel zakken (consumentenprijs incl. btw, gebaseerd op de leverancier die de bezoeker heeft gekozen)."
   },
   "default_supplier": "average",
+  "aanbieders_page": {
+    "default_verbruik_kwh": 2900,
+    "default_sort": "jaarkosten",
+    "_note": "default_verbruik_kwh = aanname voor de geschatte leverancierskosten (opslag × verbruik + vast × 12). Flags gas is feitelijk; groen/smart/no_feedin_cost zijn redactioneel en hier aanpasbaar."
+  },
   "_feestdagen_note": "Verifieer en vul aan per jaarwisseling. feestdagen_nl = officiële NL vrije dagen. feestdagen_crossborder = dagen waarop DE+BE (en vaak FR) ook vrij zijn — dit verhoogt het risico op extra-lage of negatieve prijzen door buurland-overschot op het NL net.",
   "feestdagen_nl": [
     "2026-01-01",
@@ -73,9 +78,10 @@
       "name": "Algemeen gemiddelde",
       "markup_per_kwh": 0.0178,
       "fixed_per_month": 0,
+      "consumer": false,
       "verified": "2026-05-16",
       "source": "Berekend gemiddelde van de oorspronkelijke elf kernaanbieders",
-      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan ≈ 0.018, gemiddelde = 0.0178. Nieuwe aanbieders (Vattenfall, Coolblue, Pure Energie) zijn apart selecteerbaar maar nog niet in dit gemiddelde verwerkt."
+      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan ≈ 0.018, gemiddelde = 0.0178. Nieuwe aanbieders zijn apart selecteerbaar maar nog niet in dit gemiddelde verwerkt."
     },
     {
       "id": "tibber",
@@ -85,7 +91,16 @@
       "verified": "2026-04-28",
       "source": "tibber.com tarievenpagina",
       "note": "Inkoopvergoeding excl. btw. Daarnaast vast maandbedrag.",
-      "website": "https://tibber.com/nl"
+      "website": "https://tibber.com/nl",
+      "score": 3.9,
+      "gas": true,
+      "groen": false,
+      "smart": true,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Beste app van het veld. Officiële Home Assistant-integratie, GraphQL API, Tibber Pulse (slim energiemonitor), Grid Rewards (bonus op goedkope uren) en slim EV-laden ingebouwd. Op Trustpilot scoort Tibber 3,9 — lager dan de app-reputatie doet vermoeden.",
+      "wie_text": "Tech-enthousiastelingen, EV-rijders en Home Assistant-gebruikers. Niet de goedkoopste opslag, maar de rijkste app-functies. Minder aantrekkelijk als je zonnepanelen hebt.",
+      "let_op": "Per 1 januari 2026 betaalt Tibber geen terugleveringsvergoeding meer voor zonnepanelen. Minder geschikt als je PV hebt."
     },
     {
       "id": "frank",
@@ -95,7 +110,15 @@
       "verified": "2026-04-28",
       "source": "https://www.frankenergie.nl/nl, tarieven overzicht",
       "note": "Inkoopvergoeding excl. btw. Incl. btw is dit ~€0,0182/kWh.",
-      "website": "https://www.frankenergie.nl"
+      "website": "https://www.frankenergie.nl",
+      "score": 4.5,
+      "gas": true,
+      "groen": false,
+      "smart": true,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Goede app met prijsoverzicht en verbruiksdata. Uitstekende integratiemogelijkheden via de ENTSO-E-gebaseerde prijsdata — populair bij Home Assistant- en EVCC-gebruikers. Winnaar Overstappen.nl Energie Award 2026.",
+      "wie_text": "Prijs-bewuste gebruikers en techneuten die willen automatiseren. Een van de laagste opslagen onder de pure-play dynamisch-spelers. Minder extra features voor zonnepaneel-eigenaren."
     },
     {
       "id": "energyzero",
@@ -105,7 +128,16 @@
       "verified": "2026-04-28",
       "source": "energyzero.nl tarievenpagina",
       "note": "Inkoopvergoeding excl. btw. Hoogste van de zeven gecontroleerde aanbieders.",
-      "website": "https://www.energyzero.nl"
+      "website": "https://www.energyzero.nl",
+      "score": 4.0,
+      "score_caveat": "weinig reviews op Trustpilot",
+      "gas": true,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Functionele app met directe ENTSO-E prijzen. Geen extra smart-laad features. Transparant over de prijsopbouw.",
+      "wie_text": "Gebruikers die transparantie en lage vaste lasten zoeken zonder extra gadgets. Compenseer de opslag met slim gebruik op goedkope uren."
     },
     {
       "id": "anwb",
@@ -115,7 +147,15 @@
       "verified": "2026-04-28",
       "source": "anwb.nl/energie tarievenblad",
       "note": "Inkoopvergoeding excl. btw.",
-      "website": "https://www.anwb.nl/energie"
+      "website": "https://www.anwb.nl/energie",
+      "score": 4.6,
+      "gas": true,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "30 dagen",
+      "app_text": "Basis app zonder geavanceerde smart-features. Geen officiële Home Assistant-integratie of EV-laad-optimalisatie. Geschikt als je gewoon je verbruik wilt inzien.",
+      "wie_text": "ANWB-leden die alles bij een bekende naam willen regelen. Minder interessant voor techneuten of EV-rijders die willen automatiseren. Trustpilot-score hoog (4,6), al stuurt ANWB tevreden klanten actief naar Trustpilot — weeg dat mee."
     },
     {
       "id": "vandebron",
@@ -125,7 +165,15 @@
       "verified": "2026-04-28",
       "source": "vandebron.nl tarievenpagina",
       "note": "Inkoopvergoeding excl. btw.",
-      "website": "https://vandebron.nl"
+      "website": "https://vandebron.nl",
+      "score": 4.0,
+      "gas": true,
+      "groen": true,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "App met inzicht in verbruik en herkomst van energie (direct van producenten). Geen geavanceerde smart-laad functies. Focus op duurzaamheid en transparantie.",
+      "wie_text": "Huishoudens die waarde hechten aan aantoonbaar groene energie direct van de bron. Relatief hoog vast maandbedrag; compenseer dat met hoog verbruik op goedkope uren."
     },
     {
       "id": "zonneplan",
@@ -135,7 +183,15 @@
       "verified": "2026-04-28",
       "source": "zonneplan.nl tarievenpagina",
       "note": "Inkoopvergoeding excl. btw.",
-      "website": "https://www.zonneplan.nl"
+      "website": "https://www.zonneplan.nl",
+      "score": 4.2,
+      "gas": true,
+      "groen": true,
+      "smart": true,
+      "no_feedin_cost": true,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Vernieuwde app (2026) die zonnepanelen, thuisbatterij, laadpaal én energiecontract in één dashboard combineert. Trustpilot-score 4,2 (ruim 2.200 reviews) — hoogste onder de all-in-one spelers.",
+      "wie_text": "Huishoudens met zonnepanelen, thuisbatterij of EV die alles in één app willen beheren. Beste keuze als je meerdere energiesystemen in één app wilt koppelen en beheren."
     },
     {
       "id": "easy",
@@ -145,7 +201,15 @@
       "verified": "2026-04-28",
       "source": "easyenergy.com tarievenpagina",
       "note": "Inkoopvergoeding excl. btw.",
-      "website": "https://www.easyenergy.com"
+      "website": "https://www.easyenergy.com",
+      "score": 3.9,
+      "gas": true,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Eenvoudige app met prijsoverzicht en verbruiksdata. Geen bijzondere smart-features of EV-integratie. Functioneel voor de basis.",
+      "wie_text": "Kleine huishoudens en laagverbruikers voor wie het vaste maandbedrag het zwaarst weegt. Minder geschikt als je geavanceerde domotica-integratie zoekt."
     },
     {
       "id": "nextenergy",
@@ -155,7 +219,15 @@
       "verified": "2026-05-09",
       "source": "nextenergy.nl tarievenpagina, geverifieerd mei 2026",
       "note": "Inkoopvergoeding excl. btw. Vaste kosten €5,99/maand incl. btw = €4,95 excl. btw.",
-      "website": "https://www.nextenergy.nl"
+      "website": "https://www.nextenergy.nl",
+      "score": 4.4,
+      "gas": true,
+      "groen": false,
+      "smart": true,
+      "no_feedin_cost": true,
+      "opzeg": "dagelijks opzegbaar, geen minimum",
+      "app_text": "Goede app met prijsalerts en verbruiksinzicht per uur. Eigen P1-meter en slim laden voor EV ingebouwd. NextSolar-contract voor zonnepaneelhouders: geen terugleverkosten én 50% zonnebonus op teruggeleverde stroom tussen 22:00 en 06:00.",
+      "wie_text": "Actieve gebruikers die hun verbruik willen automatiseren en slim omgaan met dalmomenten. Sterk voor huishoudens met zonnepanelen of een thuisbatterij — NextEnergy biedt specifieke producten voor beide. Lage vaste kosten."
     },
     {
       "id": "budget",
@@ -165,7 +237,15 @@
       "verified": "2026-05-09",
       "source": "budgetthuis.nl tarievenpagina, €0,017/kWh incl. btw, geverifieerd mei 2026",
       "note": "Inkoopvergoeding: €0,017 incl. btw ÷ 1,21 = €0,01405 excl. btw. Vaste kosten €5,99/maand incl. btw = €4,95 excl. btw.",
-      "website": "https://www.budgetthuis.nl/energie/dynamisch-energiecontract"
+      "website": "https://www.budgetthuis.nl/energie/dynamisch-energiecontract",
+      "score": 2.1,
+      "gas": true,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": true,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Budget Thuis-app met inzicht in actuele tarieven en uurverbruik. Tarieven worden een dag van tevoren getoond zodat je verbruik kunt plannen. Geen geavanceerde smart home-integratie of EV-functies.",
+      "wie_text": "Prijsbewuste huishoudens die de laagst mogelijke opslag willen bij een grote, gevestigde leverancier (1,2+ miljoen klanten). Geen terugleverkosten voor zonnepaneelhouders. Winnaar Keuze.nl 2025 voor laagste prijs dynamisch. Let op: lage klanttevredenheid (2,1/5 op Trustpilot)."
     },
     {
       "id": "eneco",
@@ -175,7 +255,15 @@
       "verified": "2026-05-09",
       "source": "eneco.nl tarievenpagina, tarief per 1 mei 2026, geverifieerd mei 2026",
       "note": "Inkoopvergoeding excl. btw per 1 mei 2026. Vaste kosten €7,00/maand incl. btw = €5,79 excl. btw.",
-      "website": "https://www.eneco.nl/duurzame-energie/dynamisch-energiecontract/"
+      "website": "https://www.eneco.nl/duurzame-energie/dynamisch-energiecontract/",
+      "score": 3.8,
+      "gas": true,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Mijn Eneco-app met verbruiksoverzicht en tariefinzicht. Integratie met Toon-thermostaat. Geen geavanceerde EV-laad- of Home Assistant-functies. Eneco was in september 2023 de eerste grote Nederlandse leverancier met dynamische tarieven.",
+      "wie_text": "Huishoudens die de zekerheid van een grote leverancier (circa 2 miljoen klanten) willen combineren met een dynamisch tarief. Hogere opslag én vaste kosten dan de pure dynamisch-spelers. Minder aantrekkelijk voor zonnepaneelhouders: terugleverkosten van toepassing."
     },
     {
       "id": "om",
@@ -185,7 +273,15 @@
       "verified": "2026-05-16",
       "source": "samenom.nl/tarieven — Dynamisch consumentencontract, geverifieerd mei 2026",
       "note": "Inkoopvergoeding excl. btw. Vaste leveringskosten €0,281781/dag excl. btw (≈ €8,57/maand). Coöperatief, geen winstoogmerk. Vaste terugleveringskosten van toepassing.",
-      "website": "https://www.samenom.nl"
+      "website": "https://www.samenom.nl",
+      "score": 4.3,
+      "gas": true,
+      "groen": true,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "30 dagen",
+      "app_text": "Eigen app voor verbruiksinzicht en energiebeheer. Geen geavanceerde smart-laad- of Home Assistant-integratie. Focus ligt op coöperatieve samenwerking en lokale opwek in plaats van technische automatisering.",
+      "wie_text": "Huishoudens die 100% lokaal opgewekte, aantoonbaar groene stroom willen van een coöperatief zonder winstoogmerk. Uniek in het veld: om werkt samen met meer dan 80 lokale energiecoöperaties door heel Nederland. Hogere vaste kosten dan de meeste andere aanbieders. Let op: vaste terugleveringskosten zijn van toepassing voor zonnepaneelhouders."
     },
     {
       "id": "vattenfall",
@@ -195,7 +291,15 @@
       "verified": "2026-06-19",
       "source": "vattenfall.nl/energie-aanbiedingen/flexprijs, geverifieerd juni 2026",
       "note": "Inkoopvergoeding €0,021/kWh excl. btw. Vaste kosten €5,99/maand incl. btw = €4,95 excl. Geen vaste terugleverkosten; terug tegen marktprijs. Opslag max. 4x/jaar wijzigbaar.",
-      "website": "https://www.vattenfall.nl/energie-aanbiedingen/flexprijs/"
+      "website": "https://www.vattenfall.nl/energie-aanbiedingen/flexprijs/",
+      "score": 2.9,
+      "gas": true,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": true,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Eigen app scoort hoog in de stores. Geen open API of Home Assistant-integratie. Vattenfall mag de opslag maximaal vier keer per jaar wijzigen en meldt dat vooraf.",
+      "wie_text": "Wie de zekerheid van een grote, stabiele leverancier wil (Beste Energieleverancier 2026 volgens Overstappen). Trustpilot-score laag (2,9). Geen vaste terugleverkosten; teruglevering tegen marktprijs."
     },
     {
       "id": "coolblue",
@@ -205,7 +309,16 @@
       "verified": "2026-06-19",
       "source": "coolblue.nl/energiecontracten/dynamische-energie, geverifieerd juni 2026",
       "note": "Inkoopvergoeding €0,018770/kWh excl. btw. Vaste kosten €6,20/maand incl. btw = €5,12 excl. Levert GEEN gas. Geen vaste terugleverkosten.",
-      "website": "https://www.coolblue.nl/energiecontracten/dynamische-energie"
+      "website": "https://www.coolblue.nl/energiecontracten/dynamische-energie",
+      "score": 3.6,
+      "gas": false,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": true,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Strakke app met duidelijke facturen en maandelijkse besparingsoverzichten. Geen open API of Home Assistant-integratie. Achteraf betalen in plaats van voorschot.",
+      "wie_text": "Huishoudens die de eenvoud en service van het Coolblue-merk waarderen en geen gas via dezelfde leverancier hoeven. Geen vaste terugleverkosten; teruglevering tegen de marktprijs van dat moment.",
+      "let_op": "Levert alleen stroom, geen gas."
     },
     {
       "id": "pure",
@@ -215,7 +328,15 @@
       "verified": "2026-06-19",
       "source": "pure-energie.nl/energiecontract/dynamisch-energiecontract, geverifieerd juni 2026",
       "note": "Inkoopvergoeding €0,0300/kWh incl. btw = €0,02479 excl. Vaste kosten €2,92/maand incl. btw = €2,41 excl. 100% NL groen uit eigen parken. Geen terugleververgoeding.",
-      "website": "https://pure-energie.nl/energiecontract/dynamisch-energiecontract/"
+      "website": "https://pure-energie.nl/energiecontract/dynamisch-energiecontract/",
+      "score": 4.3,
+      "gas": true,
+      "groen": true,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Basis-app voor verbruiksinzicht. 100% Nederlandse groene stroom uit eigen wind- en zonneparken. Geen smart-laad- of Home Assistant-functies.",
+      "wie_text": "Huishoudens die aantoonbaar Nederlandse groene stroom willen tegen de laagste vaste kosten van de vergelijking (€ 2,41/maand). Let op: geen terugleververgoeding voor zonnepaneelhouders."
     },
     {
       "id": "essent",
@@ -225,7 +346,15 @@
       "verified": "2026-06-19",
       "source": "Opgave Emile — offerte essent.nl, juni 2026",
       "note": "Inkoopvergoeding €0,0209/kWh excl. btw. Vaste kosten €7,49/maand incl. btw = €6,19 excl.",
-      "website": "https://www.essent.nl/energie/energiecontract/dynamisch"
+      "website": "https://www.essent.nl/energie/energiecontract/dynamisch",
+      "score": 1.4,
+      "gas": true,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Grootste leverancier van Nederland met een ruime app. Geen open API of Home Assistant-integratie. Teruglever-verkoopvergoeding €0,0253/kWh.",
+      "wie_text": "Wie de zekerheid van de grootste en financieel sterkste leverancier zoekt. Let op: laagste Trustpilot-score van de hele vergelijking (1,4)."
     },
     {
       "id": "greenchoice",
@@ -235,7 +364,15 @@
       "verified": "2026-06-19",
       "source": "Opgave Emile — offerte greenchoice.nl, juni 2026",
       "note": "Inkoopvergoeding €0,0185/kWh excl. btw. Vaste kosten €7,50/maand incl. btw = €6,20 excl. 100% groen.",
-      "website": "https://www.greenchoice.nl/stroom-en-gas/dynamisch-energiecontract/"
+      "website": "https://www.greenchoice.nl/stroom-en-gas/dynamisch-energiecontract/",
+      "score": 1.5,
+      "gas": true,
+      "groen": true,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "App scoort goed in de stores (circa 8,7). 100% groen profiel. Geen open API of Home Assistant-integratie.",
+      "wie_text": "Huishoudens met voorkeur voor een gevestigde groene leverancier die dynamisch wil. Let op: Trustpilot-score laag (1,5 op ruim 1.000 reviews)."
     },
     {
       "id": "engie",
@@ -245,7 +382,15 @@
       "verified": "2026-06-19",
       "source": "Opgave Emile — offerte engie.nl, juni 2026",
       "note": "Inkoopvergoeding €0,0157/kWh excl. btw. Vaste kosten €6,95/maand incl. btw = €5,74 excl.",
-      "website": "https://www.engie.nl/energie/dynamisch-energiecontract"
+      "website": "https://www.engie.nl/energie/dynamisch-energiecontract",
+      "score": 2.6,
+      "gas": true,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "App scoort goed in de stores (circa 8,8). Grote internationale leverancier. Geen open API of Home Assistant-integratie.",
+      "wie_text": "Huishoudens die bij een grote, gevestigde leverancier willen zitten en daar een dynamisch contract willen. Let op: Trustpilot-score laag (2,6 op ruim 2.000 reviews)."
     },
     {
       "id": "energievanons",
@@ -255,43 +400,81 @@
       "verified": "2026-06-19",
       "source": "Opgave Emile — energie.vanons.org, juni 2026",
       "note": "Inkoopvergoeding €0,02397/kWh excl. btw. Vaste kosten €6,99/maand incl. btw = €5,78 excl. Coöperatief, lokaal opgewekt.",
-      "website": "https://energie.vanons.org"
+      "website": "https://energie.vanons.org",
+      "score": 2.9,
+      "gas": true,
+      "groen": true,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Coöperatieve leverancier; stroom van lokale, vaak noordelijke opwekprojecten. Basis-app voor verbruiksinzicht, geen smart-laad- of Home Assistant-functies.",
+      "wie_text": "Huishoudens die 100% lokaal opgewekte groene stroom via een coöperatie willen. Hoge opslag van de vergelijking; geen technische meerwaarde voor wie wil automatiseren."
     },
     {
       "id": "innova",
       "name": "Innova Energie",
       "markup_per_kwh": 0.01488,
       "fixed_per_month": 7.97,
+      "fixed_unconfirmed": true,
       "verified": "2026-06-19",
       "source": "Opgave Emile (opslag); vast maandbedrag uit Overstappen-overzicht",
       "note": "Inkoopvergoeding €0,01488/kWh excl. btw. LET OP: vast maandbedrag €7,97 nog te bevestigen op btw-basis.",
-      "website": "https://www.innova-energie.nl"
+      "website": "https://www.innova-energie.nl",
+      "score": 4.0,
+      "gas": true,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Leverancier met focus op vaste én dynamische contracten. Basis-app voor verbruiksinzicht, geen EV- of Home Assistant-automatisering.",
+      "wie_text": "Prijsbewuste huishoudens: laagste opslag van het hele veld. Hoog vast maandbedrag, dus het voordeel zit in de lage opslag bij hoog verbruik. Solide Trustpilot-score op ruim 5.000 reviews."
     },
     {
       "id": "powerpeers",
       "name": "Powerpeers",
       "markup_per_kwh": 0.0083,
       "fixed_per_month": 13.25,
+      "fixed_unconfirmed": true,
       "verified": "2026-06-19",
       "source": "Opgave Emile (opslag); vast maandbedrag uit Overstappen-overzicht",
       "note": "Inkoopvergoeding €0,0083/kWh excl. btw (zeer laag). LET OP: vast maandbedrag €13,25 nog te bevestigen. Vattenfall-dochter.",
-      "website": "https://powerpeers.nl"
+      "website": "https://powerpeers.nl",
+      "score": 4.6,
+      "score_caveat": "weinig reviews op Trustpilot",
+      "gas": true,
+      "groen": false,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Vattenfall-dochter, sinds najaar 2025 gericht op dynamisch. Vernieuwde app voor verbruiksinzicht.",
+      "wie_text": "Grootverbruikers: laagste opslag van de vergelijking, maar het hoge vaste maandbedrag (≈ € 13,25) moet je eerst terugverdienen. Onaantrekkelijk bij laag verbruik."
     },
     {
       "id": "vrijopnaam",
       "name": "Vrijopnaam",
       "markup_per_kwh": 0.0165,
       "fixed_per_month": 8.00,
+      "fixed_unconfirmed": true,
       "verified": "2026-06-19",
       "source": "Opgave Emile (opslag); vast maandbedrag uit Overstappen-overzicht",
       "note": "Inkoopvergoeding €0,0165/kWh excl. btw. LET OP: vast maandbedrag €8,00 nog te bevestigen. Coöperatief, groen.",
-      "website": "https://www.vrijopnaam.nl"
+      "website": "https://www.vrijopnaam.nl",
+      "score": 4.0,
+      "score_caveat": "weinig reviews op Trustpilot",
+      "gas": true,
+      "groen": true,
+      "smart": false,
+      "no_feedin_cost": false,
+      "opzeg": "geen minimum, maandelijks opzegbaar",
+      "app_text": "Coöperatief en groen, met focus op dynamisch. Basis-app voor verbruiksinzicht, geen geavanceerde smart-functies.",
+      "wie_text": "Huishoudens die groen en coöperatief willen met een dynamisch contract. Hoog vast maandbedrag; compenseer dat met verbruik op de goedkope uren."
     },
     {
       "id": "custom",
       "name": "Eigen waarde invullen",
       "markup_per_kwh": 0.02,
       "fixed_per_month": 0,
+      "consumer": false,
       "note": "Vul zelf je opslag in (excl. btw)."
     }
   ]
