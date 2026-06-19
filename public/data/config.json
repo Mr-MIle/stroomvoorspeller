@@ -1,7 +1,7 @@
 {
   "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in ct/kWh consumentenprijs incl. energiebelasting + btw + leverancieropslag.",
-  "version": 7,
-  "updated": "2026-05-16",
+  "version": 8,
+  "updated": "2026-06-19",
   "taxes": {
     "energiebelasting_per_kwh": 0.0916,
     "btw_factor": 1.21,
@@ -74,8 +74,8 @@
       "markup_per_kwh": 0.0178,
       "fixed_per_month": 0,
       "verified": "2026-05-16",
-      "source": "Berekend gemiddelde van de elf onderstaande aanbieders",
-      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan ≈ 0.018, gemiddelde = 0.0178."
+      "source": "Berekend gemiddelde van de oorspronkelijke elf kernaanbieders",
+      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan ≈ 0.018, gemiddelde = 0.0178. Nieuwe aanbieders (Vattenfall, Coolblue, Pure Energie) zijn apart selecteerbaar maar nog niet in dit gemiddelde verwerkt."
     },
     {
       "id": "tibber",
@@ -186,6 +186,106 @@
       "source": "samenom.nl/tarieven — Dynamisch consumentencontract, geverifieerd mei 2026",
       "note": "Inkoopvergoeding excl. btw. Vaste leveringskosten €0,281781/dag excl. btw (≈ €8,57/maand). Coöperatief, geen winstoogmerk. Vaste terugleveringskosten van toepassing.",
       "website": "https://www.samenom.nl"
+    },
+    {
+      "id": "vattenfall",
+      "name": "Vattenfall FlexPrijs",
+      "markup_per_kwh": 0.021,
+      "fixed_per_month": 4.95,
+      "verified": "2026-06-19",
+      "source": "vattenfall.nl/energie-aanbiedingen/flexprijs, geverifieerd juni 2026",
+      "note": "Inkoopvergoeding €0,021/kWh excl. btw. Vaste kosten €5,99/maand incl. btw = €4,95 excl. Geen vaste terugleverkosten; terug tegen marktprijs. Opslag max. 4x/jaar wijzigbaar.",
+      "website": "https://www.vattenfall.nl/energie-aanbiedingen/flexprijs/"
+    },
+    {
+      "id": "coolblue",
+      "name": "Coolblue Energie",
+      "markup_per_kwh": 0.01877,
+      "fixed_per_month": 5.12,
+      "verified": "2026-06-19",
+      "source": "coolblue.nl/energiecontracten/dynamische-energie, geverifieerd juni 2026",
+      "note": "Inkoopvergoeding €0,018770/kWh excl. btw. Vaste kosten €6,20/maand incl. btw = €5,12 excl. Levert GEEN gas. Geen vaste terugleverkosten.",
+      "website": "https://www.coolblue.nl/energiecontracten/dynamische-energie"
+    },
+    {
+      "id": "pure",
+      "name": "Pure Energie",
+      "markup_per_kwh": 0.02479,
+      "fixed_per_month": 2.41,
+      "verified": "2026-06-19",
+      "source": "pure-energie.nl/energiecontract/dynamisch-energiecontract, geverifieerd juni 2026",
+      "note": "Inkoopvergoeding €0,0300/kWh incl. btw = €0,02479 excl. Vaste kosten €2,92/maand incl. btw = €2,41 excl. 100% NL groen uit eigen parken. Geen terugleververgoeding.",
+      "website": "https://pure-energie.nl/energiecontract/dynamisch-energiecontract/"
+    },
+    {
+      "id": "essent",
+      "name": "Essent",
+      "markup_per_kwh": 0.0209,
+      "fixed_per_month": 6.19,
+      "verified": "2026-06-19",
+      "source": "Opgave Emile — offerte essent.nl, juni 2026",
+      "note": "Inkoopvergoeding €0,0209/kWh excl. btw. Vaste kosten €7,49/maand incl. btw = €6,19 excl.",
+      "website": "https://www.essent.nl/energie/energiecontract/dynamisch"
+    },
+    {
+      "id": "greenchoice",
+      "name": "Greenchoice",
+      "markup_per_kwh": 0.0185,
+      "fixed_per_month": 6.20,
+      "verified": "2026-06-19",
+      "source": "Opgave Emile — offerte greenchoice.nl, juni 2026",
+      "note": "Inkoopvergoeding €0,0185/kWh excl. btw. Vaste kosten €7,50/maand incl. btw = €6,20 excl. 100% groen.",
+      "website": "https://www.greenchoice.nl/stroom-en-gas/dynamisch-energiecontract/"
+    },
+    {
+      "id": "engie",
+      "name": "ENGIE",
+      "markup_per_kwh": 0.0157,
+      "fixed_per_month": 5.74,
+      "verified": "2026-06-19",
+      "source": "Opgave Emile — offerte engie.nl, juni 2026",
+      "note": "Inkoopvergoeding €0,0157/kWh excl. btw. Vaste kosten €6,95/maand incl. btw = €5,74 excl.",
+      "website": "https://www.engie.nl/energie/dynamisch-energiecontract"
+    },
+    {
+      "id": "energievanons",
+      "name": "Energie VanOns",
+      "markup_per_kwh": 0.02397,
+      "fixed_per_month": 5.78,
+      "verified": "2026-06-19",
+      "source": "Opgave Emile — energie.vanons.org, juni 2026",
+      "note": "Inkoopvergoeding €0,02397/kWh excl. btw. Vaste kosten €6,99/maand incl. btw = €5,78 excl. Coöperatief, lokaal opgewekt.",
+      "website": "https://energie.vanons.org"
+    },
+    {
+      "id": "innova",
+      "name": "Innova Energie",
+      "markup_per_kwh": 0.01488,
+      "fixed_per_month": 7.97,
+      "verified": "2026-06-19",
+      "source": "Opgave Emile (opslag); vast maandbedrag uit Overstappen-overzicht",
+      "note": "Inkoopvergoeding €0,01488/kWh excl. btw. LET OP: vast maandbedrag €7,97 nog te bevestigen op btw-basis.",
+      "website": "https://www.innova-energie.nl"
+    },
+    {
+      "id": "powerpeers",
+      "name": "Powerpeers",
+      "markup_per_kwh": 0.0083,
+      "fixed_per_month": 13.25,
+      "verified": "2026-06-19",
+      "source": "Opgave Emile (opslag); vast maandbedrag uit Overstappen-overzicht",
+      "note": "Inkoopvergoeding €0,0083/kWh excl. btw (zeer laag). LET OP: vast maandbedrag €13,25 nog te bevestigen. Vattenfall-dochter.",
+      "website": "https://powerpeers.nl"
+    },
+    {
+      "id": "vrijopnaam",
+      "name": "Vrijopnaam",
+      "markup_per_kwh": 0.0165,
+      "fixed_per_month": 8.00,
+      "verified": "2026-06-19",
+      "source": "Opgave Emile (opslag); vast maandbedrag uit Overstappen-overzicht",
+      "note": "Inkoopvergoeding €0,0165/kWh excl. btw. LET OP: vast maandbedrag €8,00 nog te bevestigen. Coöperatief, groen.",
+      "website": "https://www.vrijopnaam.nl"
     },
     {
       "id": "custom",
