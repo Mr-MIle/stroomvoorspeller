@@ -1455,14 +1455,25 @@
     const cards = [];
     const used  = new Set();
 
-    // 1. Gratis stroom — sterkste negatief-signaal (hoogste kans, anders laagste prijs).
+    // 1. Negatieve prijs — sterkste negatief-signaal (hoogste kans, anders laagste prijs).
+    //    Belangrijk onderscheid: de KALE marktprijs (EPEX) kan negatief zijn terwijl je
+    //    INCL. belasting nog steeds een positief bedrag betaalt. De grafiek toont incl.
+    //    belasting, dus alleen bij ct < 0 noemen we het "gratis" — anders eerlijk labelen
+    //    als "markt negatief" met de werkelijke consumentenprijs erbij.
     const negCands = hours.filter((h) => h.negative);
     if (negCands.length) {
       negCands.sort((a, b) => (b.prob ?? 0) - (a.prob ?? 0) || a.ct - b.ct);
       const h = negCands[0];
       used.add(h.time);
-      cards.push({ cls: "fh-neg", icon: "⚡", label: "Gratis stroom",
-        title: dagdeelLabel(h.t), detail: `waarschijnlijk negatief ${rondTijd(h.t)}` });
+      if (h.ct < 0) {
+        cards.push({ cls: "fh-neg", icon: "⚡", label: "Gratis stroom",
+          title: dagdeelLabel(h.t),
+          detail: `incl. belasting ~${fmtNum(h.ct, 0)} ct ${rondTijd(h.t)}` });
+      } else {
+        cards.push({ cls: "fh-neg", icon: "⚡", label: "Waarschijnlijk negatieve marktprijs",
+          title: dagdeelLabel(h.t),
+          detail: `incl. belasting nog ~${fmtNum(h.ct, 0)} ct ${rondTijd(h.t)}` });
+      }
     }
 
     // 2. Duurste moment — hoogste voorspelde prijs, alleen boven de duur-drempel.
