@@ -492,6 +492,7 @@
     renderFooterMeta();
     renderResolutionToggle();
     renderChart();
+    renderForecastHighlights();
     renderForecastChart();
   }
 
@@ -1414,6 +1415,89 @@
         wrap.insertAdjacentElement("afterend", ctxEl);
       }
     }
+  }
+
+  // ---- Voorspelling-hoogtepunten: max 3 gedateerde regels boven de weekgrafiek ----
+  // Optie B (#kop-van-de-week): vat de model-voorspelling samen in woorden, drempelgestuurd.
+  // Toont alleen een regel als de data een drempel haalt; anders één neutrale zin.
+  // Dagnamen voluit (dinsdagmiddag), nooit afgekort.
+  function renderForecastHighlights() {
+    const el = document.getElementById("forecast-highlights");
+    if (!el || !state.config) return;
+
+    const fc = state.forecasts || [];
+    if (fc.length === 0) { el.setAttribute("hidden", ""); el.innerHTML = ""; return; }
+
+    const thr      = state.config.thresholds_ct_kwh_inclusive || {};
+    const cheapT   = thr.very_cheap ?? 14;
+    const priceyT  = thr.pricey     ?? 28;
+    const NEG_PROB = 0.30; // model-kans op negatieve prijs waarboven we "waarschijnlijk negatief" tonen
+
+    // Verrijk elk uur met de consumentenprijs (incl. btw) en een negatief-signaal.
+    const hours = fc.map((f) => {
+      const ct   = priceCents(f.predicted, "inclusive");
+      const prob = typeof f.P_negative === "number" ? f.P_negative : null;
+      return { time: f.time, t: new Date(f.time), ct, prob,
+               negative: ct < 0 || (prob !== null && prob >= NEG_PROB) };
+    });
+
+    function dagdeelLabel(d) {
+      const h    = d.getHours();
+      const deel = h < 6 ? "nacht" : h < 12 ? "ochtend" : h < 18 ? "middag" : "avond";
+      const dag  = d.toLocaleDateString("nl-NL", { weekday: "long" }); // voluit: "dinsdag"
+      const s    = dag + deel;
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+    function rondTijd(d) {
+      return "rond " + String(d.getHours()).padStart(2, "0") + ":00";
+    }
+
+    const cards = [];
+    const used  = new Set();
+
+    // 1. Gratis stroom — sterkste negatief-signaal (hoogste kans, anders laagste prijs).
+    const negCands = hours.filter((h) => h.negative);
+    if (negCands.length) {
+      negCands.sort((a, b) => (b.prob ?? 0) - (a.prob ?? 0) || a.ct - b.ct);
+      const h = negCands[0];
+      used.add(h.time);
+      cards.push({ cls: "fh-neg", icon: "⚡", label: "Gratis stroom",
+        title: dagdeelLabel(h.t), detail: `waarschijnlijk negatief ${rondTijd(h.t)}` });
+    }
+
+    // 2. Duurste moment — hoogste voorspelde prijs, alleen boven de duur-drempel.
+    let maxH = null;
+    hours.forEach((h) => { if (!used.has(h.time) && (!maxH || h.ct > maxH.ct)) maxH = h; });
+    if (maxH && maxH.ct > priceyT) {
+      used.add(maxH.time);
+      cards.push({ cls: "fh-pricey", icon: "⚠", label: "Duurste moment",
+        title: dagdeelLabel(maxH.t), detail: `~${fmtNum(maxH.ct, 0)} ct ${rondTijd(maxH.t)}` });
+    }
+
+    // 3. Goedkoopst — laagste niet-negatieve prijs, alleen onder de goedkoop-drempel.
+    let minH = null;
+    hours.forEach((h) => { if (!used.has(h.time) && h.ct >= 0 && (!minH || h.ct < minH.ct)) minH = h; });
+    if (minH && minH.ct < cheapT) {
+      used.add(minH.time);
+      cards.push({ cls: "fh-cheap", icon: "💰", label: "Goedkoopst",
+        title: dagdeelLabel(minH.t), detail: `~${fmtNum(minH.ct, 0)} ct ${rondTijd(minH.t)}` });
+    }
+
+    // Niets haalt een drempel → één neutrale regel met het weekgemiddelde.
+    if (cards.length === 0) {
+      const avg = hours.reduce((s, h) => s + h.ct, 0) / hours.length;
+      cards.push({ cls: "fh-neutral", icon: "📊", label: "Komende week",
+        title: "Stabiele prijzen", detail: `gemiddeld rond ${fmtNum(avg, 0)} ct/kWh` });
+    }
+
+    el.innerHTML = cards.map((c) =>
+      `<div class="fh-card ${c.cls}">` +
+        `<div class="fh-label"><span class="fh-icon" aria-hidden="true">${c.icon}</span>${c.label}</div>` +
+        `<div class="fh-title">${c.title}</div>` +
+        `<div class="fh-detail">${c.detail}</div>` +
+      `</div>`
+    ).join("");
+    el.removeAttribute("hidden");
   }
 
   // ---- Voorspellingsgrafiek: dag 2 t/m 7 ----

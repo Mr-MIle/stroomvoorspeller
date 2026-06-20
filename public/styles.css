@@ -599,6 +599,44 @@ a:hover { text-decoration: underline; }
 
 /* Chart */
 .chart-section { padding-bottom: 8px; }
+/* Voorspelling-hoogtepunten: kop-van-de-week strip boven de weekgrafiek (optie B) */
+.forecast-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 14px;
+}
+.forecast-highlights[hidden] { display: none; }
+.fh-card {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--c-border);
+  border-left-width: 3px;
+  padding: 10px 13px;
+}
+.fh-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.fh-icon { font-size: 0.85rem; }
+.fh-title { font-size: 0.92rem; font-weight: 600; margin-top: 3px; color: var(--c-text); }
+.fh-detail { font-size: 0.8rem; color: var(--c-text-soft); margin-top: 1px; }
+.fh-neg    { background: var(--c-free-bg);   border-left-color: var(--c-free); }
+.fh-neg    .fh-label { color: #5b21b6; }
+.fh-pricey { background: var(--c-pricey-bg); border-left-color: var(--c-pricey); }
+.fh-pricey .fh-label { color: #92400e; }
+.fh-cheap  { background: var(--c-cheap-bg);  border-left-color: var(--c-cheap); }
+.fh-cheap  .fh-label { color: #15803d; }
+.fh-neutral { grid-column: 1 / -1; background: var(--c-bg); border-left-color: var(--c-border); }
+.fh-neutral .fh-label { color: var(--c-text-mute); }
+@media (max-width: 640px) {
+  .forecast-highlights { grid-template-columns: 1fr; }
+}
+
 .chart-wrapper {
   background: var(--c-surface);
   border: 1px solid var(--c-border);
