@@ -184,6 +184,15 @@
     <section id="settings-panel" class="settings-panel container" hidden aria-label="Instellingen">
 
       <div class="settings-grid">
+        <div class="settings-block settings-block--full">
+          <strong>Mijn situatie</strong>
+          <p class="settings-help">Vink aan wat je thuis hebt. Je advies past zich erop aan — met zonnepanelen krijg je andere tips dan zonder.</p>
+          <div class="situation-options">
+            <label class="situation-chip"><input type="checkbox" id="profile-ev"> <span>EV / elektrische auto</span></label>
+            <label class="situation-chip"><input type="checkbox" id="profile-solar"> <span>Zonnepanelen</span></label>
+            <label class="situation-chip"><input type="checkbox" id="profile-battery"> <span>Thuisbatterij</span></label>
+          </div>
+        </div>
         <div class="settings-block">
           <label for="supplier-select"><strong>Mijn energieleverancier</strong></label>
           <p class="settings-help">Bepaalt de opslag (inkoopvergoeding) die bij de kale EPEX-prijs wordt opgeteld. Bedragen zijn <strong>excl. btw</strong>; vergelijk met je leverancier-app waar het soms incl. btw staat. Heb je een ander tarief? Kies <em>Eigen waarde invullen</em>.</p>
@@ -323,6 +332,10 @@
         <h2>Voorspelling 5–7 dagen vooruit</h2>
         <p class="section-sub">Eigen model-voorspelling voor de dagen ná morgen: een <strong>gestippelde lijn</strong> met een onzekerheidsband eromheen. Tik of hover op een uur voor de factor-bijdrage (zon, wind, temperatuur, gas, dagtype, uurpatroon).</p>
       </div>
+      <button type="button" id="profile-nudge" class="profile-nudge" hidden>
+        <span class="profile-nudge-icon" aria-hidden="true">⚙</span>
+        Stel je situatie in (EV, zonnepanelen, batterij) voor advies op maat
+      </button>
       <div id="forecast-highlights" class="forecast-highlights" role="status" aria-live="polite" hidden></div>
       <div class="chart-wrapper">
         <canvas id="forecastChart" aria-label="Lijngrafiek met voorspelde stroomprijzen voor de komende 5 tot 7 dagen"></canvas>

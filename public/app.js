@@ -13,6 +13,7 @@
     customMarkup:      "sv.customMarkup",        // string (euro per kWh)
     dismissedNegAlert: "sv.dismissedNegAlert",  // ISO-tijd van het event waarvoor de banner gesloten is
     chartRes:          "sv.chartRes",           // 'hourly' | 'quarter'
+    profile:           "sv.profile",            // JSON: { ev, solar, battery } — 'Mijn situatie'
   };
 
   const state = {
@@ -31,6 +32,7 @@
     mode: "inclusive",
     supplierId: "average",
     customMarkup: 0.025,
+    profile: { ev: false, solar: false, battery: false },  // 'Mijn situatie' — personalisatie
     chart: null,
   };
 
@@ -43,6 +45,38 @@
   }
   function saveStored(key, value) {
     try { localStorage.setItem(key, String(value)); } catch (e) { /* no-op */ }
+  }
+  function loadProfile() {
+    try {
+      const raw = loadStored(STORAGE_KEYS.profile, "");
+      if (!raw) return { ev: false, solar: false, battery: false };
+      const o = JSON.parse(raw);
+      return { ev: !!o.ev, solar: !!o.solar, battery: !!o.battery };
+    } catch (e) { return { ev: false, solar: false, battery: false }; }
+  }
+  function saveProfile() {
+    saveStored(STORAGE_KEYS.profile, JSON.stringify(state.profile));
+  }
+  function profileEmpty() {
+    const p = state.profile || {};
+    return !p.ev && !p.solar && !p.battery;
+  }
+  // Profiel-zin voor de nu-kaart. kind: 'laad' (goedkoop/gratis) of 'duur'. Leeg = geen toevoeging.
+  function profielActie(kind) {
+    const p = state.profile || {};
+    if (kind === "laad") {
+      const w = [];
+      if (p.ev) w.push("EV");
+      if (p.battery) w.push("batterij");
+      if (!w.length) return "";
+      return "Laad je " + (w.length === 2 ? "EV en batterij" : w[0]) + ".";
+    }
+    if (kind === "duur") {
+      if (p.battery) return "Gebruik je thuisbatterij in plaats van het net.";
+      if (p.ev) return "Stel EV-laden uit tot een goedkoper uur.";
+      return "";
+    }
+    return "";
   }
 
   // ---- Calculation helpers ----
@@ -537,7 +571,12 @@
       pricey:      "Aan de dure kant — stel zware apparaten liever even uit.",
       very_pricey: "Nu duur. Stel wasmachine, droger en auto laden uit tot een goedkoper uur.",
     };
-    adviceEl.textContent = advice[cls] || advice.normal;
+    let adviceText = advice[cls] || advice.normal;
+    const profielKind = (cls === "negative" || cls === "very_cheap" || cls === "cheap") ? "laad"
+                      : (cls === "pricey" || cls === "very_pricey") ? "duur" : "";
+    const profielZin = profielActie(profielKind);
+    if (profielZin) adviceText += " " + profielZin;
+    adviceEl.textContent = adviceText;
 
     if (!nextEl) return;
     const fromIdx     = nowIdx >= 0 ? nowIdx : 0;
@@ -699,6 +738,14 @@
     const m = effectiveMarkup();
     const m_incl = m * (t.btw_factor || 1);
     setText("current-markup", `€${fmtNum(m, 4)}/kWh excl. btw  (= €${fmtNum(m_incl, 4)} incl. btw)`);
+
+    // 'Mijn situatie' — checkbox-status spiegelen aan state.profile
+    const evCb = document.getElementById("profile-ev");
+    const solarCb = document.getElementById("profile-solar");
+    const batteryCb = document.getElementById("profile-battery");
+    if (evCb) evCb.checked = !!state.profile.ev;
+    if (solarCb) solarCb.checked = !!state.profile.solar;
+    if (batteryCb) batteryCb.checked = !!state.profile.battery;
   }
 
   function renderSettingsToggle() {
@@ -1417,28 +1464,33 @@
     }
   }
 
-  // ---- Voorspelling-hoogtepunten: max 3 gedateerde regels boven de weekgrafiek ----
-  // Optie B (#kop-van-de-week): vat de model-voorspelling samen in woorden, drempelgestuurd.
-  // Toont alleen een regel als de data een drempel haalt; anders één neutrale zin.
-  // Dagnamen voluit (dinsdagmiddag), nooit afgekort.
+  // ---- Voorspelling-hoogtepunten: gedateerde regels boven de weekgrafiek ----
+  // Optie B (#kop-van-de-week), gepersonaliseerd op 'Mijn situatie' (state.profile).
+  // Drempelgestuurd; dagnamen voluit (dinsdagmiddag). De markt-negatief-melding is
+  // verplaatst naar een eigen zon-kaart die alleen verschijnt met zonnepanelen aan,
+  // zodat de generieke strip niet tegenstrijdig is met de incl-belasting grafiek.
   function renderForecastHighlights() {
-    const el = document.getElementById("forecast-highlights");
+    const el    = document.getElementById("forecast-highlights");
+    const nudge = document.getElementById("profile-nudge");
     if (!el || !state.config) return;
 
     const fc = state.forecasts || [];
-    if (fc.length === 0) { el.setAttribute("hidden", ""); el.innerHTML = ""; return; }
+    if (fc.length === 0) {
+      el.setAttribute("hidden", ""); el.innerHTML = "";
+      if (nudge) nudge.setAttribute("hidden", "");
+      return;
+    }
 
     const thr      = state.config.thresholds_ct_kwh_inclusive || {};
     const cheapT   = thr.very_cheap ?? 14;
     const priceyT  = thr.pricey     ?? 28;
-    const NEG_PROB = 0.30; // model-kans op negatieve prijs waarboven we "waarschijnlijk negatief" tonen
+    const NEG_PROB = 0.30; // model-kans op negatieve kale marktprijs
+    const p        = state.profile || {};
 
-    // Verrijk elk uur met de consumentenprijs (incl. btw) en een negatief-signaal.
     const hours = fc.map((f) => {
       const ct   = priceCents(f.predicted, "inclusive");
       const prob = typeof f.P_negative === "number" ? f.P_negative : null;
-      return { time: f.time, t: new Date(f.time), ct, prob,
-               negative: ct < 0 || (prob !== null && prob >= NEG_PROB) };
+      return { time: f.time, t: new Date(f.time), ct, prob };
     });
 
     function dagdeelLabel(d) {
@@ -1448,57 +1500,80 @@
       const s    = dag + deel;
       return s.charAt(0).toUpperCase() + s.slice(1);
     }
-    function rondTijd(d) {
-      return "rond " + String(d.getHours()).padStart(2, "0") + ":00";
+    function rondTijd(d) { return "rond " + String(d.getHours()).padStart(2, "0") + ":00"; }
+
+    // Profiel-actie per situatie. Leeg = geen actieregel.
+    function laadActie() {
+      const w = [];
+      if (p.ev) w.push("EV");
+      if (p.battery) w.push("batterij");
+      if (!w.length) return "";
+      return "Laad je " + (w.length === 2 ? "EV en batterij" : w[0]);
+    }
+    function duurActie() {
+      if (p.battery) return "Gebruik je batterij, niet het net";
+      if (p.ev) return "Stel EV-laden uit tot een goedkoper uur";
+      return "";
     }
 
-    const cards = [];
-    const used  = new Set();
+    const lead = [];  // gratis (vooraan)
+    const mid  = [];  // goedkoopst, duurste
+    const tail = [];  // zon-overschot (achteraan, alleen met zonnepanelen)
+    const used = new Set();
 
-    // 1. Negatieve prijs — sterkste negatief-signaal (hoogste kans, anders laagste prijs).
-    //    Belangrijk onderscheid: de KALE marktprijs (EPEX) kan negatief zijn terwijl je
-    //    INCL. belasting nog steeds een positief bedrag betaalt. De grafiek toont incl.
-    //    belasting, dus alleen bij ct < 0 noemen we het "gratis" — anders eerlijk labelen
-    //    als "markt negatief" met de werkelijke consumentenprijs erbij.
-    const negCands = hours.filter((h) => h.negative);
-    if (negCands.length) {
-      negCands.sort((a, b) => (b.prob ?? 0) - (a.prob ?? 0) || a.ct - b.ct);
-      const h = negCands[0];
-      used.add(h.time);
-      if (h.ct < 0) {
-        cards.push({ cls: "fh-neg", icon: "⚡", label: "Gratis stroom",
-          title: dagdeelLabel(h.t),
-          detail: `incl. belasting ~${fmtNum(h.ct, 0)} ct ${rondTijd(h.t)}` });
-      } else {
-        cards.push({ cls: "fh-neg", icon: "⚡", label: "Waarschijnlijk negatieve marktprijs",
-          title: dagdeelLabel(h.t),
-          detail: `incl. belasting nog ~${fmtNum(h.ct, 0)} ct ${rondTijd(h.t)}` });
+    // Gratis stroom — alleen als je incl. belasting écht onder nul betaalt (klopt met grafiek).
+    const gratis = hours.filter((h) => h.ct < 0).sort((a, b) => a.ct - b.ct)[0];
+    if (gratis) {
+      used.add(gratis.time);
+      lead.push({ cls: "fh-neg", icon: "⚡", label: "Gratis stroom",
+        title: dagdeelLabel(gratis.t),
+        detail: `incl. belasting ~${fmtNum(gratis.ct, 0)} ct ${rondTijd(gratis.t)}`,
+        action: laadActie() });
+    } else if (p.solar) {
+      // Zon-overschot — kale markt onder nul. Alleen voor zonnepaneel-bezitters: dan loont
+      // zelf verbruiken meer dan terugleveren. Geen prijsgetal (incl. blijft positief), dus
+      // geen verwarrende vergelijking met 'Goedkoopst'.
+      const markt = hours
+        .filter((h) => h.prob !== null && h.prob >= NEG_PROB)
+        .sort((a, b) => (b.prob ?? 0) - (a.prob ?? 0))[0];
+      if (markt) {
+        used.add(markt.time);
+        tail.push({ cls: "fh-solar", icon: "☀", label: "Zon-overschot",
+          title: dagdeelLabel(markt.t),
+          detail: `markt onder nul ${rondTijd(markt.t)}`,
+          action: "Verbruik je eigen zon" });
       }
     }
 
-    // 2. Duurste moment — hoogste voorspelde prijs, alleen boven de duur-drempel.
-    let maxH = null;
-    hours.forEach((h) => { if (!used.has(h.time) && (!maxH || h.ct > maxH.ct)) maxH = h; });
-    if (maxH && maxH.ct > priceyT) {
-      used.add(maxH.time);
-      cards.push({ cls: "fh-pricey", icon: "⚠", label: "Duurste moment",
-        title: dagdeelLabel(maxH.t), detail: `~${fmtNum(maxH.ct, 0)} ct ${rondTijd(maxH.t)}` });
-    }
-
-    // 3. Goedkoopst — laagste niet-negatieve prijs, alleen onder de goedkoop-drempel.
+    // Goedkoopst — laagste niet-negatieve prijs onder de drempel.
     let minH = null;
     hours.forEach((h) => { if (!used.has(h.time) && h.ct >= 0 && (!minH || h.ct < minH.ct)) minH = h; });
     if (minH && minH.ct < cheapT) {
       used.add(minH.time);
-      cards.push({ cls: "fh-cheap", icon: "💰", label: "Goedkoopst",
-        title: dagdeelLabel(minH.t), detail: `~${fmtNum(minH.ct, 0)} ct ${rondTijd(minH.t)}` });
+      mid.push({ cls: "fh-cheap", icon: "💰", label: "Goedkoopst",
+        title: dagdeelLabel(minH.t),
+        detail: `~${fmtNum(minH.ct, 0)} ct ${rondTijd(minH.t)}`,
+        action: laadActie() });
     }
+
+    // Duurste moment — hoogste prijs boven de drempel.
+    let maxH = null;
+    hours.forEach((h) => { if (!used.has(h.time) && (!maxH || h.ct > maxH.ct)) maxH = h; });
+    if (maxH && maxH.ct > priceyT) {
+      used.add(maxH.time);
+      mid.push({ cls: "fh-pricey", icon: "⚠", label: "Duurste moment",
+        title: dagdeelLabel(maxH.t),
+        detail: `~${fmtNum(maxH.ct, 0)} ct ${rondTijd(maxH.t)}`,
+        action: duurActie() });
+    }
+
+    let cards = [...lead, ...mid, ...tail];
 
     // Niets haalt een drempel → één neutrale regel met het weekgemiddelde.
     if (cards.length === 0) {
       const avg = hours.reduce((s, h) => s + h.ct, 0) / hours.length;
-      cards.push({ cls: "fh-neutral", icon: "📊", label: "Komende week",
-        title: "Stabiele prijzen", detail: `gemiddeld rond ${fmtNum(avg, 0)} ct/kWh` });
+      cards = [{ cls: "fh-neutral", icon: "📊", label: "Komende week",
+        title: "Stabiele prijzen", detail: `gemiddeld rond ${fmtNum(avg, 0)} ct/kWh` }];
     }
 
     el.innerHTML = cards.map((c) =>
@@ -1506,9 +1581,16 @@
         `<div class="fh-label"><span class="fh-icon" aria-hidden="true">${c.icon}</span>${c.label}</div>` +
         `<div class="fh-title">${c.title}</div>` +
         `<div class="fh-detail">${c.detail}</div>` +
+        (c.action ? `<div class="fh-action">${c.action}</div>` : "") +
       `</div>`
     ).join("");
     el.removeAttribute("hidden");
+
+    // Nudge tonen zolang er nog geen profiel is ingesteld.
+    if (nudge) {
+      if (profileEmpty()) nudge.removeAttribute("hidden");
+      else nudge.setAttribute("hidden", "");
+    }
   }
 
   // ---- Voorspellingsgrafiek: dag 2 t/m 7 ----
@@ -1602,6 +1684,33 @@
       });
     }
 
+    // 'Mijn situatie' — kenmerken aan/uit
+    [["profile-ev", "ev"], ["profile-solar", "solar"], ["profile-battery", "battery"]].forEach(([id, key]) => {
+      const cb = document.getElementById(id);
+      if (!cb) return;
+      cb.addEventListener("change", (e) => {
+        state.profile[key] = !!e.target.checked;
+        saveProfile();
+        renderAll();
+      });
+    });
+
+    // Nudge boven de week-strip → open instellingen en scroll erheen
+    const nudge = document.getElementById("profile-nudge");
+    if (nudge) {
+      nudge.addEventListener("click", () => {
+        const panel = document.getElementById("settings-panel");
+        const toggleBtn = document.getElementById("settings-toggle");
+        if (panel) {
+          panel.removeAttribute("hidden");
+          if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "true");
+          panel.scrollIntoView({ behavior: "smooth", block: "center" });
+          const evCb = document.getElementById("profile-ev");
+          if (evCb) evCb.focus({ preventScroll: true });
+        }
+      });
+    }
+
     // Negatief-alert sluiten
     const negCloseBtn = document.getElementById("neg-alert-close");
     if (negCloseBtn) {
@@ -1630,6 +1739,7 @@
     state.customMarkup = Number.isFinite(cm) ? cm : 0.025;
     const storedRes = loadStored(STORAGE_KEYS.chartRes, "hourly");
     state.chartResolution = storedRes === "quarter" ? "quarter" : "hourly";
+    state.profile = loadProfile();
   }
   function applyConfigDefaults() {
     if (!state.config) return;

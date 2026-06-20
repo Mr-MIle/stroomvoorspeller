@@ -633,9 +633,53 @@ a:hover { text-decoration: underline; }
 .fh-cheap  .fh-label { color: #15803d; }
 .fh-neutral { grid-column: 1 / -1; background: var(--c-bg); border-left-color: var(--c-border); }
 .fh-neutral .fh-label { color: var(--c-text-mute); }
+.fh-solar  { background: var(--c-normal-bg); border-left-color: var(--c-normal); }
+.fh-solar  .fh-label { color: #8a6d10; }
+/* Profiel-actieregel onderaan een kaart (personalisatie) */
+.fh-action {
+  margin-top: 8px;
+  background: rgba(15, 108, 189, 0.08);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--c-brand-deep);
+}
 @media (max-width: 640px) {
   .forecast-highlights { grid-template-columns: 1fr; }
 }
+
+/* Nudge: opent 'Mijn situatie' in de instellingen */
+.profile-nudge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--c-accent);
+  cursor: pointer;
+}
+.profile-nudge[hidden] { display: none; }
+.profile-nudge:hover { border-color: var(--c-accent); }
+.profile-nudge-icon { font-size: 0.95rem; }
+
+/* 'Mijn situatie' — aanvinkbare kenmerken in instellingen */
+.settings-block--full { grid-column: 1 / -1; }
+.situation-options { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 4px; }
+.situation-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--c-text);
+  cursor: pointer;
+}
+.situation-chip input { width: 16px; height: 16px; accent-color: var(--c-brand); cursor: pointer; }
 
 .chart-wrapper {
   background: var(--c-surface);
