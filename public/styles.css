@@ -2253,3 +2253,69 @@ body.has-neg-alert .site-header { top: 56px; }
   transition: opacity 0.15s ease;
 }
 .share-btn.is-copied .share-copied-toast { opacity: 1; }
+
+/* ── Gedeeld dropdown-menu (nav.js) ───────────────────────────────────── */
+.primary-nav { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.primary-nav .nav-top {
+  color: var(--c-text-soft);
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 8px 8px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+}
+.primary-nav .nav-top:hover { color: var(--c-brand); }
+.primary-nav .nav-top[aria-current="page"] { color: var(--c-brand-deep); font-weight: 600; }
+.primary-nav .nav-caret { font-size: 0.7em; transition: transform .15s ease; }
+.nav-group { position: relative; }
+.nav-group.open .nav-caret { transform: rotate(180deg); }
+.nav-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 170px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(24, 34, 46, .12);
+  padding: 6px;
+  display: none;
+  z-index: 50;
+}
+.nav-group.open > .nav-menu { display: block; }
+.nav-menu a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: var(--c-text-soft);
+  white-space: nowrap;
+}
+.nav-menu a:hover { background: var(--c-bg); color: var(--c-brand); }
+.nav-menu a[aria-current="page"] { color: var(--c-brand-deep); font-weight: 600; }
+@media (hover: hover) and (min-width: 720px) {
+  .nav-group:hover > .nav-menu { display: block; }
+  .nav-group:hover .nav-caret { transform: rotate(180deg); }
+}
+@media (max-width: 640px) {
+  /* Mobiel: groepen plat in de scrollstrip, geen absolute dropdowns */
+  .primary-nav .nav-group { display: contents; }
+  .primary-nav .nav-toggle { display: none; }
+  .primary-nav .nav-menu {
+    position: static;
+    display: flex;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    min-width: 0;
+    background: none;
+  }
+  .primary-nav .nav-menu a { white-space: nowrap; padding: 10px 10px; border-radius: 0; }
+}

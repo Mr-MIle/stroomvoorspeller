@@ -166,6 +166,7 @@
         <a href="/aanbieders">Aanbieders</a>
         <a href="/kennisbank/">Kennisbank</a>
         <a href="/historisch">Historisch</a>
+        <a href="/batterij">Batterij</a>
         <a href="/integraties">Integraties</a>
       </nav>
       <button id="settings-toggle" class="settings-toggle" type="button" aria-expanded="false" aria-controls="settings-panel" title="Wijzig je energieleverancier">
@@ -421,6 +422,47 @@
       </div>
     </section>
 
+    <!-- Thuisbatterij showcase -->
+    <section id="batterij-promo" class="container" style="margin:32px auto;">
+      <div class="section-head">
+        <h2>Wat levert een thuisbatterij echt op?</h2>
+        <p class="section-sub">Geen reclame, maar &eacute;&eacute;n echte batterij &mdash; dag voor dag. Laden uit zon, ontladen in de dure uren, en hoeveel stroom daardoor gratis benut wordt.</p>
+      </div>
+      <div id="bat-promo-stats" class="bat-promo-grid">
+        <div class="bat-promo-card"><p class="bp-label">Totaal bespaard</p><p class="bp-value" id="bp-total">&ndash;</p><p class="bp-sub" id="bp-days">incl. belasting</p></div>
+        <div class="bat-promo-card"><p class="bp-label">Gratis stroom benut</p><p class="bp-value" id="bp-gratis">&ndash;</p><p class="bp-sub">zonstroom in dure uren</p></div>
+        <div class="bat-promo-card"><p class="bp-label">Gemiddeld per dag</p><p class="bp-value" id="bp-avg">&ndash;</p><p class="bp-sub">incl. belasting</p></div>
+      </div>
+      <p style="margin-top:16px;"><a class="bat-promo-cta" href="/batterij">Bekijk de batterij dag voor dag &rarr;</a></p>
+    </section>
+
+    <style>
+      .bat-promo-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; }
+      .bat-promo-card { background:var(--c-surface); border:1px solid var(--c-border); border-radius:12px; padding:16px 18px; }
+      .bp-label { font-size:0.8rem; color:var(--c-text-mute); margin:0 0 6px; }
+      .bp-value { font-size:1.5rem; font-weight:700; line-height:1.1; margin:0; color:var(--c-cheap); }
+      .bp-sub { font-size:0.8rem; color:var(--c-text-soft); margin:4px 0 0; }
+      .bat-promo-cta { display:inline-block; background:var(--c-brand); color:#fff; font-weight:600; padding:10px 18px; border-radius:8px; }
+      .bat-promo-cta:hover { background:var(--c-brand-deep); }
+    </style>
+    <script>
+      (function () {
+        fetch("/data/arbitrage.json", { cache: "no-store" })
+          .then((r) => (r.ok ? r.json() : null))
+          .then((doc) => {
+            if (!doc || !doc.totals || !(doc.days || []).length) return;
+            const t = doc.totals;
+            const eur = (x) => "\u20ac" + (x || 0).toFixed(2);
+            document.getElementById("bp-total").textContent = eur(t.profit_incl_eur);
+            document.getElementById("bp-days").textContent = (t.days || doc.days.length) + " dagen gemeten";
+            document.getElementById("bp-gratis").textContent = (t.gratis_kwh || 0).toFixed(0) + " kWh";
+            const avg = (t.profit_incl_eur || 0) / (t.days || doc.days.length);
+            document.getElementById("bp-avg").textContent = eur(avg);
+          })
+          .catch(() => {});
+      })();
+    </script>
+
     <!-- Explanation -->
     <section id="uitleg" class="explain-section container">
       <div class="section-head">
@@ -463,5 +505,6 @@
   </footer>
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script src="/nav.js" defer></script>
 </body>
 </html>

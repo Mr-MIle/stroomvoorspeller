@@ -11,7 +11,7 @@ Gebruik:
         python scripts/daily_post.py
 
 Skips automatisch als de morgen-prijzen nog niet in prices.json staan
-(bv. als de cron per ongeluk vóór 13:00 CET draait, of ENTSO-E down was).
+(bv. als de cron per ongeluk vóór 14:00 CET draait, of ENTSO-E down was).
 """
 
 from __future__ import annotations

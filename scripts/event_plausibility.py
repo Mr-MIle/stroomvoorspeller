@@ -421,7 +421,7 @@ def _run_tests() -> None:
 
     # ---- Test 3: find_analog_hours — happy path ----
     fc_hour = {
-        "target_time": "2026-05-15T13:00:00",  # vrijdag, mei
+        "target_time": "2026-05-15T14:00:00",  # vrijdag, mei
         "solar_ratio": 1.6,
         "wind_ms": 7.0,
         "temp_c": 15.0,
@@ -430,22 +430,22 @@ def _run_tests() -> None:
     }
     history = [
         # Match: alles binnen tolerantie
-        {"target_time": "2026-05-08T13:00:00", "sw_ratio_h": 1.65, "wind_ms": 7.5,
+        {"target_time": "2026-05-08T14:00:00", "sw_ratio_h": 1.65, "wind_ms": 7.5,
          "temp_c": 14.0, "actual": -22.0, "predicted": -15.0},
         # Match: maandgrens (april = 1 maand van mei)
-        {"target_time": "2026-04-17T13:00:00", "sw_ratio_h": 1.55, "wind_ms": 6.5,
+        {"target_time": "2026-04-17T14:00:00", "sw_ratio_h": 1.55, "wind_ms": 6.5,
          "temp_c": 15.5, "actual": 5.0, "predicted": 3.0},
         # Geen match: solar te ver weg
-        {"target_time": "2026-05-03T13:00:00", "sw_ratio_h": 0.4, "wind_ms": 7.0,
+        {"target_time": "2026-05-03T14:00:00", "sw_ratio_h": 0.4, "wind_ms": 7.0,
          "temp_c": 15.0, "actual": 30.0, "predicted": 28.0},
         # Geen match: weekend (zaterdag) terwijl forecast = vrijdag (werkdag)
-        {"target_time": "2026-05-09T13:00:00", "sw_ratio_h": 1.58, "wind_ms": 7.2,
+        {"target_time": "2026-05-09T14:00:00", "sw_ratio_h": 1.58, "wind_ms": 7.2,
          "temp_c": 14.5, "actual": -10.0, "predicted": -8.0},
         # Geen match: maand te ver (februari)
-        {"target_time": "2026-02-13T13:00:00", "sw_ratio_h": 1.61, "wind_ms": 7.0,
+        {"target_time": "2026-02-13T14:00:00", "sw_ratio_h": 1.61, "wind_ms": 7.0,
          "temp_c": 14.8, "actual": 50.0, "predicted": 48.0},
         # Geen match: ontbrekende wind_ms (pre-v2.1 entry)
-        {"target_time": "2026-05-07T13:00:00", "sw_ratio_h": 1.62, "temp_c": 14.9,
+        {"target_time": "2026-05-07T14:00:00", "sw_ratio_h": 1.62, "temp_c": 14.9,
          "actual": -5.0, "predicted": -3.0},
     ]
     analogs = find_analog_hours(fc_hour, history)

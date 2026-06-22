@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Wat levert een thuisbatterij op? — dag voor dag, echte cijfers | Stroomvoorspeller.nl</title>
+  <meta name="description" content="Een echte thuisbatterij, dag voor dag: laden uit zon, ontladen in dure uren, en hoeveel stroom daardoor gratis benut wordt. Zie wat een huisbatterij met dynamisch contract oplevert." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/batterij" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Wat levert een thuisbatterij op? — dag voor dag, echte cijfers" />
+  <meta property="og:description" content="Een echte thuisbatterij, dag voor dag: laden uit zon, ontladen in dure uren, en hoeveel stroom daardoor gratis benut wordt." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/batterij" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Wat levert een thuisbatterij op? — dag voor dag" />
+  <meta name="twitter:description" content="Een echte thuisbatterij, dag voor dag: laden uit zon, ontladen in dure uren, gratis stroom benut." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="stylesheet" href="/styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://stroomvoorspeller.nl/batterij",
+        "url": "https://stroomvoorspeller.nl/batterij",
+        "name": "Wat levert een thuisbatterij op? — dag voor dag, echte cijfers",
+        "description": "Een echte thuisbatterij, dag voor dag: laden uit zon, ontladen in dure uren, en hoeveel stroom daardoor gratis benut wordt.",
+        "inLanguage": "nl-NL",
+        "isPartOf": { "@id": "https://stroomvoorspeller.nl/#website" },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+            { "@type": "ListItem", "position": 2, "name": "Thuisbatterij", "item": "https://stroomvoorspeller.nl/batterij" }
+          ]
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* ── Batterij-specifieke stijlen ── */
+    .bat-hero { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: 28px 0 20px; }
+    .bat-breadcrumb { font-size: 0.85rem; color: var(--c-text-mute); margin: 0 0 8px; }
+    .bat-hero h1 { margin: 0 0 6px; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; line-height: 1.2; }
+    .bat-hero p { margin: 0; color: var(--c-text-soft); font-size: 0.95rem; max-width: 62ch; }
+
+    .intro { margin: 22px 0; }
+    .intro p { color: var(--c-text-soft); font-size: 0.95rem; line-height: 1.6; max-width: 70ch; }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 22px 0; }
+    .kpi { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 16px 18px; }
+    .kpi .label { font-size: 0.8rem; color: var(--c-text-mute); margin: 0 0 6px; }
+    .kpi .value { font-size: 1.6rem; font-weight: 700; line-height: 1.1; }
+    .kpi .sub { font-size: 0.8rem; color: var(--c-text-soft); margin-top: 4px; }
+    .pos { color: var(--c-cheap); }
+    .neg { color: var(--c-pricey); }
+    .free { color: var(--c-free); }
+
+    .panel { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 18px; margin: 22px 0; }
+    .panel h2 { margin: 0 0 14px; font-size: 1.1rem; }
+
+    .latest { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+    .latest .cell .l { font-size: 0.78rem; color: var(--c-text-mute); margin: 0 0 4px; }
+    .latest .cell .v { font-size: 1.15rem; font-weight: 600; }
+
+    table.days { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    table.days th, table.days td { padding: 9px 10px; text-align: right; border-bottom: 1px solid var(--c-border); white-space: nowrap; }
+    table.days th { color: var(--c-text-mute); font-weight: 600; font-size: 0.8rem; text-align: right; }
+    table.days th:first-child, table.days td:first-child { text-align: left; }
+    table.days tbody tr:hover { background: var(--c-bg); }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; }
+    .pill.free { background: var(--c-free-bg); color: var(--c-free); }
+    .pill.none { background: var(--c-bg); color: var(--c-text-mute); }
+
+    .note { font-size: 0.85rem; color: var(--c-text-soft); line-height: 1.55; }
+    .muted { color: var(--c-text-mute); }
+    .empty { text-align: center; color: var(--c-text-mute); padding: 40px 10px; }
+    .chart-wrap { position: relative; height: 280px; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank/">Kennisbank</a>
+        <a href="/historisch">Historisch</a>
+        <a href="/batterij" aria-current="page">Batterij</a>
+        <a href="/integraties">Integraties</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="bat-hero">
+    <div class="container">
+      <p class="bat-breadcrumb"><a href="/">Home</a> › Thuisbatterij</p>
+      <h1>Wat levert een thuisbatterij echt op?</h1>
+      <p>Geen reclamepraat, maar één echte batterij — dag voor dag. Je ziet wat hij laadt uit zon, wat hij ontlaadt in de dure uren, en hoeveel stroom daardoor gratis benut wordt. Zo zie je zelf wat een huisbatterij met een dynamisch contract kan betekenen.</p>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <div class="intro">
+      <p>De cijfers komen rechtstreeks uit de omvormer van mijn eigen thuisbatterij, gekoppeld aan de day-ahead uurprijzen. De batterij laadt overdag uit zonne-overschot en ontlaadt 's avonds, als stroom duur is. Twee bedragen per dag: de kale markt (EPEX-prijsverschil) en wat je echt in je portemonnee merkt (incl. energiebelasting en btw, gerekend met een dynamisch contract). Eerlijk over de grenzen: zonnepanelen en de wateraccu lopen buiten deze omvormer om en zitten niet in deze cijfers.</p>
+    </div>
+
+    <div id="kpis" class="kpi-row" hidden>
+      <div class="kpi">
+        <p class="label">Totaal bespaard (incl. belasting)</p>
+        <p class="value pos" id="kpi-total-incl">–</p>
+        <p class="sub" id="kpi-days">– dagen</p>
+      </div>
+      <div class="kpi">
+        <p class="label">Totaal markt (EPEX-spread)</p>
+        <p class="value" id="kpi-total-mkt">–</p>
+        <p class="sub">kale prijsverschillen</p>
+      </div>
+      <div class="kpi">
+        <p class="label">Gratis stroom benut</p>
+        <p class="value free" id="kpi-gratis">–</p>
+        <p class="sub">zonstroom in dure uren</p>
+      </div>
+      <div class="kpi">
+        <p class="label">Gemiddeld per dag</p>
+        <p class="value pos" id="kpi-avg">–</p>
+        <p class="sub">incl. belasting</p>
+      </div>
+    </div>
+
+    <section class="panel" id="latest-panel" hidden>
+      <h2 id="latest-title">Laatste dag</h2>
+      <div class="latest" id="latest"></div>
+    </section>
+
+    <section class="panel" id="chart-panel" hidden>
+      <h2>Besparing per dag (incl. belasting)</h2>
+      <div class="chart-wrap"><canvas id="chart"></canvas></div>
+    </section>
+
+    <section class="panel" id="table-panel" hidden>
+      <h2>Per dag</h2>
+      <div style="overflow-x:auto">
+        <table class="days">
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Geladen</th>
+              <th>Ontladen</th>
+              <th>Gratis benut</th>
+              <th>Winst markt</th>
+              <th>Winst incl.</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Hoe dit gerekend wordt</h2>
+      <p class="note" id="method-note">
+        Ontladen telt als <strong>vermeden inkoop</strong> tegen de consumentenprijs
+        (EPEX + opslag + energiebelasting × btw). Laden overdag komt uit zon en telt
+        als <strong>gemiste teruglevering</strong> tegen de kale EPEX-prijs; laden tussen
+        22–06 u kan alleen netstroom zijn en telt tegen de consumentenprijs. Het
+        markt-cijfer rekent laden én ontladen tegen kale EPEX.
+      </p>
+      <p class="note muted">
+        Let op: het dagcijfer is kasstroom. Op dagen dat de batterij voller eindigt dan
+        hij begon, is er meer geladen dan ontladen; die opgeslagen energie levert pas de
+        volgende dag op. Over meerdere dagen middelt dat uit — daarom telt vooral het
+        doorlopende totaal. Zonnepanelen en wateraccu lopen buiten deze omvormer om en
+        zitten niet in deze cijfers.
+      </p>
+      <p class="note muted" id="updated"></p>
+    </section>
+
+    <div class="empty" id="empty" hidden>
+      Nog geen arbitrage-data beschikbaar. Kom binnenkort terug — de cijfers worden
+      elke ochtend bijgewerkt.
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a> ·
+          <a href="/aanbieders">Aanbieders</a>
+        </p>
+      </div>
+      <div>
+        <p class="footer-meta-small">Echte cijfers van één thuisbatterij. Geen advies — wat bij mij werkt, hoeft bij jou niet hetzelfde op te leveren.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const euro = (x) => (x < 0 ? "−€" : "€") + Math.abs(x).toFixed(2);
+    const kwh = (x) => (x ?? 0).toFixed(1).replace(".", ",") + " kWh";
+    const dfmt = (s) => {
+      const [y, m, d] = s.split("-");
+      const mn = ["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
+      return d + " " + mn[parseInt(m,10)-1] + " " + y;
+    };
+
+    async function load() {
+      let doc;
+      try {
+        const r = await fetch("/data/arbitrage.json", { cache: "no-store" });
+        if (!r.ok) throw new Error("geen bestand");
+        doc = await r.json();
+      } catch (e) {
+        document.getElementById("empty").hidden = false;
+        return;
+      }
+      const days = (doc.days || []).slice();
+      if (!days.length) { document.getElementById("empty").hidden = false; return; }
+
+      const t = doc.totals || {};
+      document.getElementById("kpi-total-incl").textContent = euro(t.profit_incl_eur ?? 0);
+      document.getElementById("kpi-total-mkt").textContent = euro(t.profit_market_eur ?? 0);
+      document.getElementById("kpi-gratis").textContent = kwh(t.gratis_kwh ?? 0);
+      document.getElementById("kpi-days").textContent = (t.days ?? days.length) + " dagen";
+      const avg = (t.profit_incl_eur ?? 0) / (t.days || days.length);
+      document.getElementById("kpi-avg").textContent = euro(avg);
+      document.getElementById("kpis").hidden = false;
+
+      // Laatste dag
+      const last = days[days.length - 1];
+      document.getElementById("latest-title").textContent = "Laatste dag — " + dfmt(last.date);
+      const gratisPill = (last.gratis_kwh > 0.05)
+        ? '<span class="pill free">ja — ' + kwh(last.gratis_kwh) + '</span>'
+        : '<span class="pill none">nee</span>';
+      document.getElementById("latest").innerHTML = [
+        ["Winst incl. belasting", '<span class="' + (last.profit_incl_eur >= 0 ? "pos" : "neg") + '">' + euro(last.profit_incl_eur) + "</span>"],
+        ["Winst markt", euro(last.profit_market_eur)],
+        ["Gratis stroom benut?", gratisPill],
+        ["Geladen", kwh(last.charged_kwh) + ' <span class="muted">(' + (last.avg_charge_ct_incl ?? 0).toFixed(1).replace(".",",") + " ct)</span>"],
+        ["Ontladen", kwh(last.discharged_kwh) + ' <span class="muted">(' + (last.avg_discharge_ct_incl ?? 0).toFixed(1).replace(".",",") + " ct)</span>"],
+        ["Accu begin → eind", (last.soc_start_pct ?? "?") + "% → " + (last.soc_end_pct ?? "?") + "%"],
+      ].map(([l, v]) => '<div class="cell"><p class="l">' + l + '</p><p class="v">' + v + "</p></div>").join("");
+      document.getElementById("latest-panel").hidden = false;
+
+      // Tabel (nieuwste boven)
+      document.getElementById("rows").innerHTML = days.slice().reverse().map((d) => {
+        const g = d.gratis_kwh > 0.05
+          ? '<span class="pill free">' + kwh(d.gratis_kwh) + "</span>"
+          : '<span class="pill none">–</span>';
+        return "<tr>"
+          + "<td>" + dfmt(d.date) + "</td>"
+          + "<td>" + kwh(d.charged_kwh) + "</td>"
+          + "<td>" + kwh(d.discharged_kwh) + "</td>"
+          + "<td>" + g + "</td>"
+          + "<td>" + euro(d.profit_market_eur) + "</td>"
+          + '<td class="' + (d.profit_incl_eur >= 0 ? "pos" : "neg") + '">' + euro(d.profit_incl_eur) + "</td>"
+          + "</tr>";
+      }).join("");
+      document.getElementById("table-panel").hidden = false;
+
+      if (doc.generated_at) {
+        document.getElementById("updated").textContent =
+          "Laatst bijgewerkt: " + new Date(doc.generated_at).toLocaleString("nl-NL");
+      }
+
+      // Grafiek
+      if (window.Chart) {
+        document.getElementById("chart-panel").hidden = false;
+        const ctx = document.getElementById("chart");
+        let cum = 0;
+        const cumData = days.map((d) => (cum += d.profit_incl_eur));
+        new Chart(ctx, {
+          data: {
+            labels: days.map((d) => dfmt(d.date)),
+            datasets: [
+              { type: "bar", label: "Per dag (incl.)", data: days.map((d) => d.profit_incl_eur),
+                backgroundColor: "#2f9e44", borderRadius: 4, yAxisID: "y" },
+              { type: "line", label: "Cumulatief", data: cumData, borderColor: "#0f6cbd",
+                backgroundColor: "rgba(15,108,189,.1)", tension: .25, fill: true, yAxisID: "y" },
+            ],
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: "bottom" } },
+            scales: { y: { ticks: { callback: (v) => "€" + v } } },
+          },
+        });
+      }
+    }
+    load();
+  </script>
+  <script src="/nav.js" defer></script>
+</body>
+</html>

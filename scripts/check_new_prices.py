@@ -96,7 +96,7 @@ def entsoe_has_tomorrow(token: str, tomorrow: str) -> bool:
     url = f"{ENTSOE_BASE}?{urllib.parse.urlencode(params)}"
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "stroomvoorspeller/0.1"})
-        with urllib.request.urlopen(req, timeout=15) as resp:
+        with urllib.request.urlopen(req, timeout=30) as resp:
             body = resp.read().decode("utf-8")
         # Als er een <TimeSeries> in de XML zit, zijn er prijzen
         has_data = "<TimeSeries>" in body
@@ -108,15 +108,35 @@ def entsoe_has_tomorrow(token: str, tomorrow: str) -> bool:
     except urllib.error.HTTPError as exc:
         if exc.code == 401:
             print("[error] ENTSO-E: token ongeldig of verlopen (HTTP 401).", file=sys.stderr)
+            return False
         elif exc.code == 400:
             # ENTSO-E geeft HTTP 400 terug als er geen data is voor de gevraagde periode
             print(f"[wait] ENTSO-E HTTP 400 — nog geen data voor {tomorrow}.", file=sys.stderr)
+            return False
+        elif exc.code in (502, 503, 504):
+            # Server tijdelijk onbereikbaar — dit betekent NIET dat er geen data is.
+            # Geef True terug zodat de volledige pipeline draait; fetch_prices.py heeft
+            # eigen retry-logica (3 pogingen) en kan de data alsnog ophalen.
+            print(
+                f"[uncertain] ENTSO-E HTTP {exc.code} — server onbereikbaar maar data "
+                f"kan er al zijn. Pipeline starten met retries.",
+                file=sys.stderr,
+            )
+            return True
         else:
             print(f"[warn] ENTSO-E HTTP {exc.code}", file=sys.stderr)
-        return False
+            return False
     except Exception as exc:
-        print(f"[warn] ENTSO-E verbindingsfout: {exc}", file=sys.stderr)
-        return False
+        # Verbindingsfout of timeout: we weten niet of data beschikbaar is.
+        # Behandel net als HTTP 502/503/504 — start de pipeline toch, want
+        # fetch_prices.py heeft eigen retry-logica (3 pogingen) en kan de data
+        # alsnog ophalen, of bewaart de bestaande prices.json als fallback.
+        print(
+            f"[uncertain] ENTSO-E verbindingsfout: {exc} — kan niet verifiëren of data "
+            f"beschikbaar is. Pipeline starten met retries.",
+            file=sys.stderr,
+        )
+        return True
 
 
 def main() -> None:

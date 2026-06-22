@@ -115,7 +115,7 @@ def compose_negative_tweet(neg_rows: list) -> str:
     """Bouw alert-tweet voor uren met negatieve all-in prijs (na belasting)."""
     hours   = sorted(r["hour"] for r in neg_rows)
     start_h = hours[0]
-    end_h   = hours[-1] + 1  # '14:00' = t/m het 13:00-uur
+    end_h   = hours[-1] + 1  # '14:00' = t/m het 14:00-uur
     min_ct  = min(r["ct"] for r in neg_rows)
 
     text = (
