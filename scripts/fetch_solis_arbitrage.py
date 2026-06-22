@@ -4,13 +4,15 @@ Bereken de dagelijkse batterij-arbitragewinst en schrijf die naar
 public/data/arbitrage.json.
 
 Methode (bevestigd met Emile):
-  - Laden en ontladen per ~5-min interval uit de lopende kWh-tellers van de
-    Solis-omvormer (batteryTodayChargeEnergy / batteryTodayDischargeEnergy).
+  - Laden/ontladen per ~5-min interval uit de kWh-tellers van de Solis-omvormer.
   - Elk interval gekoppeld aan de EPEX-uurprijs uit public/data/prices.json.
-  - Ontladen = vermeden inkoop tegen consumentenprijs (epex + opslag +
-    energiebelasting) x btw  [Frank Energie].
-  - Laden overdag = gemiste export uit zon, tegen kale EPEX (Frank betaalt spot).
-    Laden 22-06u kan alleen netstroom zijn -> consumentenprijs (vangnet).
+  - ONTLADEN splitsen:
+      * deel dat samenvalt met net-export (gridSellTodayEnergy stijgt) = teruglevering
+        aan het net -> kale EPEX-verkoopprijs, GEEN energiebelasting/btw, min eventuele
+        terugleverkosten (SOLIS_FEEDIN_COST, standaard 0). De batterij ontlaadt 's avonds/
+        's nachts, dus dit valt niet samen met de zon-export overdag.
+      * rest = vermeden inkoop thuis -> consumentenprijs (epex + opslag + energiebelasting) x btw.
+  - LADEN: overdag uit zon = gemiste export (kale EPEX); 22-06u uit net = consumentenprijs.
   - Markt-cijfer: laden en ontladen tegen kale EPEX.
   - PV en wateraccu lopen buiten deze omvormer om en worden NIET gemeten.
 
@@ -36,7 +38,8 @@ KEY_ID = os.environ["SOLIS_KEY_ID"].strip()
 KEY_SECRET = os.environ["SOLIS_KEY_SECRET"].strip().encode()
 BASE = os.environ.get("SOLIS_BASE", "https://www.soliscloud.com:13333").rstrip("/")
 
-SUPPLIER_ID = os.environ.get("SOLIS_SUPPLIER_ID", "frank")  # opslag uit config.json
+SUPPLIER_ID = os.environ.get("SOLIS_SUPPLIER_ID", "frank")     # opslag uit config.json
+FEEDIN_COST = float(os.environ.get("SOLIS_FEEDIN_COST", "0"))  # terugleverkosten EUR/kWh
 
 ROOT = Path(__file__).resolve().parents[1]          # .../02-code
 PRICES_FILE = ROOT / "public" / "data" / "prices.json"
@@ -139,7 +142,9 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
 
     charged = discharged = 0.0
     solar_charge = grid_charge = 0.0
+    discharge_home = discharge_grid = 0.0
     cost_mkt = val_mkt = cost_incl = val_incl = 0.0
+    val_incl_home = 0.0
     energy_priced = energy_total = 0.0
 
     prev = None
@@ -147,6 +152,7 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
         if prev is not None:
             dch = max(0.0, p["batteryTodayChargeEnergy"] - prev["batteryTodayChargeEnergy"])
             ddis = max(0.0, p["batteryTodayDischargeEnergy"] - prev["batteryTodayDischargeEnergy"])
+            dsell = max(0.0, p["gridSellTodayEnergy"] - prev["gridSellTodayEnergy"])
             if dch or ddis:
                 hour = int(p["timeStr"][11:13])
                 hour_key = p["timeStr"][:13].replace(" ", "T")  # 'YYYY-MM-DDTHH'
@@ -156,9 +162,18 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
                 epex = prices.get(hour_key)
                 if epex is not None:
                     cons = consumer_price(epex, tar)
-                    # ontladen = vermeden inkoop tegen consumentenprijs
+                    export_price = epex - FEEDIN_COST  # teruglevering: EPEX, geen belasting
+                    # ontladen splitsen: deel dat samenvalt met net-export = teruglevering,
+                    # rest = vermeden inkoop thuis. Ontlading gebeurt 's avonds/'s nachts,
+                    # dus valt niet samen met de zon-export overdag.
+                    to_grid = min(ddis, dsell)
+                    to_home = ddis - to_grid
+                    discharge_grid += to_grid
+                    discharge_home += to_home
                     val_mkt += ddis * epex
-                    val_incl += ddis * cons
+                    home_val = to_home * cons
+                    val_incl_home += home_val
+                    val_incl += home_val + to_grid * export_price
                     # laden: overdag uit zon (gemiste export = EPEX);
                     # 22-06u kan alleen netstroom zijn -> consumentenprijs.
                     cost_mkt += dch * epex
@@ -174,12 +189,11 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
 
     coverage = (energy_priced / energy_total) if energy_total else 0.0
 
-    # "Gratis" verbruik: deel van de ontlading dat uit zon geladen was en in
-    # (dure) uren is gebruikt i.p.v. ingekocht. Zon-aandeel van de lading
-    # toegepast op de ontlading.
+    # "Gratis" verbruik: het deel van de THUIS gebruikte ontlading dat uit zon
+    # geladen was en in (dure) uren is gebruikt i.p.v. ingekocht.
     solar_fraction = (solar_charge / charged) if charged else 0.0
-    gratis_kwh = discharged * solar_fraction
-    gratis_besparing = val_incl * solar_fraction
+    gratis_kwh = discharge_home * solar_fraction
+    gratis_besparing = val_incl_home * solar_fraction
 
     soc_start = pts[0].get("batteryCapacitySoc")
     soc_end = pts[-1].get("batteryCapacitySoc")
@@ -192,6 +206,8 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
         "date": day,
         "charged_kwh": r(charged, 2),
         "discharged_kwh": r(discharged, 2),
+        "discharge_home_kwh": r(discharge_home, 2),
+        "discharge_grid_kwh": r(discharge_grid, 2),
         "solar_charge_kwh": r(solar_charge, 2),
         "grid_charge_kwh": r(grid_charge, 2),
         "gratis_kwh": r(gratis_kwh, 2),
@@ -231,10 +247,11 @@ def upsert(record: dict, tar: dict):
         "currency": "EUR",
         "supplier": tar["supplier"],
         "markup_per_kwh": tar["markup"],
-        "method": ("Ontladen = vermeden inkoop tegen consumentenprijs "
-                   "(epex + opslag + energiebelasting) x btw. Laden overdag = gemiste "
-                   "export tegen EPEX (zon); laden 22-06u = netstroom tegen consumentenprijs. "
-                   "Markt = EPEX voor laden en ontladen. PV en wateraccu niet gemeten."),
+        "method": ("Thuis gebruikte ontlading = vermeden inkoop (epex + opslag + "
+                   "energiebelasting) x btw. Teruggeleverde ontlading (samenvallend met "
+                   "net-export) = kale EPEX zonder belasting, min terugleverkosten. Laden "
+                   "overdag = gemiste export (EPEX); 22-06u = netstroom (consumentenprijs). "
+                   "Markt = EPEX. PV en wateraccu niet gemeten."),
         "totals": {
             "days": len(ordered),
             "profit_market_eur": round(tot_mkt, 2),
@@ -268,7 +285,8 @@ def main():
     record = compute_day(points, prices, tar, day)
     upsert(record, tar)
 
-    print(f"[{day}] geladen {record['charged_kwh']} kWh / ontladen {record['discharged_kwh']} kWh")
+    print(f"[{day}] geladen {record['charged_kwh']} kWh / ontladen {record['discharged_kwh']} kWh "
+          f"(thuis {record['discharge_home_kwh']} / net {record['discharge_grid_kwh']})")
     print(f"  winst markt:          EUR {record['profit_market_eur']}")
     print(f"  winst incl.belasting: EUR {record['profit_incl_eur']}")
     print(f"  gratis verbruikt:     {record['gratis_kwh']} kWh (EUR {record['gratis_besparing_eur']})")
