@@ -1,0 +1,52 @@
+name: Update batterij-arbitrage
+
+# Berekent dagelijks de arbitragewinst van gisteren uit de Solis-API en
+# committeert public/data/arbitrage.json. Draait 's ochtends, als de dag
+# compleet is en de uurprijzen in prices.json staan.
+on:
+  schedule:
+    - cron: "0 4 * * *"   # 06:00 CEST / 05:00 CET
+  workflow_dispatch:
+    inputs:
+      day:
+        description: "Specifieke dag (YYYY-MM-DD), leeg = gisteren"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-arbitrage
+  cancel-in-progress: false
+
+jobs:
+  arbitrage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bereken arbitrage
+        env:
+          SOLIS_KEY_ID: ${{ secrets.SOLIS_KEY_ID }}
+          SOLIS_KEY_SECRET: ${{ secrets.SOLIS_KEY_SECRET }}
+        run: |
+          python scripts/fetch_solis_arbitrage.py ${{ github.event.inputs.day }}
+
+      - name: Commit en push als er iets veranderd is
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          git add public/data/arbitrage.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: batterij-arbitrage $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          else
+            echo "Geen wijzigingen - niets te committen."
+          fi
