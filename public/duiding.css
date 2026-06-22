@@ -1,0 +1,113 @@
+/* Prijsduiding bij de morgen-grafiek — optie 1 (strook) + optie 3 (uitklap).
+   Gebruikt de bestaande kleur-tokens uit styles.css (:root). */
+
+.duiding {
+  margin: 14px 0 0;
+}
+
+/* Optie 1: de "waarom"-strook */
+.duiding-strook {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--c-surface);
+  border: 0.5px solid var(--c-border);
+  border-left: 4px solid var(--c-normal);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.duiding[data-niveau="duur"]     .duiding-strook { border-left-color: var(--c-pricey); }
+.duiding[data-niveau="normaal"]  .duiding-strook { border-left-color: var(--c-normal); }
+.duiding[data-niveau="goedkoop"] .duiding-strook { border-left-color: var(--c-cheap); }
+
+.duiding-icon { flex: 0 0 auto; line-height: 1.3; }
+.duiding[data-niveau="duur"]     .duiding-icon { color: var(--c-pricey); }
+.duiding[data-niveau="normaal"]  .duiding-icon { color: var(--c-normal); }
+.duiding[data-niveau="goedkoop"] .duiding-icon { color: var(--c-cheap); }
+
+.duiding-kop {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--c-text);
+}
+.duiding-uitleg {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--c-text-soft);
+}
+.duiding-waarschuwing {
+  margin: 8px 0 0;
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  background: var(--c-normal-bg);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #7a5c00;
+}
+
+/* Optie 3: uitklap "Waarom is dit zo?" */
+.duiding-toggle {
+  margin: 8px 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 6px 2px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-brand);
+  cursor: pointer;
+}
+.duiding-toggle .duiding-chevron { transition: transform .18s ease; }
+.duiding-toggle[aria-expanded="true"] .duiding-chevron { transform: rotate(180deg); }
+
+.duiding-detail { margin: 6px 0 0; }
+.duiding-detail[hidden] { display: none; }
+
+.duiding-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 10px;
+}
+.duiding-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  padding: 6px 11px;
+  border-radius: var(--radius-sm);
+  background: var(--c-bg);
+  color: var(--c-text-soft);
+}
+.duiding-chip--laag    { background: var(--c-cheap-bg);  color: #1e5e2c; }
+.duiding-chip--hoog    { background: var(--c-pricey-bg); color: #8a1f1f; }
+.duiding-chip--neutraal{ background: var(--c-normal-bg); color: #7a5c00; }
+
+.duiding-tip {
+  margin: 0 0 8px;
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--c-text);
+}
+.duiding-tip svg { color: var(--c-brand); flex: 0 0 auto; margin-top: 1px; }
+.duiding-bron {
+  margin: 0;
+  font-size: 11px;
+  color: var(--c-text-mute);
+}
+
+@media (max-width: 540px) {
+  .duiding-kop { font-size: 14px; }
+}
