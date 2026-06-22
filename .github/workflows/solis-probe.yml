@@ -1,0 +1,33 @@
+name: Solis probe (eenmalig)
+
+# Handmatig draaien: Actions -> "Solis probe (eenmalig)" -> Run workflow.
+# Haalt de ruwe Solis-respons op en bewaart die als artifact (NIET in de repo).
+# Download daarna het artifact "solis-probe" en stuur het door.
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Probe Solis API
+        env:
+          SOLIS_KEY_ID: ${{ secrets.SOLIS_KEY_ID }}
+          SOLIS_KEY_SECRET: ${{ secrets.SOLIS_KEY_SECRET }}
+        run: |
+          python scripts/solis_probe.py
+
+      - name: Upload ruwe respons als artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: solis-probe
+          path: solis_probe.json
+          retention-days: 7
