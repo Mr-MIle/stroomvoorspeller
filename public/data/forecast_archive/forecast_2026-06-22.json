@@ -1,1790 +1,21 @@
 {
-  "generated_at": "2026-06-22T21:45:20.700286+00:00",
+  "generated_at": "2026-06-22T22:02:30.007866+00:00",
   "currency": "EUR",
   "unit": "EUR/MWh",
   "tz": "Europe/Amsterdam",
   "model_version": "3.1",
-  "horizon_start": "2026-06-23T00:00:00+02:00",
-  "horizon_end": "2026-06-29T23:59:59+02:00",
+  "horizon_start": "2026-06-24T00:00:00+02:00",
+  "horizon_end": "2026-06-30T23:59:59+02:00",
   "forecasts": [
-    {
-      "time": "2026-06-23T00:00:00+02:00",
-      "baseline": 133.25,
-      "predicted": 117.26,
-      "lower": 98.5,
-      "upper": 136.02,
-      "uncertainty_pct": 0.16,
-      "total_points": -4,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.459,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (146%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (0:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (0.95×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.73x baseline)"
-        }
-      ],
-      "event_plausibility_score": 1.0,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 63
-    },
-    {
-      "time": "2026-06-23T01:00:00+02:00",
-      "baseline": 124.43,
-      "predicted": 109.5,
-      "lower": 91.98,
-      "upper": 127.02,
-      "uncertainty_pct": 0.16,
-      "total_points": -4,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.459,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (146%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (1:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (0.96×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.72x baseline)"
-        }
-      ],
-      "event_plausibility_score": 1.0,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 63
-    },
-    {
-      "time": "2026-06-23T02:00:00+02:00",
-      "baseline": 120.85,
-      "predicted": 106.35,
-      "lower": 89.33,
-      "upper": 123.37,
-      "uncertainty_pct": 0.16,
-      "total_points": -4,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.459,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (146%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (2:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (0.93×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.72x baseline)"
-        }
-      ],
-      "event_plausibility_score": 1.0,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 63
-    },
-    {
-      "time": "2026-06-23T03:00:00+02:00",
-      "baseline": 118.2,
-      "predicted": 104.02,
-      "lower": 87.38,
-      "upper": 120.66,
-      "uncertainty_pct": 0.16,
-      "total_points": -4,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.459,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (146%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (3:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (0.94×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.71x baseline)"
-        }
-      ],
-      "event_plausibility_score": 1.0,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 63
-    },
-    {
-      "time": "2026-06-23T04:00:00+02:00",
-      "baseline": 116.1,
-      "predicted": 102.17,
-      "lower": 85.82,
-      "upper": 118.52,
-      "uncertainty_pct": 0.16,
-      "total_points": -4,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.459,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (146%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -2,
-          "reason": "zomer, nacht (4:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (0.98×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.73x baseline)"
-        }
-      ],
-      "event_plausibility_score": 1.0,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 63
-    },
-    {
-      "time": "2026-06-23T05:00:00+02:00",
-      "baseline": 121.07,
-      "predicted": 117.24,
-      "lower": 99.27,
-      "upper": 135.21,
-      "uncertainty_pct": 0.14,
-      "total_points": 2,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 0.0,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 3,
-          "reason": "bewolkt (0% van seizoen)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 0,
-          "reason": "geblokkeerd (bewolkt: sw_h=0.00<0.30)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.02×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.77x baseline)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS -11.1 EUR/MWh (normaal_h05_m06, n=21)"
-        }
-      ],
-      "event_plausibility_score": 0.6888,
-      "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 14
-    },
-    {
-      "time": "2026-06-23T06:00:00+02:00",
-      "baseline": 136.8,
-      "predicted": 139.36,
-      "lower": 116.99,
-      "upper": 161.73,
-      "uncertainty_pct": 0.15,
-      "total_points": 3,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 0.009,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 3,
-          "reason": "bewolkt (1% van seizoen)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 0,
-          "reason": "geblokkeerd (bewolkt: sw_h=0.01<0.30)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.02×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -1,
-          "reason": "seizoen iets goedkoper (0.81x)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS -9.8 EUR/MWh (normaal_h06_m06, n=21)"
-        }
-      ],
-      "event_plausibility_score": 0.6888,
-      "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 14
-    },
-    {
-      "time": "2026-06-23T07:00:00+02:00",
-      "baseline": 134.06,
-      "predicted": 135.76,
-      "lower": 113.84,
-      "upper": 157.68,
-      "uncertainty_pct": 0.15,
-      "total_points": 3,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 0.147,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 3,
-          "reason": "bewolkt (15% van seizoen)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 0,
-          "reason": "geblokkeerd (bewolkt: sw_h=0.15<0.30)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.10×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -1,
-          "reason": "seizoen iets goedkoper (0.86x)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS -10.4 EUR/MWh (normaal_h07_m06, n=21)"
-        }
-      ],
-      "event_plausibility_score": 0.6888,
-      "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 14
-    },
-    {
-      "time": "2026-06-23T08:00:00+02:00",
-      "baseline": 120.43,
-      "predicted": 124.56,
-      "lower": 104.87,
-      "upper": 144.25,
-      "uncertainty_pct": 0.15,
-      "total_points": 3,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 0.259,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 3,
-          "reason": "bewolkt (26% van seizoen)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 0,
-          "reason": "geblokkeerd (bewolkt: sw_h=0.26<0.30)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.06×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -1,
-          "reason": "seizoen iets goedkoper (0.88x)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS -6.7 EUR/MWh (normaal_h08_m06, n=21)"
-        }
-      ],
-      "event_plausibility_score": 0.4093,
-      "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 4
-    },
-    {
-      "time": "2026-06-23T09:00:00+02:00",
-      "baseline": 109.67,
-      "predicted": 109.67,
-      "lower": 96.51,
-      "upper": 122.83,
-      "uncertainty_pct": 0.12,
-      "total_points": 0,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 0.626,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": 1,
-          "reason": "iets minder zon (63%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (9:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.05×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -1,
-          "reason": "seizoen iets goedkoper (0.81x)"
-        }
-      ],
-      "event_plausibility_score": 0.632,
-      "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 11
-    },
-    {
-      "time": "2026-06-23T10:00:00+02:00",
-      "baseline": 87.55,
-      "predicted": 103.77,
-      "lower": 92.25,
-      "upper": 115.29,
-      "uncertainty_pct": 0.14,
-      "total_points": -2,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.229,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (123%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (10:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.04×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -1,
-          "reason": "seizoen iets goedkoper (0.81x)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS +21.5 EUR/MWh (normaal_h10_m06, n=20)"
-        }
-      ],
-      "event_plausibility_score": 0.8382,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 26
-    },
-    {
-      "time": "2026-06-23T11:00:00+02:00",
-      "baseline": 57.3,
-      "predicted": 55.58,
-      "lower": 48.35,
-      "upper": 62.81,
-      "uncertainty_pct": 0.13,
-      "total_points": -1,
-      "days_ahead": 1,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.414,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (141%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (11:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.06×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.2p"
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": 0,
-          "reason": "seizoen normaal (0.95x)"
-        }
-      ],
-      "event_plausibility_score": 1.0,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 53
-    },
-    {
-      "time": "2026-06-23T12:00:00+02:00",
-      "baseline": 39.52,
-      "predicted": 35.96,
-      "lower": 30.57,
-      "upper": 41.35,
-      "uncertainty_pct": 0.15,
-      "total_points": -3,
-      "days_ahead": 1,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.561,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (156%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (12:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (1.40×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": -1,
-          "reason": "oversupply niet-lineair: zon -1.0p"
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -1,
-          "reason": "seizoen iets goedkoper (0.86x)"
-        }
-      ],
-      "event_plausibility_score": 1.0,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 51
-    },
-    {
-      "time": "2026-06-23T13:00:00+02:00",
-      "baseline": 32.3,
-      "predicted": 29.39,
-      "lower": 24.98,
-      "upper": 33.8,
-      "uncertainty_pct": 0.15,
-      "total_points": -3,
-      "days_ahead": 1,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.67,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (167%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (13:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (1.71×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": -2,
-          "reason": "oversupply niet-lineair: zon -1.9p"
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": 0,
-          "reason": "seizoen normaal (0.94x)"
-        }
-      ],
-      "event_plausibility_score": 0.9625,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 43
-    },
-    {
-      "time": "2026-06-23T14:00:00+02:00",
-      "baseline": 31.92,
-      "predicted": 31.32,
-      "lower": 26.61,
-      "upper": 36.03,
-      "uncertainty_pct": 0.18,
-      "total_points": -6,
-      "days_ahead": 1,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.692,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (169%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, midden van de dag (14:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.23×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": -2,
-          "reason": "oversupply niet-lineair: zon -2.1p"
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.69x baseline)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS +5.2 EUR/MWh (oversupply_h14_m06, n=10)"
-        }
-      ],
-      "event_plausibility_score": 0.9625,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 43
-    },
-    {
-      "time": "2026-06-23T15:00:00+02:00",
-      "baseline": 62.65,
-      "predicted": 62.69,
-      "lower": 53.17,
-      "upper": 72.21,
-      "uncertainty_pct": 0.2,
-      "total_points": -8,
-      "days_ahead": 1,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.839,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (184%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, namiddag (15:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.14×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": -4,
-          "reason": "oversupply niet-lineair: zon -4.1p"
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.37x baseline)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS +15.1 EUR/MWh (oversupply_h15_m06, n=13)"
-        }
-      ],
-      "event_plausibility_score": 0.7489,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 18
-    },
-    {
-      "time": "2026-06-23T16:00:00+02:00",
-      "baseline": 87.77,
-      "predicted": 81.7,
-      "lower": 68.25,
-      "upper": 95.15,
-      "uncertainty_pct": 0.21,
-      "total_points": -9,
-      "days_ahead": 1,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.852,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (185%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, namiddag (16:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.06×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": -4,
-          "reason": "oversupply niet-lineair: zon -4.3p"
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.45x baseline)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS +17.6 EUR/MWh (oversupply_h16_m06, n=13)"
-        }
-      ],
-      "event_plausibility_score": 0.7619,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 19
-    },
-    {
-      "time": "2026-06-23T17:00:00+02:00",
-      "baseline": 108.3,
-      "predicted": 102.46,
-      "lower": 86.0,
-      "upper": 118.92,
-      "uncertainty_pct": 0.2,
-      "total_points": -8,
-      "days_ahead": 1,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.853,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (185%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 0,
-          "reason": "zomer, vroege avond (17:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "vorige dag normaal (1.06×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": -4,
-          "reason": "oversupply niet-lineair: zon -4.3p"
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.68x baseline)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS +20.1 EUR/MWh (oversupply_h17_m06, n=14)"
-        }
-      ],
-      "event_plausibility_score": 0.7619,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 19
-    },
-    {
-      "time": "2026-06-23T18:00:00+02:00",
-      "baseline": 135.88,
-      "predicted": 124.78,
-      "lower": 104.13,
-      "upper": 145.43,
-      "uncertainty_pct": 0.2,
-      "total_points": -8,
-      "days_ahead": 1,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.906,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (191%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 0,
-          "reason": "zomer, vroege avond (18:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.15×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": -5,
-          "reason": "oversupply niet-lineair: zon -5.1p"
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.69x baseline)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS +21.5 EUR/MWh (oversupply_h18_m06, n=14)"
-        }
-      ],
-      "event_plausibility_score": 0.7619,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 19
-    },
-    {
-      "time": "2026-06-23T19:00:00+02:00",
-      "baseline": 166.2,
-      "predicted": 161.21,
-      "lower": 140.25,
-      "upper": 182.17,
-      "uncertainty_pct": 0.13,
-      "total_points": -1,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.991,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -3,
-          "reason": "heel zonnig (199%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 1,
-          "reason": "zomer, avondspits (19:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (1.33×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.71x baseline)"
-        }
-      ],
-      "event_plausibility_score": 0.7489,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 18
-    },
-    {
-      "time": "2026-06-23T20:00:00+02:00",
-      "baseline": 209.22,
-      "predicted": 201.62,
-      "lower": 173.06,
-      "upper": 230.18,
-      "uncertainty_pct": 0.15,
-      "total_points": -3,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 2.211,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -5,
-          "reason": "extreem zonnig (221%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": 1,
-          "reason": "zomer, avondspits (20:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (1.52×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.70x baseline)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS +11.2 EUR/MWh (normaal_h20_m06, n=20)"
-        }
-      ],
-      "event_plausibility_score": 0.5856,
-      "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 9
-    },
-    {
-      "time": "2026-06-23T21:00:00+02:00",
-      "baseline": 192.0,
-      "predicted": 196.25,
-      "lower": 168.51,
-      "upper": 223.99,
-      "uncertainty_pct": 0.17,
-      "total_points": -5,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 4.654,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -5,
-          "reason": "extreem zonnig (465%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, late avond (21:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (1.41×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.69x baseline)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS +33.0 EUR/MWh (normaal_h21_m06, n=20)"
-        }
-      ],
-      "event_plausibility_score": 0.0,
-      "event_plausibility_label": "VERY_RARE_EVENT",
-      "analog_sample_size": 0
-    },
-    {
-      "time": "2026-06-23T22:00:00+02:00",
-      "baseline": 164.8,
-      "predicted": 160.43,
-      "lower": 138.74,
-      "upper": 182.12,
-      "uncertainty_pct": 0.14,
-      "total_points": -2,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.459,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (146%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, late avond (22:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.21×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.72x baseline)"
-        },
-        {
-          "name": "bias_correctie",
-          "points": 0,
-          "reason": "MOS +5.5 EUR/MWh (normaal_h22_m06, n=20)"
-        }
-      ],
-      "event_plausibility_score": 1.0,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 63
-    },
-    {
-      "time": "2026-06-23T23:00:00+02:00",
-      "baseline": 143.52,
-      "predicted": 134.91,
-      "lower": 116.02,
-      "upper": 153.8,
-      "uncertainty_pct": 0.14,
-      "total_points": -2,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.459,
-      "sw_ratio_daily": 1.459,
-      "wind_ms": 2.77,
-      "temp_c": 23.3,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "zon",
-          "points": -1,
-          "reason": "zonnig (146%)"
-        },
-        {
-          "name": "wind",
-          "points": 3,
-          "reason": "windstil (2.8 m/s)"
-        },
-        {
-          "name": "temperatuur",
-          "points": -1,
-          "reason": "lekker (23.3°C)"
-        },
-        {
-          "name": "gas",
-          "points": -1,
-          "reason": "gas iets goedkoper (89%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "uurpatroon",
-          "points": -1,
-          "reason": "zomer, late avond (23:00)"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 1,
-          "reason": "vorige dag duurder (1.13×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "seizoen",
-          "points": -2,
-          "reason": "seizoen historisch goedkoper (0.72x baseline)"
-        }
-      ],
-      "event_plausibility_score": 1.0,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 63
-    },
     {
       "time": "2026-06-24T00:00:00+02:00",
       "baseline": 140.65,
       "predicted": 119.55,
-      "lower": 96.84,
-      "upper": 142.26,
-      "uncertainty_pct": 0.19,
+      "lower": 99.23,
+      "upper": 139.87,
+      "uncertainty_pct": 0.17,
       "total_points": -5,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.542,
       "sw_ratio_daily": 1.542,
@@ -1851,11 +82,11 @@
       "time": "2026-06-24T01:00:00+02:00",
       "baseline": 133.53,
       "predicted": 117.51,
-      "lower": 96.36,
-      "upper": 138.66,
-      "uncertainty_pct": 0.18,
+      "lower": 98.71,
+      "upper": 136.31,
+      "uncertainty_pct": 0.16,
       "total_points": -4,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.542,
       "sw_ratio_daily": 1.542,
@@ -1922,11 +153,11 @@
       "time": "2026-06-24T02:00:00+02:00",
       "baseline": 123.42,
       "predicted": 108.61,
-      "lower": 89.06,
-      "upper": 128.16,
-      "uncertainty_pct": 0.18,
+      "lower": 91.23,
+      "upper": 125.99,
+      "uncertainty_pct": 0.16,
       "total_points": -4,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.542,
       "sw_ratio_daily": 1.542,
@@ -1993,11 +224,11 @@
       "time": "2026-06-24T03:00:00+02:00",
       "baseline": 119.33,
       "predicted": 105.01,
-      "lower": 86.11,
-      "upper": 123.91,
-      "uncertainty_pct": 0.18,
+      "lower": 88.21,
+      "upper": 121.81,
+      "uncertainty_pct": 0.16,
       "total_points": -4,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.542,
       "sw_ratio_daily": 1.542,
@@ -2064,11 +295,11 @@
       "time": "2026-06-24T04:00:00+02:00",
       "baseline": 117.78,
       "predicted": 103.65,
-      "lower": 84.99,
-      "upper": 122.31,
-      "uncertainty_pct": 0.18,
+      "lower": 87.07,
+      "upper": 120.23,
+      "uncertainty_pct": 0.16,
       "total_points": -4,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.542,
       "sw_ratio_daily": 1.542,
@@ -2135,11 +366,11 @@
       "time": "2026-06-24T05:00:00+02:00",
       "baseline": 125.48,
       "predicted": 129.45,
-      "lower": 104.15,
-      "upper": 154.75,
-      "uncertainty_pct": 0.18,
+      "lower": 106.96,
+      "upper": 151.94,
+      "uncertainty_pct": 0.16,
       "total_points": 4,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 0.0,
       "sw_ratio_daily": 1.542,
@@ -2211,11 +442,11 @@
       "time": "2026-06-24T06:00:00+02:00",
       "baseline": 137.37,
       "predicted": 148.23,
-      "lower": 118.21,
-      "upper": 178.25,
-      "uncertainty_pct": 0.19,
+      "lower": 121.37,
+      "upper": 175.09,
+      "uncertainty_pct": 0.17,
       "total_points": 5,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 0.082,
       "sw_ratio_daily": 1.542,
@@ -2287,11 +518,11 @@
       "time": "2026-06-24T07:00:00+02:00",
       "baseline": 134.51,
       "predicted": 148.35,
-      "lower": 116.61,
-      "upper": 180.09,
-      "uncertainty_pct": 0.2,
+      "lower": 119.78,
+      "upper": 176.92,
+      "uncertainty_pct": 0.18,
       "total_points": 6,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 0.441,
       "sw_ratio_daily": 1.542,
@@ -2363,11 +594,11 @@
       "time": "2026-06-24T08:00:00+02:00",
       "baseline": 120.43,
       "predicted": 128.17,
-      "lower": 103.89,
-      "upper": 152.45,
-      "uncertainty_pct": 0.18,
+      "lower": 106.59,
+      "upper": 149.75,
+      "uncertainty_pct": 0.16,
       "total_points": 4,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 0.756,
       "sw_ratio_daily": 1.542,
@@ -2439,11 +670,11 @@
       "time": "2026-06-24T09:00:00+02:00",
       "baseline": 109.67,
       "predicted": 109.67,
-      "lower": 94.32,
-      "upper": 125.02,
-      "uncertainty_pct": 0.14,
+      "lower": 96.51,
+      "upper": 122.83,
+      "uncertainty_pct": 0.12,
       "total_points": 0,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.018,
       "sw_ratio_daily": 1.542,
@@ -2510,11 +741,11 @@
       "time": "2026-06-24T10:00:00+02:00",
       "baseline": 87.55,
       "predicted": 109.02,
-      "lower": 96.76,
-      "upper": 121.28,
-      "uncertainty_pct": 0.14,
+      "lower": 98.51,
+      "upper": 119.53,
+      "uncertainty_pct": 0.12,
       "total_points": 0,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.228,
       "sw_ratio_daily": 1.542,
@@ -2586,11 +817,11 @@
       "time": "2026-06-24T11:00:00+02:00",
       "baseline": 66.77,
       "predicted": 68.77,
-      "lower": 58.45,
-      "upper": 79.09,
-      "uncertainty_pct": 0.15,
+      "lower": 59.83,
+      "upper": 77.71,
+      "uncertainty_pct": 0.13,
       "total_points": 1,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "oversupply",
       "sw_ratio_h": 1.407,
       "sw_ratio_daily": 1.542,
@@ -2657,11 +888,11 @@
       "time": "2026-06-24T12:00:00+02:00",
       "baseline": 49.53,
       "predicted": 45.08,
-      "lower": 37.42,
-      "upper": 52.74,
-      "uncertainty_pct": 0.17,
+      "lower": 38.32,
+      "upper": 51.84,
+      "uncertainty_pct": 0.15,
       "total_points": -3,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "oversupply",
       "sw_ratio_h": 1.554,
       "sw_ratio_daily": 1.542,
@@ -2728,11 +959,11 @@
       "time": "2026-06-24T13:00:00+02:00",
       "baseline": 37.91,
       "predicted": 33.37,
-      "lower": 27.36,
-      "upper": 39.38,
-      "uncertainty_pct": 0.18,
+      "lower": 28.03,
+      "upper": 38.71,
+      "uncertainty_pct": 0.16,
       "total_points": -4,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "oversupply",
       "sw_ratio_h": 1.678,
       "sw_ratio_daily": 1.542,
@@ -2799,11 +1030,11 @@
       "time": "2026-06-24T14:00:00+02:00",
       "baseline": 36.56,
       "predicted": 35.13,
-      "lower": 29.13,
-      "upper": 41.13,
-      "uncertainty_pct": 0.2,
+      "lower": 29.73,
+      "upper": 40.53,
+      "uncertainty_pct": 0.18,
       "total_points": -6,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "oversupply",
       "sw_ratio_h": 1.773,
       "sw_ratio_daily": 1.542,
@@ -2875,11 +1106,11 @@
       "time": "2026-06-24T15:00:00+02:00",
       "baseline": 58.77,
       "predicted": 57.99,
-      "lower": 48.12,
-      "upper": 67.86,
-      "uncertainty_pct": 0.23,
+      "lower": 48.98,
+      "upper": 67.0,
+      "uncertainty_pct": 0.21,
       "total_points": -9,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "oversupply",
       "sw_ratio_h": 1.838,
       "sw_ratio_daily": 1.542,
@@ -2951,11 +1182,11 @@
       "time": "2026-06-24T16:00:00+02:00",
       "baseline": 95.27,
       "predicted": 90.04,
-      "lower": 74.11,
-      "upper": 105.97,
-      "uncertainty_pct": 0.22,
+      "lower": 75.56,
+      "upper": 104.52,
+      "uncertainty_pct": 0.2,
       "total_points": -8,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "oversupply",
       "sw_ratio_h": 1.885,
       "sw_ratio_daily": 1.542,
@@ -3027,11 +1258,11 @@
       "time": "2026-06-24T17:00:00+02:00",
       "baseline": 117.87,
       "predicted": 113.27,
-      "lower": 93.71,
-      "upper": 132.83,
-      "uncertainty_pct": 0.21,
+      "lower": 95.58,
+      "upper": 130.96,
+      "uncertainty_pct": 0.19,
       "total_points": -7,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "oversupply",
       "sw_ratio_h": 1.908,
       "sw_ratio_daily": 1.542,
@@ -3103,11 +1334,11 @@
       "time": "2026-06-24T18:00:00+02:00",
       "baseline": 156.86,
       "predicted": 145.43,
-      "lower": 119.41,
-      "upper": 171.45,
-      "uncertainty_pct": 0.21,
+      "lower": 121.89,
+      "upper": 168.97,
+      "uncertainty_pct": 0.19,
       "total_points": -7,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "oversupply",
       "sw_ratio_h": 1.939,
       "sw_ratio_daily": 1.542,
@@ -3179,11 +1410,11 @@
       "time": "2026-06-24T19:00:00+02:00",
       "baseline": 196.08,
       "predicted": 196.08,
-      "lower": 168.63,
-      "upper": 223.53,
-      "uncertainty_pct": 0.14,
+      "lower": 172.55,
+      "upper": 219.61,
+      "uncertainty_pct": 0.12,
       "total_points": 0,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.993,
       "sw_ratio_daily": 1.542,
@@ -3250,11 +1481,11 @@
       "time": "2026-06-24T20:00:00+02:00",
       "baseline": 267.74,
       "predicted": 262.91,
-      "lower": 222.64,
-      "upper": 303.18,
-      "uncertainty_pct": 0.16,
+      "lower": 227.67,
+      "upper": 298.15,
+      "uncertainty_pct": 0.14,
       "total_points": -2,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 2.23,
       "sw_ratio_daily": 1.542,
@@ -3326,11 +1557,11 @@
       "time": "2026-06-24T21:00:00+02:00",
       "baseline": 258.95,
       "predicted": 260.93,
-      "lower": 219.91,
-      "upper": 301.95,
-      "uncertainty_pct": 0.18,
+      "lower": 224.47,
+      "upper": 297.39,
+      "uncertainty_pct": 0.16,
       "total_points": -4,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 4.766,
       "sw_ratio_daily": 1.542,
@@ -3402,11 +1633,11 @@
       "time": "2026-06-24T22:00:00+02:00",
       "baseline": 191.73,
       "predicted": 185.75,
-      "lower": 156.91,
-      "upper": 214.59,
-      "uncertainty_pct": 0.16,
+      "lower": 160.52,
+      "upper": 210.98,
+      "uncertainty_pct": 0.14,
       "total_points": -2,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.542,
       "sw_ratio_daily": 1.542,
@@ -3478,11 +1709,11 @@
       "time": "2026-06-24T23:00:00+02:00",
       "baseline": 160.11,
       "predicted": 150.5,
-      "lower": 126.42,
-      "upper": 174.58,
-      "uncertainty_pct": 0.16,
+      "lower": 129.43,
+      "upper": 171.57,
+      "uncertainty_pct": 0.14,
       "total_points": -2,
-      "days_ahead": 2,
+      "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.542,
       "sw_ratio_daily": 1.542,
@@ -3549,11 +1780,11 @@
       "time": "2026-06-25T00:00:00+02:00",
       "baseline": 139.48,
       "predicted": 118.56,
-      "lower": 93.66,
-      "upper": 143.46,
-      "uncertainty_pct": 0.21,
+      "lower": 96.03,
+      "upper": 141.09,
+      "uncertainty_pct": 0.19,
       "total_points": -5,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 1.557,
       "sw_ratio_daily": 1.557,
@@ -3620,11 +1851,11 @@
       "time": "2026-06-25T01:00:00+02:00",
       "baseline": 128.98,
       "predicted": 109.63,
-      "lower": 86.61,
-      "upper": 132.65,
-      "uncertainty_pct": 0.21,
+      "lower": 88.8,
+      "upper": 130.46,
+      "uncertainty_pct": 0.19,
       "total_points": -5,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 1.557,
       "sw_ratio_daily": 1.557,
@@ -3691,11 +1922,11 @@
       "time": "2026-06-25T02:00:00+02:00",
       "baseline": 122.13,
       "predicted": 103.81,
-      "lower": 82.01,
-      "upper": 125.61,
-      "uncertainty_pct": 0.21,
+      "lower": 84.09,
+      "upper": 123.53,
+      "uncertainty_pct": 0.19,
       "total_points": -5,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 1.557,
       "sw_ratio_daily": 1.557,
@@ -3762,11 +1993,11 @@
       "time": "2026-06-25T03:00:00+02:00",
       "baseline": 118.77,
       "predicted": 100.95,
-      "lower": 79.75,
-      "upper": 122.15,
-      "uncertainty_pct": 0.21,
+      "lower": 81.77,
+      "upper": 120.13,
+      "uncertainty_pct": 0.19,
       "total_points": -5,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 1.557,
       "sw_ratio_daily": 1.557,
@@ -3833,11 +2064,11 @@
       "time": "2026-06-25T04:00:00+02:00",
       "baseline": 116.94,
       "predicted": 99.4,
-      "lower": 78.53,
-      "upper": 120.27,
-      "uncertainty_pct": 0.21,
+      "lower": 80.51,
+      "upper": 118.29,
+      "uncertainty_pct": 0.19,
       "total_points": -5,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 1.557,
       "sw_ratio_daily": 1.557,
@@ -3904,11 +2135,11 @@
       "time": "2026-06-25T05:00:00+02:00",
       "baseline": 123.28,
       "predicted": 123.28,
-      "lower": 97.75,
-      "upper": 148.81,
-      "uncertainty_pct": 0.19,
+      "lower": 100.44,
+      "upper": 146.12,
+      "uncertainty_pct": 0.17,
       "total_points": 3,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 0.0,
       "sw_ratio_daily": 1.557,
@@ -3980,11 +2211,11 @@
       "time": "2026-06-25T06:00:00+02:00",
       "baseline": 138.59,
       "predicted": 141.31,
-      "lower": 112.61,
-      "upper": 170.01,
-      "uncertainty_pct": 0.19,
+      "lower": 115.63,
+      "upper": 166.99,
+      "uncertainty_pct": 0.17,
       "total_points": 3,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 0.091,
       "sw_ratio_daily": 1.557,
@@ -4056,11 +2287,11 @@
       "time": "2026-06-25T07:00:00+02:00",
       "baseline": 139.68,
       "predicted": 150.26,
-      "lower": 116.53,
-      "upper": 183.99,
-      "uncertainty_pct": 0.21,
+      "lower": 119.74,
+      "upper": 180.78,
+      "uncertainty_pct": 0.19,
       "total_points": 5,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 0.444,
       "sw_ratio_daily": 1.557,
@@ -4132,11 +2363,11 @@
       "time": "2026-06-25T08:00:00+02:00",
       "baseline": 123.39,
       "predicted": 127.79,
-      "lower": 102.24,
-      "upper": 153.35,
-      "uncertainty_pct": 0.19,
+      "lower": 104.92,
+      "upper": 150.65,
+      "uncertainty_pct": 0.17,
       "total_points": 3,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 0.777,
       "sw_ratio_daily": 1.557,
@@ -4208,11 +2439,11 @@
       "time": "2026-06-25T09:00:00+02:00",
       "baseline": 108.21,
       "predicted": 108.21,
-      "lower": 90.9,
-      "upper": 125.52,
-      "uncertainty_pct": 0.16,
+      "lower": 93.06,
+      "upper": 123.36,
+      "uncertainty_pct": 0.14,
       "total_points": 0,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 1.047,
       "sw_ratio_daily": 1.557,
@@ -4279,11 +2510,11 @@
       "time": "2026-06-25T10:00:00+02:00",
       "baseline": 85.97,
       "predicted": 104.87,
-      "lower": 90.69,
-      "upper": 119.05,
-      "uncertainty_pct": 0.17,
+      "lower": 92.36,
+      "upper": 117.38,
+      "uncertainty_pct": 0.15,
       "total_points": -1,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 1.264,
       "sw_ratio_daily": 1.557,
@@ -4355,11 +2586,11 @@
       "time": "2026-06-25T11:00:00+02:00",
       "baseline": 55.61,
       "predicted": 53.94,
-      "lower": 44.77,
-      "upper": 63.11,
-      "uncertainty_pct": 0.17,
+      "lower": 45.85,
+      "upper": 62.03,
+      "uncertainty_pct": 0.15,
       "total_points": -1,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "oversupply",
       "sw_ratio_h": 1.441,
       "sw_ratio_daily": 1.557,
@@ -4426,11 +2657,11 @@
       "time": "2026-06-25T12:00:00+02:00",
       "baseline": 33.89,
       "predicted": 28.8,
-      "lower": 22.75,
-      "upper": 34.85,
-      "uncertainty_pct": 0.21,
+      "lower": 23.33,
+      "upper": 34.27,
+      "uncertainty_pct": 0.19,
       "total_points": -5,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "oversupply",
       "sw_ratio_h": 1.583,
       "sw_ratio_daily": 1.557,
@@ -4497,11 +2728,11 @@
       "time": "2026-06-25T13:00:00+02:00",
       "baseline": 25.59,
       "predicted": 20.99,
-      "lower": 16.37,
-      "upper": 25.61,
-      "uncertainty_pct": 0.22,
+      "lower": 16.79,
+      "upper": 25.19,
+      "uncertainty_pct": 0.2,
       "total_points": -6,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "oversupply",
       "sw_ratio_h": 1.698,
       "sw_ratio_daily": 1.557,
@@ -4568,11 +2799,11 @@
       "time": "2026-06-25T14:00:00+02:00",
       "baseline": 28.91,
       "predicted": 27.99,
-      "lower": 22.74,
-      "upper": 33.24,
-      "uncertainty_pct": 0.23,
+      "lower": 23.19,
+      "upper": 32.79,
+      "uncertainty_pct": 0.21,
       "total_points": -7,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "oversupply",
       "sw_ratio_h": 1.787,
       "sw_ratio_daily": 1.557,
@@ -4644,11 +2875,11 @@
       "time": "2026-06-25T15:00:00+02:00",
       "baseline": 55.02,
       "predicted": 56.9,
-      "lower": 46.86,
-      "upper": 66.94,
-      "uncertainty_pct": 0.24,
+      "lower": 47.7,
+      "upper": 66.1,
+      "uncertainty_pct": 0.22,
       "total_points": -8,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "oversupply",
       "sw_ratio_h": 1.86,
       "sw_ratio_daily": 1.557,
@@ -4720,11 +2951,11 @@
       "time": "2026-06-25T16:00:00+02:00",
       "baseline": 93.08,
       "predicted": 85.58,
-      "lower": 68.59,
-      "upper": 102.57,
-      "uncertainty_pct": 0.25,
+      "lower": 69.95,
+      "upper": 101.21,
+      "uncertainty_pct": 0.23,
       "total_points": -9,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "oversupply",
       "sw_ratio_h": 1.909,
       "sw_ratio_daily": 1.557,
@@ -4796,11 +3027,11 @@
       "time": "2026-06-25T17:00:00+02:00",
       "baseline": 112.89,
       "predicted": 105.95,
-      "lower": 85.36,
-      "upper": 126.54,
-      "uncertainty_pct": 0.24,
+      "lower": 87.07,
+      "upper": 124.83,
+      "uncertainty_pct": 0.22,
       "total_points": -8,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "oversupply",
       "sw_ratio_h": 1.896,
       "sw_ratio_daily": 1.557,
@@ -4872,11 +3103,11 @@
       "time": "2026-06-25T18:00:00+02:00",
       "baseline": 156.86,
       "predicted": 136.02,
-      "lower": 107.39,
-      "upper": 164.65,
-      "uncertainty_pct": 0.25,
+      "lower": 109.68,
+      "upper": 162.36,
+      "uncertainty_pct": 0.23,
       "total_points": -9,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "oversupply",
       "sw_ratio_h": 1.927,
       "sw_ratio_daily": 1.557,
@@ -4948,11 +3179,11 @@
       "time": "2026-06-25T19:00:00+02:00",
       "baseline": 229.72,
       "predicted": 215.93,
-      "lower": 177.06,
-      "upper": 254.8,
-      "uncertainty_pct": 0.18,
+      "lower": 181.38,
+      "upper": 250.48,
+      "uncertainty_pct": 0.16,
       "total_points": -2,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 1.917,
       "sw_ratio_daily": 1.557,
@@ -5019,11 +3250,11 @@
       "time": "2026-06-25T20:00:00+02:00",
       "baseline": 363.47,
       "predicted": 331.08,
-      "lower": 267.11,
-      "upper": 395.05,
-      "uncertainty_pct": 0.2,
+      "lower": 273.51,
+      "upper": 388.65,
+      "uncertainty_pct": 0.18,
       "total_points": -4,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 2.265,
       "sw_ratio_daily": 1.557,
@@ -5095,11 +3326,11 @@
       "time": "2026-06-25T21:00:00+02:00",
       "baseline": 363.11,
       "predicted": 330.8,
-      "lower": 265.3,
-      "upper": 396.3,
-      "uncertainty_pct": 0.22,
+      "lower": 271.25,
+      "upper": 390.35,
+      "uncertainty_pct": 0.2,
       "total_points": -6,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 4.735,
       "sw_ratio_daily": 1.557,
@@ -5171,11 +3402,11 @@
       "time": "2026-06-25T22:00:00+02:00",
       "baseline": 233.28,
       "predicted": 210.81,
-      "lower": 169.75,
-      "upper": 251.87,
-      "uncertainty_pct": 0.2,
+      "lower": 173.86,
+      "upper": 247.76,
+      "uncertainty_pct": 0.18,
       "total_points": -4,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 1.557,
       "sw_ratio_daily": 1.557,
@@ -5247,11 +3478,11 @@
       "time": "2026-06-25T23:00:00+02:00",
       "baseline": 162.86,
       "predicted": 143.31,
-      "lower": 114.65,
-      "upper": 171.97,
-      "uncertainty_pct": 0.2,
+      "lower": 117.51,
+      "upper": 169.11,
+      "uncertainty_pct": 0.18,
       "total_points": -4,
-      "days_ahead": 3,
+      "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 1.557,
       "sw_ratio_daily": 1.557,
@@ -5318,11 +3549,11 @@
       "time": "2026-06-26T00:00:00+02:00",
       "baseline": 145.71,
       "predicted": 132.6,
-      "lower": 104.75,
-      "upper": 160.45,
-      "uncertainty_pct": 0.21,
+      "lower": 107.41,
+      "upper": 157.79,
+      "uncertainty_pct": 0.19,
       "total_points": -3,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.46,
       "sw_ratio_daily": 1.46,
@@ -5389,11 +3620,11 @@
       "time": "2026-06-26T01:00:00+02:00",
       "baseline": 133.53,
       "predicted": 121.51,
-      "lower": 95.99,
-      "upper": 147.03,
-      "uncertainty_pct": 0.21,
+      "lower": 98.42,
+      "upper": 144.6,
+      "uncertainty_pct": 0.19,
       "total_points": -3,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.46,
       "sw_ratio_daily": 1.46,
@@ -5460,11 +3691,11 @@
       "time": "2026-06-26T02:00:00+02:00",
       "baseline": 123.42,
       "predicted": 112.31,
-      "lower": 88.72,
-      "upper": 135.9,
-      "uncertainty_pct": 0.21,
+      "lower": 90.97,
+      "upper": 133.65,
+      "uncertainty_pct": 0.19,
       "total_points": -3,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.46,
       "sw_ratio_daily": 1.46,
@@ -5531,11 +3762,11 @@
       "time": "2026-06-26T03:00:00+02:00",
       "baseline": 119.33,
       "predicted": 108.59,
-      "lower": 85.79,
-      "upper": 131.39,
-      "uncertainty_pct": 0.21,
+      "lower": 87.96,
+      "upper": 129.22,
+      "uncertainty_pct": 0.19,
       "total_points": -3,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.46,
       "sw_ratio_daily": 1.46,
@@ -5602,11 +3833,11 @@
       "time": "2026-06-26T04:00:00+02:00",
       "baseline": 116.1,
       "predicted": 105.65,
-      "lower": 83.46,
-      "upper": 127.84,
-      "uncertainty_pct": 0.21,
+      "lower": 85.58,
+      "upper": 125.72,
+      "uncertainty_pct": 0.19,
       "total_points": -3,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.46,
       "sw_ratio_daily": 1.46,
@@ -5673,11 +3904,11 @@
       "time": "2026-06-26T05:00:00+02:00",
       "baseline": 121.07,
       "predicted": 120.88,
-      "lower": 93.17,
-      "upper": 148.59,
-      "uncertainty_pct": 0.21,
+      "lower": 95.81,
+      "upper": 145.95,
+      "uncertainty_pct": 0.19,
       "total_points": 3,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 0.0,
       "sw_ratio_daily": 1.46,
@@ -5749,11 +3980,11 @@
       "time": "2026-06-26T06:00:00+02:00",
       "baseline": 139.81,
       "predicted": 142.64,
-      "lower": 110.64,
-      "upper": 174.64,
-      "uncertainty_pct": 0.21,
+      "lower": 113.69,
+      "upper": 171.59,
+      "uncertainty_pct": 0.19,
       "total_points": 3,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 0.073,
       "sw_ratio_daily": 1.46,
@@ -5825,11 +4056,11 @@
       "time": "2026-06-26T07:00:00+02:00",
       "baseline": 144.84,
       "predicted": 151.85,
-      "lower": 116.16,
-      "upper": 187.54,
-      "uncertainty_pct": 0.22,
+      "lower": 119.41,
+      "upper": 184.29,
+      "uncertainty_pct": 0.2,
       "total_points": 4,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 0.432,
       "sw_ratio_daily": 1.46,
@@ -5901,11 +4132,11 @@
       "time": "2026-06-26T08:00:00+02:00",
       "baseline": 128.14,
       "predicted": 132.96,
-      "lower": 103.63,
-      "upper": 162.29,
-      "uncertainty_pct": 0.21,
+      "lower": 106.42,
+      "upper": 159.5,
+      "uncertainty_pct": 0.19,
       "total_points": 3,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 0.776,
       "sw_ratio_daily": 1.46,
@@ -5977,11 +4208,11 @@
       "time": "2026-06-26T09:00:00+02:00",
       "baseline": 111.04,
       "predicted": 111.04,
-      "lower": 91.05,
-      "upper": 131.03,
-      "uncertainty_pct": 0.18,
+      "lower": 93.27,
+      "upper": 128.81,
+      "uncertainty_pct": 0.16,
       "total_points": 0,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 0.988,
       "sw_ratio_daily": 1.46,
@@ -6048,11 +4279,11 @@
       "time": "2026-06-26T10:00:00+02:00",
       "baseline": 87.55,
       "predicted": 106.39,
-      "lower": 90.26,
-      "upper": 122.52,
-      "uncertainty_pct": 0.19,
+      "lower": 91.95,
+      "upper": 120.83,
+      "uncertainty_pct": 0.17,
       "total_points": -1,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.196,
       "sw_ratio_daily": 1.46,
@@ -6124,11 +4355,11 @@
       "time": "2026-06-26T11:00:00+02:00",
       "baseline": 57.3,
       "predicted": 75.52,
-      "lower": 64.96,
-      "upper": 86.08,
-      "uncertainty_pct": 0.19,
+      "lower": 66.07,
+      "upper": 84.97,
+      "uncertainty_pct": 0.17,
       "total_points": -1,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.382,
       "sw_ratio_daily": 1.46,
@@ -6200,11 +4431,11 @@
       "time": "2026-06-26T12:00:00+02:00",
       "baseline": 39.52,
       "predicted": 33.59,
-      "lower": 25.86,
-      "upper": 41.32,
-      "uncertainty_pct": 0.23,
+      "lower": 26.54,
+      "upper": 40.64,
+      "uncertainty_pct": 0.21,
       "total_points": -5,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "oversupply",
       "sw_ratio_h": 1.545,
       "sw_ratio_daily": 1.46,
@@ -6271,11 +4502,11 @@
       "time": "2026-06-26T13:00:00+02:00",
       "baseline": 32.3,
       "predicted": 26.49,
-      "lower": 20.13,
-      "upper": 32.85,
-      "uncertainty_pct": 0.24,
+      "lower": 20.66,
+      "upper": 32.32,
+      "uncertainty_pct": 0.22,
       "total_points": -6,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "oversupply",
       "sw_ratio_h": 1.683,
       "sw_ratio_daily": 1.46,
@@ -6342,11 +4573,11 @@
       "time": "2026-06-26T14:00:00+02:00",
       "baseline": 31.92,
       "predicted": 30.37,
-      "lower": 24.06,
-      "upper": 36.67,
-      "uncertainty_pct": 0.25,
+      "lower": 24.57,
+      "upper": 36.17,
+      "uncertainty_pct": 0.23,
       "total_points": -7,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "oversupply",
       "sw_ratio_h": 1.774,
       "sw_ratio_daily": 1.46,
@@ -6418,11 +4649,11 @@
       "time": "2026-06-26T15:00:00+02:00",
       "baseline": 55.14,
       "predicted": 58.64,
-      "lower": 47.75,
-      "upper": 69.53,
-      "uncertainty_pct": 0.25,
+      "lower": 48.62,
+      "upper": 68.66,
+      "uncertainty_pct": 0.23,
       "total_points": -7,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "oversupply",
       "sw_ratio_h": 1.795,
       "sw_ratio_daily": 1.46,
@@ -6494,11 +4725,11 @@
       "time": "2026-06-26T16:00:00+02:00",
       "baseline": 95.27,
       "predicted": 92.89,
-      "lower": 74.08,
-      "upper": 111.71,
-      "uncertainty_pct": 0.25,
+      "lower": 75.58,
+      "upper": 110.2,
+      "uncertainty_pct": 0.23,
       "total_points": -7,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "oversupply",
       "sw_ratio_h": 1.764,
       "sw_ratio_daily": 1.46,
@@ -6570,11 +4801,11 @@
       "time": "2026-06-26T17:00:00+02:00",
       "baseline": 113.78,
       "predicted": 116.86,
-      "lower": 94.62,
-      "upper": 139.1,
-      "uncertainty_pct": 0.23,
+      "lower": 96.55,
+      "upper": 137.17,
+      "uncertainty_pct": 0.21,
       "total_points": -5,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "oversupply",
       "sw_ratio_h": 1.714,
       "sw_ratio_daily": 1.46,
@@ -6646,11 +4877,11 @@
       "time": "2026-06-26T18:00:00+02:00",
       "baseline": 156.86,
       "predicted": 154.84,
-      "lower": 124.17,
-      "upper": 185.51,
-      "uncertainty_pct": 0.23,
+      "lower": 126.84,
+      "upper": 182.84,
+      "uncertainty_pct": 0.21,
       "total_points": -5,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "oversupply",
       "sw_ratio_h": 1.644,
       "sw_ratio_daily": 1.46,
@@ -6722,11 +4953,11 @@
       "time": "2026-06-26T19:00:00+02:00",
       "baseline": 196.08,
       "predicted": 184.32,
-      "lower": 147.46,
-      "upper": 221.18,
-      "uncertainty_pct": 0.2,
+      "lower": 151.14,
+      "upper": 217.5,
+      "uncertainty_pct": 0.18,
       "total_points": -2,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.593,
       "sw_ratio_daily": 1.46,
@@ -6793,11 +5024,11 @@
       "time": "2026-06-26T20:00:00+02:00",
       "baseline": 267.74,
       "predicted": 262.91,
-      "lower": 212.57,
-      "upper": 313.25,
-      "uncertainty_pct": 0.2,
+      "lower": 217.61,
+      "upper": 308.21,
+      "uncertainty_pct": 0.18,
       "total_points": -2,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.745,
       "sw_ratio_daily": 1.46,
@@ -6869,11 +5100,11 @@
       "time": "2026-06-26T21:00:00+02:00",
       "baseline": 258.95,
       "predicted": 245.39,
-      "lower": 194.43,
-      "upper": 296.35,
-      "uncertainty_pct": 0.24,
+      "lower": 198.68,
+      "upper": 292.1,
+      "uncertainty_pct": 0.22,
       "total_points": -6,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 4.015,
       "sw_ratio_daily": 1.46,
@@ -6945,11 +5176,11 @@
       "time": "2026-06-26T22:00:00+02:00",
       "baseline": 191.73,
       "predicted": 185.75,
-      "lower": 149.7,
-      "upper": 221.8,
-      "uncertainty_pct": 0.2,
+      "lower": 153.31,
+      "upper": 218.19,
+      "uncertainty_pct": 0.18,
       "total_points": -2,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.46,
       "sw_ratio_daily": 1.46,
@@ -7021,11 +5252,11 @@
       "time": "2026-06-26T23:00:00+02:00",
       "baseline": 160.11,
       "predicted": 150.5,
-      "lower": 120.4,
-      "upper": 180.6,
-      "uncertainty_pct": 0.2,
+      "lower": 123.41,
+      "upper": 177.59,
+      "uncertainty_pct": 0.18,
       "total_points": -2,
-      "days_ahead": 4,
+      "days_ahead": 3,
       "regime": "normaal",
       "sw_ratio_h": 1.46,
       "sw_ratio_daily": 1.46,
@@ -7092,11 +5323,11 @@
       "time": "2026-06-27T00:00:00+02:00",
       "baseline": 107.92,
       "predicted": 91.74,
-      "lower": 68.8,
-      "upper": 114.67,
-      "uncertainty_pct": 0.25,
+      "lower": 70.64,
+      "upper": 112.84,
+      "uncertainty_pct": 0.23,
       "total_points": -5,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.503,
       "sw_ratio_daily": 1.503,
@@ -7163,11 +5394,11 @@
       "time": "2026-06-27T01:00:00+02:00",
       "baseline": 97.5,
       "predicted": 82.88,
-      "lower": 62.16,
-      "upper": 103.6,
-      "uncertainty_pct": 0.25,
+      "lower": 63.82,
+      "upper": 101.94,
+      "uncertainty_pct": 0.23,
       "total_points": -5,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.503,
       "sw_ratio_daily": 1.503,
@@ -7234,11 +5465,11 @@
       "time": "2026-06-27T02:00:00+02:00",
       "baseline": 91.1,
       "predicted": 77.44,
-      "lower": 58.08,
-      "upper": 96.8,
-      "uncertainty_pct": 0.25,
+      "lower": 59.63,
+      "upper": 95.25,
+      "uncertainty_pct": 0.23,
       "total_points": -5,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.503,
       "sw_ratio_daily": 1.503,
@@ -7305,11 +5536,11 @@
       "time": "2026-06-27T03:00:00+02:00",
       "baseline": 88.22,
       "predicted": 74.98,
-      "lower": 56.23,
-      "upper": 93.73,
-      "uncertainty_pct": 0.25,
+      "lower": 57.73,
+      "upper": 92.23,
+      "uncertainty_pct": 0.23,
       "total_points": -5,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.503,
       "sw_ratio_daily": 1.503,
@@ -7376,11 +5607,11 @@
       "time": "2026-06-27T04:00:00+02:00",
       "baseline": 88.07,
       "predicted": 74.86,
-      "lower": 56.14,
-      "upper": 93.58,
-      "uncertainty_pct": 0.25,
+      "lower": 57.64,
+      "upper": 92.08,
+      "uncertainty_pct": 0.23,
       "total_points": -5,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.503,
       "sw_ratio_daily": 1.503,
@@ -7447,11 +5678,11 @@
       "time": "2026-06-27T05:00:00+02:00",
       "baseline": 82.32,
       "predicted": 81.11,
-      "lower": 58.98,
-      "upper": 103.24,
-      "uncertainty_pct": 0.24,
+      "lower": 60.83,
+      "upper": 101.39,
+      "uncertainty_pct": 0.22,
       "total_points": 4,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 0.0,
       "sw_ratio_daily": 1.503,
@@ -7523,11 +5754,11 @@
       "time": "2026-06-27T06:00:00+02:00",
       "baseline": 70.04,
       "predicted": 68.69,
-      "lower": 49.86,
-      "upper": 87.52,
-      "uncertainty_pct": 0.24,
+      "lower": 51.43,
+      "upper": 85.95,
+      "uncertainty_pct": 0.22,
       "total_points": 4,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 0.119,
       "sw_ratio_daily": 1.503,
@@ -7599,11 +5830,11 @@
       "time": "2026-06-27T07:00:00+02:00",
       "baseline": 58.43,
       "predicted": 55.07,
-      "lower": 39.36,
-      "upper": 70.78,
-      "uncertainty_pct": 0.24,
+      "lower": 40.67,
+      "upper": 69.47,
+      "uncertainty_pct": 0.22,
       "total_points": 4,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 0.478,
       "sw_ratio_daily": 1.503,
@@ -7675,11 +5906,11 @@
       "time": "2026-06-27T08:00:00+02:00",
       "baseline": 47.05,
       "predicted": 41.75,
-      "lower": 31.57,
-      "upper": 51.93,
-      "uncertainty_pct": 0.21,
+      "lower": 32.54,
+      "upper": 50.96,
+      "uncertainty_pct": 0.19,
       "total_points": 1,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 0.712,
       "sw_ratio_daily": 1.503,
@@ -7751,11 +5982,11 @@
       "time": "2026-06-27T09:00:00+02:00",
       "baseline": 23.77,
       "predicted": 22.34,
-      "lower": 17.43,
-      "upper": 27.25,
-      "uncertainty_pct": 0.22,
+      "lower": 17.87,
+      "upper": 26.81,
+      "uncertainty_pct": 0.2,
       "total_points": -2,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 0.934,
       "sw_ratio_daily": 1.503,
@@ -7822,11 +6053,11 @@
       "time": "2026-06-27T10:00:00+02:00",
       "baseline": -1.78,
       "predicted": 19.8,
-      "lower": 20.17,
-      "upper": 19.43,
-      "uncertainty_pct": 0.22,
+      "lower": 20.13,
+      "upper": 19.47,
+      "uncertainty_pct": 0.2,
       "total_points": -2,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.174,
       "sw_ratio_daily": 1.503,
@@ -7898,11 +6129,11 @@
       "time": "2026-06-27T11:00:00+02:00",
       "baseline": -4.65,
       "predicted": 15.71,
-      "lower": 16.68,
-      "upper": 14.74,
-      "uncertainty_pct": 0.23,
+      "lower": 16.6,
+      "upper": 14.82,
+      "uncertainty_pct": 0.21,
       "total_points": -3,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.39,
       "sw_ratio_daily": 1.503,
@@ -7976,9 +6207,9 @@
       "predicted": -0.02,
       "lower": -0.02,
       "upper": -0.02,
-      "uncertainty_pct": 0.22,
+      "uncertainty_pct": 0.2,
       "total_points": -2,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "oversupply",
       "sw_ratio_h": 1.552,
       "sw_ratio_daily": 1.503,
@@ -8045,11 +6276,11 @@
       "time": "2026-06-27T13:00:00+02:00",
       "baseline": -23.42,
       "predicted": -18.5,
-      "lower": -13.5,
-      "upper": -23.5,
-      "uncertainty_pct": 0.27,
+      "lower": -13.88,
+      "upper": -23.12,
+      "uncertainty_pct": 0.25,
       "total_points": -7,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "oversupply",
       "sw_ratio_h": 1.683,
       "sw_ratio_daily": 1.503,
@@ -8119,9 +6350,9 @@
       "predicted": 5.14,
       "lower": 5.14,
       "upper": 5.14,
-      "uncertainty_pct": 0.24,
+      "uncertainty_pct": 0.22,
       "total_points": -4,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "oversupply",
       "sw_ratio_h": 1.78,
       "sw_ratio_daily": 1.503,
@@ -8193,11 +6424,11 @@
       "time": "2026-06-27T15:00:00+02:00",
       "baseline": 0.27,
       "predicted": 15.27,
-      "lower": 15.21,
-      "upper": 15.33,
-      "uncertainty_pct": 0.29,
+      "lower": 15.22,
+      "upper": 15.32,
+      "uncertainty_pct": 0.27,
       "total_points": -9,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "oversupply",
       "sw_ratio_h": 1.859,
       "sw_ratio_daily": 1.503,
@@ -8269,11 +6500,11 @@
       "time": "2026-06-27T16:00:00+02:00",
       "baseline": 15.13,
       "predicted": 28.22,
-      "lower": 25.04,
-      "upper": 31.4,
-      "uncertainty_pct": 0.3,
+      "lower": 25.25,
+      "upper": 31.19,
+      "uncertainty_pct": 0.28,
       "total_points": -10,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "oversupply",
       "sw_ratio_h": 1.912,
       "sw_ratio_daily": 1.503,
@@ -8345,11 +6576,11 @@
       "time": "2026-06-27T17:00:00+02:00",
       "baseline": 77.91,
       "predicted": 77.03,
-      "lower": 60.53,
-      "upper": 93.53,
-      "uncertainty_pct": 0.29,
+      "lower": 61.67,
+      "upper": 92.39,
+      "uncertainty_pct": 0.27,
       "total_points": -9,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "oversupply",
       "sw_ratio_h": 1.911,
       "sw_ratio_daily": 1.503,
@@ -8421,11 +6652,11 @@
       "time": "2026-06-27T18:00:00+02:00",
       "baseline": 116.47,
       "predicted": 110.02,
-      "lower": 85.24,
-      "upper": 134.8,
-      "uncertainty_pct": 0.28,
+      "lower": 87.01,
+      "upper": 133.03,
+      "uncertainty_pct": 0.26,
       "total_points": -8,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "oversupply",
       "sw_ratio_h": 1.822,
       "sw_ratio_daily": 1.503,
@@ -8497,11 +6728,11 @@
       "time": "2026-06-27T19:00:00+02:00",
       "baseline": 101.03,
       "predicted": 98.0,
-      "lower": 77.42,
-      "upper": 118.58,
-      "uncertainty_pct": 0.21,
+      "lower": 79.38,
+      "upper": 116.62,
+      "uncertainty_pct": 0.19,
       "total_points": -1,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.711,
       "sw_ratio_daily": 1.503,
@@ -8568,11 +6799,11 @@
       "time": "2026-06-27T20:00:00+02:00",
       "baseline": 138.33,
       "predicted": 141.26,
-      "lower": 112.65,
-      "upper": 169.87,
-      "uncertainty_pct": 0.22,
+      "lower": 115.25,
+      "upper": 167.27,
+      "uncertainty_pct": 0.2,
       "total_points": -2,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.806,
       "sw_ratio_daily": 1.503,
@@ -8644,11 +6875,11 @@
       "time": "2026-06-27T21:00:00+02:00",
       "baseline": 140.91,
       "predicted": 148.6,
-      "lower": 118.56,
-      "upper": 178.64,
-      "uncertainty_pct": 0.26,
+      "lower": 120.87,
+      "upper": 176.33,
+      "uncertainty_pct": 0.24,
       "total_points": -6,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 4.019,
       "sw_ratio_daily": 1.503,
@@ -8720,11 +6951,11 @@
       "time": "2026-06-27T22:00:00+02:00",
       "baseline": 136.32,
       "predicted": 125.48,
-      "lower": 96.69,
-      "upper": 154.27,
-      "uncertainty_pct": 0.24,
+      "lower": 99.09,
+      "upper": 151.87,
+      "uncertainty_pct": 0.22,
       "total_points": -4,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.503,
       "sw_ratio_daily": 1.503,
@@ -8796,11 +7027,11 @@
       "time": "2026-06-27T23:00:00+02:00",
       "baseline": 126.27,
       "predicted": 107.33,
-      "lower": 80.5,
-      "upper": 134.16,
-      "uncertainty_pct": 0.25,
+      "lower": 82.64,
+      "upper": 132.02,
+      "uncertainty_pct": 0.23,
       "total_points": -5,
-      "days_ahead": 5,
+      "days_ahead": 4,
       "regime": "normaal",
       "sw_ratio_h": 1.503,
       "sw_ratio_daily": 1.503,
@@ -8867,11 +7098,11 @@
       "time": "2026-06-28T00:00:00+02:00",
       "baseline": 129.76,
       "predicted": 118.08,
-      "lower": 88.56,
-      "upper": 147.6,
-      "uncertainty_pct": 0.25,
+      "lower": 90.92,
+      "upper": 145.24,
+      "uncertainty_pct": 0.23,
       "total_points": -3,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 1.445,
       "sw_ratio_daily": 1.445,
@@ -8938,11 +7169,11 @@
       "time": "2026-06-28T01:00:00+02:00",
       "baseline": 121.1,
       "predicted": 110.2,
-      "lower": 82.65,
-      "upper": 137.75,
-      "uncertainty_pct": 0.25,
+      "lower": 84.85,
+      "upper": 135.55,
+      "uncertainty_pct": 0.23,
       "total_points": -3,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 1.445,
       "sw_ratio_daily": 1.445,
@@ -9009,11 +7240,11 @@
       "time": "2026-06-28T02:00:00+02:00",
       "baseline": 118.6,
       "predicted": 107.93,
-      "lower": 80.95,
-      "upper": 134.91,
-      "uncertainty_pct": 0.25,
+      "lower": 83.11,
+      "upper": 132.75,
+      "uncertainty_pct": 0.23,
       "total_points": -3,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 1.445,
       "sw_ratio_daily": 1.445,
@@ -9080,11 +7311,11 @@
       "time": "2026-06-28T03:00:00+02:00",
       "baseline": 116.22,
       "predicted": 105.76,
-      "lower": 79.32,
-      "upper": 132.2,
-      "uncertainty_pct": 0.25,
+      "lower": 81.44,
+      "upper": 130.08,
+      "uncertainty_pct": 0.23,
       "total_points": -3,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 1.445,
       "sw_ratio_daily": 1.445,
@@ -9151,11 +7382,11 @@
       "time": "2026-06-28T04:00:00+02:00",
       "baseline": 114.38,
       "predicted": 104.09,
-      "lower": 78.07,
-      "upper": 130.11,
-      "uncertainty_pct": 0.25,
+      "lower": 80.15,
+      "upper": 128.03,
+      "uncertainty_pct": 0.23,
       "total_points": -3,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 1.445,
       "sw_ratio_daily": 1.445,
@@ -9222,11 +7453,11 @@
       "time": "2026-06-28T05:00:00+02:00",
       "baseline": 113.31,
       "predicted": 126.02,
-      "lower": 86.26,
-      "upper": 165.78,
-      "uncertainty_pct": 0.29,
+      "lower": 89.0,
+      "upper": 163.04,
+      "uncertainty_pct": 0.27,
       "total_points": 7,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 0.0,
       "sw_ratio_daily": 1.445,
@@ -9298,11 +7529,11 @@
       "time": "2026-06-28T06:00:00+02:00",
       "baseline": 109.54,
       "predicted": 122.79,
-      "lower": 84.35,
-      "upper": 161.23,
-      "uncertainty_pct": 0.29,
+      "lower": 87.0,
+      "upper": 158.58,
+      "uncertainty_pct": 0.27,
       "total_points": 7,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 0.11,
       "sw_ratio_daily": 1.445,
@@ -9374,11 +7605,11 @@
       "time": "2026-06-28T07:00:00+02:00",
       "baseline": 103.2,
       "predicted": 117.6,
-      "lower": 79.21,
-      "upper": 155.99,
-      "uncertainty_pct": 0.3,
+      "lower": 81.77,
+      "upper": 153.43,
+      "uncertainty_pct": 0.28,
       "total_points": 8,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 0.483,
       "sw_ratio_daily": 1.445,
@@ -9450,11 +7681,11 @@
       "time": "2026-06-28T08:00:00+02:00",
       "baseline": 93.77,
       "predicted": 98.31,
-      "lower": 71.0,
-      "upper": 125.62,
-      "uncertainty_pct": 0.26,
+      "lower": 73.11,
+      "upper": 123.51,
+      "uncertainty_pct": 0.24,
       "total_points": 4,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 0.716,
       "sw_ratio_daily": 1.445,
@@ -9526,11 +7757,11 @@
       "time": "2026-06-28T09:00:00+02:00",
       "baseline": 48.99,
       "predicted": 48.99,
-      "lower": 38.21,
-      "upper": 59.77,
-      "uncertainty_pct": 0.22,
+      "lower": 39.19,
+      "upper": 58.79,
+      "uncertainty_pct": 0.2,
       "total_points": 0,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 0.92,
       "sw_ratio_daily": 1.445,
@@ -9597,11 +7828,11 @@
       "time": "2026-06-28T10:00:00+02:00",
       "baseline": 1.36,
       "predicted": 22.83,
-      "lower": 22.53,
-      "upper": 23.13,
-      "uncertainty_pct": 0.22,
+      "lower": 22.56,
+      "upper": 23.1,
+      "uncertainty_pct": 0.2,
       "total_points": 0,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 1.126,
       "sw_ratio_daily": 1.445,
@@ -9675,9 +7906,9 @@
       "predicted": 19.93,
       "lower": 19.93,
       "upper": 19.93,
-      "uncertainty_pct": 0.24,
+      "uncertainty_pct": 0.22,
       "total_points": 2,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 1.315,
       "sw_ratio_daily": 1.445,
@@ -9751,9 +7982,9 @@
       "predicted": -0.03,
       "lower": -0.02,
       "upper": -0.04,
-      "uncertainty_pct": 0.24,
+      "uncertainty_pct": 0.22,
       "total_points": 2,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "oversupply",
       "sw_ratio_h": 1.45,
       "sw_ratio_daily": 1.445,
@@ -9820,11 +8051,11 @@
       "time": "2026-06-28T13:00:00+02:00",
       "baseline": -11.72,
       "predicted": -9.25,
-      "lower": -6.57,
-      "upper": -11.93,
-      "uncertainty_pct": 0.29,
+      "lower": -6.75,
+      "upper": -11.75,
+      "uncertainty_pct": 0.27,
       "total_points": -7,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "oversupply",
       "sw_ratio_h": 1.591,
       "sw_ratio_daily": 1.445,
@@ -9892,11 +8123,11 @@
       "time": "2026-06-28T14:00:00+02:00",
       "baseline": -0.02,
       "predicted": 5.13,
-      "lower": 5.14,
-      "upper": 5.12,
-      "uncertainty_pct": 0.26,
+      "lower": 5.13,
+      "upper": 5.13,
+      "uncertainty_pct": 0.24,
       "total_points": -4,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "oversupply",
       "sw_ratio_h": 1.71,
       "sw_ratio_daily": 1.445,
@@ -9970,9 +8201,9 @@
       "predicted": 15.1,
       "lower": 15.09,
       "upper": 15.11,
-      "uncertainty_pct": 0.31,
+      "uncertainty_pct": 0.29,
       "total_points": -9,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "oversupply",
       "sw_ratio_h": 1.761,
       "sw_ratio_daily": 1.445,
@@ -10044,11 +8275,11 @@
       "time": "2026-06-28T16:00:00+02:00",
       "baseline": 12.39,
       "predicted": 26.67,
-      "lower": 23.87,
-      "upper": 29.47,
-      "uncertainty_pct": 0.31,
+      "lower": 24.05,
+      "upper": 29.29,
+      "uncertainty_pct": 0.29,
       "total_points": -9,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "oversupply",
       "sw_ratio_h": 1.775,
       "sw_ratio_daily": 1.445,
@@ -10120,11 +8351,11 @@
       "time": "2026-06-28T17:00:00+02:00",
       "baseline": 73.75,
       "predicted": 76.2,
-      "lower": 59.38,
-      "upper": 93.01,
-      "uncertainty_pct": 0.3,
+      "lower": 60.51,
+      "upper": 91.89,
+      "uncertainty_pct": 0.28,
       "total_points": -8,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "oversupply",
       "sw_ratio_h": 1.765,
       "sw_ratio_daily": 1.445,
@@ -10196,11 +8427,11 @@
       "time": "2026-06-28T18:00:00+02:00",
       "baseline": 113.96,
       "predicted": 108.12,
-      "lower": 82.14,
-      "upper": 134.1,
-      "uncertainty_pct": 0.3,
+      "lower": 83.87,
+      "upper": 132.37,
+      "uncertainty_pct": 0.28,
       "total_points": -8,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "oversupply",
       "sw_ratio_h": 1.753,
       "sw_ratio_daily": 1.445,
@@ -10272,11 +8503,11 @@
       "time": "2026-06-28T19:00:00+02:00",
       "baseline": 132.18,
       "predicted": 116.32,
-      "lower": 86.08,
-      "upper": 146.56,
-      "uncertainty_pct": 0.26,
+      "lower": 88.4,
+      "upper": 144.24,
+      "uncertainty_pct": 0.24,
       "total_points": -4,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 1.786,
       "sw_ratio_daily": 1.445,
@@ -10343,11 +8574,11 @@
       "time": "2026-06-28T20:00:00+02:00",
       "baseline": 147.89,
       "predicted": 123.63,
-      "lower": 89.91,
-      "upper": 157.35,
-      "uncertainty_pct": 0.3,
+      "lower": 92.16,
+      "upper": 155.1,
+      "uncertainty_pct": 0.28,
       "total_points": -8,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 2.027,
       "sw_ratio_daily": 1.445,
@@ -10419,11 +8650,11 @@
       "time": "2026-06-28T21:00:00+02:00",
       "baseline": 150.29,
       "predicted": 142.76,
-      "lower": 108.75,
-      "upper": 176.77,
-      "uncertainty_pct": 0.31,
+      "lower": 110.94,
+      "upper": 174.58,
+      "uncertainty_pct": 0.29,
       "total_points": -9,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 4.53,
       "sw_ratio_daily": 1.445,
@@ -10495,11 +8726,11 @@
       "time": "2026-06-28T22:00:00+02:00",
       "baseline": 145.57,
       "predicted": 142.36,
-      "lower": 109.52,
-      "upper": 175.2,
-      "uncertainty_pct": 0.24,
+      "lower": 112.26,
+      "upper": 172.46,
+      "uncertainty_pct": 0.22,
       "total_points": -2,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 1.445,
       "sw_ratio_daily": 1.445,
@@ -10571,11 +8802,11 @@
       "time": "2026-06-28T23:00:00+02:00",
       "baseline": 133.28,
       "predicted": 125.28,
-      "lower": 95.21,
-      "upper": 155.35,
-      "uncertainty_pct": 0.24,
+      "lower": 97.72,
+      "upper": 152.84,
+      "uncertainty_pct": 0.22,
       "total_points": -2,
-      "days_ahead": 6,
+      "days_ahead": 5,
       "regime": "normaal",
       "sw_ratio_h": 1.445,
       "sw_ratio_daily": 1.445,
@@ -10642,11 +8873,11 @@
       "time": "2026-06-29T00:00:00+02:00",
       "baseline": 136.3,
       "predicted": 111.76,
-      "lower": 78.23,
-      "upper": 145.29,
-      "uncertainty_pct": 0.3,
+      "lower": 80.47,
+      "upper": 143.05,
+      "uncertainty_pct": 0.28,
       "total_points": -6,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 1.431,
       "sw_ratio_daily": 1.431,
@@ -10713,11 +8944,11 @@
       "time": "2026-06-29T01:00:00+02:00",
       "baseline": 128.69,
       "predicted": 105.52,
-      "lower": 73.86,
-      "upper": 137.18,
-      "uncertainty_pct": 0.3,
+      "lower": 75.97,
+      "upper": 135.07,
+      "uncertainty_pct": 0.28,
       "total_points": -6,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 1.431,
       "sw_ratio_daily": 1.431,
@@ -10784,11 +9015,11 @@
       "time": "2026-06-29T02:00:00+02:00",
       "baseline": 123.24,
       "predicted": 101.06,
-      "lower": 70.74,
-      "upper": 131.38,
-      "uncertainty_pct": 0.3,
+      "lower": 72.76,
+      "upper": 129.36,
+      "uncertainty_pct": 0.28,
       "total_points": -6,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 1.431,
       "sw_ratio_daily": 1.431,
@@ -10855,11 +9086,11 @@
       "time": "2026-06-29T03:00:00+02:00",
       "baseline": 122.92,
       "predicted": 100.79,
-      "lower": 70.55,
-      "upper": 131.03,
-      "uncertainty_pct": 0.3,
+      "lower": 72.57,
+      "upper": 129.01,
+      "uncertainty_pct": 0.28,
       "total_points": -6,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 1.431,
       "sw_ratio_daily": 1.431,
@@ -10926,11 +9157,11 @@
       "time": "2026-06-29T04:00:00+02:00",
       "baseline": 125.11,
       "predicted": 102.59,
-      "lower": 71.81,
-      "upper": 133.37,
-      "uncertainty_pct": 0.3,
+      "lower": 73.86,
+      "upper": 131.32,
+      "uncertainty_pct": 0.28,
       "total_points": -6,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 1.431,
       "sw_ratio_daily": 1.431,
@@ -10997,11 +9228,11 @@
       "time": "2026-06-29T05:00:00+02:00",
       "baseline": 131.06,
       "predicted": 119.97,
-      "lower": 88.52,
-      "upper": 151.42,
-      "uncertainty_pct": 0.24,
+      "lower": 91.14,
+      "upper": 148.8,
+      "uncertainty_pct": 0.22,
       "total_points": 0,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 0.0,
       "sw_ratio_daily": 1.431,
@@ -11073,11 +9304,11 @@
       "time": "2026-06-29T06:00:00+02:00",
       "baseline": 155.11,
       "predicted": 145.36,
-      "lower": 108.13,
-      "upper": 182.59,
-      "uncertainty_pct": 0.24,
+      "lower": 111.24,
+      "upper": 179.48,
+      "uncertainty_pct": 0.22,
       "total_points": 0,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 0.101,
       "sw_ratio_daily": 1.431,
@@ -11149,11 +9380,11 @@
       "time": "2026-06-29T07:00:00+02:00",
       "baseline": 155.75,
       "predicted": 150.05,
-      "lower": 109.94,
-      "upper": 190.15,
-      "uncertainty_pct": 0.25,
+      "lower": 113.15,
+      "upper": 186.95,
+      "uncertainty_pct": 0.23,
       "total_points": 1,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 0.443,
       "sw_ratio_daily": 1.431,
@@ -11225,11 +9456,11 @@
       "time": "2026-06-29T08:00:00+02:00",
       "baseline": 133.87,
       "predicted": 123.14,
-      "lower": 90.68,
-      "upper": 155.6,
-      "uncertainty_pct": 0.25,
+      "lower": 93.27,
+      "upper": 153.01,
+      "uncertainty_pct": 0.23,
       "total_points": -1,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 0.662,
       "sw_ratio_daily": 1.431,
@@ -11301,11 +9532,11 @@
       "time": "2026-06-29T09:00:00+02:00",
       "baseline": 111.92,
       "predicted": 101.85,
-      "lower": 74.35,
-      "upper": 129.35,
-      "uncertainty_pct": 0.27,
+      "lower": 76.39,
+      "upper": 127.31,
+      "uncertainty_pct": 0.25,
       "total_points": -3,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 0.832,
       "sw_ratio_daily": 1.431,
@@ -11372,11 +9603,11 @@
       "time": "2026-06-29T10:00:00+02:00",
       "baseline": 92.04,
       "predicted": 105.23,
-      "lower": 82.61,
-      "upper": 127.85,
-      "uncertainty_pct": 0.27,
+      "lower": 84.29,
+      "upper": 126.17,
+      "uncertainty_pct": 0.25,
       "total_points": -3,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 0.996,
       "sw_ratio_daily": 1.431,
@@ -11448,11 +9679,11 @@
       "time": "2026-06-29T11:00:00+02:00",
       "baseline": 66.77,
       "predicted": 80.7,
-      "lower": 64.29,
-      "upper": 97.11,
-      "uncertainty_pct": 0.27,
+      "lower": 65.51,
+      "upper": 95.89,
+      "uncertainty_pct": 0.25,
       "total_points": -3,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 1.153,
       "sw_ratio_daily": 1.431,
@@ -11524,11 +9755,11 @@
       "time": "2026-06-29T12:00:00+02:00",
       "baseline": 49.53,
       "predicted": 63.19,
-      "lower": 50.98,
-      "upper": 75.4,
-      "uncertainty_pct": 0.29,
+      "lower": 51.82,
+      "upper": 74.56,
+      "uncertainty_pct": 0.27,
       "total_points": -5,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 1.308,
       "sw_ratio_daily": 1.431,
@@ -11600,11 +9831,11 @@
       "time": "2026-06-29T13:00:00+02:00",
       "baseline": 37.91,
       "predicted": 32.23,
-      "lower": 22.88,
-      "upper": 41.58,
-      "uncertainty_pct": 0.29,
+      "lower": 23.53,
+      "upper": 40.93,
+      "uncertainty_pct": 0.27,
       "total_points": -5,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "oversupply",
       "sw_ratio_h": 1.452,
       "sw_ratio_daily": 1.431,
@@ -11671,11 +9902,11 @@
       "time": "2026-06-29T14:00:00+02:00",
       "baseline": 36.56,
       "predicted": 32.94,
-      "lower": 24.05,
-      "upper": 41.83,
-      "uncertainty_pct": 0.32,
+      "lower": 24.6,
+      "upper": 41.28,
+      "uncertainty_pct": 0.3,
       "total_points": -8,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "oversupply",
       "sw_ratio_h": 1.573,
       "sw_ratio_daily": 1.431,
@@ -11747,11 +9978,11 @@
       "time": "2026-06-29T15:00:00+02:00",
       "baseline": 58.77,
       "predicted": 57.99,
-      "lower": 43.83,
-      "upper": 72.15,
-      "uncertainty_pct": 0.33,
+      "lower": 44.69,
+      "upper": 71.29,
+      "uncertainty_pct": 0.31,
       "total_points": -9,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "oversupply",
       "sw_ratio_h": 1.68,
       "sw_ratio_daily": 1.431,
@@ -11823,11 +10054,11 @@
       "time": "2026-06-29T16:00:00+02:00",
       "baseline": 95.27,
       "predicted": 84.32,
-      "lower": 61.65,
-      "upper": 106.99,
-      "uncertainty_pct": 0.34,
+      "lower": 62.98,
+      "upper": 105.66,
+      "uncertainty_pct": 0.32,
       "total_points": -10,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "oversupply",
       "sw_ratio_h": 1.786,
       "sw_ratio_daily": 1.431,
@@ -11899,11 +10130,11 @@
       "time": "2026-06-29T17:00:00+02:00",
       "baseline": 117.87,
       "predicted": 99.12,
-      "lower": 71.48,
-      "upper": 126.76,
-      "uncertainty_pct": 0.35,
+      "lower": 73.06,
+      "upper": 125.18,
+      "uncertainty_pct": 0.33,
       "total_points": -11,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "oversupply",
       "sw_ratio_h": 1.891,
       "sw_ratio_daily": 1.431,
@@ -11975,11 +10206,11 @@
       "time": "2026-06-29T18:00:00+02:00",
       "baseline": 156.86,
       "predicted": 107.78,
-      "lower": 74.13,
-      "upper": 141.43,
-      "uncertainty_pct": 0.39,
+      "lower": 75.86,
+      "upper": 139.7,
+      "uncertainty_pct": 0.37,
       "total_points": -15,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "oversupply",
       "sw_ratio_h": 2.012,
       "sw_ratio_daily": 1.431,
@@ -12051,11 +10282,11 @@
       "time": "2026-06-29T19:00:00+02:00",
       "baseline": 266.6,
       "predicted": 210.61,
-      "lower": 145.32,
-      "upper": 275.9,
-      "uncertainty_pct": 0.31,
+      "lower": 149.53,
+      "upper": 271.69,
+      "uncertainty_pct": 0.29,
       "total_points": -7,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 2.193,
       "sw_ratio_daily": 1.431,
@@ -12122,11 +10353,11 @@
       "time": "2026-06-29T20:00:00+02:00",
       "baseline": 423.09,
       "predicted": 345.47,
-      "lower": 241.86,
-      "upper": 449.08,
-      "uncertainty_pct": 0.31,
+      "lower": 248.54,
+      "upper": 442.4,
+      "uncertainty_pct": 0.29,
       "total_points": -7,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 2.646,
       "sw_ratio_daily": 1.431,
@@ -12198,11 +10429,11 @@
       "time": "2026-06-29T21:00:00+02:00",
       "baseline": 411.17,
       "predicted": 333.21,
-      "lower": 234.16,
-      "upper": 432.26,
-      "uncertainty_pct": 0.33,
+      "lower": 240.16,
+      "upper": 426.26,
+      "uncertainty_pct": 0.31,
       "total_points": -9,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 6.312,
       "sw_ratio_daily": 1.431,
@@ -12274,11 +10505,11 @@
       "time": "2026-06-29T22:00:00+02:00",
       "baseline": 270.87,
       "predicted": 235.76,
-      "lower": 168.99,
-      "upper": 302.53,
-      "uncertainty_pct": 0.29,
+      "lower": 173.6,
+      "upper": 297.92,
+      "uncertainty_pct": 0.27,
       "total_points": -5,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 1.431,
       "sw_ratio_daily": 1.431,
@@ -12350,11 +10581,11 @@
       "time": "2026-06-29T23:00:00+02:00",
       "baseline": 184.48,
       "predicted": 156.8,
-      "lower": 111.33,
-      "upper": 202.27,
-      "uncertainty_pct": 0.29,
+      "lower": 114.46,
+      "upper": 199.14,
+      "uncertainty_pct": 0.27,
       "total_points": -5,
-      "days_ahead": 7,
+      "days_ahead": 6,
       "regime": "normaal",
       "sw_ratio_h": 1.431,
       "sw_ratio_daily": 1.431,
@@ -12416,6 +10647,1790 @@
       "event_plausibility_score": 0.9792,
       "event_plausibility_label": "HIGH",
       "analog_sample_size": 46
+    },
+    {
+      "time": "2026-06-30T00:00:00+02:00",
+      "baseline": 136.95,
+      "predicted": 116.41,
+      "lower": 82.65,
+      "upper": 150.17,
+      "uncertainty_pct": 0.29,
+      "total_points": -5,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.146,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (115%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (0:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.72x baseline)"
+        }
+      ],
+      "event_plausibility_score": 0.865,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 29
+    },
+    {
+      "time": "2026-06-30T01:00:00+02:00",
+      "baseline": 128.98,
+      "predicted": 109.63,
+      "lower": 77.84,
+      "upper": 141.42,
+      "uncertainty_pct": 0.29,
+      "total_points": -5,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.146,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (115%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (1:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.69x baseline)"
+        }
+      ],
+      "event_plausibility_score": 0.865,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 29
+    },
+    {
+      "time": "2026-06-30T02:00:00+02:00",
+      "baseline": 122.13,
+      "predicted": 103.81,
+      "lower": 73.71,
+      "upper": 133.91,
+      "uncertainty_pct": 0.29,
+      "total_points": -5,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.146,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (115%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (2:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.71x baseline)"
+        }
+      ],
+      "event_plausibility_score": 0.865,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 29
+    },
+    {
+      "time": "2026-06-30T03:00:00+02:00",
+      "baseline": 118.77,
+      "predicted": 100.95,
+      "lower": 71.67,
+      "upper": 130.23,
+      "uncertainty_pct": 0.29,
+      "total_points": -5,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.146,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (115%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (3:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.71x baseline)"
+        }
+      ],
+      "event_plausibility_score": 0.865,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 29
+    },
+    {
+      "time": "2026-06-30T04:00:00+02:00",
+      "baseline": 116.94,
+      "predicted": 99.4,
+      "lower": 70.57,
+      "upper": 128.23,
+      "uncertainty_pct": 0.29,
+      "total_points": -5,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.146,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (115%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -2,
+          "reason": "zomer, nacht (4:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.72x baseline)"
+        }
+      ],
+      "event_plausibility_score": 0.865,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 29
+    },
+    {
+      "time": "2026-06-30T05:00:00+02:00",
+      "baseline": 123.28,
+      "predicted": 112.19,
+      "lower": 82.6,
+      "upper": 141.78,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 0.0,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 3,
+          "reason": "bewolkt (0% van seizoen)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 0,
+          "reason": "geblokkeerd (bewolkt: sw_h=0.00<0.30)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.72x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS -11.1 EUR/MWh (normaal_h05_m06, n=21)"
+        }
+      ],
+      "event_plausibility_score": 0.6888,
+      "event_plausibility_label": "NORMAL",
+      "analog_sample_size": 14
+    },
+    {
+      "time": "2026-06-30T06:00:00+02:00",
+      "baseline": 137.09,
+      "predicted": 127.34,
+      "lower": 94.44,
+      "upper": 160.24,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 0.073,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 3,
+          "reason": "bewolkt (7% van seizoen)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 0,
+          "reason": "geblokkeerd (bewolkt: sw_h=0.07<0.30)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.79x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS -9.8 EUR/MWh (normaal_h06_m06, n=21)"
+        }
+      ],
+      "event_plausibility_score": 0.6888,
+      "event_plausibility_label": "NORMAL",
+      "analog_sample_size": 14
+    },
+    {
+      "time": "2026-06-30T07:00:00+02:00",
+      "baseline": 134.28,
+      "predicted": 131.97,
+      "lower": 94.96,
+      "upper": 168.98,
+      "uncertainty_pct": 0.26,
+      "total_points": 2,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 0.357,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 3,
+          "reason": "bewolkt (36% van seizoen)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 1,
+          "reason": "zomer, ochtendspits (7:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -1,
+          "reason": "seizoen iets goedkoper (0.84x)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS -10.4 EUR/MWh (normaal_h07_m06, n=21)"
+        }
+      ],
+      "event_plausibility_score": 0.5588,
+      "event_plausibility_label": "NORMAL",
+      "analog_sample_size": 8
+    },
+    {
+      "time": "2026-06-30T08:00:00+02:00",
+      "baseline": 124.28,
+      "predicted": 117.57,
+      "lower": 87.74,
+      "upper": 147.4,
+      "uncertainty_pct": 0.24,
+      "total_points": 0,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 0.536,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 1,
+          "reason": "iets minder zon (54%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 1,
+          "reason": "zomer, ochtendspits (8:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -1,
+          "reason": "seizoen iets goedkoper (0.85x)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS -6.7 EUR/MWh (normaal_h08_m06, n=21)"
+        }
+      ],
+      "event_plausibility_score": 0.6099,
+      "event_plausibility_label": "NORMAL",
+      "analog_sample_size": 10
+    },
+    {
+      "time": "2026-06-30T09:00:00+02:00",
+      "baseline": 110.36,
+      "predicted": 103.73,
+      "lower": 76.76,
+      "upper": 130.7,
+      "uncertainty_pct": 0.26,
+      "total_points": -2,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 0.668,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 1,
+          "reason": "iets minder zon (67%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (9:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -1,
+          "reason": "seizoen iets goedkoper (0.83x)"
+        }
+      ],
+      "event_plausibility_score": 0.6099,
+      "event_plausibility_label": "NORMAL",
+      "analog_sample_size": 10
+    },
+    {
+      "time": "2026-06-30T10:00:00+02:00",
+      "baseline": 92.04,
+      "predicted": 107.99,
+      "lower": 85.49,
+      "upper": 130.49,
+      "uncertainty_pct": 0.26,
+      "total_points": -2,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 0.778,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 1,
+          "reason": "iets minder zon (78%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (10:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -1,
+          "reason": "seizoen iets goedkoper (0.83x)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +21.5 EUR/MWh (normaal_h10_m06, n=20)"
+        }
+      ],
+      "event_plausibility_score": 0.6888,
+      "event_plausibility_label": "NORMAL",
+      "analog_sample_size": 14
+    },
+    {
+      "time": "2026-06-30T11:00:00+02:00",
+      "baseline": 66.77,
+      "predicted": 80.7,
+      "lower": 64.29,
+      "upper": 97.11,
+      "uncertainty_pct": 0.27,
+      "total_points": -3,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 0.883,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (88%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (11:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -1,
+          "reason": "seizoen iets goedkoper (0.88x)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +19.9 EUR/MWh (normaal_h11_m06, n=20)"
+        }
+      ],
+      "event_plausibility_score": 0.6712,
+      "event_plausibility_label": "NORMAL",
+      "analog_sample_size": 13
+    },
+    {
+      "time": "2026-06-30T12:00:00+02:00",
+      "baseline": 49.53,
+      "predicted": 64.68,
+      "lower": 52.47,
+      "upper": 76.89,
+      "uncertainty_pct": 0.28,
+      "total_points": -4,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 0.986,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (99%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (12:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.73x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +21.1 EUR/MWh (normaal_h12_m06, n=15)"
+        }
+      ],
+      "event_plausibility_score": 0.7052,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 15
+    },
+    {
+      "time": "2026-06-30T13:00:00+02:00",
+      "baseline": 37.91,
+      "predicted": 61.79,
+      "lower": 52.47,
+      "upper": 71.1,
+      "uncertainty_pct": 0.27,
+      "total_points": -3,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.084,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (108%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (13:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -1,
+          "reason": "seizoen iets goedkoper (0.82x)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +27.3 EUR/MWh (normaal_h13_m06, n=10)"
+        }
+      ],
+      "event_plausibility_score": 0.6524,
+      "event_plausibility_label": "NORMAL",
+      "analog_sample_size": 12
+    },
+    {
+      "time": "2026-06-30T14:00:00+02:00",
+      "baseline": 36.56,
+      "predicted": 57.42,
+      "lower": 48.41,
+      "upper": 66.43,
+      "uncertainty_pct": 0.28,
+      "total_points": -4,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.182,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (118%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, midden van de dag (14:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.74x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +25.2 EUR/MWh (normaal_h14_m06, n=10)"
+        }
+      ],
+      "event_plausibility_score": 0.865,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 29
+    },
+    {
+      "time": "2026-06-30T15:00:00+02:00",
+      "baseline": 58.89,
+      "predicted": 80.05,
+      "lower": 65.53,
+      "upper": 94.57,
+      "uncertainty_pct": 0.29,
+      "total_points": -5,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.292,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -1,
+          "reason": "zonnig (129%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, namiddag (15:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.39x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +30.0 EUR/MWh (normaal_h15_m06, n=7)"
+        }
+      ],
+      "event_plausibility_score": 0.865,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 29
+    },
+    {
+      "time": "2026-06-30T16:00:00+02:00",
+      "baseline": 99.65,
+      "predicted": 102.33,
+      "lower": 77.77,
+      "upper": 126.89,
+      "uncertainty_pct": 0.29,
+      "total_points": -5,
+      "days_ahead": 7,
+      "regime": "oversupply",
+      "sw_ratio_h": 1.425,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -1,
+          "reason": "zonnig (143%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, namiddag (16:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "oversupply niet-lineair: zon -0.2p"
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.50x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +17.6 EUR/MWh (oversupply_h16_m06, n=13)"
+        }
+      ],
+      "event_plausibility_score": 1.0,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 62
+    },
+    {
+      "time": "2026-06-30T17:00:00+02:00",
+      "baseline": 121.96,
+      "predicted": 116.5,
+      "lower": 86.63,
+      "upper": 146.37,
+      "uncertainty_pct": 0.31,
+      "total_points": -7,
+      "days_ahead": 7,
+      "regime": "oversupply",
+      "sw_ratio_h": 1.572,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -3,
+          "reason": "heel zonnig (157%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 0,
+          "reason": "zomer, vroege avond (17:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": -1,
+          "reason": "oversupply niet-lineair: zon -1.0p"
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.65x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +20.1 EUR/MWh (oversupply_h17_m06, n=14)"
+        }
+      ],
+      "event_plausibility_score": 1.0,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 77
+    },
+    {
+      "time": "2026-06-30T18:00:00+02:00",
+      "baseline": 169.78,
+      "predicted": 145.45,
+      "lower": 104.55,
+      "upper": 186.35,
+      "uncertainty_pct": 0.33,
+      "total_points": -9,
+      "days_ahead": 7,
+      "regime": "oversupply",
+      "sw_ratio_h": 1.739,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -3,
+          "reason": "heel zonnig (174%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 0,
+          "reason": "zomer, vroege avond (18:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": -3,
+          "reason": "oversupply niet-lineair: zon -2.7p"
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.54x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +21.5 EUR/MWh (oversupply_h18_m06, n=14)"
+        }
+      ],
+      "event_plausibility_score": 0.8564,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 28
+    },
+    {
+      "time": "2026-06-30T19:00:00+02:00",
+      "baseline": 181.14,
+      "predicted": 153.97,
+      "lower": 109.32,
+      "upper": 198.62,
+      "uncertainty_pct": 0.29,
+      "total_points": -5,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.955,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -3,
+          "reason": "heel zonnig (196%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 1,
+          "reason": "zomer, avondspits (19:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.60x baseline)"
+        }
+      ],
+      "event_plausibility_score": 0.7619,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 19
+    },
+    {
+      "time": "2026-06-30T20:00:00+02:00",
+      "baseline": 238.48,
+      "predicted": 199.63,
+      "lower": 141.23,
+      "upper": 258.03,
+      "uncertainty_pct": 0.31,
+      "total_points": -7,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 2.394,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -5,
+          "reason": "extreem zonnig (239%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": 1,
+          "reason": "zomer, avondspits (20:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.57x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +11.2 EUR/MWh (normaal_h20_m06, n=20)"
+        }
+      ],
+      "event_plausibility_score": 0.4093,
+      "event_plausibility_label": "NORMAL",
+      "analog_sample_size": 4
+    },
+    {
+      "time": "2026-06-30T21:00:00+02:00",
+      "baseline": 225.47,
+      "predicted": 197.65,
+      "lower": 143.33,
+      "upper": 251.97,
+      "uncertainty_pct": 0.33,
+      "total_points": -9,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 5.737,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": -5,
+          "reason": "extreem zonnig (574%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, late avond (21:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.58x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +33.0 EUR/MWh (normaal_h21_m06, n=20)"
+        }
+      ],
+      "event_plausibility_score": 0.0,
+      "event_plausibility_label": "VERY_RARE_EVENT",
+      "analog_sample_size": 0
+    },
+    {
+      "time": "2026-06-30T22:00:00+02:00",
+      "baseline": 178.26,
+      "predicted": 162.39,
+      "lower": 118.47,
+      "upper": 206.31,
+      "uncertainty_pct": 0.28,
+      "total_points": -4,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.146,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (115%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, late avond (22:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.66x baseline)"
+        },
+        {
+          "name": "bias_correctie",
+          "points": 0,
+          "reason": "MOS +5.5 EUR/MWh (normaal_h22_m06, n=20)"
+        }
+      ],
+      "event_plausibility_score": 0.865,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 29
+    },
+    {
+      "time": "2026-06-30T23:00:00+02:00",
+      "baseline": 151.81,
+      "predicted": 133.6,
+      "lower": 96.19,
+      "upper": 171.01,
+      "uncertainty_pct": 0.28,
+      "total_points": -4,
+      "days_ahead": 7,
+      "regime": "normaal",
+      "sw_ratio_h": 1.146,
+      "sw_ratio_daily": 1.146,
+      "wind_ms": 5.33,
+      "temp_c": 20.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "zon",
+          "points": 0,
+          "reason": "normaal (115%)"
+        },
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.3 m/s)"
+        },
+        {
+          "name": "temperatuur",
+          "points": -1,
+          "reason": "lekker (20.5°C)"
+        },
+        {
+          "name": "gas",
+          "points": -1,
+          "reason": "gas iets goedkoper (89%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "uurpatroon",
+          "points": -1,
+          "reason": "zomer, late avond (23:00)"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 0,
+          "reason": "niet beschikbaar (>1 dag vooruit)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "seizoen",
+          "points": -2,
+          "reason": "seizoen historisch goedkoper (0.66x baseline)"
+        }
+      ],
+      "event_plausibility_score": 0.865,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 29
     }
   ]
 }
