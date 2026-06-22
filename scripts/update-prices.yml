@@ -1,0 +1,166 @@
+name: Update prijzen (handmatig / fallback)
+
+# Aangestuurd door Pipedream (dagelijks om 14:01 CEST via workflow_dispatch).
+# Na het ophalen wordt gecontroleerd of morgen-prijzen aanwezig zijn; zo ja,
+# wordt automatisch de dagelijkse tweet gestart (alleen bij workflow_dispatch,
+# niet bij push naar main om dubbele tweets te voorkomen).
+#
+# Wanneer draait deze workflow?
+#  - na elke push naar main (handig om de cache direct te verversen)
+#  - dagelijks om 14:01 CEST via Pipedream (workflow_dispatch)
+#  - handmatig, via Run workflow in de GitHub UI
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # nodig om data terug te committen
+
+concurrency:
+  group: update-prices
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    outputs:
+      morgen_aanwezig: ${{ steps.morgen_check.outputs.morgen_aanwezig }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Haal prijzen op
+        env:
+          ENTSOE_TOKEN: ${{ secrets.ENTSOE_TOKEN }}
+        run: |
+          python scripts/fetch_prices.py
+
+      - name: Genereer voorspelling
+        # Mag falen zonder dat de prijzen-update zelf faalt (continue-on-error).
+        # Bij Open-Meteo of Yahoo downtime krijgen bezoekers de actuele day-ahead
+        # prijzen wel; alleen de 5-7d voorspelling ontbreekt dan tijdelijk.
+        # Schrijft ook 03-data/prediction_log.json (nieuwe entries, actual=null).
+        continue-on-error: true
+        run: |
+          python scripts/run_forecast.py
+
+      - name: Vul actuals in prediction log
+        # Zoekt entries in prediction_log.json waar actual==null en de prijs
+        # inmiddels beschikbaar is in prices.json. Nodig voor bias-correctie.
+        continue-on-error: true
+        run: |
+          python scripts/update_log.py
+
+      - name: Archiveer forecast-snapshot
+        # Slaat dagelijks een kopie van forecast.json op in forecast_archive/.
+        # Nodig voor het performance-dashboard (vergelijking voorspelling vs werkelijk).
+        # Overschrijft de snapshot van dezelfde dag als de workflow meerdere keren draait.
+        continue-on-error: true
+        run: |
+          mkdir -p public/data/forecast_archive
+          DATE=$(date -u +%Y-%m-%d)
+          cp public/data/forecast.json public/data/forecast_archive/forecast_${DATE}.json
+
+      - name: Genereer RSS-feed
+        # Schrijft public/data/feed.xml met de laatste 7 dagen uurprijzen.
+        # Mag falen zonder dat de rest van de workflow stopt.
+        continue-on-error: true
+        run: |
+          python scripts/generate_feed.py
+
+      - name: Genereer Home Assistant feed
+        # Schrijft public/data/ha.json: vandaag + morgen + voorspelling,
+        # klaar voor de RESTful sensor van Home Assistant. Mag falen zonder
+        # dat de rest van de workflow stopt.
+        continue-on-error: true
+        run: |
+          python scripts/generate_ha.py
+
+      - name: Genereer prijsduiding
+        # Schrijft public/data/duiding.json: uitleg in gewone taal bij de morgen-prijzen.
+        # Leest ha.json (prijzen) + forecast.json (gemeten wind/zon). Draait ná
+        # generate_ha.py en run_forecast.py, dus beide zijn vers. Mag falen.
+        continue-on-error: true
+        run: |
+          python scripts/genereer_duiding.py --prod public/data/ha.json public/data/duiding.json public/data/forecast.json
+
+      - name: Genereer performance-dashboard
+        # Schrijft public/data/performance.json op basis van gearchiveerde forecasts
+        # en werkelijke prijzen. Heeft pas zinvolle output na ~14 dagen archief.
+        continue-on-error: true
+        run: |
+          python scripts/generate_performance.py
+
+      - name: Commit en push als er iets veranderd is
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          git add public/data/prices.json public/data/forecast.json 2>/dev/null || true
+          git add public/data/feed.xml 2>/dev/null || true
+          git add public/data/ha.json 2>/dev/null || true
+          git add public/data/duiding.json 2>/dev/null || true
+          git add public/data/performance.json 2>/dev/null || true
+          git add public/data/forecast_archive/ 2>/dev/null || true
+          git add public/data/archief/ 2>/dev/null || true
+          git add 03-data/prediction_log.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: update prijzen + voorspelling $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          else
+            echo "Geen wijzigingen - niets te committen."
+          fi
+
+      - name: Check of morgen-prijzen aanwezig zijn
+        # Kijkt of prices.json >=24 uurprijzen voor morgen bevat (Amsterdam-tijd).
+        # Uitkomst wordt als job output doorgegeven aan de tweet-job hieronder.
+        # Gebruikt bash heredoc (python - <<'PYEOF') zodat de Python-code niet
+        # aan YAML-inspringing hoeft te voldoen en er geen syntax-fouten ontstaan.
+        id: morgen_check
+        run: |
+          python - <<'PYEOF' >> $GITHUB_OUTPUT
+          import json, sys
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          def amsterdam_offset():
+              now_utc = datetime.now(timezone.utc)
+              year = now_utc.year
+              march = datetime(year, 3, 31, 1, 0, tzinfo=timezone.utc)
+              while march.weekday() != 6:
+                  march -= timedelta(days=1)
+              october = datetime(year, 10, 31, 1, 0, tzinfo=timezone.utc)
+              while october.weekday() != 6:
+                  october -= timedelta(days=1)
+              return timedelta(hours=2) if march <= now_utc < october else timedelta(hours=1)
+
+          offset = amsterdam_offset()
+          now_ams = datetime.now(timezone.utc) + offset
+          tomorrow = (now_ams + timedelta(days=1)).strftime('%Y-%m-%d')
+
+          p = Path('public/data/prices.json')
+          if not p.exists():
+              print('morgen_aanwezig=false')
+              sys.exit(0)
+
+          data = json.loads(p.read_text())
+          count = sum(1 for e in data.get('prices', []) if e.get('time', '')[:10] == tomorrow)
+          result = 'true' if count >= 24 else 'false'
+          print(f'[morgen_check] {count} uurprijzen gevonden voor {tomorrow} -> morgen_aanwezig={result}', file=sys.stderr)
+          print(f'morgen_aanwezig={result}')
+          PYEOF
+
+  tweet:
+    name: Post dagelijkse X-tweet
+    needs: update
+    # Alleen bij workflow_dispatch (Pipedream / handmatig), nooit bij push naar main.
+    # Zo tweet het systeem precies eenmaal per dag en worden code-pushes niet
+    # per ongeluk als tweet-aanleiding gebruikt.
+    if: github.event_name == 'workflow_dispatch' && needs.update.outputs.morgen_aanwezig == 'true'
+    uses: ./.github/workflows/daily-tweet.yml
+    secrets: inherit
