@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-genereer_duiding.py — Route C: deterministisch feiten-skelet + verwoordings-prompt
-voor de dagelijkse prijsduiding op stroomvoorspeller.nl.
+genereer_duiding.py — automatische prijsduiding voor stroomvoorspeller.nl.
 
 Filosofie (zelfde als forecast.py / event_plausibility.py):
 - Deterministisch en herleidbaar. Geen ML, geen verzonnen cijfers.
@@ -11,26 +10,29 @@ Filosofie (zelfde als forecast.py / event_plausibility.py):
 
 Pijplijn:
     prijzen (+ optioneel forecast-factoren)
-        -> bouw_skelet()          # de feiten
-        -> template_concept()      # route A: kant-en-klare zinnen, geen LLM
-        -> verwoordings_prompt()   # route C: prompt die ALLEEN het skelet verwoordt
+        -> bouw_skelet()     # de feiten (technisch, voor controle/anomalie)
+        -> bouw_publiek()    # de B2-tekst die de bezoeker leest (duiding.json)
 
 Twee databronnen voor de drivers, in volgorde van voorkeur:
   1. forecast.json `factors` (zon/wind/temp/gas/uurpatroon) — exact, uit het model.
-     In productie draait dit script ná run_forecast.py en leest het die factoren.
+     In productie draait dit script ná run_forecast.py en kan het die factoren lezen.
   2. Geen factoren beschikbaar -> "prijs-modus": de driver wordt afgeleid uit de
-     vorm van de prijscurve zelf (middagdal = zon, avondpiek = wegvallende zon +
-     krappe marge) plus het deterministische uurpatroon. Kwalitatief, duidelijk
-     gelabeld als afleiding, niet als meting.
+     vorm van de prijscurve zelf (middagdal = zon, avondpiek = wegvallende zon)
+     plus het deterministische uurpatroon. Duidelijk gelabeld als afleiding.
 
 Belasting/all-in volgt de site-conventie (ha.json):
     all_in = (markt[EUR/kWh] + energiebelasting + gem. opslag) * btw
 en de regel: "gratis" alleen als all_in < 0; anders "markt negatief".
+
+Gebruik:
+    genereer_duiding.py --prod [ha.json] [duiding.json]    # productie
+    genereer_duiding.py <prijzen.json> [--datum YYYY-MM-DD] # backtest
 """
 
 from __future__ import annotations
 
 import json
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -52,7 +54,7 @@ NL_FEESTDAGEN_2026 = {
 }
 
 # Drempels voor anomalie-detectie (de "event_plausibility"-gedachte).
-ANOM_PIEK_FACTOR = 3.0   # piek > 3x de dagmediaan -> mogelijk extra oorzaak
+ANOM_PIEK_FACTOR = 3.0   # piek > 3x het dagmidden -> mogelijk extra oorzaak
 ANOM_PIEK_ABS = 300.0    # of piek > 300 EUR/MWh absoluut
 
 BRONNEN = {
@@ -85,24 +87,7 @@ def _is_zomer(month: int) -> bool:
     return 4 <= month <= 9
 
 
-def uurpatroon_label(hour: int, zomer: bool) -> str:
-    """Deterministisch uurpatroon (vereenvoudigd uit forecast.factor_uurpatroon)."""
-    if 0 <= hour <= 5:
-        return "nacht"
-    if 6 <= hour <= 8:
-        return "ochtendspits"
-    if 9 <= hour <= 14:
-        return "midden van de dag"
-    if 15 <= hour <= 16:
-        return "namiddag"
-    if 17 <= hour <= 18:
-        return "vroege avond"
-    if 19 <= hour <= 20:
-        return "avondspits"
-    return "late avond"
-
-
-def median(xs: list[float]) -> float:
+def median(xs: list) -> float:
     s = sorted(xs)
     n = len(s)
     if n == 0:
@@ -111,7 +96,7 @@ def median(xs: list[float]) -> float:
     return s[mid] if n % 2 else (s[mid - 1] + s[mid]) / 2
 
 
-def _runs(hours: list[int]) -> list[tuple[int, int]]:
+def _runs(hours: list) -> list:
     """Groepeer een gesorteerde lijst uren in aaneengesloten blokken (start, eind)."""
     if not hours:
         return []
@@ -133,12 +118,11 @@ def fmt_uur(h: int) -> str:
 
 
 def fmt_window(a: int, b: int) -> str:
-    # b is het laatste uur dat begint; het blok loopt tot b+1.
-    return f"{a:02d}–{(b + 1) % 24:02d}u" if a != b else f"{a:02d}–{(a + 1) % 24:02d}u"
+    return f"{a:02d}-{(b + 1) % 24:02d}u" if a != b else f"{a:02d}-{(a + 1) % 24:02d}u"
 
 
 # ---------------------------------------------------------------------------
-# Kern: bouw het feiten-skelet voor één dag
+# Kern: bouw het feiten-skelet voor één dag (technisch)
 # ---------------------------------------------------------------------------
 def bouw_skelet(date: str, prices: list, factors_per_hour: list | None = None) -> dict:
     """
@@ -147,10 +131,8 @@ def bouw_skelet(date: str, prices: list, factors_per_hour: list | None = None) -
     factors_per_hour: optioneel, de `factors`-array per uur uit forecast.json.
     """
     dt = datetime.fromisoformat(date)
-    zomer = _is_zomer(dt.month)
     dtype = daytype(dt, date)
 
-    # Geldige (uur, prijs)-paren.
     pairs = [(h, p) for h, p in enumerate(prices) if p is not None]
     vals = [p for _, p in pairs]
     missing = [h for h, p in enumerate(prices) if p is None]
@@ -160,246 +142,358 @@ def bouw_skelet(date: str, prices: list, factors_per_hour: list | None = None) -
     min_h, min_p = min(pairs, key=lambda x: x[1])
     max_h, max_p = max(pairs, key=lambda x: x[1])
 
-    # Negatieve uren (kale markt < 0).
     neg_hours = [h for h, p in pairs if p < 0]
     allin_neg = [h for h, p in pairs if all_in(p) < 0]
 
-    # --- Daluren (zonnedal): aaneengesloten goedkoopste blok midden op de dag ---
-    dal_drempel = min(0.25 * day_med, 5.0)  # "bijna gratis"-zone
+    # Daluren (zonnedal): aaneengesloten goedkoopste blok midden op de dag.
+    dal_drempel = min(0.25 * day_med, 5.0)
     dal_hours = [h for h, p in pairs if p <= dal_drempel]
-    dal_blocks = _runs(dal_hours)
-    # Kies het blok dat het dagminimum bevat.
-    dal_block = next((b for b in dal_blocks if b[0] <= min_h <= b[1]), None)
+    dal_block = next((b for b in _runs(dal_hours) if b[0] <= min_h <= b[1]), None)
 
-    # --- Piekblok: aaneengesloten duurste blok rond het dagmaximum ---
+    # Piekblok: aaneengesloten duurste blok rond het dagmaximum.
     piek_drempel = 0.80 * max_p
     piek_hours = [h for h, p in pairs if p >= piek_drempel]
-    piek_blocks = _runs(piek_hours)
-    piek_block = next((b for b in piek_blocks if b[0] <= max_h <= b[1]), None)
+    piek_block = next((b for b in _runs(piek_hours) if b[0] <= max_h <= b[1]), None)
 
     windows = []
-
-    # Dal-venster
     if dal_block:
         a, b = dal_block
         drivers = ["zon"] if any(9 <= h <= 17 for h in range(a, b + 1)) else ["lage vraag"]
-        if min_p < 0:
-            mag = "diep negatief"
-        elif min_p < 5:
-            mag = "rond nul"
-        else:
-            mag = "laag"
+        mag = "diep negatief" if min_p < 0 else ("rond nul" if min_p < 5 else "laag")
         windows.append({
-            "kind": "dal",
-            "window": fmt_window(a, b),
-            "extreme_hour": fmt_uur(min_h),
-            "extreme_market": round(min_p, 2),
-            "extreme_all_in": round(all_in(min_p), 4),
-            "magnitude": mag,
-            "drivers": drivers,
-            "toelichting_feit": f"prijs zakt naar {min_p:.0f} EUR/MWh tussen {fmt_window(a, b)}",
+            "kind": "dal", "window": fmt_window(a, b),
+            "extreme_hour": fmt_uur(min_h), "extreme_market": round(min_p, 2),
+            "extreme_all_in": round(all_in(min_p), 4), "magnitude": mag, "drivers": drivers,
         })
 
-    # Ochtendpiek apart benoemen als die los van de avondpiek bestaat.
-    if max(6, 0) and any(6 <= h <= 8 for h, p in pairs):
-        om_vals = [(h, p) for h, p in pairs if 6 <= h <= 8]
-        om_h, om_p = max(om_vals, key=lambda x: x[1])
+    if any(6 <= h <= 8 for h, p in pairs):
+        om_h, om_p = max([(h, p) for h, p in pairs if 6 <= h <= 8], key=lambda x: x[1])
         if om_p >= 0.92 * day_med and not (piek_block and piek_block[0] <= om_h <= piek_block[1]):
             windows.append({
-                "kind": "ochtendpiek",
-                "window": "06–09u",
-                "extreme_hour": fmt_uur(om_h),
-                "extreme_market": round(om_p, 2),
-                "extreme_all_in": round(all_in(om_p), 4),
-                "magnitude": "verhoogd",
+                "kind": "ochtendpiek", "window": "06-09u",
+                "extreme_hour": fmt_uur(om_h), "extreme_market": round(om_p, 2),
+                "extreme_all_in": round(all_in(om_p), 4), "magnitude": "verhoogd",
                 "drivers": ["ochtendvraag", "weinig zon"],
-                "toelichting_feit": f"ochtendvraag tilt de prijs naar {om_p:.0f} EUR/MWh om {fmt_uur(om_h)}",
             })
 
-    # Piek-venster (meestal avond)
     if piek_block:
         a, b = piek_block
         in_avond = any(17 <= h <= 22 for h in range(a, b + 1))
         ratio = max_p / day_med if day_med else 0
         drivers = []
         if in_avond:
-            drivers.append("wegvallende zon")
-            drivers.append("avondvraag")
+            drivers += ["wegvallende zon", "avondvraag"]
             if ratio >= ANOM_PIEK_FACTOR or max_p >= ANOM_PIEK_ABS:
                 drivers.append("krappe marge / lage wind")
         else:
             drivers.append("hoge vraag")
         windows.append({
-            "kind": "piek",
-            "window": fmt_window(a, b),
-            "extreme_hour": fmt_uur(max_h),
-            "extreme_market": round(max_p, 2),
+            "kind": "piek", "window": fmt_window(a, b),
+            "extreme_hour": fmt_uur(max_h), "extreme_market": round(max_p, 2),
             "extreme_all_in": round(all_in(max_p), 4),
             "magnitude": "extreem" if (ratio >= ANOM_PIEK_FACTOR or max_p >= ANOM_PIEK_ABS) else "verhoogd",
-            "drivers": drivers,
-            "ratio_vs_mediaan": round(ratio, 2),
-            "toelichting_feit": f"piek {max_p:.0f} EUR/MWh om {fmt_uur(max_h)} ({ratio:.1f}x de dagmediaan)",
+            "drivers": drivers, "ratio_vs_midden": round(ratio, 2),
         })
 
-    # --- Anomalie-flag (event_plausibility-gedachte) ---
     anomalie = {"flag": False, "reden": "", "bronnen": []}
     ratio = max_p / day_med if day_med else 0
     if ratio >= ANOM_PIEK_FACTOR or max_p >= ANOM_PIEK_ABS:
         anomalie = {
             "flag": True,
-            "reden": (f"avondpiek {max_p:.0f} EUR/MWh is {ratio:.1f}x de dagmediaan "
-                      f"({day_med:.0f}) — structureel patroon verklaart de hoogte niet volledig; "
-                      f"check externe oorzaak (lage wind, onbeschikbare centrale, import)"),
+            "reden": (f"avondpiek {max_p:.0f} EUR/MWh is {ratio:.1f}x het dagmidden "
+                      f"({day_med:.0f}); structureel patroon verklaart de hoogte niet "
+                      f"volledig — check externe oorzaak (lage wind, onbeschikbare centrale)"),
             "bronnen": [BRONNEN["outages"], BRONNEN["weer"]],
         }
 
-    # Negatief-label volgens de site-regel.
     if neg_hours:
-        if allin_neg:
-            neg_label = "all-in negatief (gratis)"
-        else:
-            neg_label = "markt negatief, all-in nog positief"
+        neg_label = "all-in negatief (gratis)" if allin_neg else "markt negatief, all-in nog positief"
     else:
         neg_label = "geen negatieve uren"
 
-    skelet = {
-        "date": date,
-        "weekdag": WEEKDAGEN_NL[dt.weekday()],
-        "daytype": dtype,
-        "n_uren": len(vals),
-        "ontbrekende_uren": [fmt_uur(h) for h in missing],
+    return {
+        "date": date, "weekdag": WEEKDAGEN_NL[dt.weekday()], "daytype": dtype,
+        "n_uren": len(vals), "ontbrekende_uren": [fmt_uur(h) for h in missing],
         "dag": {
-            "gem_markt": round(day_avg, 2),
-            "mediaan_markt": round(day_med, 2),
+            "gem_markt": round(day_avg, 2), "midden_markt": round(day_med, 2),
             "gem_all_in": round(all_in(day_avg), 4),
-            "goedkoopste": {"uur": fmt_uur(min_h), "markt": round(min_p, 2),
-                            "all_in": round(all_in(min_p), 4)},
-            "duurste": {"uur": fmt_uur(max_h), "markt": round(max_p, 2),
-                        "all_in": round(all_in(max_p), 4)},
+            "goedkoopste": {"uur": fmt_uur(min_h), "markt": round(min_p, 2), "all_in": round(all_in(min_p), 4)},
+            "duurste": {"uur": fmt_uur(max_h), "markt": round(max_p, 2), "all_in": round(all_in(max_p), 4)},
             "spreiding": round(max_p - min_p, 2),
         },
-        "negatief": {
-            "aantal": len(neg_hours),
-            "uren": [fmt_uur(h) for h in neg_hours],
-            "label": neg_label,
-        },
-        "vensters": windows,
-        "anomalie": anomalie,
+        "negatief": {"aantal": len(neg_hours), "uren": [fmt_uur(h) for h in neg_hours], "label": neg_label},
+        "vensters": windows, "anomalie": anomalie,
         "bronnen": [BRONNEN["prijs"], BRONNEN["weer"], BRONNEN["gas"]],
         "weer_modus": "model-factoren" if factors_per_hour else "afgeleid-uit-prijs",
     }
-    return skelet
 
 
 # ---------------------------------------------------------------------------
-# Route A: deterministisch concept (geen LLM) — altijd beschikbaar als fallback
+# Publieke duiding (B2-taal, cent/kWh, geen vaktermen) — dit leest de bezoeker
 # ---------------------------------------------------------------------------
-def template_concept(s: dict) -> str:
-    d = s["dag"]
-    zinnen = []
-    # Openingsoordeel.
-    med = d["mediaan_markt"]
-    if med < 40:
-        niveau = "laag"
-    elif med < 90:
-        niveau = "normaal"
+# Regels: maximaal B2. Geen "mediaan", "marktprijs", "EUR/MWh", "factor",
+# "anomalie". Bedragen in hele centen per kWh. Concreet, kort, to the point.
+
+def ct_kwh(market_mwh: float) -> float:
+    """Kale marktprijs (EUR/MWh) -> all-in cent per kWh (wat de bezoeker betaalt)."""
+    return all_in(market_mwh) * 100.0
+
+
+def _niveau_klasse(typ_ct: float) -> str:
+    if typ_ct < 18:
+        return "goedkoop"
+    if typ_ct < 26:
+        return "normaal"
+    return "duur"
+
+
+def lees_factoren(forecast_path: str, date: str) -> dict | None:
+    """
+    Leest de gemeten weersfactoren voor één dag uit forecast.json.
+
+    Het forecast-model schrijft per uur een `factors`-lijst met o.a.
+    zon/wind/gas/temperatuur; die zijn per dag constant. We pakken het
+    mediane puntenaantal en een representatieve reden, en halen de waarde
+    (m/s, %, °C) uit de tekst tussen haakjes, bv. "zwakke wind (5.1 m/s)".
+
+    Geeft None als forecast.json ontbreekt of de datum er niet in staat —
+    dan valt de duiding terug op afleiding uit de prijsvorm.
+    """
+    try:
+        fc = json.loads(Path(forecast_path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    rows = [f for f in fc.get("forecasts", []) if str(f.get("time", "")).startswith(date)]
+    if not rows:
+        return None
+    out = {}
+    for naam in ("zon", "wind", "gas", "temperatuur"):
+        punten, reason = [], ""
+        for r in rows:
+            for f in r.get("factors", []):
+                if f.get("name") == naam:
+                    punten.append(f.get("points", 0))
+                    reason = f.get("reason", "") or reason
+        if not punten:
+            continue
+        m = re.search(r"\(([-\d.]+)", reason)
+        waarde = None
+        if m:
+            try:
+                waarde = float(m.group(1))
+            except ValueError:
+                waarde = None
+        out[naam] = {"points": round(median(punten)), "reason": reason, "waarde": waarde}
+    return out or None
+
+
+def _publieke_redenen(heeft_dal: bool, avond_piek: bool, anom: bool,
+                      weer: dict | None) -> list:
+    """Begrijpelijke 'waarom'-punten. Gebruikt gemeten weer als dat er is,
+    anders een afleiding uit de prijsvorm."""
+    redenen = []
+
+    # --- Zon ---
+    if weer and "zon" in weer:
+        zp = weer["zon"]["points"]
+        if zp < 0:
+            redenen.append({"label": "Zon", "type": "laag", "tekst": "Veel zon overdag, dat drukt de prijs"})
+        elif zp > 0:
+            redenen.append({"label": "Zon", "type": "hoog", "tekst": "Weinig zon overdag, dat houdt de prijs hoog"})
+        else:
+            redenen.append({"label": "Zon", "type": "neutraal", "tekst": "Een normale hoeveelheid zon"})
+    elif heeft_dal:
+        redenen.append({"label": "Zon", "type": "laag", "tekst": "Overdag veel zon, dat maakt stroom goedkoop"})
     else:
-        niveau = "aan de hoge kant"
-    zinnen.append(
-        f"De prijzen voor {s['weekdag']} {s['date']} liggen overdag {niveau} "
-        f"(mediaan {med:.0f} EUR/MWh)."
-    )
-    for w in s["vensters"]:
-        if w["kind"] == "dal":
-            if w["magnitude"] == "diep negatief":
-                zinnen.append(
-                    f"Midden op de dag duwt de zon de markt {w['window']} onder nul "
-                    f"(dieptepunt {w['extreme_market']:.0f} EUR/MWh om {w['extreme_hour']}); "
-                    f"all-in blijft met {w['extreme_all_in']:.2f} EUR/kWh wel positief."
-                )
-            else:
-                zinnen.append(
-                    f"Rond het middaguur drukt de zon de prijs naar {w['extreme_market']:.0f} "
-                    f"EUR/MWh ({w['window']})."
-                )
-        elif w["kind"] == "ochtendpiek":
-            zinnen.append(
-                f"'s Ochtends tilt de vraag de prijs kort naar {w['extreme_market']:.0f} "
-                f"EUR/MWh om {w['extreme_hour']}."
-            )
-        elif w["kind"] == "piek":
-            extra = " en vermoedelijk lage wind" if "krappe marge / lage wind" in w["drivers"] else ""
-            zinnen.append(
-                f"In de vroege avond valt de zon weg terwijl de vraag hoog blijft{extra}: "
-                f"de prijs piekt naar {w['extreme_market']:.0f} EUR/MWh om {w['extreme_hour']} "
-                f"({w.get('ratio_vs_mediaan', '?')}x de dagmediaan)."
-            )
-    if s["anomalie"]["flag"]:
-        zinnen.append(f"Let op: {s['anomalie']['reden']}.")
-    return " ".join(zinnen)
+        redenen.append({"label": "Zon", "type": "neutraal", "tekst": "Weinig zon overdag, dus geen goedkoop middagdal"})
+
+    # --- Wind (gemeten uit het model, anders voorzichtige afleiding) ---
+    if weer and "wind" in weer:
+        wp = weer["wind"]["points"]
+        ms = weer["wind"]["waarde"]
+        mss = f", rond {round(ms)} m/s" if ms is not None else ""
+        if wp >= 3:
+            redenen.append({"label": "Wind", "type": "hoog", "tekst": f"Bijna geen wind{mss}, dat houdt de prijs hoog"})
+        elif wp > 0:
+            redenen.append({"label": "Wind", "type": "hoog", "tekst": f"Weinig wind{mss}, dat houdt de prijs hoog"})
+        elif wp == 0:
+            redenen.append({"label": "Wind", "type": "neutraal", "tekst": f"Een normale wind{mss}"})
+        elif wp == -2:
+            redenen.append({"label": "Wind", "type": "laag", "tekst": f"Veel wind{mss}, dat drukt de prijs"})
+        else:
+            redenen.append({"label": "Wind", "type": "laag", "tekst": f"Harde wind{mss}, dat drukt de prijs flink"})
+    elif anom:
+        redenen.append({"label": "Wind", "type": "hoog", "tekst": "Waarschijnlijk weinig wind, dat houdt de prijs hoog"})
+
+    # --- Vraag ---
+    if avond_piek:
+        redenen.append({"label": "Vraag", "type": "hoog", "tekst": "'s Avonds gebruikt het hele land veel stroom"})
+
+    # --- Gas (alleen als het sterk meespeelt) ---
+    if weer and "gas" in weer and abs(weer["gas"]["points"]) >= 2:
+        gp = weer["gas"]["points"]
+        if gp > 0:
+            redenen.append({"label": "Gas", "type": "hoog", "tekst": "Gas is duur, dat tilt de hele prijs op"})
+        else:
+            redenen.append({"label": "Gas", "type": "laag", "tekst": "Gas is goedkoop, dat drukt de prijs"})
+
+    return redenen
 
 
-# ---------------------------------------------------------------------------
-# Route C: prompt die ALLEEN het skelet verwoordt (voor LLM-stap)
-# ---------------------------------------------------------------------------
-VOICE_REGELS = (
-    "Schrijf 2-3 zinnen Nederlandse prijsduiding voor een breed publiek. "
-    "Conclusie eerst, dan oorzaak. Actief, concreet, exacte getallen uit het skelet. "
-    "Geen jargon, geen marketingtaal, geen emoji, geen kapitalen voor nadruk. "
-    "Gebruit UITSLUITEND feiten uit het skelet; voeg niets toe en verzin geen oorzaken. "
-    "Noem bij een negatieve markt nooit 'gratis' tenzij all_in < 0; label anders 'markt negatief'. "
-    "Als anomalie.flag waar is, benoem kort dat de hoogte een externe check vraagt, "
-    "zonder een specifieke oorzaak te claimen."
-)
+def bouw_publiek(date: str, prices: list, weer: dict | None = None) -> dict:
+    """Bouwt de publieke duiding (B2) uit het feiten-skelet.
 
+    weer: optioneel de gemeten weersfactoren uit lees_factoren(); als die er
+    zijn, gebruikt de duiding de gemeten wind/zon in plaats van een afleiding.
+    """
+    s = bouw_skelet(date, prices, weer)
+    dt = datetime.fromisoformat(date)
 
-def verwoordings_prompt(s: dict) -> str:
-    return (
-        "Je verwoordt een feiten-skelet in de huisstijl van stroomvoorspeller.nl.\n\n"
-        f"REGELS:\n{VOICE_REGELS}\n\n"
-        f"SKELET (JSON, dit zijn de enige toegestane feiten):\n"
-        f"{json.dumps(s, ensure_ascii=False, indent=2)}\n\n"
-        "Lever alleen de duiding-tekst."
-    )
+    pairs = [(h, p) for h, p in enumerate(prices) if p is not None]
+    cents = [ct_kwh(p) for _, p in pairs]
+    typ = sorted(cents)[len(cents) // 2]
+    typ_ct = round(typ)
+    duur = s["dag"]["duurste"]
+    goed = s["dag"]["goedkoopste"]
+    duur_ct = round(ct_kwh(duur["markt"]))
+    goed_ct = round(ct_kwh(goed["markt"]))
+    duur_uur = duur["uur"]
+    goed_uur = goed["uur"]
+
+    avond_piek = any(w["kind"] == "piek" and 17 <= int(w["extreme_hour"][:2]) <= 23
+                     for w in s["vensters"])
+    heeft_dal = goed_ct <= 16
+    anom = s["anomalie"]["flag"]
+
+    # Kop (de conclusie, eerst).
+    if anom and avond_piek:
+        kop = "Morgen overdag normaal, maar begin van de avond extreem duur"
+    elif heeft_dal and avond_piek:
+        kop = "Morgen overdag heel goedkoop, in de avond juist duur"
+    elif typ < 18:
+        kop = "Morgen is stroom de hele dag goedkoop"
+    elif typ < 26:
+        kop = "Morgen liggen de stroomprijzen op een normaal niveau"
+    else:
+        kop = "Morgen is stroom de hele dag aan de prijzige kant"
+
+    # Uitleg: 2 korte zinnen met concrete centen, geen ratio-jargon.
+    zinnen = []
+    if heeft_dal:
+        zinnen.append(f"Overdag is stroom goedkoop, rond {goed_uur} zelfs maar {goed_ct} cent per kWh.")
+    elif typ >= 26 and not anom:
+        zinnen.append(f"Overdag is de prijs al aan de hoge kant, rond {typ_ct} cent per kWh.")
+    else:
+        zinnen.append(f"Overdag betaal je een normale prijs, rond {typ_ct} cent per kWh.")
+    if avond_piek:
+        slot = " Dat is uitzonderlijk hoog." if anom else ""
+        zinnen.append(f"Maar in de avond loopt het hard op: {duur_ct} cent per kWh om {duur_uur}.{slot}")
+    else:
+        zinnen.append(f"Het duurste moment is om {duur_uur}, {duur_ct} cent per kWh.")
+    uitleg = " ".join(zinnen)
+
+    waarschuwing = ""
+    if anom:
+        wind = weer.get("wind") if weer else None
+        if wind and wind["points"] > 0:
+            ms = wind["waarde"]
+            mss = f" (rond {round(ms)} m/s)" if ms is not None else ""
+            waarschuwing = (f"De avondprijs is ongewoon hoog. Er staat weinig wind{mss} en de zon "
+                            f"levert 's avonds niets meer, terwijl het hele land dan stroom gebruikt.")
+        elif wind:
+            waarschuwing = ("De avondprijs is ongewoon hoog. De wind is niet bijzonder laag, dus er "
+                            "speelt waarschijnlijk iets anders mee, zoals een centrale die stilligt "
+                            "of veel vraag in het buitenland.")
+        else:
+            waarschuwing = ("De avondprijs is ongewoon hoog. Dat komt waarschijnlijk doordat er "
+                            "weinig wind staat en de zon 's avonds niets meer levert, terwijl het "
+                            "hele land dan stroom gebruikt.")
+
+    if avond_piek:
+        tip = (f"Zet wasmachine, droger of vaatwasser het liefst rond {goed_uur} aan "
+               f"en niet tussen 18:00 en 22:00.")
+    else:
+        tip = f"Het goedkoopste moment is rond {goed_uur}."
+
+    return {
+        "datum": date,
+        "weekdag": WEEKDAGEN_NL[dt.weekday()],
+        "kop": kop,
+        "uitleg": uitleg,
+        "waarom": _publieke_redenen(heeft_dal, avond_piek, anom, weer),
+        "weer_modus": s["weer_modus"],
+        "waarschuwing": waarschuwing,
+        "tip": tip,
+        "niveau": "duur" if anom else _niveau_klasse(typ),
+        "bron": "Gebaseerd op de officiële stroomprijzen voor morgen en het weer. "
+                "Automatisch gemaakt, niet door iemand nagekeken.",
+        "gegenereerd": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+    }
 
 
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
-def main(argv: list[str]) -> int:
+def _prod_uit_ha(ha_path: str, out_path: str, forecast_path: str) -> int:
+    """
+    Productiemodus. Leest public/data/ha.json (morgen-prijzen) en de gemeten
+    weersfactoren uit public/data/forecast.json, en schrijft public/data/duiding.json
+    met de publieke B2-duiding. Draait in de GitHub Actions-pijplijn, ná
+    generate_ha.py én run_forecast.py (beide moeten vers zijn).
+
+    ha.json levert `market` in EUR/kWh; de engine rekent in EUR/MWh (x1000).
+    """
+    ha = json.loads(Path(ha_path).read_text(encoding="utf-8"))
+    morgen = ha.get("tomorrow") or {}
+    if not morgen.get("available") or not morgen.get("hours"):
+        print("[duiding] geen complete morgen-prijzen in ha.json — niets te doen.")
+        return 0
+    date = morgen["date"]
+    prices = [None] * 24
+    for h in morgen["hours"]:
+        hour = datetime.fromisoformat(h["start"]).hour
+        prices[hour] = h["market"] * 1000.0          # EUR/kWh -> EUR/MWh
+
+    weer = lees_factoren(forecast_path, date)
+    bron = "gemeten weer" if weer else "afgeleid uit de prijzen"
+
+    publiek = bouw_publiek(date, prices, weer)
+    Path(out_path).write_text(
+        json.dumps(publiek, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"[duiding] {out_path} geschreven voor {date} ({bron}): {publiek['kop']}")
+    return 0
+
+
+def main(argv: list) -> int:
+    if "--prod" in argv:
+        rest = [a for a in argv[2:] if not a.startswith("--")]
+        ha = rest[0] if len(rest) > 0 else "public/data/ha.json"
+        out = rest[1] if len(rest) > 1 else "public/data/duiding.json"
+        forecast = rest[2] if len(rest) > 2 else "public/data/forecast.json"
+        return _prod_uit_ha(ha, out, forecast)
+
     if len(argv) < 2:
-        print("gebruik: genereer_duiding.py <prijzen.json> [--datum YYYY-MM-DD]", file=sys.stderr)
+        print("gebruik: genereer_duiding.py <prijzen.json> [--datum YYYY-MM-DD]\n"
+              "         genereer_duiding.py --prod [ha.json] [duiding.json]", file=sys.stderr)
         return 2
     data = json.loads(Path(argv[1]).read_text(encoding="utf-8"))
     days = data["days"]
-    only = None
-    if "--datum" in argv:
-        only = argv[argv.index("--datum") + 1]
+    only = argv[argv.index("--datum") + 1] if "--datum" in argv else None
 
-    out_skelet = {}
-    out_concept = {}
+    out_skelet, out_publiek = {}, {}
     for date in sorted(days):
         if only and date != only:
             continue
-        s = bouw_skelet(date, days[date])
-        out_skelet[date] = s
-        out_concept[date] = {
-            "template_concept": template_concept(s),
-            "verwoordings_prompt": verwoordings_prompt(s),
-        }
+        out_skelet[date] = bouw_skelet(date, days[date])
+        out_publiek[date] = bouw_publiek(date, days[date])
 
     Path("duiding_skelet.json").write_text(
         json.dumps(out_skelet, ensure_ascii=False, indent=2), encoding="utf-8")
-    Path("duiding_concept.json").write_text(
-        json.dumps(out_concept, ensure_ascii=False, indent=2), encoding="utf-8")
+    Path("duiding_publiek.json").write_text(
+        json.dumps(out_publiek, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # Korte console-samenvatting.
-    for date, s in out_skelet.items():
-        flag = "  [ANOMALIE]" if s["anomalie"]["flag"] else ""
-        print(f"{date} {s['weekdag']:9s} mediaan {s['dag']['mediaan_markt']:6.0f}  "
-              f"piek {s['dag']['duurste']['markt']:6.0f}@{s['dag']['duurste']['uur']}  "
-              f"dal {s['dag']['goedkoopste']['markt']:7.0f}@{s['dag']['goedkoopste']['uur']}"
-              f"{flag}")
+    for date, p in out_publiek.items():
+        print(f"{date} {p['weekdag']:9s} | {p['kop']}")
     return 0
 
 
