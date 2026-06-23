@@ -1,0 +1,53 @@
+name: Backfill batterij-arbitrage
+
+# Eenmalig een datumbereik vullen. Dagen zonder uurprijzen in prices.json
+# (voor ~9 juni 2026) worden automatisch overgeslagen.
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "Startdatum (YYYY-MM-DD)"
+        required: true
+        default: "2026-06-01"
+      end:
+        description: "Einddatum (YYYY-MM-DD)"
+        required: true
+        default: "2026-06-22"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-arbitrage
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Backfill arbitrage
+        env:
+          SOLIS_KEY_ID: ${{ secrets.SOLIS_KEY_ID }}
+          SOLIS_KEY_SECRET: ${{ secrets.SOLIS_KEY_SECRET }}
+        run: |
+          python scripts/fetch_solis_arbitrage.py "${{ github.event.inputs.start }}" "${{ github.event.inputs.end }}"
+
+      - name: Commit en push
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          git add public/data/arbitrage.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: backfill batterij-arbitrage $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          else
+            echo "Geen wijzigingen."
+          fi
