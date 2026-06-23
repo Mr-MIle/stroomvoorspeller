@@ -115,17 +115,18 @@
     <div class="container">
       <p class="bat-breadcrumb"><a href="/">Home</a> › Thuisbatterij</p>
       <h1>Wat levert een thuisbatterij op?</h1>
-      <p>Ik laad mijn batterij als stroom goedkoop is — uit zon of uit het net op lage uren — en gebruik die als stroom duur is. Hieronder zie je per dag wat dat doet: hoeveel ik verbruik, wat het kost, hoeveel de batterij levert en wat ik verdien door in dure uren terug te leveren.</p>
+      <p>Een batterij verdient aan tijdsverschil. Ik laad als stroom goedkoop is — uit zon, of 's nachts uit het net — en gebruik of verkoop het als stroom duur is. Hieronder staat per dag wat dat doet: verbruik, kosten, wat de batterij levert, en wat terugleveren in dure uren opbrengt.</p>
     </div>
   </section>
 
   <main class="container">
 
     <div class="intro">
-      <p>De getallen komen rechtstreeks uit mijn omvormer en werk ik elke ochtend bij. Ik heb een contract met uurprijzen, dus de stroomprijs verschilt per uur. Het totaal bovenaan is het eerlijke cijfer; losse dagen schommelen, omdat de batterij de ene dag voller en de andere dag leger eindigt.</p>
+      <p>De cijfers komen uit mijn eigen omvormer en lopen elke ochtend bij. Ik heb een contract met uurprijzen, dus de prijs verschilt per uur. Kijk naar het totaal bovenaan, niet naar één dag: de batterij eindigt de ene dag voller dan de andere, dus losse dagen schommelen.</p>
     </div>
 
     <p class="solarline" id="solarline" hidden></p>
+    <p class="solarline" id="splitline" hidden></p>
 
     <div id="kpis" class="kpi-row" hidden>
       <div class="kpi">
@@ -183,15 +184,16 @@
 
     <section class="panel">
       <h2>Hoe ik reken</h2>
-      <p class="note">Ik vergelijk twee bedragen. Wat ik nu echt aan het net betaal (inkoop min teruglevering), en wat hetzelfde verbruik zou kosten als ik alles van het net zou halen, zonder batterij en zon. <strong>Het verschil is mijn besparing.</strong></p>
-      <p class="note">De batterij laadt op twee manieren. Uit zon is gratis. Uit het net op goedkope uren kost geld, maar dat verdien ik terug door die stroom in dure uren te gebruiken of terug te leveren. Stroom die de batterij mijn huis in stuurt, bespaart de dure inkoop. Stroom die in dure uren terug het net op gaat, levert geld op tegen de kale marktprijs — zonder belasting, want over teruglevering betaal je die niet.</p>
-      <p class="note">Eén dag zegt weinig. Laad ik meer dan ik gebruik, dan eindigt de batterij voller en lijkt die dag duur — die stroom gebruik ik morgen pas. Het werkt als een spaarpot. Kijk daarom naar het totaal, niet naar één losse dag.</p>
-      <p class="note muted">Mijn zonnepanelen en warmwaterboiler meet deze omvormer niet apart; hun effect zie je terug in een lagere inkoop.</p>
+      <p class="note">Mijn besparing is het verschil tussen twee bedragen: wat ik nu aan het net betaal (inkoop min teruglevering), en wat mijn verbruik zou kosten als ik alles van het net haalde, zonder batterij en zon.</p>
+      <p class="note">De batterij laadt uit zon (gratis) of 's nachts uit het net (tegen de volle prijs). Wat hij mijn huis in stuurt, bespaart dure inkoop. Wat hij in dure uren teruglevert, brengt geld op tegen de kale marktprijs — zonder belasting, want over teruglevering betaal je die niet.</p>
+      <p class="note">Eén dag zegt weinig. Laad ik meer dan ik gebruik, dan eindigt de batterij voller en lijkt die dag duur; die stroom gebruik ik de volgende dag. Een batterij werkt als een spaarpot — pas als je 'm leeghaalt, zie je wat erin zat.</p>
+      <p class="note">De verdeling tussen batterij en zon is een schatting. Mijn losse panelen (Zonneplan en Enphase) meet deze omvormer niet, dus ik leid de zonproductie af uit de rest. Op een zonnige dag met lage middagprijzen brengt losse zon-export weinig op; de batterij verdient juist door die stroom naar de dure avond te schuiven.</p>
+      <p class="note muted">Wat deze omvormer niet ziet — de zonopbrengst zelf en de warmwaterboiler — staat niet in deze cijfers. Het effect zit verstopt in een lagere inkoop.</p>
       <p class="note muted" id="updated"></p>
     </section>
 
     <div class="empty" id="empty" hidden>
-      Nog geen cijfers. Kom binnenkort terug — ik werk de pagina elke ochtend bij.
+      Nog geen cijfers. De pagina werkt elke ochtend bij.
     </div>
 
   </main>
@@ -257,6 +259,11 @@
         "<strong>" + kwh(t.solar_charged_kwh) + " gratis uit zon opgeslagen</strong>" +
         " &middot; " + kwh(totGridCharge) + " uit het net geladen op goedkope uren";
       document.getElementById("solarline").hidden = false;
+      const bs = t.battery_saving_eur ?? 0, ss = t.solar_saving_eur ?? 0;
+      document.getElementById("splitline").innerHTML =
+        "Besparing opgesplitst <span class='muted'>(schatting)</span>: batterij <span class='" + cls(bs) + "'>" + euro(bs) +
+        "</span> &middot; zon <span class='" + cls(ss) + "'>" + euro(ss) + "</span>";
+      document.getElementById("splitline").hidden = false;
 
       // Laatste dag
       const last = days[days.length - 1];
@@ -267,6 +274,7 @@
         ["Kosten", euro(last.cost_actual_eur)],
         ["Zonder batterij", euro(last.cost_without_eur)],
         ["Bespaard", "<span class='" + cls(ls) + "'>" + euro(ls) + "</span>"],
+        ["waarvan batterij / zon", "<span class='" + cls(last.battery_saving_eur ?? 0) + "'>" + euro(last.battery_saving_eur) + "</span> / <span class='" + cls(last.solar_saving_eur ?? 0) + "'>" + euro(last.solar_saving_eur) + "</span>"],
         ["Batterij → huis", kwh(last.battery_home_kwh) + " <span class='muted'>(" + euro(last.battery_home_value_eur) + ")</span>"],
         ["Teruggeleverd", kwh(last.arbitrage_kwh) + " <span class='muted'>(" + euro(last.arbitrage_income_eur) + ")</span>"],
         ["Zon geladen", kwh(last.solar_charged_kwh)],
