@@ -14,7 +14,9 @@ name: Check & update prijzen
 
 on:
   workflow_dispatch:
-
+  schedule:
+    - cron: "0,15,30,45 14-16 * * *"
+    
 permissions:
   contents: write
 
