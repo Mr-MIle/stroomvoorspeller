@@ -23,6 +23,7 @@ Draait in een GitHub Action. Sleutels uit env SOLIS_KEY_ID / SOLIS_KEY_SECRET.
 Gebruik:
   python scripts/fetch_solis_arbitrage.py            # gisteren (NL-tijd)
   python scripts/fetch_solis_arbitrage.py 2026-06-21 # specifieke dag
+  python scripts/fetch_solis_arbitrage.py 2026-06-09 2026-06-22 # backfill bereik
 """
 import hashlib
 import hmac
@@ -30,6 +31,7 @@ import base64
 import json
 import os
 import sys
+import time
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone, timedelta
@@ -148,6 +150,7 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
     battery_home = arbitrage_kwh = 0.0
     cost_actual = cost_without = 0.0
     battery_home_value = arbitrage_income = grid_charge_cost = 0.0
+    solar_charge_value = 0.0
     energy_priced = energy_total = 0.0
 
     def d(cur, prv, key):
@@ -175,10 +178,13 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
                 if epex is not None:
                     cons = consumer_price(epex, tar)
                     export_price = epex - FEEDIN_COST
-                    # kosten
+                    # kosten = je echte netto-rekening: inkoop tegen consumentenprijs,
+                    # min ALLE teruglevering (batterij + losse zonnepanelen) tegen kale EPEX.
                     cost_actual += dimp * cons - dsell * export_price
                     cost_without += dload * cons
-                    # ontladen splitsen: samen met net-export = teruglevering, rest = thuis
+                    # batterij-teruglevering apart, voor de arbitrage-tegel: deel van de
+                    # ontlading dat samenvalt met net-export. 's Avonds (geen zon) is net-
+                    # export = batterij; begrensd op de ontlading.
                     to_grid = min(ddis, dsell)
                     to_home = ddis - to_grid
                     battery_home += to_home
@@ -191,11 +197,17 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
                     grid_charged += gch
                     solar_charged += dch - gch
                     grid_charge_cost += gch * cons
+                    solar_charge_value += (dch - gch) * epex
                     energy_priced += flow
         prev = p
 
     coverage = (energy_priced / energy_total) if energy_total else 0.0
     saving = cost_without - cost_actual
+    # Schatting: batterij-aandeel = wat de batterij verdiende door in tijd te schuiven
+    # (thuis vermeden inkoop + verkoop terug) min laadkosten (net + marktwaarde zon).
+    # Zon-aandeel = de rest van de besparing.
+    battery_saving = battery_home_value + arbitrage_income - grid_charge_cost - solar_charge_value
+    solar_saving = saving - battery_saving
     grid_data_ok = not (import_kwh == 0 and export_kwh == 0 and (charged or discharged or consumption))
 
     soc_start = pts[0].get("batteryCapacitySoc")
@@ -219,11 +231,14 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
         "solar_charged_kwh": r(solar_charged),
         "grid_charged_kwh": r(grid_charged),
         "grid_charge_cost_eur": r(grid_charge_cost),
+        "battery_saving_eur": r(battery_saving),
+        "solar_saving_eur": r(solar_saving),
         # batterij ruw
         "charged_kwh": r(charged),
         "discharged_kwh": r(discharged),
         "import_kwh": r(import_kwh),
         "export_kwh": r(export_kwh),
+        "battery_to_grid_kwh": r(arbitrage_kwh),
         "soc_start_pct": soc_start,
         "soc_end_pct": soc_end,
         # kwaliteit
@@ -253,13 +268,15 @@ def upsert(record: dict, tar: dict):
         "method": ("Verbruik = homeLoad. Kosten actueel = inkoop x consumentenprijs - "
                    "teruglevering x EPEX. Kosten zonder = verbruik x consumentenprijs. "
                    "Laden uit zon = gratis; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen "
-                   "naar huis = vermeden inkoop; naar net = inkomsten tegen EPEX."),
+                   "naar huis = vermeden inkoop; naar net = inkomsten tegen EPEX. Besparing geschat gesplitst in batterij (arbitrage) en zon."),
         "totals": {
             "days": len(ordered),
             "consumption_kwh": tot("consumption_kwh"),
             "cost_actual_eur": tot("cost_actual_eur"),
             "cost_without_eur": tot("cost_without_eur"),
             "saving_eur": tot("saving_eur"),
+            "battery_saving_eur": tot("battery_saving_eur"),
+            "solar_saving_eur": tot("solar_saving_eur"),
             "battery_home_kwh": tot("battery_home_kwh"),
             "arbitrage_income_eur": tot("arbitrage_income_eur"),
             "solar_charged_kwh": tot("solar_charged_kwh"),
@@ -269,37 +286,56 @@ def upsert(record: dict, tar: dict):
     OUT_FILE.write_text(json.dumps(doc, indent=1, ensure_ascii=False))
 
 
-def main():
-    now_utc = datetime.now(timezone.utc)
-    if len(sys.argv) > 1 and sys.argv[1].strip():
-        day = sys.argv[1].strip()
-    else:
-        ams = now_utc + amsterdam_offset(now_utc)
-        day = (ams - timedelta(days=1)).strftime("%Y-%m-%d")
-
-    tz_hours = int(amsterdam_offset(now_utc).total_seconds() // 3600)
-    inv_id, sn = get_inverter()
+def process_day(inv_id, sn, day, prices, tar, tz_hours):
+    """Verwerk één dag; schrijft weg en geeft het record terug (of None bij overslaan)."""
     resp = call("/v1/api/inverterDay",
                 {"id": inv_id, "sn": sn, "money": "EUR", "time": day, "timeZone": tz_hours})
     points = resp.get("data") or []
     if not points:
-        print(f"Geen meetdata voor {day} - niets weggeschreven.", file=sys.stderr)
-        sys.exit(0)
+        print(f"[{day}] geen meetdata - overgeslagen.", file=sys.stderr)
+        return None
+    record = compute_day(points, prices, tar, day)
+    if record["price_coverage"] < 0.5:
+        print(f"[{day}] te weinig uurprijzen ({record['price_coverage']*100:.0f}%) - overgeslagen.", file=sys.stderr)
+        return None
+    upsert(record, tar)
+    print(f"[{day}] verbruik {record['consumption_kwh']} kWh | "
+          f"besparing EUR {record['saving_eur']} (batterij {record['battery_saving_eur']} / zon {record['solar_saving_eur']})")
+    if not record["grid_data_ok"]:
+        print(f"  LET OP {day}: net-tellers op 0 - kosten mogelijk onbetrouwbaar.", file=sys.stderr)
+    return record
+
+
+def main():
+    now_utc = datetime.now(timezone.utc)
+    tz_hours = int(amsterdam_offset(now_utc).total_seconds() // 3600)
+    args = [a.strip() for a in sys.argv[1:] if a.strip()]
 
     prices = load_prices()
     tar = load_tariff()
-    record = compute_day(points, prices, tar, day)
-    upsert(record, tar)
+    inv_id, sn = get_inverter()
 
-    print(f"[{day}] verbruik {record['consumption_kwh']} kWh")
-    print(f"  kosten actueel: EUR {record['cost_actual_eur']}  | zonder batterij: EUR {record['cost_without_eur']}")
-    print(f"  besparing: EUR {record['saving_eur']}")
-    print(f"  batterij naar huis: {record['battery_home_kwh']} kWh (EUR {record['battery_home_value_eur']})")
-    print(f"  arbitrage-inkomsten: EUR {record['arbitrage_income_eur']} ({record['arbitrage_kwh']} kWh)")
-    print(f"  gratis zon opgeslagen: {record['solar_charged_kwh']} kWh")
-    print(f"  prijsdekking {record['price_coverage']*100:.0f}% | net-data ok: {record['grid_data_ok']} | {record['n_points']} punten")
-    if not record["grid_data_ok"]:
-        print("  LET OP: net-tellers stonden op 0 - kosten kloppen mogelijk niet voor deze dag.", file=sys.stderr)
+    if len(args) >= 2:
+        # Backfill: bereik van start t/m eind (beide inclusief).
+        from datetime import date
+        start = date.fromisoformat(args[0])
+        end = date.fromisoformat(args[1])
+        cur = start
+        done = 0
+        while cur <= end:
+            if process_day(inv_id, sn, cur.isoformat(), prices, tar, tz_hours):
+                done += 1
+            cur += timedelta(days=1)
+            time.sleep(2)  # rustig aan met de API
+        print(f"Backfill klaar: {done} dagen weggeschreven ({start} t/m {end}).")
+    else:
+        if args:
+            day = args[0]
+        else:
+            ams = now_utc + amsterdam_offset(now_utc)
+            day = (ams - timedelta(days=1)).strftime("%Y-%m-%d")
+        if not process_day(inv_id, sn, day, prices, tar, tz_hours):
+            sys.exit(0)
 
 
 if __name__ == "__main__":
