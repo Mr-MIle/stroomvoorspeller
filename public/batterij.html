@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Wat levert een thuisbatterij op? Cijfers van mijn eigen batterij | Stroomvoorspeller.nl</title>
-  <meta name="description" content="Ik laad mijn thuisbatterij overdag met zonnestroom en gebruik die 's avonds, als stroom duur is. Hier zie je per dag wat dat bespaart — in echte cijfers." />
+  <meta name="description" content="Mijn eigen thuisbatterij, dag voor dag: hoeveel ik verbruik, wat het kost, hoeveel de batterij levert en wat ik verdien met terugleveren in dure uren." />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -14,13 +14,13 @@
   <meta property="og:locale" content="nl_NL" />
   <meta property="og:site_name" content="Stroomvoorspeller.nl" />
   <meta property="og:title" content="Wat levert een thuisbatterij op? Cijfers van mijn eigen batterij" />
-  <meta property="og:description" content="Ik laad mijn thuisbatterij overdag met zonnestroom en gebruik die 's avonds. Hier zie je per dag wat dat bespaart." />
+  <meta property="og:description" content="Mijn eigen thuisbatterij, dag voor dag: verbruik, kosten, wat de batterij levert en wat terugleveren in dure uren oplevert." />
   <meta property="og:url" content="https://stroomvoorspeller.nl/batterij" />
   <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Wat levert een thuisbatterij op? Cijfers van mijn eigen batterij" />
-  <meta name="twitter:description" content="Ik laad mijn thuisbatterij overdag met zonnestroom en gebruik die 's avonds. Per dag zie je wat dat bespaart." />
+  <meta name="twitter:description" content="Mijn eigen thuisbatterij, dag voor dag: verbruik, kosten en wat de batterij oplevert." />
   <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
 
   <link rel="stylesheet" href="/styles.css" />
@@ -35,7 +35,7 @@
         "@id": "https://stroomvoorspeller.nl/batterij",
         "url": "https://stroomvoorspeller.nl/batterij",
         "name": "Wat levert een thuisbatterij op? Cijfers van mijn eigen batterij",
-        "description": "Ik laad mijn thuisbatterij overdag met zonnestroom en gebruik die 's avonds. Per dag zie je wat dat bespaart.",
+        "description": "Mijn eigen thuisbatterij, dag voor dag: verbruik, kosten, wat de batterij levert en wat terugleveren oplevert.",
         "inLanguage": "nl-NL",
         "isPartOf": { "@id": "https://stroomvoorspeller.nl/#website" },
         "breadcrumb": {
@@ -54,37 +54,37 @@
     .bat-hero { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: 28px 0 20px; }
     .bat-breadcrumb { font-size: 0.85rem; color: var(--c-text-mute); margin: 0 0 8px; }
     .bat-hero h1 { margin: 0 0 6px; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; line-height: 1.2; }
-    .bat-hero p { margin: 0; color: var(--c-text-soft); font-size: 0.95rem; max-width: 62ch; }
+    .bat-hero p { margin: 0; color: var(--c-text-soft); font-size: 0.95rem; max-width: 64ch; }
 
     .intro { margin: 22px 0; }
-    .intro p { color: var(--c-text-soft); font-size: 0.95rem; line-height: 1.6; max-width: 70ch; }
+    .intro p { color: var(--c-text-soft); font-size: 0.95rem; line-height: 1.6; max-width: 72ch; }
 
-    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 22px 0; }
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin: 18px 0; }
     .kpi { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 16px 18px; }
     .kpi .label { font-size: 0.8rem; color: var(--c-text-mute); margin: 0 0 6px; }
-    .kpi .value { font-size: 1.6rem; font-weight: 700; line-height: 1.1; }
+    .kpi .value { font-size: 1.55rem; font-weight: 700; line-height: 1.1; }
     .kpi .sub { font-size: 0.8rem; color: var(--c-text-soft); margin-top: 4px; }
     .pos { color: var(--c-cheap); }
     .neg { color: var(--c-pricey); }
     .free { color: var(--c-free); }
+
+    .solarline { margin: 0 0 6px; font-size: 0.9rem; color: var(--c-text-soft); }
+    .solarline strong { color: var(--c-free); }
 
     .panel { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 18px; margin: 22px 0; }
     .panel h2 { margin: 0 0 14px; font-size: 1.1rem; }
 
     .latest { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
     .latest .cell .l { font-size: 0.78rem; color: var(--c-text-mute); margin: 0 0 4px; }
-    .latest .cell .v { font-size: 1.15rem; font-weight: 600; }
+    .latest .cell .v { font-size: 1.1rem; font-weight: 600; }
 
-    table.days { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    table.days { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     table.days th, table.days td { padding: 9px 10px; text-align: right; border-bottom: 1px solid var(--c-border); white-space: nowrap; }
-    table.days th { color: var(--c-text-mute); font-weight: 600; font-size: 0.8rem; text-align: right; }
+    table.days th { color: var(--c-text-mute); font-weight: 600; font-size: 0.78rem; }
     table.days th:first-child, table.days td:first-child { text-align: left; }
     table.days tbody tr:hover { background: var(--c-bg); }
-    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; }
-    .pill.free { background: var(--c-free-bg); color: var(--c-free); }
-    .pill.none { background: var(--c-bg); color: var(--c-text-mute); }
 
-    .note { font-size: 0.9rem; color: var(--c-text-soft); line-height: 1.6; max-width: 70ch; }
+    .note { font-size: 0.9rem; color: var(--c-text-soft); line-height: 1.6; max-width: 72ch; }
     .note strong { color: var(--c-text); }
     .muted { color: var(--c-text-mute); }
     .empty { text-align: center; color: var(--c-text-mute); padding: 40px 10px; }
@@ -115,36 +115,38 @@
     <div class="container">
       <p class="bat-breadcrumb"><a href="/">Home</a> › Thuisbatterij</p>
       <h1>Wat levert een thuisbatterij op?</h1>
-      <p>Ik laad mijn batterij overdag met mijn eigen zonnestroom en gebruik die 's avonds, als stroom duur is. Zo hoef ik 's avonds minder dure stroom te kopen. Hieronder zie je per dag wat dat oplevert — geen rekenvoorbeeld, maar mijn eigen batterij.</p>
+      <p>Ik laad mijn batterij als stroom goedkoop is — uit zon of uit het net op lage uren — en gebruik die als stroom duur is. Hieronder zie je per dag wat dat doet: hoeveel ik verbruik, wat het kost, hoeveel de batterij levert en wat ik verdien door in dure uren terug te leveren.</p>
     </div>
   </section>
 
   <main class="container">
 
     <div class="intro">
-      <p>De getallen komen rechtstreeks uit mijn omvormer en werk ik elke ochtend bij. Ik heb een contract met uurprijzen, dus de stroomprijs verschilt per uur. Ik laat twee bedragen zien: wat ik bespaar op de kale marktprijs, en wat ik bespaar op de prijs die ik echt betaal (met energiebelasting en btw erbij). Mijn zonnepanelen en mijn warmwaterboiler lopen langs een andere meter, dus die staan hier niet in.</p>
+      <p>De getallen komen rechtstreeks uit mijn omvormer en werk ik elke ochtend bij. Ik heb een contract met uurprijzen, dus de stroomprijs verschilt per uur. Het totaal bovenaan is het eerlijke cijfer; losse dagen schommelen, omdat de batterij de ene dag voller en de andere dag leger eindigt.</p>
     </div>
+
+    <p class="solarline" id="solarline" hidden></p>
 
     <div id="kpis" class="kpi-row" hidden>
       <div class="kpi">
-        <p class="label">Totaal bespaard</p>
-        <p class="value pos" id="kpi-total-incl">–</p>
-        <p class="sub" id="kpi-days">op wat ik echt betaal</p>
+        <p class="label">Verbruikt</p>
+        <p class="value" id="kpi-consumption">–</p>
+        <p class="sub" id="kpi-days">–</p>
       </div>
       <div class="kpi">
-        <p class="label">Op de kale marktprijs</p>
-        <p class="value" id="kpi-total-mkt">–</p>
-        <p class="sub">zonder belasting</p>
+        <p class="label">Kosten</p>
+        <p class="value" id="kpi-cost">–</p>
+        <p class="sub" id="kpi-cost-sub">–</p>
       </div>
       <div class="kpi">
-        <p class="label">Gratis stroom gebruikt</p>
-        <p class="value free" id="kpi-gratis">–</p>
-        <p class="sub">zonnestroom in dure uren</p>
+        <p class="label">Door batterij geleverd</p>
+        <p class="value pos" id="kpi-battery">–</p>
+        <p class="sub" id="kpi-battery-sub">vermeden inkoop</p>
       </div>
       <div class="kpi">
-        <p class="label">Gemiddeld per dag</p>
-        <p class="value pos" id="kpi-avg">–</p>
-        <p class="sub">wat ik echt betaal</p>
+        <p class="label">Verdiend met terugleveren</p>
+        <p class="value pos" id="kpi-arbitrage">–</p>
+        <p class="sub">in dure uren</p>
       </div>
     </div>
 
@@ -154,7 +156,7 @@
     </section>
 
     <section class="panel" id="chart-panel" hidden>
-      <h2>Wat ik per dag bespaar</h2>
+      <h2>Besparing, opgeteld per dag</h2>
       <div class="chart-wrap"><canvas id="chart"></canvas></div>
     </section>
 
@@ -165,11 +167,13 @@
           <thead>
             <tr>
               <th>Datum</th>
-              <th>Opgeladen</th>
-              <th>Gebruikt</th>
-              <th>Gratis gebruikt</th>
-              <th>Markt</th>
+              <th>Verbruikt</th>
+              <th>Kosten</th>
+              <th>Zonder batterij</th>
               <th>Bespaard</th>
+              <th>Batterij → huis</th>
+              <th>Teruggeleverd</th>
+              <th>Zon geladen</th>
             </tr>
           </thead>
           <tbody id="rows"></tbody>
@@ -179,11 +183,10 @@
 
     <section class="panel">
       <h2>Hoe ik reken</h2>
-      <p class="note">De winst is het verschil tussen twee dingen. Overdag laadt de batterij met zonnestroom. Die stroom had ik anders voor de lage dagprijs aan het net verkocht. 's Avonds gebruik ik de batterij in plaats van dure stroom te kopen. <strong>Wat ik 's avonds bespaar, min wat de zonnestroom overdag had opgebracht: dat is de winst.</strong></p>
-      <p class="note">Soms stuurt de batterij stroom terug het net op in plaats van mijn huis te voeden. Daarvoor krijg ik alleen de kale verkoopprijs, zonder belasting — minder dan wat ik bespaar als ik de stroom zelf gebruik. Dat deel reken ik dus apart, tegen die lagere prijs.</p>
-      <p class="note">Laadt de batterij 's nachts uit het net (tussen 22.00 en 06.00 uur)? Dan is dat geen zon, maar gekochte stroom. Die reken ik tegen de prijs die ik er zelf voor betaal.</p>
-      <p class="note">Eén dag op zich zegt weinig. Soms laad ik meer dan ik gebruik; dan blijft er stroom in de batterij zitten voor de volgende dag. Het werkt als een spaarpot: wat je er vandaag in stopt, haal je er morgen uit. Kijk dus naar het totaal over alle dagen, niet naar één losse dag.</p>
-      <p class="note muted">Mijn zonnepanelen en mijn warmwaterboiler meet deze omvormer niet. Wat die opleveren of besparen, staat hier dus niet bij.</p>
+      <p class="note">Ik vergelijk twee bedragen. Wat ik nu echt aan het net betaal (inkoop min teruglevering), en wat hetzelfde verbruik zou kosten als ik alles van het net zou halen, zonder batterij en zon. <strong>Het verschil is mijn besparing.</strong></p>
+      <p class="note">De batterij laadt op twee manieren. Uit zon is gratis. Uit het net op goedkope uren kost geld, maar dat verdien ik terug door die stroom in dure uren te gebruiken of terug te leveren. Stroom die de batterij mijn huis in stuurt, bespaart de dure inkoop. Stroom die in dure uren terug het net op gaat, levert geld op tegen de kale marktprijs — zonder belasting, want over teruglevering betaal je die niet.</p>
+      <p class="note">Eén dag zegt weinig. Laad ik meer dan ik gebruik, dan eindigt de batterij voller en lijkt die dag duur — die stroom gebruik ik morgen pas. Het werkt als een spaarpot. Kijk daarom naar het totaal, niet naar één losse dag.</p>
+      <p class="note muted">Mijn zonnepanelen en warmwaterboiler meet deze omvormer niet apart; hun effect zie je terug in een lagere inkoop.</p>
       <p class="note muted" id="updated"></p>
     </section>
 
@@ -212,14 +215,14 @@
   </footer>
 
   <script>
-    const euro = (x) => (x < 0 ? "−€" : "€") + Math.abs(x).toFixed(2);
+    const euro = (x) => (x < 0 ? "−€" : "€") + Math.abs(x ?? 0).toFixed(2);
     const kwh = (x) => (x ?? 0).toFixed(1).replace(".", ",") + " kWh";
-    const cent = (x) => (x ?? 0).toFixed(1).replace(".", ",") + " ct";
     const dfmt = (s) => {
       const [y, m, d] = s.split("-");
       const mn = ["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
       return parseInt(d,10) + " " + mn[parseInt(m,10)-1] + " " + y;
     };
+    const cls = (x) => (x >= 0 ? "pos" : "neg");
 
     async function load() {
       let doc;
@@ -233,44 +236,57 @@
       }
       const days = (doc.days || []).slice();
       if (!days.length) { document.getElementById("empty").hidden = false; return; }
-
       const t = doc.totals || {};
-      document.getElementById("kpi-total-incl").textContent = euro(t.profit_incl_eur ?? 0);
-      document.getElementById("kpi-total-mkt").textContent = euro(t.profit_market_eur ?? 0);
-      document.getElementById("kpi-gratis").textContent = kwh(t.gratis_kwh ?? 0);
-      document.getElementById("kpi-days").textContent = "over " + (t.days ?? days.length) + " dagen";
-      const avg = (t.profit_incl_eur ?? 0) / (t.days || days.length);
-      document.getElementById("kpi-avg").textContent = euro(avg);
+      const n = t.days || days.length;
+
+      // Totaal-tegels
+      document.getElementById("kpi-consumption").textContent = kwh(t.consumption_kwh);
+      document.getElementById("kpi-days").textContent = "over " + n + " dagen";
+      const saving = t.saving_eur ?? 0;
+      document.getElementById("kpi-cost").textContent = euro(t.cost_actual_eur);
+      document.getElementById("kpi-cost-sub").innerHTML =
+        "zonder batterij " + euro(t.cost_without_eur) + " &middot; <span class='" + cls(saving) + "'>" +
+        (saving >= 0 ? "bespaard " : "duurder ") + euro(Math.abs(saving)) + "</span>";
+      document.getElementById("kpi-battery").textContent = kwh(t.battery_home_kwh);
+      document.getElementById("kpi-arbitrage").textContent = euro(t.arbitrage_income_eur);
       document.getElementById("kpis").hidden = false;
 
+      // Zon-regel
+      const totGridCharge = days.reduce((a, d) => a + (d.grid_charged_kwh || 0), 0);
+      document.getElementById("solarline").innerHTML =
+        "<strong>" + kwh(t.solar_charged_kwh) + " gratis uit zon opgeslagen</strong>" +
+        " &middot; " + kwh(totGridCharge) + " uit het net geladen op goedkope uren";
+      document.getElementById("solarline").hidden = false;
+
+      // Laatste dag
       const last = days[days.length - 1];
       document.getElementById("latest-title").textContent = "Laatste dag — " + dfmt(last.date);
-      const gratisPill = (last.gratis_kwh > 0.05)
-        ? '<span class="pill free">ja — ' + kwh(last.gratis_kwh) + '</span>'
-        : '<span class="pill none">nee</span>';
+      const ls = last.saving_eur ?? 0;
       document.getElementById("latest").innerHTML = [
-        ["Bespaard", '<span class="' + (last.profit_incl_eur >= 0 ? "pos" : "neg") + '">' + euro(last.profit_incl_eur) + "</span>"],
-        ["Op kale marktprijs", euro(last.profit_market_eur)],
-        ["Gratis stroom gebruikt?", gratisPill],
-        ["Opgeladen", kwh(last.charged_kwh) + ' <span class="muted">(' + cent(last.avg_charge_ct_incl) + "/kWh)</span>"],
-        ["Gebruikt", kwh(last.discharged_kwh) + ' <span class="muted">(' + cent(last.avg_discharge_ct_incl) + "/kWh)</span>"],
-        ["Batterij: begin → eind", (last.soc_start_pct ?? "?") + "% → " + (last.soc_end_pct ?? "?") + "%"],
+        ["Verbruikt", kwh(last.consumption_kwh)],
+        ["Kosten", euro(last.cost_actual_eur)],
+        ["Zonder batterij", euro(last.cost_without_eur)],
+        ["Bespaard", "<span class='" + cls(ls) + "'>" + euro(ls) + "</span>"],
+        ["Batterij → huis", kwh(last.battery_home_kwh) + " <span class='muted'>(" + euro(last.battery_home_value_eur) + ")</span>"],
+        ["Teruggeleverd", kwh(last.arbitrage_kwh) + " <span class='muted'>(" + euro(last.arbitrage_income_eur) + ")</span>"],
+        ["Zon geladen", kwh(last.solar_charged_kwh)],
+        ["Batterij begin → eind", (last.soc_start_pct ?? "?") + "% → " + (last.soc_end_pct ?? "?") + "%"],
       ].map(([l, v]) => '<div class="cell"><p class="l">' + l + '</p><p class="v">' + v + "</p></div>").join("");
       document.getElementById("latest-panel").hidden = false;
 
-      document.getElementById("rows").innerHTML = days.slice().reverse().map((d) => {
-        const g = d.gratis_kwh > 0.05
-          ? '<span class="pill free">' + kwh(d.gratis_kwh) + "</span>"
-          : '<span class="pill none">–</span>';
-        return "<tr>"
-          + "<td>" + dfmt(d.date) + "</td>"
-          + "<td>" + kwh(d.charged_kwh) + "</td>"
-          + "<td>" + kwh(d.discharged_kwh) + "</td>"
-          + "<td>" + g + "</td>"
-          + "<td>" + euro(d.profit_market_eur) + "</td>"
-          + '<td class="' + (d.profit_incl_eur >= 0 ? "pos" : "neg") + '">' + euro(d.profit_incl_eur) + "</td>"
-          + "</tr>";
-      }).join("");
+      // Tabel (nieuwste boven)
+      document.getElementById("rows").innerHTML = days.slice().reverse().map((d) =>
+        "<tr>"
+        + "<td>" + dfmt(d.date) + "</td>"
+        + "<td>" + kwh(d.consumption_kwh) + "</td>"
+        + "<td>" + euro(d.cost_actual_eur) + "</td>"
+        + "<td>" + euro(d.cost_without_eur) + "</td>"
+        + '<td class="' + cls(d.saving_eur ?? 0) + '">' + euro(d.saving_eur) + "</td>"
+        + "<td>" + kwh(d.battery_home_kwh) + "</td>"
+        + "<td>" + kwh(d.arbitrage_kwh) + "</td>"
+        + "<td>" + kwh(d.solar_charged_kwh) + "</td>"
+        + "</tr>"
+      ).join("");
       document.getElementById("table-panel").hidden = false;
 
       if (doc.generated_at) {
@@ -278,18 +294,18 @@
           "Laatst bijgewerkt: " + new Date(doc.generated_at).toLocaleString("nl-NL");
       }
 
+      // Grafiek: besparing per dag + cumulatief
       if (window.Chart) {
         document.getElementById("chart-panel").hidden = false;
-        const ctx = document.getElementById("chart");
         let cum = 0;
-        const cumData = days.map((d) => (cum += d.profit_incl_eur));
-        new Chart(ctx, {
+        const cumData = days.map((d) => (cum += (d.saving_eur || 0)));
+        new Chart(document.getElementById("chart"), {
           data: {
             labels: days.map((d) => dfmt(d.date)),
             datasets: [
-              { type: "bar", label: "Per dag", data: days.map((d) => d.profit_incl_eur),
+              { type: "bar", label: "Besparing per dag", data: days.map((d) => d.saving_eur || 0),
                 backgroundColor: "#2f9e44", borderRadius: 4, yAxisID: "y" },
-              { type: "line", label: "Bij elkaar opgeteld", data: cumData, borderColor: "#0f6cbd",
+              { type: "line", label: "Totaal bespaard", data: cumData, borderColor: "#0f6cbd",
                 backgroundColor: "rgba(15,108,189,.1)", tension: .25, fill: true, yAxisID: "y" },
             ],
           },
