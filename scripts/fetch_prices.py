@@ -142,6 +142,35 @@ def fetch_entsoe_with_retry(
     raise last_exc
 
 
+ENERGY_CHARTS_BASE = "https://api.energy-charts.info/price"
+
+
+def fetch_epex(start_date: str, end_date: str) -> list[dict]:
+    """Achtervang-bron: day-ahead prijzen via energy-charts.info (EPEX/SMARD-data).
+
+    Geen API-key nodig. `start_date`/`end_date` zijn 'YYYY-MM-DD' (Amsterdam-dagen,
+    inclusief). Gebruikt als ENTSO-E nog geen (volledige) morgen-prijzen heeft:
+    leveranciers en EPEX publiceren doorgaans eerder dan het ENTSO-E Transparency
+    Platform. Retourneert [{time: ISO Amsterdam, price: EUR/MWh}], gesorteerd.
+    """
+    params = {"bzn": "NL", "start": start_date, "end": end_date}
+    url = f"{ENERGY_CHARTS_BASE}?{urllib.parse.urlencode(params)}"
+    req = urllib.request.Request(url, headers={"User-Agent": "stroomvoorspeller/0.1"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+
+    seconds = data.get("unix_seconds", []) or []
+    prices = data.get("price", []) or []
+    out: list[dict] = []
+    for ts, pr in zip(seconds, prices):
+        if pr is None:
+            continue
+        dt_utc = datetime.fromtimestamp(int(ts), tz=timezone.utc)
+        out.append({"time": utc_to_amsterdam(dt_utc).isoformat(), "price": round(float(pr), 2)})
+    out.sort(key=lambda x: x["time"])
+    return out
+
+
 def parse_entsoe_xml(xml_text: str, default_start_utc: datetime) -> list[dict]:
     """Parseer ENTSO-E day-ahead prices XML naar een lijst van prijzen.
 
@@ -159,6 +188,7 @@ def parse_entsoe_xml(xml_text: str, default_start_utc: datetime) -> list[dict]:
         if period is None:
             continue
         start_text = period.find(f"{ns}timeInterval/{ns}start").text
+        end_el = period.find(f"{ns}timeInterval/{ns}end")
         period_start_utc = datetime.fromisoformat(start_text.replace("Z", "+00:00"))
         resolution = period.find(f"{ns}resolution").text  # bv. PT60M
 
@@ -169,13 +199,36 @@ def parse_entsoe_xml(xml_text: str, default_start_utc: datetime) -> list[dict]:
         else:
             res_minutes = 60
 
+        # ENTSO-E gebruikt curveType A03: opeenvolgende punten met dezelfde prijs
+        # worden weggelaten. Een ontbrekende positie betekent dus "zelfde prijs als
+        # het vorige gegeven punt", niet "geen data". We lezen eerst alle gegeven
+        # punten in en vullen daarna de gaten op (forward-fill). Zonder dit levert
+        # een vlakke dag 23 i.p.v. 24 uur op, en faalt de >=24-uur morgen-check.
+        given: dict[int, float] = {}
         for point in period.findall(f"{ns}Point"):
             position = int(point.find(f"{ns}position").text)
-            price_text = point.find(f"{ns}price.amount").text
-            price = float(price_text)
+            given[position] = float(point.find(f"{ns}price.amount").text)
+        if not given:
+            continue
+
+        # Aantal verwachte posities: uit het tijdsinterval als dat er is, anders het
+        # hoogste gegeven positienummer. Het interval staat in UTC, dus DST (23/25 uur)
+        # blijft automatisch correct.
+        n_positions = max(given)
+        if end_el is not None and end_el.text:
+            period_end_utc = datetime.fromisoformat(end_el.text.replace("Z", "+00:00"))
+            span_minutes = (period_end_utc - period_start_utc).total_seconds() / 60
+            n_positions = max(n_positions, int(round(span_minutes / res_minutes)))
+
+        last_price: float | None = None
+        for position in range(1, n_positions + 1):
+            if position in given:
+                last_price = given[position]
+            if last_price is None:
+                continue  # nog geen prijs gezien (zou niet mogen als positie 1 bestaat)
             point_utc = period_start_utc + timedelta(minutes=res_minutes * (position - 1))
             point_ams = utc_to_amsterdam(point_utc)
-            results.append({"time": point_ams.isoformat(), "price": round(price, 2)})
+            results.append({"time": point_ams.isoformat(), "price": round(last_price, 2)})
 
     results.sort(key=lambda x: x["time"])
     return results
@@ -428,6 +481,7 @@ def main() -> int:
     prices_15m: list[dict] = []
     has_pt15m = False
     error_msg = None
+    epex_fallback = False
 
     if token:
         try:
@@ -472,9 +526,49 @@ def main() -> int:
             error_msg = f"ENTSO-E fout: {exc}"
             print(f"[warn] {error_msg}", file=sys.stderr)
 
-    # Archiveer alle opgehaalde uurprijzen (alleen bij echte ENTSO-E data).
+    # ---- EPEX-achtervang (energy-charts.info, geen API-key) ----
+    def _count_day(plist: list[dict], day: str) -> int:
+        return sum(1 for p in plist if p["time"][:10] == day)
+
+    # Scenario a: ENTSO-E leverde data, maar morgen ontbreekt (deels). ENTSO-E
+    # publiceert vaak later dan EPEX/leveranciers; vul de ontbrekende morgen-uren
+    # aan uit EPEX zodat de site morgen-prijzen toont zodra de markt ze heeft.
+    if source == "entsoe" and _count_day(prices, tomorrow_date) < 24:
+        ontbreekt = 24 - _count_day(prices, tomorrow_date)
+        print(f"[info] ENTSO-E mist {ontbreekt} morgen-uren — EPEX-achtervang bevragen.", file=sys.stderr)
+        try:
+            epex = fetch_epex(today_date, tomorrow_date)
+            have_hours = {p["time"][:13] for p in prices}
+            added = [p for p in epex if p["time"][:13] not in have_hours]
+            if added:
+                prices.extend(added)
+                prices.sort(key=lambda x: x["time"])
+                epex_fallback = True
+                print(f"[ok] EPEX-achtervang: {len(added)} uren aangevuld (morgen).", file=sys.stderr)
+            else:
+                print("[wait] EPEX-achtervang had ook nog geen nieuwe morgen-uren.", file=sys.stderr)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[warn] EPEX-achtervang mislukt: {exc}", file=sys.stderr)
+
+    # Scenario b: ENTSO-E leverde helemaal niets, maar er was wél een token (dus
+    # productie, geen dev). Probeer EPEX als volledige bron — inclusief historie voor
+    # de forecast — voordat we oude data bewaren of sample genereren.
+    if not prices and token:
+        try:
+            epex = fetch_epex(history_start_ams.strftime("%Y-%m-%d"), tomorrow_date)
+            if epex:
+                prices = aggregate_to_hourly(epex)
+                source = "epex"
+                epex_fallback = True
+                if error_msg:
+                    error_msg = f"{error_msg}; EPEX-achtervang gebruikt"
+                print(f"[ok] ENTSO-E leeg — {len(prices)} uurprijzen via EPEX-achtervang.", file=sys.stderr)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[warn] EPEX volledige fallback mislukt: {exc}", file=sys.stderr)
+
+    # Archiveer alle opgehaalde uurprijzen (alleen bij echte day-ahead data).
     # Dit gebeurt ook als prices leeg is na een fout — in dat geval is er niets te archiveren.
-    if prices and source == "entsoe":
+    if prices and source in ("entsoe", "epex"):
         try:
             archive_prices(prices)
         except Exception as exc:  # noqa: BLE001
@@ -522,14 +616,15 @@ def main() -> int:
         "unit": "EUR/MWh",
         "tz": "Europe/Amsterdam",
         "source": source,
+        "epex_fallback": epex_fallback,
         "has_pt15m": has_pt15m,
         "prices": prices,
         "prices_15m": prices_15m,  # Kwartierdata voor vandaag+morgen (leeg als PT60M of fout)
     }
 
     # Referentielijn 'wat is normaal' (#63): 30-daags gemiddelde consumentenprijs.
-    # Alleen bij echte ENTSO-E data — over sample-data is het gemiddelde betekenisloos.
-    if source == "entsoe":
+    # Alleen bij echte day-ahead data — over sample-data is het gemiddelde betekenisloos.
+    if source in ("entsoe", "epex"):
         try:
             avg_30d, avg_window = compute_avg_30d(now_ams, prices)
             if avg_30d is not None:

@@ -28,6 +28,10 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PRICES_FILE = PROJECT_ROOT / "public" / "data" / "prices.json"
 CONFIG_FILE = PROJECT_ROOT / "public" / "data" / "config.json"
+# Markeert voor welke morgen-datum al een tweet is gepost. Voorkomt dat een tweede
+# run (bv. omdat prices.json opnieuw is overschreven) nogmaals tweet. De workflow
+# committeert dit bestand terug naar de repo, zodat de markering blijft bestaan.
+TWEET_STATE_FILE = PROJECT_ROOT / "public" / "data" / "tweet_state.json"
 
 # ---- Branding & X ----
 BRAND = "stroomvoorspeller.nl"
@@ -319,6 +323,33 @@ def post_tweet(text: str, image_path: Path) -> None:
     print(f"OK tweet gepost: id={tweet_id}")
 
 
+def already_posted(target_date: str) -> bool:
+    """True als er voor deze morgen-datum al een tweet is gepost (zie TWEET_STATE_FILE)."""
+    try:
+        state = json.loads(TWEET_STATE_FILE.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return False
+    except Exception as exc:  # noqa: BLE001
+        print(f"[warn] tweet_state.json onleesbaar ({exc}) — behandel als niet-gepost.",
+              file=sys.stderr)
+        return False
+    return state.get("last_posted_date") == target_date
+
+
+def mark_posted(target_date: str) -> None:
+    """Leg vast dat voor deze morgen-datum een tweet is gepost."""
+    TWEET_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    TWEET_STATE_FILE.write_text(
+        json.dumps(
+            {"last_posted_date": target_date, "posted_at": datetime.now(timezone.utc).isoformat()},
+            indent=2,
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    print(f"[ok] tweet_state.json bijgewerkt: last_posted_date={target_date}")
+
+
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--dry-run", action="store_true",
@@ -327,6 +358,8 @@ def main() -> None:
                    help="Output JPEG-pad. Default: /tmp/daily_post.jpg")
     p.add_argument("--target-date", default=None,
                    help="Override 'morgen'-datum (YYYY-MM-DD). Voor test of inhalen.")
+    p.add_argument("--force", action="store_true",
+                   help="Negeer de tweet-markering en post toch (handmatig opnieuw posten).")
     args = p.parse_args()
 
     config = load_json(CONFIG_FILE)
@@ -350,6 +383,14 @@ def main() -> None:
         print("SKIP: morgen-prijzen nog niet in prices.json. Niets gepost.", file=sys.stderr)
         sys.exit(0)
 
+    # Harde dedup: post hooguit één keer per morgen-datum, ook als prices.json
+    # meerdere keren wordt overschreven of de workflow vaker draait. --force omzeilt dit.
+    target_date_str = window[0]["time"][:10]
+    if not args.dry_run and not args.force and already_posted(target_date_str):
+        print(f"SKIP: al getweet voor {target_date_str} (tweet_state.json). Niets gepost.",
+              file=sys.stderr)
+        sys.exit(0)
+
     summary = compute_summary(window, config)
     text = compose_tweet(summary)
 
@@ -367,6 +408,9 @@ def main() -> None:
         return
 
     post_tweet(text, out)
+    # Pas ná een geslaagde post markeren. Faalt post_tweet (gooit exception), dan
+    # blijft de markering uit en probeert de volgende run het opnieuw.
+    mark_posted(target_date_str)
 
 
 if __name__ == "__main__":
