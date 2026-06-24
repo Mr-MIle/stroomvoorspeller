@@ -61,22 +61,25 @@ def tomorrow_date_ams() -> str:
     return (now_ams + timedelta(days=1)).strftime("%Y-%m-%d")
 
 
-def prices_json_has_tomorrow(tomorrow: str) -> bool:
+def prices_json_tomorrow_source(tomorrow: str) -> str | None:
     """
-    True als prices.json al ≥24 uurprijzen van source=entsoe heeft voor morgen.
-    Dan is er niets te doen.
+    Geeft de bron ('entsoe' / 'energyzero' / 'energy-charts') waarmee morgen al
+    volledig (>=24 uur) in prices.json staat, of None als morgen er (nog) niet
+    volledig in staat. Zo kan de caller onderscheid maken tussen "al via ENTSO-E"
+    (klaar) en "via achtervang" (mag nog naar ENTSO-E upgraden).
     """
     if not OUTPUT_FILE.exists():
-        return False
+        return None
     try:
         data = json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
-        if data.get("source") not in ("entsoe", "energyzero", "energy-charts"):
-            return False
+        src = data.get("source")
+        if src not in ("entsoe", "energyzero", "energy-charts"):
+            return None
         count = sum(1 for p in data.get("prices", []) if p.get("time", "")[:10] == tomorrow)
-        return count >= 24
+        return src if count >= 24 else None
     except Exception as exc:
         print(f"[warn] Kon prices.json niet lezen: {exc}", file=sys.stderr)
-        return False
+        return None
 
 
 def entsoe_has_tomorrow(token: str, tomorrow: str) -> bool:
@@ -232,11 +235,26 @@ def main() -> None:
     tomorrow = tomorrow_date_ams()
     print(f"[check] Morgen in Amsterdam-tijd = {tomorrow}", file=sys.stderr)
 
-    if prices_json_has_tomorrow(tomorrow):
-        print(
-            f"[skip] prices.json heeft al >=24 uurprijzen voor {tomorrow}. Niets te doen.",
-            file=sys.stderr,
-        )
+    current_source = prices_json_tomorrow_source(tomorrow)
+
+    # Morgen staat al volledig via ENTSO-E -> klaar, niets te doen.
+    if current_source == "entsoe":
+        print(f"[skip] prices.json heeft al ENTSO-E-prijzen voor {tomorrow}. Niets te doen.",
+              file=sys.stderr)
+        sys.exit(1)
+
+    # Morgen staat er, maar via een achtervang. ENTSO-E is leidend: zodra ENTSO-E de
+    # data heeft, draaien we opnieuw zodat ENTSO-E de achtervang overschrijft (incl.
+    # kwartierdata). Heeft ENTSO-E nog niets, dan laten we de achtervang staan.
+    if current_source in ("energyzero", "energy-charts"):
+        print(f"[check] Morgen staat in prices.json via achtervang ({current_source}). "
+              f"Controleer of ENTSO-E kan upgraden...", file=sys.stderr)
+        if entsoe_has_tomorrow(token, tomorrow):
+            print("[go] ENTSO-E heeft morgen nu — upgrade van achtervang naar ENTSO-E.",
+                  file=sys.stderr)
+            sys.exit(0)
+        print("[skip] ENTSO-E nog niet beschikbaar; achtervang blijft staan. Niets te doen.",
+              file=sys.stderr)
         sys.exit(1)
 
     print("[check] prices.json mist morgen-prijzen. Controleer ENTSO-E...", file=sys.stderr)
