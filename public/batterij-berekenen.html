@@ -67,6 +67,8 @@ table.bd th,table.bd td{text-align:left;padding:8px 8px;border-bottom:1px solid 
 table.bd td.num,table.bd th.num{text-align:right;font-variant-numeric:tabular-nums}
 table.bd tr.tot td{font-weight:700;border-top:2px solid var(--c-border);border-bottom:0}
 table.bd tr.best td{background:var(--c-cheap-bg);font-weight:600}
+table.bd tr.you td{background:#eef4fb;font-weight:600}
+.adv-tag{display:inline-block;font-size:.7rem;font-weight:600;color:var(--c-brand-deep);background:#dceaf8;border-radius:4px;padding:1px 6px;margin-left:4px;vertical-align:middle}
 .muted{color:var(--c-text-mute)}
 .chart-box{position:relative;height:300px;margin-top:8px}
 h3{font-size:.95rem;margin:22px 0 6px}
@@ -162,6 +164,11 @@ h3{font-size:.95rem;margin:22px 0 6px}
         </div>
 
         <div class="field">
+          <label>Wat kost deze batterij? <span class="hint">prijs voor de batterijgrootte hierboven &#8211; hiermee rekenen we de terugverdientijd</span></label>
+          <input type="number" id="prijs" min="0" max="30000" step="100" placeholder="bijv. 6000" />
+        </div>
+
+        <div class="field">
           <label>Je leverancier</label>
           <select id="aanbieder"></select>
         </div>
@@ -176,10 +183,7 @@ h3{font-size:.95rem;margin:22px 0 6px}
           <p class="modus-note" id="modusNote"></p>
         </div>
 
-        <div class="field" style="margin-bottom:0">
-          <label>Wat kost de batterij? <span class="hint">niet verplicht &#8211; voor de terugverdientijd</span></label>
-          <input type="number" id="prijs" min="0" max="30000" step="100" placeholder="bijv. 5000" />
-        </div>
+
       </div>
     </form>
 
@@ -576,29 +580,42 @@ function yearSaving(p, capKwh){
   return tot;
 }
 function renderAdvisor(p){
-  const base0=yearSaving(p,0);                 // alleen zonnepanelen, geen batterij
-  const eigenPrijs=(parseFloat(v('prijs'))>0 && +v('batkwh')>0);
-  const rows=ADV_SIZES.map(s=>({s,batSave:yearSaving(p,s)-base0,price:batPrice(s)}));
-  let rec=null, bestPb=rows[0];
-  for(let i=0;i<rows.length;i++){
-    rows[i].extra = i===0? rows[i].batSave : rows[i].batSave-rows[i-1].batSave;
-    rows[i].payback = rows[i].batSave>0? rows[i].price/rows[i].batSave : Infinity;
-    const stepCost = i===0? rows[i].price : rows[i].price-rows[i-1].price;
-    const stepPay = rows[i].extra>0? stepCost/rows[i].extra : Infinity;
-    if(stepPay<=BAT_LIFESPAN) rec=rows[i].s;
-    if(rows[i].payback<bestPb.payback) bestPb=rows[i];
+  const base0=yearSaving(p,0);
+  const pr=parseFloat(v('prijs')), userKwh=Math.max(0,+v('batkwh'));
+  const hasPrice=(pr>0 && userKwh>0);
+  let rows=ADV_SIZES.map(s=>({s,batSave:yearSaving(p,s)-base0,price:batPrice(s),std:true}));
+  let userRow=null;
+  if(hasPrice){
+    const ex=rows.find(r=>Math.abs(r.s-userKwh)<0.01);
+    if(ex){ ex.price=pr; ex.isUser=true; userRow=ex; }
+    else { userRow={s:userKwh,batSave:yearSaving(p,userKwh)-base0,price:pr,isUser:true}; rows.push(userRow); rows.sort((a,b)=>a.s-b.s); }
+  }
+  rows.forEach(r=> r.payback = r.batSave>0? r.price/r.batSave : Infinity);
+  const std=rows.filter(r=>r.std);
+  let rec=null, bestPb=std[0];
+  for(let i=0;i<std.length;i++){
+    const extra = i===0? std[i].batSave : std[i].batSave-std[i-1].batSave;
+    const stepCost = i===0? std[i].price : std[i].price-std[i-1].price;
+    const stepPay = extra>0? stepCost/extra : Infinity;
+    if(stepPay<=BAT_LIFESPAN) rec=std[i].s;
+    if(std[i].payback<bestPb.payback) bestPb=std[i];
   }
   const mark = rec!=null? rec : bestPb.s;
-  $('advBody').innerHTML=rows.map(r=>`<tr class="${r.s===mark?'best':''}"><td>${r.s} kWh${r.s===mark?' &#9733;':''}</td><td class="num">${eur(r.price)}</td><td class="num">${eur(r.batSave)}</td><td class="num">${isFinite(r.payback)?Math.round(r.payback)+' jr':'&#8211;'}</td></tr>`).join('');
-  if(rec!=null){
-    const rr=rows.find(r=>r.s===rec);
-    $('advRec').innerHTML=`Een batterij van <b>${rec} kWh</b> is voor jou de beste balans: grotere stappen verdienen zich binnen de levensduur niet meer terug. Die bespaart ongeveer <b>${eur(rr.batSave)} per jaar</b> bovenop je zonnepanelen.`;
-  } else if(bestPb.batSave>5){
-    $('advRec').innerHTML=`Bij de huidige batterijprijzen verdient geen enkele maat zich binnen ~${BAT_LIFESPAN} jaar terug. Een batterij van ${bestPb.s} kWh bespaart het meeste per euro (~${eur(bestPb.batSave)} per jaar), maar is financieel nog niet rond &#8211; nu interessanter voor onafhankelijkheid dan voor puur rendement.`;
-  } else {
-    $('advRec').innerHTML='Met deze instellingen levert een batterij weinig extra op bovenop je zonnepanelen. Meer panelen of een hoger verbruik maken een batterij eerder rendabel.';
+  $('advBody').innerHTML=rows.map(r=>{
+    const cls=[]; if(r.s===mark) cls.push('best'); if(r.isUser) cls.push('you');
+    let tag=''; if(r.isUser) tag+=' <span class="adv-tag">jouw keuze</span>'; if(r.s===mark) tag+=' &#9733;';
+    return `<tr class="${cls.join(' ')}"><td>${(+r.s).toLocaleString('nl-NL')} kWh${tag}</td><td class="num">${eur(r.price)}</td><td class="num">${eur(r.batSave)}</td><td class="num">${isFinite(r.payback)?Math.round(r.payback)+' jr':'&#8211;'}</td></tr>`;
+  }).join('');
+  let recHtml;
+  if(rec!=null){ const rr=std.find(r=>r.s===rec); recHtml=`Een batterij van <b>${rec} kWh</b> is voor jou de beste balans: grotere stappen verdienen zich binnen de levensduur niet meer terug. Die bespaart ongeveer <b>${eur(rr.batSave)} per jaar</b> bovenop je zonnepanelen.`; }
+  else if(bestPb.batSave>5){ recHtml=`Bij de huidige batterijprijzen verdient geen enkele maat zich binnen ~${BAT_LIFESPAN} jaar terug. Een batterij van ${bestPb.s} kWh bespaart het meeste per euro (~${eur(bestPb.batSave)} per jaar), maar is financieel nog niet rond &#8211; nu interessanter voor onafhankelijkheid dan voor puur rendement.`; }
+  else { recHtml='Met deze instellingen levert een batterij weinig extra op bovenop je zonnepanelen. Meer panelen of een hoger verbruik maken een batterij eerder rendabel.'; }
+  if(hasPrice && userRow){
+    const yrs= isFinite(userRow.payback)? '~'+Math.round(userRow.payback)+' jaar' : 'niet binnen de levensduur';
+    recHtml += `<br><span style="font-weight:400;font-size:.92em">Jouw keuze: <b>${(+userKwh).toLocaleString('nl-NL')} kWh</b> voor ${eur(pr)} &#8211; bespaart ~${eur(userRow.batSave)}/jaar, terugverdientijd ${yrs}.</span>`;
   }
-  $('advNote').innerHTML=`&#8220;Bespaart per jaar&#8221; is wat de batterij <b>bovenop</b> alleen zonnepanelen oplevert, gemiddeld over 12 maanden. ${eigenPrijs?'Gerekend met jouw prijs, geschaald per kWh.':'Richtprijzen 2026 incl. installatie (0% btw met zon); vul je eigen prijs in onder Verfijnen.'}`;
+  $('advRec').innerHTML=recHtml;
+  $('advNote').innerHTML=`&#8220;Bespaart per jaar&#8221; is wat de batterij <b>bovenop</b> alleen zonnepanelen oplevert, gemiddeld over 12 maanden. ${hasPrice?`Gerekend met jouw prijs (${eur(pr)} voor ${(+userKwh).toLocaleString('nl-NL')} kWh), per kWh toegepast op de andere maten.`:'Richtprijzen 2026 incl. installatie (0% btw met zon); vul je eigen prijs in bij &#8220;Wat kost deze batterij&#8221;.'}`;
 }
 
 // ---------- wiring ----------
