@@ -1,20 +1,20 @@
 {
- "generated_at": "2026-06-23T13:16:37+00:00",
+ "generated_at": "2026-06-24T07:33:26+00:00",
  "currency": "EUR",
  "supplier": "Frank Energie",
  "markup_per_kwh": 0.015,
  "method": "Verbruik = homeLoad. Kosten actueel = inkoop x consumentenprijs - teruglevering x EPEX. Kosten zonder = verbruik x consumentenprijs. Laden uit zon = gratis; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen naar huis = vermeden inkoop; naar net = inkomsten tegen EPEX. Besparing geschat gesplitst in batterij (arbitrage) en zon.",
  "totals": {
-  "days": 14,
-  "consumption_kwh": 238.2,
-  "cost_actual_eur": 27.79,
-  "cost_without_eur": 46.77,
-  "saving_eur": 18.95,
-  "battery_saving_eur": 23.49,
-  "solar_saving_eur": -4.51,
-  "battery_home_kwh": 80.0,
-  "arbitrage_income_eur": 22.73,
-  "solar_charged_kwh": 87.2
+  "days": 15,
+  "consumption_kwh": 245.0,
+  "cost_actual_eur": 23.25,
+  "cost_without_eur": 49.55,
+  "saving_eur": 26.26,
+  "battery_saving_eur": 30.85,
+  "solar_saving_eur": -4.56,
+  "battery_home_kwh": 84.6,
+  "arbitrage_income_eur": 30.66,
+  "solar_charged_kwh": 95.6
  },
  "days": [
   {
@@ -380,6 +380,32 @@
    "price_coverage": 1.0,
    "grid_data_ok": true,
    "n_points": 286
+  },
+  {
+   "date": "2026-06-23",
+   "consumption_kwh": 6.8,
+   "cost_actual_eur": -4.54,
+   "cost_without_eur": 2.78,
+   "saving_eur": 7.31,
+   "battery_home_kwh": 4.6,
+   "battery_home_value_eur": 2.26,
+   "arbitrage_kwh": 15.8,
+   "arbitrage_income_eur": 7.93,
+   "solar_charged_kwh": 8.4,
+   "grid_charged_kwh": 7.3,
+   "grid_charge_cost_eur": 2.14,
+   "battery_saving_eur": 7.36,
+   "solar_saving_eur": -0.05,
+   "charged_kwh": 15.7,
+   "discharged_kwh": 20.4,
+   "import_kwh": 17.6,
+   "export_kwh": 36.4,
+   "battery_to_grid_kwh": 15.8,
+   "soc_start_pct": 34,
+   "soc_end_pct": 21,
+   "price_coverage": 1.0,
+   "grid_data_ok": true,
+   "n_points": 279
   }
  ]
 }
