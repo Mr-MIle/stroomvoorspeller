@@ -17,6 +17,7 @@
     { href: "/kennisbank/", label: "Kennisbank" },
     { label: "Slim thuis", children: [
       { href: "/batterij", label: "Thuisbatterij" },
+      { href: "/batterij-berekenen", label: "Batterij berekenen" },
       { href: "/integraties", label: "Integraties" },
       { href: "/home-assistant", label: "Home Assistant" }
     ] }

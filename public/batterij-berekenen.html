@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Welke thuisbatterij past bij jou? Bereken de opbrengst | Stroomvoorspeller.nl</title>
+<meta name="description" content="Bereken op echte uurprijzen wat zonnepanelen en een thuisbatterij je opleveren, welke batterijgrootte het meeste bespaart en de terugverdientijd." />
+<meta name="theme-color" content="#0f6cbd" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="canonical" href="https://stroomvoorspeller.nl/batterij-berekenen" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="nl_NL" />
+<meta property="og:site_name" content="Stroomvoorspeller.nl" />
+<meta property="og:title" content="Welke thuisbatterij past bij jou? Bereken de opbrengst" />
+<meta property="og:description" content="Bereken op echte uurprijzen wat zonnepanelen en een thuisbatterij je opleveren, welke batterijgrootte het meeste bespaart en de terugverdientijd." />
+<meta property="og:url" content="https://stroomvoorspeller.nl/batterij-berekenen" />
+<meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Welke thuisbatterij past bij jou? Bereken de opbrengst" />
+<meta name="twitter:description" content="Bereken op echte uurprijzen wat zonnepanelen en een thuisbatterij je opleveren, welke batterijgrootte het meeste bespaart en de terugverdientijd." />
+<meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@graph":[
+ {"@type":"WebApplication","name":"Welke thuisbatterij past bij jou? Bereken de opbrengst","url":"https://stroomvoorspeller.nl/batterij-berekenen","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"inLanguage":"nl-NL","isPartOf":{"@id":"https://stroomvoorspeller.nl/#website"}},
+ {"@type":"BreadcrumbList","itemListElement":[
+   {"@type":"ListItem","position":1,"name":"Home","item":"https://stroomvoorspeller.nl/"},
+   {"@type":"ListItem","position":2,"name":"Batterij berekenen","item":"https://stroomvoorspeller.nl/batterij-berekenen"}]}
+]}
+</script>
+<style>
+
+*{box-sizing:border-box}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 18px 60px}
+h1{font-size:1.6rem;margin:.2em 0 .1em}
+.lead{color:var(--c-text-soft);margin:.2em 0 1em;max-width:62ch}
+.proto-note{background:var(--c-free-bg);border:1px solid #d9ccf7;color:#4b3a85;border-radius:var(--radius-sm);padding:10px 14px;font-size:.85rem;margin-bottom:22px}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:22px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);box-shadow:var(--shadow-md);padding:20px}
+.card h2{font-size:1.05rem;margin:0 0 14px}
+.field{margin-bottom:15px}
+.field label{display:block;font-weight:600;font-size:.88rem;margin-bottom:5px}
+.field .hint{font-weight:400;color:var(--c-text-mute);font-size:.78rem}
+input[type=number],select{width:100%;padding:9px 11px;border:1px solid var(--c-border);border-radius:var(--radius-sm);font-family:inherit;font-size:.95rem;background:#fff;color:var(--c-text)}
+.row2{display:flex;gap:10px}.row2>*{flex:1}
+.seg{display:flex;border:1px solid var(--c-border);border-radius:var(--radius-sm);overflow:hidden}
+.seg button{flex:1;border:0;background:#fff;padding:9px 6px;font-family:inherit;font-size:.82rem;cursor:pointer;color:var(--c-text-soft);border-right:1px solid var(--c-border)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--c-brand);color:#fff;font-weight:600}
+.adv-toggle{background:none;border:0;color:var(--c-brand);font-size:.82rem;cursor:pointer;padding:0;font-family:inherit;text-decoration:underline}
+.adv{display:none;margin-top:10px;padding-top:12px;border-top:1px dashed var(--c-border)}
+.adv.show{display:block}
+.verbruik-vragen{display:none}.verbruik-vragen.show{display:block}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:680px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:#f0f6fc;border:1px solid #d8e6f4;border-radius:var(--radius-sm);padding:13px 14px}
+.kpi .lbl{font-size:.76rem;color:var(--c-text-mute);margin-bottom:3px}
+.kpi .val{font-size:1.3rem;font-weight:700;color:var(--c-brand-deep);line-height:1.1}
+.kpi .sub{font-size:.76rem;color:var(--c-text-soft);margin-top:2px}
+.headline{background:var(--c-cheap-bg);border:1px solid #bfe3cb;border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:18px;font-size:1.05rem}
+.headline b{color:#1c7a37}
+table.bd{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:6px}
+table.bd th,table.bd td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--c-border)}
+table.bd td.num,table.bd th.num{text-align:right;font-variant-numeric:tabular-nums}
+table.bd tr.tot td{font-weight:700;border-top:2px solid var(--c-border);border-bottom:0}
+table.bd tr.best td{background:var(--c-cheap-bg);font-weight:600}
+.muted{color:var(--c-text-mute)}
+.chart-box{position:relative;height:300px;margin-top:8px}
+h3{font-size:.95rem;margin:22px 0 6px}
+.payback{font-size:.95rem;margin-top:10px;padding:12px 14px;background:#fff4d6;border:1px solid #efdca0;border-radius:var(--radius-sm)}
+.modus-note{font-size:.8rem;color:var(--c-text-mute);margin-top:8px}
+.foot{font-size:.78rem;color:var(--c-text-mute);margin-top:26px;border-top:1px solid var(--c-border);padding-top:14px}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank/">Kennisbank</a>
+        <a href="/historisch">Historisch</a>
+        <a href="/batterij">Batterij</a>
+        <a href="/batterij-berekenen" aria-current="page">Berekenen</a>
+        <a href="/integraties">Integraties</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+<div class="wrap">
+  <h1>Welke thuisbatterij past bij jou &#8211; en wat levert die op?</h1>
+  <p class="lead">Vul je zonnepanelen en verbruik in. Je ziet meteen welke batterijgrootte het meeste oplevert &#8211; en je kunt per maand bekijken wat je zonnepanelen en batterij precies hadden gedaan op de echte uurprijzen.</p>
+  <div class="proto-note" id="protoNote"><b>Prijzen laden…</b> Een moment, de tool haalt de echte uurprijzen op.</div>
+
+  <div class="grid">
+    <!-- ============ INPUT ============ -->
+    <form class="card" id="form" onsubmit="return false">
+      <h2>Jouw situatie</h2>
+
+      <div class="field">
+        <label>Zonnepanelen <span class="hint">aantal panelen, op het zuiden</span></label>
+        <input type="number" id="panelen" min="0" max="60" step="1" value="8" />
+      </div>
+
+      <div class="field">
+        <label>Jaarverbruik</label>
+        <div class="seg" id="verbruikMode">
+          <button type="button" data-v="kwh" class="on">Ik weet het (kWh)</button>
+          <button type="button" data-v="schat">Schat het voor mij</button>
+        </div>
+        <div id="verbruikKwh" style="margin-top:10px">
+          <input type="number" id="verbruik" min="0" max="20000" step="50" value="2900" />
+        </div>
+        <div class="verbruik-vragen" id="verbruikVragen">
+          <div class="field" style="margin:10px 0 8px">
+            <label>Bewoners</label>
+            <select id="qPersons"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5 of meer</option></select>
+          </div>
+          <div class="field" style="margin:8px 0">
+            <label>Woningtype</label>
+            <select id="qHome"><option value="0.85">Appartement</option><option value="1" selected>Tussenwoning</option><option value="1.1">Hoekwoning</option><option value="1.25">Vrijstaand</option></select>
+          </div>
+          <div class="field" style="margin:8px 0">
+            <label>Warmtepomp</label>
+            <select id="qHp"><option value="0" selected>Nee</option><option value="2500">Ja</option></select>
+          </div>
+          <div class="field" style="margin:8px 0 2px">
+            <label>Elektrische auto</label>
+            <select id="qEv"><option value="0" selected>Nee</option><option value="2000">Ja</option></select>
+          </div>
+          <p class="muted" style="font-size:.8rem;margin:6px 0 0">Schatting: <b id="schatKwh">2.500</b> kWh per jaar</p>
+        </div>
+      </div>
+
+      <div id="verfijnBox" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--c-border)">
+        <div class="field">
+          <label>Maand <span class="hint">voor de maand-details onderaan</span></label>
+          <select id="maand"></select>
+        </div>
+
+        <div class="field">
+          <label>Batterij <span class="hint">hoeveel stroom hij opslaat, in kWh</span></label>
+          <div class="row2">
+            <input type="number" id="batkwh" min="0" max="100" step="0.5" value="10" /> 
+            <select id="batpreset"><option value="">kWh</option></select>
+          </div>
+          <button type="button" class="adv-toggle" id="advBtn">+ laadsnelheid instellen (voor kenners)</button>
+          <div class="adv" id="advBox">
+            <label style="font-weight:600;font-size:.82rem">Laadsnelheid (kW)
+              <span class="hint">leeg laten = automatisch</span></label>
+            <input type="number" id="batkw" min="0" max="50" step="0.5" placeholder="auto" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Je leverancier</label>
+          <select id="aanbieder"></select>
+        </div>
+
+        <div class="field">
+          <label>Gebruiksstrategie</label>
+          <div class="seg" id="modus">
+            <button type="button" data-m="self">Eigen stroom</button>
+            <button type="button" data-m="balanced" class="on">Gebalanceerd</button>
+            <button type="button" data-m="max">Volop handelen</button>
+          </div>
+          <p class="modus-note" id="modusNote"></p>
+        </div>
+
+        <div class="field" style="margin-bottom:0">
+          <label>Wat kost de batterij? <span class="hint">niet verplicht &#8211; voor de terugverdientijd</span></label>
+          <input type="number" id="prijs" min="0" max="30000" step="100" placeholder="bijv. 5000" />
+        </div>
+      </div>
+    </form>
+
+    <!-- ============ OUTPUT ============ -->
+    <div>
+      <div class="card" id="advCard">
+        <h2>Welke batterij past bij jou?</h2>
+        <div class="headline" id="advRec"></div>
+        <table class="bd">
+          <thead><tr><th>Batterij</th><th class="num">Richtprijs</th><th class="num">Bespaart/jaar</th><th class="num">Terugverdientijd</th></tr></thead>
+          <tbody id="advBody"></tbody>
+        </table>
+        <p class="muted" id="advNote" style="font-size:.8rem;margin-top:8px"></p>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h2>E&#233;n maand in detail <span class="muted" id="resMaand" style="font-weight:400;font-size:.9rem"></span></h2>
+        <div class="headline" id="headline"></div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="lbl">Bespaard deze maand</div><div class="val" id="kBesp"></div><div class="sub">vergeleken met geen zon en batterij</div></div>
+          <div class="kpi"><div class="lbl">Zelf voorzien</div><div class="val" id="kEigen"></div><div class="sub">deel van je verbruik uit eigen zon en batterij</div></div>
+          <div class="kpi"><div class="lbl">Zonnestroom zelf gebruikt</div><div class="val" id="kZon"></div><div class="sub">de rest gaat terug het net op</div></div>
+          <div class="kpi"><div class="lbl">Laadbeurten</div><div class="val" id="kCycli"></div><div class="sub" id="kCycliSub">per dag</div></div>
+        </div>
+        <p class="muted" style="font-size:.82rem;margin:-2px 0 16px">In de zomer zit de batterij vaak vol met zonne-energie &#8211; het verschil tussen de strategie&#235;n zit dan vooral in slim terugleveren. In de winter juist in slim laden.</p>
+
+        <h3>Opbrengst uitgesplitst</h3>
+        <table class="bd">
+          <thead><tr><th>Onderdeel</th><th class="num">kWh</th><th class="num">Euro</th></tr></thead>
+          <tbody id="bdBody"></tbody>
+        </table>
+
+        <div class="payback" id="payback" style="display:none"></div>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h2>Een typische dag in deze maand</h2>
+        <p class="muted" style="font-size:.85rem;margin:0 0 6px" id="dagInfo"></p>
+        <div class="chart-box"><canvas id="dagChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot">Hoe we rekenen: ongeveer 350 kWh zonnestroom per paneel per jaar, op het zuiden. Voor je verbruik gebruiken we een gemiddeld dagpatroon. De batterij verliest een beetje stroom bij laden en ontladen (ruwweg 1 op de 10 kWh) en je kunt hem niet helemaal vol of leeg gebruiken. Voor stroom die je inkoopt betaal je de marktprijs plus belasting; voor stroom die je teruglevert krijg je de kale marktprijs zonder belasting. De batterij stuurt op de prijzen die een dag van tevoren bekend zijn. De bedragen zijn een onderbouwde schatting, geen meterstand. Let op: we rekenen zonder de salderingsregeling (die per 2027 stopt); zolang saldering nog geldt, levert teruglevering iets meer op.</p>
+</div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+        <p class="footer-meta">Dagelijkse updates: <a href="https://x.com/stroomtarief" rel="noopener noreferrer">@stroomtarief op X &#8599;</a></p>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> &#183;
+          <a href="/cookies">Cookies</a> &#183;
+          <a href="/disclaimer">Disclaimer</a> &#183;
+          <a href="/over/voorspelling">Over de voorspelling</a> &#183;
+          <a href="/aanbieders">Aanbieders</a>
+        </p>
+      </div>
+      <div>
+        <p class="footer-meta-small">Hobby-project van &#233;&#233;n persoon.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script src="/nav.js" defer></script>
+  <script>
+
+// ---------- data ----------
+const SUPPLIERS = [
+ {id:"average",name:"Algemeen gemiddelde",markup:0.0178,fixed:0},
+ {id:"tibber",name:"Tibber",markup:0.0205,fixed:6.99},
+ {id:"frank",name:"Frank Energie",markup:0.015,fixed:6.95},
+ {id:"energyzero",name:"EnergyZero",markup:0.01853,fixed:5.95},
+ {id:"anwb",name:"ANWB Energie",markup:0.018,fixed:6.5},
+ {id:"vandebron",name:"Vandebron Dynamisch",markup:0.0165,fixed:7.5},
+ {id:"zonneplan",name:"Zonneplan Dynamic",markup:0.0165,fixed:6.5},
+ {id:"easy",name:"Easy Energy Dynamisch",markup:0.018,fixed:5.5},
+ {id:"nextenergy",name:"NextEnergy",markup:0.0181,fixed:4.95},
+ {id:"budget",name:"Budget Energie",markup:0.01405,fixed:4.95},
+ {id:"eneco",name:"Eneco Dynamisch",markup:0.02,fixed:5.79},
+ {id:"om",name:"om | nieuwe energie",markup:0.02066,fixed:8.57},
+ {id:"vattenfall",name:"Vattenfall FlexPrijs",markup:0.021,fixed:4.95},
+ {id:"coolblue",name:"Coolblue Energie",markup:0.01877,fixed:5.12},
+ {id:"pure",name:"Pure Energie",markup:0.02479,fixed:2.41},
+ {id:"essent",name:"Essent",markup:0.0209,fixed:6.19},
+ {id:"greenchoice",name:"Greenchoice",markup:0.0185,fixed:6.2},
+ {id:"engie",name:"ENGIE",markup:0.0157,fixed:5.74},
+ {id:"energievanons",name:"Energie VanOns",markup:0.02397,fixed:5.78},
+ {id:"innova",name:"Innova Energie",markup:0.01488,fixed:5.75},
+ {id:"powerpeers",name:"Powerpeers",markup:0.0083,fixed:5.17},
+ {id:"vrijopnaam",name:"Vrijopnaam",markup:0.0165,fixed:6.61},
+];
+const EB=0.0916, BTW=1.21;
+const SOLAR_PER_PANEL=350;
+const SOLAR_MONTH=[.02,.04,.08,.12,.14,.14,.13,.11,.09,.06,.04,.03];      // Jan..Dec
+const CONS_MONTH=[.095,.086,.086,.080,.076,.072,.072,.073,.078,.085,.094,.103];
+const CONS_HOUR=[.022,.018,.016,.015,.016,.022,.038,.052,.050,.044,.042,.044,.046,.044,.042,.044,.052,.066,.074,.070,.060,.050,.040,.030];
+const SUNRISE=[8.4,7.7,6.9,5.7,5.0,4.5,4.7,5.4,6.2,7.0,7.0,8.0];
+const SUNSET =[16.7,17.5,18.4,19.3,20.1,20.9,20.9,20.1,18.9,17.8,16.7,16.4];
+const BASE_MWH=[95,92,85,75,62,55,52,55,68,78,88,96]; // EUR/MWh by month
+const SHAPE=[.75,.72,.70,.70,.72,.80,.95,1.15,1.20,1.05,1.00,.95,.90,.92,.98,1.05,1.20,1.45,1.55,1.40,1.20,1.00,.90,.80];
+const MODUS_TXT={
+ self:"De batterij gebruikt alleen je eigen zonnestroom: overdag opslaan, &#8217;s avonds verbruiken. Hij koopt of verkoopt geen stroom.",
+ balanced:"Vooral eigen zonnestroom. Op dagen met een groot prijsverschil koopt de batterij ook goedkope stroom in om die in dure uren te gebruiken.",
+ max:"De batterij benut elk voordeel: laden als stroom goedkoop is, gebruiken of terugleveren als het duur is. Meeste opbrengst, maar ook de meeste laadbeurten en dus meer slijtage."
+};
+
+// ---------- deterministic prices ----------
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function daysInMonth(y,m){return new Date(y,m+1,0).getDate()}
+function epexExample(y,m,d){ // returns 24 EUR/MWh
+  const rng=mulberry32((y*10000+(m+1)*100+d)>>>0);
+  const level=BASE_MWH[m]*(0.72+rng()*0.65);
+  const sunny=(m>=2&&m<=8);
+  const arr=[];
+  for(let h=0;h<24;h++){
+    let s=SHAPE[h]*(0.92+rng()*0.16);
+    if(sunny&&h>=9&&h<=15){ s*= (0.10+rng()*0.45); }
+    let v=level*s;
+    if(sunny&&h>=11&&h<=14&&rng()<0.45){ v-= (10+rng()*70); } // soms negatief rond de middag
+    arr.push(Math.round(v*100)/100);
+  }
+  return arr;
+}
+
+// ---------- echte prijzen (live archief), voorbeeld als terugval ----------
+const DATA_BASE="/data/archief/";
+const REAL={};        // "y-m-d" (m 0-index) -> [24] EUR/MWh
+const monthState={};  // "y-m" -> 'real' | 'example'
+const pad2=n=>String(n).padStart(2,'0');
+async function ensureMonth(y,m){
+  const key=y+'-'+m;
+  if(monthState[key]) return;
+  try{
+    const r=await fetch(`${DATA_BASE}${y}-${pad2(m+1)}.json`,{cache:'force-cache'});
+    if(!r.ok) throw 0;
+    const j=await r.json();
+    for(const p of (j.prices||[])){
+      const t=p.time, dk=t.slice(0,10).split('-').map(Number);
+      const dkey=dk[0]+'-'+(dk[1]-1)+'-'+dk[2];
+      const h=parseInt(t.slice(11,13),10);
+      if(!REAL[dkey]) REAL[dkey]=new Array(24).fill(null);
+      REAL[dkey][h]=p.price;
+    }
+    for(const k in REAL){ const a=REAL[k]; for(let h=0;h<24;h++){ if(a[h]==null) a[h]=(h>0?a[h-1]:null)??a[h+1]??0; } }
+    monthState[key]='real';
+  }catch(e){ monthState[key]='example'; }
+}
+async function ensureMonths(list){ await Promise.all(list.map(o=>ensureMonth(o.y,o.m))); }
+function epexFor(y,m,d){ const k=y+'-'+m+'-'+d; return REAL[k] || epexExample(y,m,d); }
+function refreshDataNote(){
+  const anyReal=Object.values(monthState).some(x=>x==='real');
+  const el=document.getElementById('protoNote'); if(!el) return;
+  el.innerHTML = anyReal
+    ? '<b>Echte prijzen.</b> De berekening gebruikt de werkelijke uurprijzen per aanbieder vanuit ons archief. Zonopwek en verbruik blijven een schatting op basis van gemiddelde patronen.'
+    : '<b>Voorbeeldprijzen.</b> De echte uurprijzen lukten niet te laden, dus rekenen we met prijzen die er sterk op lijken. Op de site zelf gebruikt de tool de echte prijzen.';
+}
+
+// ---------- profiles ----------
+function solarDay(y,m,d,panels){
+  const annual=panels*SOLAR_PER_PANEL;
+  const monthE=annual*SOLAR_MONTH[m];
+  const dayE=monthE/daysInMonth(y,m);
+  const sr=SUNRISE[m], ss=SUNSET[m];
+  const w=[]; let sum=0;
+  for(let h=0;h<24;h++){const x=(h+0.5-sr)/(ss-sr);const val=(x>0&&x<1)?Math.sin(Math.PI*x):0;w.push(val);sum+=val;}
+  return w.map(x=> sum>0? dayE*x/sum : 0);
+}
+function consDay(y,m,annual){
+  const monthE=annual*CONS_MONTH[m];
+  const dayE=monthE/daysInMonth(y,m);
+  let sum=CONS_HOUR.reduce((a,b)=>a+b,0);
+  return CONS_HOUR.map(x=> dayE*x/sum);
+}
+function estimateConsumption(){
+  const base={1:1600,2:2500,3:3200,4:3900,5:4600}[+v('qPersons')];
+  const home=+v('qHome'), hp=+v('qHp'), ev=+v('qEv');
+  return Math.round((base*home+hp+ev)/50)*50;
+}
+
+// ---------- dispatch ----------
+const MAXCYC={self:0, balanced:1.2, max:3.5};
+// gratis zon-overschot: verkoop bij elk positief prijsverschil (lage drempel)
+const SOLAR_THR={self:0, balanced:0.005, max:0.0};
+// net-inkoop: pas rendabel als het de belasting + slijtage goedmaakt (hogere drempel)
+const GRID_THR={self:0, balanced:0.06, max:0.01};
+
+function simulateDay(epex,solar,load,bat,markup,mode,socIn){
+  const cp=epex.map(e=>(e/1000+markup+EB)*BTW);   // inkoop incl. belasting
+  const tb=epex.map(e=>e/1000);                   // teruglevering = kale epex
+  const cap=bat.cap,pwr=bat.pwr,ce=bat.ce,de=bat.de,rt=ce*de;
+  let soc=Math.min(socIn||0,cap);
+  const imp=new Array(24).fill(0), expK=new Array(24).fill(0), sold=new Array(24).fill(0);
+  const solL=new Array(24).fill(0), batL=new Array(24).fill(0);
+  let charged=0, loadTot=0, solarGen=0, soldGridKwh=0;
+  // Pass 1: eigen verbruik (carryover soc)
+  for(let h=0;h<24;h++){
+    loadTot+=load[h]; solarGen+=solar[h];
+    let s=solar[h], l=load[h];
+    const d=Math.min(s,l); solL[h]=d; s-=d; l-=d;
+    if(l>0&&soc>0){ const out=Math.min(l,pwr,soc*de); soc-=out/de; batL[h]=out; l-=out; }
+    if(l>0) imp[h]=l;
+    if(s>0&&soc<cap){ const cin=Math.min(s,pwr,(cap-soc)/ce); soc+=cin*ce; charged+=cin*ce; s-=cin; }
+    if(s>0) expK[h]=s;
+  }
+  // Arbitrage (balanced/max), met doorvoer-budget en verkooplimiet per uur
+  if(mode!=='self'&&cap>0){
+    let budget=Math.max(0, cap*MAXCYC[mode]-charged);
+    const sthr=SOLAR_THR[mode], gthr=GRID_THR[mode];
+    const step=0.25;
+    const sellH=[...Array(24).keys()].sort((a,b)=>tb[b]-tb[a]);   // hoogste teruglever-epex eerst
+    const cheapH=[...Array(24).keys()].sort((a,b)=>cp[a]-cp[b]);  // goedkoopste inkoop eerst
+    const sellRoom=h=>pwr-sold[h];                                // resterende verkoopruimte dat uur
+    // Pass 2: overtollige zon bewaren en in de piek terugleveren (kale epex)
+    const expH=[...Array(24).keys()].filter(h=>expK[h]>0).sort((a,b)=>tb[a]-tb[b]);
+    for(const xh of expH){
+      while(expK[xh]>0.001&&budget>0.001){
+        let sh=-1; for(const h of sellH){ if(tb[h]<=tb[xh]) break; if(sellRoom(h)>0.001){sh=h;break;} }
+        if(sh<0) break;
+        const gain=tb[sh]*rt-tb[xh];
+        if(gain<=sthr) break;
+        const chunk=Math.min(step,expK[xh],budget,pwr,sellRoom(sh)/rt);
+        if(chunk<=0.001) break;
+        expK[xh]-=chunk; sold[sh]+=chunk*rt; charged+=chunk; budget-=chunk;
+      }
+      if(budget<=0.001) break;
+    }
+    // Pass 3: goedkoop van het net laden om dure EIGEN inkoop te vermijden (load-shift)
+    const impH=[...Array(24).keys()].filter(h=>imp[h]>0).sort((a,b)=>cp[b]-cp[a]);
+    for(const eh of impH){
+      while(imp[eh]>0.001&&budget>0.001){
+        const bh=cheapH[0];
+        const gain=cp[eh]-cp[bh]/rt;
+        if(gain<=gthr) break;
+        const chunk=Math.min(step,imp[eh],budget,pwr);
+        imp[eh]-=chunk; imp[bh]+=chunk/rt; charged+=chunk/de; budget-=chunk;
+      }
+      if(budget<=0.001) break;
+    }
+    // Pass 4: net-arbitrage - goedkoop/negatief inkopen en in de piek terugleveren
+    // rendabel als teruglevering (kale epex, na verlies) > inkoopprijs incl. belasting
+    for(const sh of sellH){
+      if(budget<=0.001) break;
+      while(sellRoom(sh)>0.001&&budget>0.001){
+        const bh=cheapH[0];
+        const gain=tb[sh]*rt-cp[bh];
+        if(gain<=gthr) break;
+        const chunk=Math.min(step,budget,pwr,sellRoom(sh)/rt);
+        if(chunk<=0.001) break;
+        imp[bh]+=chunk; sold[sh]+=chunk*rt; soldGridKwh+=chunk*rt; charged+=chunk*ce; budget-=chunk;
+      }
+    }
+  }
+  // boekhouding
+  let impCost=0,expRev=0,soldRev=0,solSave=0,batSave=0;
+  for(let h=0;h<24;h++){ impCost+=imp[h]*cp[h]; expRev+=expK[h]*tb[h]; soldRev+=sold[h]*tb[h]; solSave+=solL[h]*cp[h]; batSave+=batL[h]*cp[h]; }
+  const costWithout=load.reduce((a,l,h)=>a+l*cp[h],0);
+  const costWith=impCost-expRev-soldRev;
+  const f={solToLoad:solL.reduce((a,b)=>a+b,0),batToLoad:batL.reduce((a,b)=>a+b,0),expKwh:expK.reduce((a,b)=>a+b,0),soldKwh:sold.reduce((a,b)=>a+b,0),soldGridKwh,solarGen,charged,loadTot,costWithout,costWith,solSave,batSave,expRev,soldRev,socOut:soc};
+  f.arbProfit=(costWithout-costWith)-solSave-batSave-expRev;       // restterm: verkoop-piek + load-shift
+  return f;
+}
+function simulateMonth(y,m,p,lastDay){
+  const dn=lastDay||daysInMonth(y,m); let soc=0;
+  const agg={solToLoad:0,batToLoad:0,expKwh:0,soldKwh:0,soldGridKwh:0,solarGen:0,charged:0,loadTot:0,costWithout:0,costWith:0,solSave:0,batSave:0,expRev:0,soldRev:0,arbProfit:0};
+  for(let d=1;d<=dn;d++){
+    const epex=epexFor(y,m,d), solar=solarDay(y,m,d,p.panels), load=consDay(y,m,p.verbruik);
+    const f=simulateDay(epex,solar,load,{cap:p.cap,pwr:p.pwr,ce:p.ce,de:p.de},p.markup,p.mode,soc);
+    soc=Math.min(f.socOut,p.cap);
+    for(const k of Object.keys(agg)) agg[k]+=f[k];
+  }
+  return agg;
+}
+
+// ---------- helpers ----------
+const $=id=>document.getElementById(id);
+const v=id=>$(id).value;
+const eur=x=>'€'+(x).toLocaleString('nl-NL',{minimumFractionDigits:0,maximumFractionDigits:0});
+const eur2=x=>'€'+(x).toLocaleString('nl-NL',{minimumFractionDigits:2,maximumFractionDigits:2});
+const kwh=x=>Math.round(x).toLocaleString('nl-NL')+' kWh';
+let state={mode:'balanced',verbruikMode:'kwh'};
+let chart=null;
+
+// month options: last 12 complete months before "now" (prototype: now = juni 2026)
+const _now=new Date();
+const NOW={y:_now.getFullYear(), m:_now.getMonth()}; // huidige maand
+const TODAY_DAY=_now.getDate();
+const MNAMES=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+let MONTHS=[];
+function buildMonths(){
+  MONTHS=[]; let y=NOW.y,m=NOW.m-1; // 12 volledige maanden, start vorige maand
+  for(let i=0;i<12;i++){ if(m<0){m=11;y--;} MONTHS.push({y,m,label:MNAMES[m]+' '+y}); m--; }
+  const opts=[{y:NOW.y,m:NOW.m,label:MNAMES[NOW.m]+' '+NOW.y+' (tot vandaag)'}].concat(MONTHS);
+  $('maand').innerHTML=opts.map((o,i)=>`<option value="${o.y}-${o.m}" ${i===1?'selected':''}>${o.label}</option>`).join('');
+}
+
+function currentParams(){
+  const cap=Math.max(0,+v('batkwh'))*0.9; // bruikbaar
+  let pwr=parseFloat(v('batkw')); if(!pwr||pwr<=0) pwr=Math.max(0,+v('batkwh'))*0.5; if(pwr<=0)pwr=0.01;
+  const sup=SUPPLIERS.find(s=>s.id===v('aanbieder'))||SUPPLIERS[0];
+  const verbruik= state.verbruikMode==='kwh'? Math.max(0,+v('verbruik')) : estimateConsumption();
+  const [yy,mm]=v('maand').split('-').map(Number);
+  return {y:yy,m:mm,cap,pwr,ce:0.95,de:0.95,panels:Math.max(0,+v('panelen')),verbruik,markup:sup.markup,mode:state.mode};
+}
+
+async function render(){
+  const p=currentParams();
+  await ensureMonth(p.y,p.m);
+  await ensureMonths(MONTHS);
+  refreshDataNote();
+  renderAdvisor(p);
+  const isPartial=(p.y===NOW.y&&p.m===NOW.m);
+  const simDays= isPartial? Math.max(1, Math.min(TODAY_DAY-1, daysInMonth(p.y,p.m))) : daysInMonth(p.y,p.m);
+  const a=simulateMonth(p.y,p.m,p,simDays);
+  const saving=a.costWithout-a.costWith;
+  const selfSuff= a.loadTot>0? (a.solToLoad+a.batToLoad)/a.loadTot*100 : 0;
+  const returned=a.expKwh+a.soldKwh-a.soldGridKwh;
+  const solarSelf= a.solarGen>0? (a.solarGen-returned)/a.solarGen*100 : 0;
+  const dn=simDays;
+  const cycMonth= p.cap>0? a.charged/p.cap : 0;
+  const cycDay= cycMonth/dn;
+  $('resMaand').textContent= isPartial? '— '+MNAMES[p.m]+' '+p.y+' · tot vandaag ('+simDays+' dagen)' : '— '+MNAMES[p.m]+' '+p.y;
+  $('headline').innerHTML= isPartial
+    ? 'Zon en batterij hebben je deze maand tot nu <b>'+eur(saving)+'</b> bespaard. Dit is een deel van de maand.'
+    : 'Zon en batterij hadden je in deze maand <b>'+eur(saving)+'</b> bespaard.';
+  $('kBesp').textContent=eur(saving);
+  $('kEigen').textContent=Math.round(selfSuff)+'%';
+  $('kZon').textContent=Math.round(solarSelf)+'%';
+  $('kCycli').textContent=cycDay.toFixed(1).replace('.',',');
+  $('kCycliSub').textContent= isPartial? 'per dag · ~'+Math.round(cycMonth)+' tot nu' : 'per dag · ~'+Math.round(cycMonth)+' deze maand';
+  // breakdown
+  const rows=[
+    ['Zonnestroom &#8211; direct gebruikt', a.solToLoad, a.solSave],
+    ['Zonnestroom &#8211; opgeslagen voor later (batterij)', a.batToLoad, a.batSave],
+    ['Teruggeleverd op het moment zelf', a.expKwh, a.expRev],
+    ['Slim terugleveren in dure uren &amp; schuiven', null, a.arbProfit],
+  ];
+  $('bdBody').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]==null?'&#8211;':kwh(r[1])}</td><td class="num">${eur2(r[2])}</td></tr>`).join('')
+    +`<tr class="tot"><td>Totale besparing</td><td class="num"></td><td class="num">${eur2(saving)}</td></tr>`;
+  // payback (jaarbasis)
+  const prijs=parseFloat(v('prijs'));
+  if(prijs>0){
+    const curKwh=Math.max(0,+v('batkwh'));
+    const batYear=yearSaving(p,curKwh)-yearSaving(p,0);
+    const years=batYear>0? prijs/batYear : Infinity;
+    $('payback').style.display='block';
+    $('payback').innerHTML= batYear>0
+      ? `Deze batterij (${curKwh} kWh) bespaart op jaarbasis ongeveer <b>${eur(batYear)}</b> bovenop je zonnepanelen. Terugverdientijd bij ${eur(prijs)}: <b>${years.toFixed(1).replace('.',',')} jaar</b>.`
+      : 'Met deze instellingen levert de batterij op jaarbasis niets extra op, dus is er geen terugverdientijd.';
+  } else { $('payback').style.display='none'; }
+  drawChart(p);
+}
+
+function drawChart(p){
+  const _part=(p.y===NOW.y&&p.m===NOW.m);
+  const _last=_part? Math.max(1,Math.min(TODAY_DAY-1,daysInMonth(p.y,p.m))) : daysInMonth(p.y,p.m);
+  const d=Math.max(1,Math.min(15,_last));
+  const epex=epexFor(p.y,p.m,d), solar=solarDay(p.y,p.m,d,p.panels), load=consDay(p.y,p.m,p.verbruik);
+  const cp=epex.map(e=>(e/1000+p.markup+EB)*BTW*100); // ct/kWh
+  $('dagInfo').textContent=`Voorbeeld: ${d} ${MNAMES[p.m]} ${p.y}. Prijs in ct/kWh (incl. belasting), zonopwek en verbruik in kWh per uur.`;
+  const labels=[...Array(24).keys()].map(h=>h+'u');
+  const cfg={type:'line',data:{labels,datasets:[
+    {label:'Prijs (ct/kWh)',data:cp,yAxisID:'y1',borderColor:'#c92a2a',backgroundColor:'transparent',tension:.3,pointRadius:0,borderWidth:2},
+    {label:'Zonopwek (kWh)',data:solar,yAxisID:'y',borderColor:'#d4a017',backgroundColor:'rgba(212,160,23,.15)',fill:true,tension:.3,pointRadius:0,borderWidth:2},
+    {label:'Verbruik (kWh)',data:load,yAxisID:'y',borderColor:'#0f6cbd',backgroundColor:'transparent',tension:.3,pointRadius:0,borderWidth:2},
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}},
+    scales:{y:{title:{display:true,text:'kWh/uur'},beginAtZero:true},
+      y1:{position:'right',title:{display:true,text:'ct/kWh'},grid:{drawOnChartArea:false}}}}};
+  if(chart)chart.destroy();
+  chart=new Chart($('dagChart'),cfg);
+}
+
+// ---------- batterij-maat-adviseur ----------
+const ADV_SIZES=[5,10,15,20];
+// richtprijzen 2026 incl. installatie + 0% btw met zon: 5kWh ~EUR4000, 10 ~6000, 15 ~8000, 20 ~11000
+function batPrice(s){
+  const pr=parseFloat(v('prijs')), cur=Math.max(0,+v('batkwh'));
+  if(pr>0&&cur>0) return pr*(s/cur);          // eigen prijs, lineair geschaald
+  if(s<=5) return 800*s;
+  if(s<=10) return 4000+400*(s-5);
+  if(s<=15) return 6000+400*(s-10);
+  return 8000+600*(s-15);
+}
+const BAT_LIFESPAN=15;           // jaar; stap loont als hij zich binnen de levensduur terugverdient
+function yearSaving(p, capKwh){
+  const cap=capKwh*0.9; let pwr=capKwh*0.5; if(pwr<=0) pwr=0.01;
+  let tot=0;
+  for(const o of MONTHS){ const ap=Object.assign({},p,{y:o.y,m:o.m,cap,pwr}); const a=simulateMonth(o.y,o.m,ap); tot+=(a.costWithout-a.costWith); }
+  return tot;
+}
+function renderAdvisor(p){
+  const base0=yearSaving(p,0);                 // alleen zonnepanelen, geen batterij
+  const eigenPrijs=(parseFloat(v('prijs'))>0 && +v('batkwh')>0);
+  const rows=ADV_SIZES.map(s=>({s,batSave:yearSaving(p,s)-base0,price:batPrice(s)}));
+  let rec=null, bestPb=rows[0];
+  for(let i=0;i<rows.length;i++){
+    rows[i].extra = i===0? rows[i].batSave : rows[i].batSave-rows[i-1].batSave;
+    rows[i].payback = rows[i].batSave>0? rows[i].price/rows[i].batSave : Infinity;
+    const stepCost = i===0? rows[i].price : rows[i].price-rows[i-1].price;
+    const stepPay = rows[i].extra>0? stepCost/rows[i].extra : Infinity;
+    if(stepPay<=BAT_LIFESPAN) rec=rows[i].s;
+    if(rows[i].payback<bestPb.payback) bestPb=rows[i];
+  }
+  const mark = rec!=null? rec : bestPb.s;
+  $('advBody').innerHTML=rows.map(r=>`<tr class="${r.s===mark?'best':''}"><td>${r.s} kWh${r.s===mark?' &#9733;':''}</td><td class="num">${eur(r.price)}</td><td class="num">${eur(r.batSave)}</td><td class="num">${isFinite(r.payback)?Math.round(r.payback)+' jr':'&#8211;'}</td></tr>`).join('');
+  if(rec!=null){
+    const rr=rows.find(r=>r.s===rec);
+    $('advRec').innerHTML=`Een batterij van <b>${rec} kWh</b> is voor jou de beste balans: grotere stappen verdienen zich binnen de levensduur niet meer terug. Die bespaart ongeveer <b>${eur(rr.batSave)} per jaar</b> bovenop je zonnepanelen.`;
+  } else if(bestPb.batSave>5){
+    $('advRec').innerHTML=`Bij de huidige batterijprijzen verdient geen enkele maat zich binnen ~${BAT_LIFESPAN} jaar terug. Een batterij van ${bestPb.s} kWh bespaart het meeste per euro (~${eur(bestPb.batSave)} per jaar), maar is financieel nog niet rond &#8211; nu interessanter voor onafhankelijkheid dan voor puur rendement.`;
+  } else {
+    $('advRec').innerHTML='Met deze instellingen levert een batterij weinig extra op bovenop je zonnepanelen. Meer panelen of een hoger verbruik maken een batterij eerder rendabel.';
+  }
+  $('advNote').innerHTML=`&#8220;Bespaart per jaar&#8221; is wat de batterij <b>bovenop</b> alleen zonnepanelen oplevert, gemiddeld over 12 maanden. ${eigenPrijs?'Gerekend met jouw prijs, geschaald per kWh.':'Richtprijzen 2026 incl. installatie (0% btw met zon); vul je eigen prijs in onder Verfijnen.'}`;
+}
+
+// ---------- wiring ----------
+function init(){
+  buildMonths();
+  $('aanbieder').innerHTML=SUPPLIERS.map(s=>`<option value="${s.id}" ${s.id==='average'?'selected':''}>${s.name}</option>`).join('');
+  $('batpreset').innerHTML='<option value="">snel</option>'+[5,10,15,20,25].map(x=>`<option value="${x}">${x} kWh</option>`).join('');
+  $('batpreset').onchange=e=>{ if(e.target.value){$('batkwh').value=e.target.value; e.target.value=''; render();} };
+  $('advBtn').onclick=()=>{ $('advBox').classList.toggle('show'); };
+  $('modusNote').innerHTML=MODUS_TXT['balanced'];
+  document.querySelectorAll('#modus button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#modus button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); state.mode=b.dataset.m; $('modusNote').innerHTML=MODUS_TXT[b.dataset.m]; render();
+  });
+  document.querySelectorAll('#verbruikMode button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#verbruikMode button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); state.verbruikMode=b.dataset.v;
+    $('verbruikKwh').style.display = b.dataset.v==='kwh'?'block':'none';
+    $('verbruikVragen').classList.toggle('show', b.dataset.v==='schat');
+    render();
+  });
+  ['maand','batkwh','batkw','aanbieder','panelen','verbruik','prijs','qPersons','qHome','qHp','qEv'].forEach(id=>{
+    $(id).addEventListener('input',()=>{ if(['qPersons','qHome','qHp','qEv'].includes(id)) $('schatKwh').textContent=estimateConsumption().toLocaleString('nl-NL'); render(); });
+  });
+  render();
+}
+if(window.Chart) init(); else window.addEventListener('load',init);
+</script>
+</body>
+</html>
