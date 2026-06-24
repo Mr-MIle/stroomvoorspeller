@@ -1,9 +1,9 @@
 name: Update prijzen (handmatig / fallback)
 
 # Aangestuurd door Pipedream (dagelijks om 14:01 CEST via workflow_dispatch).
-# Na het ophalen wordt gecontroleerd of morgen-prijzen aanwezig zijn; zo ja,
-# wordt automatisch de dagelijkse tweet gestart (alleen bij workflow_dispatch,
-# niet bij push naar main om dubbele tweets te voorkomen).
+# Na het ophalen wordt gecontroleerd of morgen-prijzen aanwezig zijn; alleen als deze
+# run ze NIEUW toevoegt, wordt automatisch de dagelijkse tweet gestart (alleen bij
+# workflow_dispatch, niet bij push naar main om dubbele tweets te voorkomen).
 #
 # Wanneer draait deze workflow?
 #  - na elke push naar main (handig om de cache direct te verversen)
@@ -26,6 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       morgen_aanwezig: ${{ steps.morgen_check.outputs.morgen_aanwezig }}
+      # 'true' alleen als deze run morgen-prijzen NIEUW toevoegt (voor afwezig, na
+      # aanwezig). Voorkomt een tweede tweet als check-prices.yml de prijzen al eerder
+      # publiceerde en tweette - de tweet hoort alleen bij de eerste publicatie.
+      morgen_nieuw: ${{ steps.morgen_check.outputs.morgen_aanwezig == 'true' && steps.morgen_check_voor.outputs.morgen_voor == 'false' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,6 +38,39 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Check of morgen-prijzen al aanwezig waren (voor de fetch)
+        # Vastleggen of prices.json morgen al had voor deze run. Zo weten we straks of
+        # deze run de morgen-prijzen voor het eerst toevoegt (= tweet-aanleiding) of dat
+        # ze al bekend waren (= niet opnieuw tweeten).
+        id: morgen_check_voor
+        run: |
+          python - <<'PYEOF' >> $GITHUB_OUTPUT
+          import json
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          def amsterdam_offset():
+              now_utc = datetime.now(timezone.utc)
+              year = now_utc.year
+              march = datetime(year, 3, 31, 1, 0, tzinfo=timezone.utc)
+              while march.weekday() != 6:
+                  march -= timedelta(days=1)
+              october = datetime(year, 10, 31, 1, 0, tzinfo=timezone.utc)
+              while october.weekday() != 6:
+                  october -= timedelta(days=1)
+              return timedelta(hours=2) if march <= now_utc < october else timedelta(hours=1)
+
+          now_ams = datetime.now(timezone.utc) + amsterdam_offset()
+          tomorrow = (now_ams + timedelta(days=1)).strftime('%Y-%m-%d')
+          p = Path('public/data/prices.json')
+          aanwezig = False
+          if p.exists():
+              data = json.loads(p.read_text())
+              count = sum(1 for e in data.get('prices', []) if e.get('time', '')[:10] == tomorrow)
+              aanwezig = count >= 24
+          print(f'morgen_voor={"true" if aanwezig else "false"}')
+          PYEOF
 
       - name: Haal prijzen op
         env:
@@ -82,6 +119,14 @@ jobs:
         run: |
           python scripts/generate_ha.py
 
+      - name: Genereer prijsduiding
+        # Schrijft public/data/duiding.json: uitleg in gewone taal bij de morgen-prijzen.
+        # Leest ha.json (prijzen) + forecast.json (gemeten wind/zon). Draait na
+        # generate_ha.py en run_forecast.py, dus beide zijn vers. Mag falen.
+        continue-on-error: true
+        run: |
+          python scripts/genereer_duiding.py --prod public/data/ha.json public/data/duiding.json public/data/forecast.json
+
       - name: Genereer performance-dashboard
         # Schrijft public/data/performance.json op basis van gearchiveerde forecasts
         # en werkelijke prijzen. Heeft pas zinvolle output na ~14 dagen archief.
@@ -96,6 +141,7 @@ jobs:
           git add public/data/prices.json public/data/forecast.json 2>/dev/null || true
           git add public/data/feed.xml 2>/dev/null || true
           git add public/data/ha.json 2>/dev/null || true
+          git add public/data/duiding.json 2>/dev/null || true
           git add public/data/performance.json 2>/dev/null || true
           git add public/data/forecast_archive/ 2>/dev/null || true
           git add public/data/archief/ 2>/dev/null || true
@@ -150,8 +196,10 @@ jobs:
     name: Post dagelijkse X-tweet
     needs: update
     # Alleen bij workflow_dispatch (Pipedream / handmatig), nooit bij push naar main.
-    # Zo tweet het systeem precies eenmaal per dag en worden code-pushes niet
-    # per ongeluk als tweet-aanleiding gebruikt.
-    if: github.event_name == 'workflow_dispatch' && needs.update.outputs.morgen_aanwezig == 'true'
+    # En alleen als deze run de morgen-prijzen NIEUW heeft toegevoegd (morgen_nieuw).
+    # Waren ze al bekend - bijvoorbeeld omdat check-prices.yml ze eerder publiceerde
+    # en al tweette - dan niet opnieuw posten. Zo komt de tweet precies een keer per
+    # dag, bij de eerste publicatie.
+    if: github.event_name == 'workflow_dispatch' && needs.update.outputs.morgen_nieuw == 'true'
     uses: ./.github/workflows/daily-tweet.yml
     secrets: inherit

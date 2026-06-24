@@ -6,12 +6,20 @@ name: Dagelijkse X-post
 #    We posten een halfuur tot anderhalf uur later, zodat de meest recente
 #    fetch_prices.py-run (cron */3 op het hele uur) de prijzen al heeft binnengehaald.
 #  - Manueel via 'Run workflow' in de GitHub UI (workflow_dispatch).
+#  - Aangeroepen vanuit check-prices.yml / update-prices.yml zodra morgen-prijzen er zijn.
+#
+# Dubbele tweets worden op twee niveaus voorkomen:
+#  1. De aanroepende workflows tweeten alleen bij de eerste publicatie.
+#  2. daily_post.py houdt in public/data/tweet_state.json bij voor welke morgen-datum
+#     al getweet is en slaat over als dat zo is. Die markering wordt hieronder
+#     teruggecommit, zodat hij blijft bestaan ook als prices.json later opnieuw
+#     wordt overschreven.
 on:
   workflow_dispatch:
   workflow_call:  # aanroepbaar vanuit check-prices.yml zodra morgen-prijzen beschikbaar zijn
 
 permissions:
-  contents: read
+  contents: write  # nodig om tweet_state.json terug te committen
 
 concurrency:
   group: daily-tweet
@@ -42,7 +50,8 @@ jobs:
 
       - name: Genereer + post X-bericht
         # Mag falen zonder dat dit alarm geeft — een hobbysite zonder cijfers vandaag
-        # is geen incident. De volgende run probeert het opnieuw.
+        # is geen incident. De volgende run probeert het opnieuw. daily_post.py slaat
+        # over als er voor deze morgen-datum al getweet is (tweet_state.json).
         continue-on-error: true
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
@@ -51,6 +60,22 @@ jobs:
           X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
         run: |
           python scripts/daily_post.py
+
+      - name: Commit tweet-markering
+        # Bewaart public/data/tweet_state.json zodat de dedup blijft werken als
+        # prices.json later opnieuw wordt overschreven. [skip ci] voorkomt dat deze
+        # push update-prices.yml (on: push) opnieuw laat draaien.
+        if: always()
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          git add public/data/tweet_state.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: tweet-markering bijgewerkt [skip ci]"
+            git push
+          else
+            echo "Geen nieuwe tweet-markering — niets te committen."
+          fi
 
       - name: Upload preview-image als CI-artifact
         # Handig om achteraf te zien wat er gepost is, ook als de tweet zelf faalde.

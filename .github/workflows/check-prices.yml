@@ -3,20 +3,23 @@ name: Check & update prijzen
 # Aangestuurd door Pipedream (elke 15 minuten via workflow_dispatch).
 #
 # Logica:
-#   1. check_new_prices.py controleert of ENTSO-E nieuwe morgen-prijzen heeft
-#      die nog niet in prices.json staan (exit 0 = ja, exit 1 = nee/wacht).
+#   1. check_new_prices.py controleert of er nieuwe morgen-prijzen zijn die nog niet
+#      in prices.json staan (exit 0 = ja, exit 1 = nee/wacht). De check kijkt eerst
+#      naar ENTSO-E; heeft die nog niets, dan wordt de EPEX-achtervang
+#      (energy-charts.info, geen API-key) bevraagd. Zodra EPEX de volledige dag heeft,
+#      draait de pipeline en vult fetch_prices.py morgen via EPEX aan.
 #   2. Alleen als de check slaagt: volledige pipeline draaien.
 #   3. Als prices.json al up-to-date is: workflow stopt na ~15 seconden.
 #
-# Pipedream-instelling: POST naar GitHub API elke 15 minuten,
-#   9:45–14:00 CEST (07:45–12:00 UTC) is voldoende om publicatie om ~13:00
-#   CEST te vangen. Buiten dit venster hoef je niet te triggeren.
+# Pipedream-instelling: POST naar GitHub API elke 15 minuten.
+#   ENTSO-E publiceert meestal ~13:00 CEST, maar op gespannen/late dagen pas later.
+#   Houd het triggervenster daarom ruim - 9:45-19:00 CEST - zodat een late publicatie
+#   (en de EPEX-achtervang) alsnog binnen het venster valt. Buiten dit venster
+#   hoef je niet te triggeren.
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0,15,30,45 14-16 * * *"
-    
+
 permissions:
   contents: write
 
@@ -28,7 +31,7 @@ jobs:
   check-and-update:
     runs-on: ubuntu-latest
     outputs:
-      # 'true' als er nieuwe prijzen zijn gecommit in deze run — gebruikt door de tweet-job.
+      # 'true' als er nieuwe prijzen zijn gecommit in deze run - gebruikt door de tweet-job.
       nieuwe_prijzen: ${{ steps.commit.outputs.committed }}
 
     steps:
@@ -40,10 +43,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      # Exit 0 → nieuwe prijzen beschikbaar.
-      # Exit 1 → al up-to-date of ENTSO-E heeft nog niets → alle volgende stappen
+      # Exit 0 -> nieuwe prijzen beschikbaar.
+      # Exit 1 -> al up-to-date of ENTSO-E/EPEX hebben nog niets -> alle volgende stappen
       #           worden overgeslagen via `if: steps.check.outcome == 'success'`.
-      - name: Check nieuwe ENTSO-E prijzen
+      - name: Check nieuwe prijzen (ENTSO-E + EPEX-achtervang)
         id: check
         continue-on-error: true
         env:
@@ -100,16 +103,17 @@ jobs:
             git push
             echo "committed=true" >> $GITHUB_OUTPUT
           else
-            echo "Geen wijzigingen — niets te committen."
+            echo "Geen wijzigingen - niets te committen."
             echo "committed=false" >> $GITHUB_OUTPUT
           fi
 
   tweet:
     name: Post dagelijkse X-tweet
     needs: check-and-update
-    # Alleen draaien als er in déze run daadwerkelijk nieuwe prijzen zijn gecommit.
-    # Zo tweet het systeem precies één keer per dag, zodra de morgen-prijzen voor
-    # het eerst beschikbaar zijn — en niet bij elke latere check.
+    # Alleen draaien als er in deze run daadwerkelijk nieuwe prijzen zijn gecommit.
+    # Omdat de check stopt zodra prices.json morgen al heeft (uit ENTSO-E OF EPEX),
+    # draait de pipeline maar een keer per dag -> precies een tweet bij de eerste
+    # publicatie, en niet opnieuw als ENTSO-E later de EPEX-data nog inhaalt.
     if: needs.check-and-update.outputs.nieuwe_prijzen == 'true'
     uses: ./.github/workflows/daily-tweet.yml
     secrets: inherit
