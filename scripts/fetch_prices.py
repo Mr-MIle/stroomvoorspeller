@@ -171,6 +171,47 @@ def fetch_epex(start_date: str, end_date: str) -> list[dict]:
     return out
 
 
+ENERGYZERO_BASE = "https://api.energyzero.nl/v1/energyprices"
+
+
+def fetch_energyzero(start_date: str, end_date: str) -> list[dict]:
+    """Achtervang-bron 1: day-ahead prijzen via EnergyZero (leverancier-API die o.a.
+    ANWB Energie/jeprijs voedt). Geen API-key. Vaak iets eerder bijgewerkt dan
+    ENTSO-E/SMARD. `start_date`/`end_date` = 'YYYY-MM-DD' (Amsterdam-dagen, inclusief).
+
+    EnergyZero rapporteert EUR/kWh exclusief btw; we rekenen om naar EUR/MWh (×1000)
+    zoals de rest van de pipeline. Retour: [{time: ISO Amsterdam, price: EUR/MWh}].
+    """
+    from_utc = datetime.fromisoformat(start_date).replace(tzinfo=AMS_TZ).astimezone(timezone.utc)
+    till_utc = (
+        datetime.fromisoformat(end_date)
+        .replace(hour=23, minute=59, second=59, tzinfo=AMS_TZ)
+        .astimezone(timezone.utc)
+    )
+    params = {
+        "fromDate": from_utc.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+        "tillDate": till_utc.strftime("%Y-%m-%dT%H:%M:%S.999Z"),
+        "interval": "4",      # uurprijzen
+        "usageType": "1",     # elektriciteit
+        "inclBtw": "false",   # kale marktprijs
+    }
+    url = f"{ENERGYZERO_BASE}?{urllib.parse.urlencode(params)}"
+    req = urllib.request.Request(url, headers={"User-Agent": "stroomvoorspeller/0.1"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+
+    out: list[dict] = []
+    for row in data.get("Prices", []) or []:
+        rd = row.get("readingDate")
+        pr = row.get("price")
+        if rd is None or pr is None:
+            continue
+        dt_utc = datetime.fromisoformat(rd.replace("Z", "+00:00"))
+        out.append({"time": utc_to_amsterdam(dt_utc).isoformat(), "price": round(float(pr) * 1000.0, 2)})
+    out.sort(key=lambda x: x["time"])
+    return out
+
+
 def parse_entsoe_xml(xml_text: str, default_start_utc: datetime) -> list[dict]:
     """Parseer ENTSO-E day-ahead prices XML naar een lijst van prijzen.
 
@@ -481,7 +522,7 @@ def main() -> int:
     prices_15m: list[dict] = []
     has_pt15m = False
     error_msg = None
-    epex_fallback = False
+    fallback_source: str | None = None
 
     if token:
         try:
@@ -526,49 +567,62 @@ def main() -> int:
             error_msg = f"ENTSO-E fout: {exc}"
             print(f"[warn] {error_msg}", file=sys.stderr)
 
-    # ---- EPEX-achtervang (energy-charts.info, geen API-key) ----
+    # ---- Achtervang als ENTSO-E (deels) ontbreekt ----
+    # Volgorde: EnergyZero (leverancier-API, vaak eerder) → energy-charts (SMARD).
+    # Beide geven dezelfde SDAC-uitslag via een andere pijplijn; op een dag waarop de
+    # markt zélf laat publiceert hebben ze allebei nog niets.
+    fallback_sources = (("energyzero", fetch_energyzero), ("energy-charts", fetch_epex))
+
     def _count_day(plist: list[dict], day: str) -> int:
         return sum(1 for p in plist if p["time"][:10] == day)
 
-    # Scenario a: ENTSO-E leverde data, maar morgen ontbreekt (deels). ENTSO-E
-    # publiceert vaak later dan EPEX/leveranciers; vul de ontbrekende morgen-uren
-    # aan uit EPEX zodat de site morgen-prijzen toont zodra de markt ze heeft.
+    # Scenario a: ENTSO-E leverde data, maar morgen ontbreekt (deels). Vul de
+    # ontbrekende morgen-uren aan uit de eerste achtervang die ze heeft. Belangrijk:
+    # eerst naar uur aggregeren (energy-charts levert kwartierdata) vóór het mergen,
+    # anders komen er meerdere punten per uur in de uur-reeks.
     if source == "entsoe" and _count_day(prices, tomorrow_date) < 24:
         ontbreekt = 24 - _count_day(prices, tomorrow_date)
-        print(f"[info] ENTSO-E mist {ontbreekt} morgen-uren — EPEX-achtervang bevragen.", file=sys.stderr)
-        try:
-            epex = fetch_epex(today_date, tomorrow_date)
-            have_hours = {p["time"][:13] for p in prices}
-            added = [p for p in epex if p["time"][:13] not in have_hours]
+        print(f"[info] ENTSO-E mist {ontbreekt} morgen-uren — achtervang bevragen.", file=sys.stderr)
+        have_hours = {p["time"][:13] for p in prices}
+        for name, fn in fallback_sources:
+            try:
+                raw = fn(today_date, tomorrow_date)
+            except Exception as exc:  # noqa: BLE001
+                print(f"[warn] achtervang {name} mislukt: {exc}", file=sys.stderr)
+                continue
+            hourly = aggregate_to_hourly(raw)
+            added = [p for p in hourly if p["time"][:13] not in have_hours]
             if added:
                 prices.extend(added)
                 prices.sort(key=lambda x: x["time"])
-                epex_fallback = True
-                print(f"[ok] EPEX-achtervang: {len(added)} uren aangevuld (morgen).", file=sys.stderr)
-            else:
-                print("[wait] EPEX-achtervang had ook nog geen nieuwe morgen-uren.", file=sys.stderr)
-        except Exception as exc:  # noqa: BLE001
-            print(f"[warn] EPEX-achtervang mislukt: {exc}", file=sys.stderr)
+                fallback_source = name
+                print(f"[ok] Achtervang {name}: {len(added)} morgen-uren aangevuld.", file=sys.stderr)
+                break
+            print(f"[wait] Achtervang {name} had nog geen morgen-uren.", file=sys.stderr)
 
     # Scenario b: ENTSO-E leverde helemaal niets, maar er was wél een token (dus
-    # productie, geen dev). Probeer EPEX als volledige bron — inclusief historie voor
-    # de forecast — voordat we oude data bewaren of sample genereren.
+    # productie, geen dev). Haal de hele periode — inclusief historie voor de forecast —
+    # bij de eerste achtervang die werkt, vóór we oude data bewaren of sample genereren.
     if not prices and token:
-        try:
-            epex = fetch_epex(history_start_ams.strftime("%Y-%m-%d"), tomorrow_date)
-            if epex:
-                prices = aggregate_to_hourly(epex)
-                source = "epex"
-                epex_fallback = True
+        for name, fn in fallback_sources:
+            try:
+                raw = fn(history_start_ams.strftime("%Y-%m-%d"), tomorrow_date)
+            except Exception as exc:  # noqa: BLE001
+                print(f"[warn] volledige achtervang {name} mislukt: {exc}", file=sys.stderr)
+                continue
+            hourly = aggregate_to_hourly(raw)
+            if hourly:
+                prices = hourly
+                source = name
+                fallback_source = name
                 if error_msg:
-                    error_msg = f"{error_msg}; EPEX-achtervang gebruikt"
-                print(f"[ok] ENTSO-E leeg — {len(prices)} uurprijzen via EPEX-achtervang.", file=sys.stderr)
-        except Exception as exc:  # noqa: BLE001
-            print(f"[warn] EPEX volledige fallback mislukt: {exc}", file=sys.stderr)
+                    error_msg = f"{error_msg}; achtervang {name} gebruikt"
+                print(f"[ok] ENTSO-E leeg — {len(prices)} uurprijzen via achtervang {name}.", file=sys.stderr)
+                break
 
     # Archiveer alle opgehaalde uurprijzen (alleen bij echte day-ahead data).
     # Dit gebeurt ook als prices leeg is na een fout — in dat geval is er niets te archiveren.
-    if prices and source in ("entsoe", "epex"):
+    if prices and source in ("entsoe", "energyzero", "energy-charts"):
         try:
             archive_prices(prices)
         except Exception as exc:  # noqa: BLE001
@@ -616,7 +670,7 @@ def main() -> int:
         "unit": "EUR/MWh",
         "tz": "Europe/Amsterdam",
         "source": source,
-        "epex_fallback": epex_fallback,
+        "fallback_source": fallback_source,
         "has_pt15m": has_pt15m,
         "prices": prices,
         "prices_15m": prices_15m,  # Kwartierdata voor vandaag+morgen (leeg als PT60M of fout)
@@ -624,7 +678,7 @@ def main() -> int:
 
     # Referentielijn 'wat is normaal' (#63): 30-daags gemiddelde consumentenprijs.
     # Alleen bij echte day-ahead data — over sample-data is het gemiddelde betekenisloos.
-    if source in ("entsoe", "epex"):
+    if source in ("entsoe", "energyzero", "energy-charts"):
         try:
             avg_30d, avg_window = compute_avg_30d(now_ams, prices)
             if avg_30d is not None:

@@ -13,8 +13,9 @@ Logica:
 2. Als prices.json al ≥24 uurprijzen voor morgen heeft → exit 1.
 3. Vraag ENTSO-E om de eerste 2 uur van morgen (minimale API-call).
 4. Als ENTSO-E data teruggeeft → exit 0 (pipeline starten).
-5. Anders: vraag de EPEX-achtervang (energy-charts.info, geen key). Heeft die de
-   volledige dag → exit 0; fetch_prices.py vult morgen dan via EPEX aan.
+5. Anders: vraag de achtervang op volgorde — EnergyZero (leverancier-API, vaak eerder),
+   dan energy-charts (SMARD). Geen API-key. Heeft één van beide de volledige dag →
+   exit 0; fetch_prices.py vult morgen dan via diezelfde volgorde aan.
 6. Anders → exit 1 (nog niet gepubliceerd).
 """
 from __future__ import annotations
@@ -32,6 +33,7 @@ NL_EIC = "10YNL----------L"
 DOC_TYPE_DAY_AHEAD = "A44"
 ENTSOE_BASE = "https://web-api.tp.entsoe.eu/api"
 ENERGY_CHARTS_BASE = "https://api.energy-charts.info/price"
+ENERGYZERO_BASE = "https://api.energyzero.nl/v1/energyprices"
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = PROJECT_ROOT / "public" / "data" / "prices.json"
@@ -68,7 +70,7 @@ def prices_json_has_tomorrow(tomorrow: str) -> bool:
         return False
     try:
         data = json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
-        if data.get("source") not in ("entsoe", "epex"):
+        if data.get("source") not in ("entsoe", "energyzero", "energy-charts"):
             return False
         count = sum(1 for p in data.get("prices", []) if p.get("time", "")[:10] == tomorrow)
         return count >= 24
@@ -142,6 +144,49 @@ def entsoe_has_tomorrow(token: str, tomorrow: str) -> bool:
         return True
 
 
+def energyzero_has_tomorrow(tomorrow: str) -> bool:
+    """
+    True als EnergyZero (leverancier-API, voedt o.a. ANWB/jeprijs) al een volledige dag
+    day-ahead prijzen voor morgen heeft. Geen API-key. Eerste achtervang: vaak iets
+    eerder dan ENTSO-E/SMARD. Telt unieke uren.
+    """
+    offset = amsterdam_offset()
+    tz = timezone(offset)
+    start_ams = datetime.strptime(tomorrow, "%Y-%m-%d").replace(tzinfo=tz)
+    from_utc = start_ams.astimezone(timezone.utc)
+    till_utc = (start_ams + timedelta(hours=23, minutes=59, seconds=59)).astimezone(timezone.utc)
+    params = {
+        "fromDate": from_utc.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+        "tillDate": till_utc.strftime("%Y-%m-%dT%H:%M:%S.999Z"),
+        "interval": "4",
+        "usageType": "1",
+        "inclBtw": "false",
+    }
+    url = f"{ENERGYZERO_BASE}?{urllib.parse.urlencode(params)}"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "stroomvoorspeller/0.1"})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        hours = {
+            r.get("readingDate", "")[:13]
+            for r in (data.get("Prices") or [])
+            if r.get("price") is not None
+        }
+        has_data = len(hours) >= 24
+        if has_data:
+            print(f"[go] EnergyZero heeft {len(hours)} uren voor {tomorrow}.", file=sys.stderr)
+        else:
+            print(
+                f"[wait] EnergyZero heeft nog geen volledige dag voor {tomorrow} "
+                f"({len(hours)} uren).",
+                file=sys.stderr,
+            )
+        return has_data
+    except Exception as exc:  # noqa: BLE001
+        print(f"[warn] EnergyZero check mislukt: {exc}", file=sys.stderr)
+        return False
+
+
 def epex_has_tomorrow(tomorrow: str) -> bool:
     """
     True als de EPEX-achtervang (energy-charts.info) al een volledige dag day-ahead
@@ -165,16 +210,16 @@ def epex_has_tomorrow(tomorrow: str) -> bool:
             hours.add(datetime.fromtimestamp(int(ts), tz=timezone.utc).strftime("%Y%m%d%H"))
         has_data = len(hours) >= 24
         if has_data:
-            print(f"[go] EPEX-achtervang heeft {len(hours)} uren voor {tomorrow}.", file=sys.stderr)
+            print(f"[go] energy-charts heeft {len(hours)} uren voor {tomorrow}.", file=sys.stderr)
         else:
             print(
-                f"[wait] EPEX-achtervang heeft nog geen volledige dag voor {tomorrow} "
+                f"[wait] energy-charts heeft nog geen volledige dag voor {tomorrow} "
                 f"({len(hours)} uren).",
                 file=sys.stderr,
             )
         return has_data
     except Exception as exc:  # noqa: BLE001
-        print(f"[warn] EPEX-achtervang check mislukt: {exc}", file=sys.stderr)
+        print(f"[warn] energy-charts check mislukt: {exc}", file=sys.stderr)
         return False
 
 
@@ -189,25 +234,31 @@ def main() -> None:
 
     if prices_json_has_tomorrow(tomorrow):
         print(
-            f"[skip] prices.json heeft al ≥24 uurprijzen voor {tomorrow}. Niets te doen.",
+            f"[skip] prices.json heeft al >=24 uurprijzen voor {tomorrow}. Niets te doen.",
             file=sys.stderr,
         )
         sys.exit(1)
 
-    print(f"[check] prices.json mist morgen-prijzen. Controleer ENTSO-E…", file=sys.stderr)
+    print("[check] prices.json mist morgen-prijzen. Controleer ENTSO-E...", file=sys.stderr)
 
     if entsoe_has_tomorrow(token, tomorrow):
         print("[go] Pipeline starten.", file=sys.stderr)
         sys.exit(0)
 
-    # ENTSO-E heeft nog niets — probeer de EPEX-achtervang. Heeft die de morgen-prijzen
-    # al, dan draaien we de pipeline tóch: fetch_prices.py vult morgen dan aan via EPEX.
-    print("[check] ENTSO-E nog leeg. Controleer EPEX-achtervang…", file=sys.stderr)
+    # ENTSO-E heeft nog niets — probeer de achtervang op volgorde: EnergyZero (vaak
+    # eerder), dan energy-charts. Heeft een van beide morgen, dan draaien we de pipeline
+    # toch: fetch_prices.py vult morgen via diezelfde volgorde aan.
+    print("[check] ENTSO-E nog leeg. Controleer achtervang (EnergyZero -> energy-charts)...",
+          file=sys.stderr)
+    if energyzero_has_tomorrow(tomorrow):
+        print("[go] EnergyZero heeft morgen — pipeline starten.", file=sys.stderr)
+        sys.exit(0)
     if epex_has_tomorrow(tomorrow):
-        print("[go] EPEX-achtervang heeft morgen — pipeline starten.", file=sys.stderr)
+        print("[go] energy-charts heeft morgen — pipeline starten.", file=sys.stderr)
         sys.exit(0)
 
-    print("[wait] ENTSO-E én EPEX hebben nog niets. Volgende check over 15 minuten.", file=sys.stderr)
+    print("[wait] ENTSO-E, EnergyZero en energy-charts hebben nog niets. "
+          "Volgende check over 15 minuten.", file=sys.stderr)
     sys.exit(1)
 
 
