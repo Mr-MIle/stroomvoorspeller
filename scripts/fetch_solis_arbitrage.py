@@ -34,6 +34,7 @@ import sys
 import time
 import urllib.request
 import urllib.error
+import urllib.parse
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -113,6 +114,38 @@ def load_prices() -> dict:
         if t and e.get("price") is not None:
             out[t[:13]] = e["price"] / 1000.0   # EUR/MWh -> EUR/kWh
     return out
+
+
+ENERGY_CHARTS_URL = "https://api.energy-charts.info/price"
+
+
+def fetch_history_prices(start: str, end: str) -> dict:
+    """Historische uur-EPEX (EUR/kWh) uit energy-charts voor [start, end] (incl.).
+
+    prices.json is rollend (~16 dagen), dus backfill-dagen daarbuiten hebben anders
+    geen prijs en worden door process_day overgeslagen (price_coverage < 0.5). Deze
+    achtervang vult dat gat. Geen API-key. energy-charts geeft kwartierwaarden in
+    EUR/MWh op UTC-tijd; we middelen per uur en zetten om naar Amsterdam-lokale
+    uursleutels 'YYYY-MM-DDTHH', zodat ze matchen met load_prices/compute_day.
+    """
+    params = urllib.parse.urlencode({"bzn": "NL", "start": start, "end": end})
+    req = urllib.request.Request(
+        f"{ENERGY_CHARTS_URL}?{params}",
+        headers={"User-Agent": "stroomvoorspeller/0.1"},
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    seconds = data.get("unix_seconds", []) or []
+    prices = data.get("price", []) or []
+    buckets: dict = {}
+    for ts, pr in zip(seconds, prices):
+        if pr is None:
+            continue
+        utc = datetime.fromtimestamp(int(ts), tz=timezone.utc)
+        local = utc + amsterdam_offset(utc)
+        key = local.strftime("%Y-%m-%dT%H")
+        buckets.setdefault(key, []).append(pr)
+    return {k: (sum(v) / len(v)) / 1000.0 for k, v in buckets.items()}
 
 
 def load_tariff():
@@ -320,6 +353,15 @@ def main():
         from datetime import date
         start = date.fromisoformat(args[0])
         end = date.fromisoformat(args[1])
+        # prices.json dekt alleen de laatste ~16 dagen; haal de rest als historische
+        # EPEX uit energy-charts. prices.json wint bij overlap (autoritatieve day-ahead).
+        try:
+            hist = fetch_history_prices(args[0], args[1])
+            prices = {**hist, **prices}
+            print(f"energy-charts: {len(hist)} uurprijzen geladen voor backfill.",
+                  file=sys.stderr)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[warn] historische prijzen ophalen mislukt: {exc}", file=sys.stderr)
         cur = start
         done = 0
         while cur <= end:
