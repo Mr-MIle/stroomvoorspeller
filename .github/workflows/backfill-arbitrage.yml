@@ -1,7 +1,8 @@
 name: Backfill batterij-arbitrage
 
-# Eenmalig een datumbereik vullen. Dagen zonder uurprijzen in prices.json
-# (voor ~9 juni 2026) worden automatisch overgeslagen.
+# Eenmalig een datumbereik vullen. Historische uurprijzen komen uit energy-charts
+# (fetch_history_prices), dus ook dagen buiten het rollende prices.json-venster
+# worden doorgerekend. Alleen dagen zonder Solis-data worden overgeslagen.
 on:
   workflow_dispatch:
     inputs:
@@ -45,9 +46,17 @@ jobs:
           git config user.name "stroomvoorspeller-bot"
           git config user.email "bot@stroomvoorspeller.nl"
           git add public/data/arbitrage.json 2>/dev/null || true
-          if ! git diff --cached --quiet; then
-            git commit -m "auto: backfill batterij-arbitrage $(date -u +%Y-%m-%dT%H:%MZ)"
-            git push
-          else
+          if git diff --cached --quiet; then
             echo "Geen wijzigingen."
+            exit 0
           fi
+          git commit -m "auto: backfill batterij-arbitrage $(date -u +%Y-%m-%dT%H:%MZ)"
+          # De remote kan intussen vooruit zijn (web-edits, dagelijkse cron):
+          # rebase op origin/main en probeer de push een paar keer.
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push && exit 0
+            echo "Push poging $i mislukt, opnieuw na rebase..." >&2
+            sleep 5
+          done
+          echo "Push na 3 pogingen mislukt." >&2
+          exit 1
