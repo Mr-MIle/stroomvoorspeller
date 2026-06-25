@@ -426,7 +426,7 @@
     <section id="batterij-promo" class="container" style="margin:32px auto;">
       <div class="section-head">
         <h2>Wat levert een thuisbatterij op?</h2>
-        <p class="section-sub">Ik laad mijn batterij overdag met zonnestroom en gebruik die 's avonds, als stroom duur is. Dit is wat dat per dag oplevert &mdash; mijn eigen batterij, geen rekenvoorbeeld. Benieuwd wat een batterij jóu zou opleveren? Reken het hieronder uit.</p>
+        <p class="section-sub">Ik laad mijn batterij overdag met zonnestroom en gebruik die 's avonds, als stroom duur is. Dit is wat dat per dag oplevert &mdash; mijn eigen batterij, geen rekenvoorbeeld. De batterij draait sinds 15 oktober 2025. Benieuwd wat een batterij jóu zou opleveren? Reken het hieronder uit.</p>
       </div>
       <div id="bat-promo-stats" class="bat-promo-grid">
         <div class="bat-promo-card"><p class="bp-label">Totaal bespaard</p><p class="bp-value" id="bp-total">&ndash;</p><p class="bp-sub" id="bp-days">incl. belasting</p></div>
@@ -457,11 +457,11 @@
           .then((doc) => {
             if (!doc || !doc.totals || !(doc.days || []).length) return;
             const t = doc.totals;
-            const eur = (x) => "\u20ac" + (x || 0).toFixed(2);
-            document.getElementById("bp-total").textContent = eur(t.profit_incl_eur);
+            const eur = (x) => "\u20ac" + (x ?? 0).toFixed(2);
+            document.getElementById("bp-total").textContent = eur(t.saving_eur);
             document.getElementById("bp-days").textContent = (t.days || doc.days.length) + " dagen gemeten";
-            document.getElementById("bp-gratis").textContent = (t.gratis_kwh || 0).toFixed(0) + " kWh";
-            const avg = (t.profit_incl_eur || 0) / (t.days || doc.days.length);
+            document.getElementById("bp-gratis").textContent = (t.solar_charged_kwh ?? 0).toFixed(0) + " kWh";
+            const avg = (t.saving_eur ?? 0) / (t.days || doc.days.length);
             document.getElementById("bp-avg").textContent = eur(avg);
           })
           .catch(() => {});
