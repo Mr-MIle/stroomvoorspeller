@@ -579,7 +579,6 @@
     adviceEl.textContent = adviceText;
 
     if (!nextEl) return;
-    const fromIdx     = nowIdx >= 0 ? nowIdx : 0;
     const isCheapNow  = (cls === "negative" || cls === "very_cheap" || cls === "cheap");
     const fmtEnd2 = (isoEnd) =>
       new Date(new Date(isoEnd).getTime() + 3600000)
@@ -587,8 +586,13 @@
 
     let html = "";
     if (!isCheapNow) {
-      // Wijs naar het eerstvolgende goedkopere 2-uurs venster — alleen als het écht goedkoper is.
-      const upcoming = findBestMoments(prices, Math.min(fromIdx + 1, prices.length - 1), 1, 2);
+      // Wijs naar het eerstvolgende goedkopere 2-uurs venster van VANDAAG — niet morgen.
+      // (Zonder dagfilter zou findBestMoments morgen-uren kunnen kiezen; die tonen
+      //  we hier zonder datum, wat een onzinnig "wacht tot een al voorbij uur" oplevert.)
+      const todayAhead = prices.filter(
+        (p) => isSameLocalDay(p.time, current.time) && new Date(p.time) > new Date(current.time)
+      );
+      const upcoming = findBestMoments(todayAhead, 0, 1, 2);
       if (upcoming.length && upcoming[0].avg < current.price) {
         const m = upcoming[0];
         html = `Goedkoper rond ${fmtTime(m.startIso)}–${fmtEnd2(m.endIso)} · ${fmtCents(m.avg)} ct/kWh`;
