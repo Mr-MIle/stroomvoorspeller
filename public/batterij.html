@@ -83,6 +83,8 @@
     table.days th { color: var(--c-text-mute); font-weight: 600; font-size: 0.78rem; }
     table.days th:first-child, table.days td:first-child { text-align: left; }
     table.days tbody tr:hover { background: var(--c-bg); }
+    .show-all-btn { margin-top: 14px; background: transparent; color: var(--c-brand); border: 1px solid var(--c-border); border-radius: 8px; padding: 9px 16px; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+    .show-all-btn:hover { background: var(--c-bg); }
 
     .note { font-size: 0.9rem; color: var(--c-text-soft); line-height: 1.6; max-width: 72ch; }
     .note strong { color: var(--c-text); }
@@ -180,6 +182,7 @@
           <tbody id="rows"></tbody>
         </table>
       </div>
+      <button id="toggle-rows" class="show-all-btn" hidden></button>
     </section>
 
     <section class="panel">
@@ -282,9 +285,11 @@
       ].map(([l, v]) => '<div class="cell"><p class="l">' + l + '</p><p class="v">' + v + "</p></div>").join("");
       document.getElementById("latest-panel").hidden = false;
 
-      // Tabel (nieuwste boven)
-      document.getElementById("rows").innerHTML = days.slice().reverse().map((d) =>
-        "<tr>"
+      // Tabel (nieuwste boven, standaard laatste 30 dagen; rest achter een knop)
+      const rev = days.slice().reverse();
+      const VISIBLE = 30;
+      const rowHtml = (d, hidden) =>
+        "<tr" + (hidden ? ' class="extra-row" hidden' : "") + ">"
         + "<td>" + dfmt(d.date) + "</td>"
         + "<td>" + kwh(d.consumption_kwh) + "</td>"
         + "<td>" + euro(d.cost_actual_eur) + "</td>"
@@ -293,25 +298,66 @@
         + "<td>" + kwh(d.battery_home_kwh) + "</td>"
         + "<td>" + kwh(d.arbitrage_kwh) + "</td>"
         + "<td>" + kwh(d.solar_charged_kwh) + "</td>"
-        + "</tr>"
-      ).join("");
+        + "</tr>";
+      document.getElementById("rows").innerHTML =
+        rev.map((d, i) => rowHtml(d, i >= VISIBLE)).join("");
       document.getElementById("table-panel").hidden = false;
+
+      // Inklap-knop alleen als er meer dan VISIBLE dagen zijn
+      if (rev.length > VISIBLE) {
+        const btn = document.getElementById("toggle-rows");
+        let open = false;
+        const label = () => open ? "Toon minder" : ("Toon alle " + rev.length + " dagen");
+        btn.textContent = label();
+        btn.hidden = false;
+        btn.addEventListener("click", () => {
+          open = !open;
+          document.querySelectorAll("#rows .extra-row").forEach((tr) => { tr.hidden = !open; });
+          btn.textContent = label();
+        });
+      }
 
       if (doc.generated_at) {
         document.getElementById("updated").textContent =
           "Laatst bijgewerkt: " + new Date(doc.generated_at).toLocaleString("nl-NL");
       }
 
-      // Grafiek: besparing per dag + cumulatief
+      // Grafiek: cumulatieve lijn + staven. Bij een lange periode (>70 dagen) tellen
+      // we de staven per week op, anders worden het 250 flinterdunne dagstaven.
       if (window.Chart) {
         document.getElementById("chart-panel").hidden = false;
+        const weekly = days.length > 70;
+        // lokale YYYY-MM-DD (geen toISOString → geen tijdzone-verschuiving)
+        const isoLocal = (dt) =>
+          dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") +
+          "-" + String(dt.getDate()).padStart(2, "0");
+        let buckets;
+        if (weekly) {
+          buckets = [];
+          days.forEach((d) => {
+            const dt = new Date(d.date + "T00:00");
+            const dow = (dt.getDay() + 6) % 7;            // maandag = 0
+            const monday = new Date(dt);
+            monday.setDate(dt.getDate() - dow);
+            const key = isoLocal(monday);
+            let g = buckets.length && buckets[buckets.length - 1].key === key
+              ? buckets[buckets.length - 1] : null;
+            if (!g) { g = { key, sum: 0 }; buckets.push(g); }
+            g.sum += (d.saving_eur || 0);
+          });
+        } else {
+          buckets = days.map((d) => ({ key: d.date, sum: (d.saving_eur || 0) }));
+        }
         let cum = 0;
-        const cumData = days.map((d) => (cum += (d.saving_eur || 0)));
+        const cumData = buckets.map((g) => (cum += g.sum));
+        document.querySelector("#chart-panel h2").textContent =
+          weekly ? "Besparing, opgeteld per week" : "Besparing, opgeteld per dag";
         new Chart(document.getElementById("chart"), {
           data: {
-            labels: days.map((d) => dfmt(d.date)),
+            labels: buckets.map((g) => dfmt(g.key)),
             datasets: [
-              { type: "bar", label: "Besparing per dag", data: days.map((d) => d.saving_eur || 0),
+              { type: "bar", label: weekly ? "Besparing per week" : "Besparing per dag",
+                data: buckets.map((g) => g.sum),
                 backgroundColor: "#2f9e44", borderRadius: 4, yAxisID: "y" },
               { type: "line", label: "Totaal bespaard", data: cumData, borderColor: "#0f6cbd",
                 backgroundColor: "rgba(15,108,189,.1)", tension: .25, fill: true, yAxisID: "y" },
@@ -320,7 +366,10 @@
           options: {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { position: "bottom" } },
-            scales: { y: { ticks: { callback: (v) => "€" + v } } },
+            scales: {
+              x: { ticks: { autoSkip: true, maxTicksLimit: 12, maxRotation: 0 } },
+              y: { ticks: { callback: (v) => "€" + v } },
+            },
           },
         });
       }
