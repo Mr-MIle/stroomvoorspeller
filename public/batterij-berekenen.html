@@ -116,13 +116,14 @@ h3{font-size:.95rem;margin:22px 0 6px}
       </div>
 
       <div class="field">
-        <label>Jaarverbruik</label>
+        <label>Jaarverbruik <span class="hint">je stroomverbruik zonder warmtepomp, en zonder je zonnestroom eraf te trekken</span></label>
         <div class="seg" id="verbruikMode">
           <button type="button" data-v="kwh" class="on">Ik weet het (kWh)</button>
           <button type="button" data-v="schat">Schat het voor mij</button>
         </div>
         <div id="verbruikKwh" style="margin-top:10px">
           <input type="number" id="verbruik" min="0" max="20000" step="50" value="2900" />
+          <p class="muted" style="font-size:.78rem;margin:5px 0 0">Vul je bruto huishoudverbruik in: <b>exclusief</b> warmtepomp (die zet je hieronder apart aan) en <b>zonder</b> je zonnestroom-eigenverbruik eraf te halen. Heb je zonnepanelen met saldering? Dan staat op je meter het netto verbruik &#8211; tel je opgewekte en zelf gebruikte stroom er weer bij op.</p>
         </div>
         <div class="verbruik-vragen" id="verbruikVragen">
           <div class="field" style="margin:10px 0 8px">
@@ -133,15 +134,21 @@ h3{font-size:.95rem;margin:22px 0 6px}
             <label>Woningtype</label>
             <select id="qHome"><option value="0.85">Appartement</option><option value="1" selected>Tussenwoning</option><option value="1.1">Hoekwoning</option><option value="1.25">Vrijstaand</option></select>
           </div>
-          <div class="field" style="margin:8px 0">
-            <label>Warmtepomp</label>
-            <select id="qHp"><option value="0" selected>Nee</option><option value="2500">Ja</option></select>
-          </div>
           <div class="field" style="margin:8px 0 2px">
             <label>Elektrische auto</label>
             <select id="qEv"><option value="0" selected>Nee</option><option value="2000">Ja</option></select>
           </div>
-          <p class="muted" style="font-size:.8rem;margin:6px 0 0">Schatting: <b id="schatKwh">2.500</b> kWh per jaar</p>
+          <p class="muted" style="font-size:.8rem;margin:6px 0 0">Schatting (excl. warmtepomp): <b id="schatKwh">2.500</b> kWh per jaar</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Warmtepomp <span class="hint">stuwt je winterverbruik op en dempt zo de opbrengst in oktober&#8211;maart</span></label>
+        <select id="qHpOn"><option value="0" selected>Nee</option><option value="1">Ja</option></select>
+        <div id="qHpKwhBox" style="display:none;margin-top:8px">
+          <label style="font-weight:600;font-size:.82rem">Verbruik warmtepomp <span class="hint">kWh per jaar, bovenop je verbruik hierboven</span></label>
+          <input type="number" id="qHpKwh" min="0" max="12000" step="100" value="3000" />
+          <p class="muted" style="font-size:.78rem;margin:5px 0 0">Vuistregel: hybride warmtepomp ~1.500&#8211;2.500 kWh, volledige (all-electric) warmtepomp ~3.000&#8211;6.000 kWh per jaar.</p>
         </div>
       </div>
 
@@ -173,6 +180,7 @@ h3{font-size:.95rem;margin:22px 0 6px}
         <div class="field">
           <label>Je leverancier</label>
           <select id="aanbieder"></select>
+          <p class="muted" id="tlvNote" style="font-size:.8rem;margin:6px 0 0"></p>
         </div>
 
         <div class="field">
@@ -232,7 +240,7 @@ h3{font-size:.95rem;margin:22px 0 6px}
     </div>
   </div>
 
-  <p class="foot">Hoe we rekenen: ongeveer 350 kWh zonnestroom per paneel per jaar, op het zuiden. Voor je verbruik gebruiken we een gemiddeld dagpatroon. De batterij verliest een beetje stroom bij laden en ontladen (ruwweg 1 op de 10 kWh) en je kunt hem niet helemaal vol of leeg gebruiken. Voor stroom die je inkoopt betaal je de marktprijs plus belasting; voor stroom die je teruglevert krijg je de kale marktprijs zonder belasting. De batterij stuurt op de prijzen die een dag van tevoren bekend zijn. De bedragen zijn een onderbouwde schatting, geen meterstand. Let op: we rekenen zonder de salderingsregeling (die per 2027 stopt); zolang saldering nog geldt, levert teruglevering iets meer op. De werkelijke opbrengst kan afwijken en aan deze uitkomsten kun je geen rechten ontlenen.</p>
+  <p class="foot">Hoe we rekenen: ongeveer 350 kWh zonnestroom per paneel per jaar, op het zuiden. Voor je verbruik gebruiken we een gemiddeld dagpatroon. De batterij verliest een beetje stroom bij laden en ontladen (ruwweg 1 op de 10 kWh) en je kunt hem niet helemaal vol of leeg gebruiken. Voor stroom die je inkoopt betaal je de marktprijs plus belasting; voor stroom die je teruglevert krijg je de kale marktprijs zonder belasting, minus de terugleverkosten van je leverancier (per aanbieder verschillend &#8211; sommige rekenen niets, een enkele geeft juist een vergoeding). Heb je een warmtepomp aangezet, dan stuwt dat je verbruik in oktober&#8211;maart op, precies wanneer je zonnepanelen weinig leveren; de batterij levert in die periode dan ook minder op. De batterij stuurt op de prijzen die een dag van tevoren bekend zijn. De bedragen zijn een onderbouwde schatting, geen meterstand. Let op: we rekenen zonder de salderingsregeling (die per 2027 stopt); zolang saldering nog geldt, levert teruglevering iets meer op. De werkelijke opbrengst kan afwijken en aan deze uitkomsten kun je geen rechten ontlenen.</p>
 </div>
   </main>
 
@@ -261,34 +269,43 @@ h3{font-size:.95rem;margin:22px 0 6px}
   <script>
 
 // ---------- data ----------
+// tlv = terugleverkosten per teruggeleverde kWh bij een DYNAMISCH contract.
+//  > 0 = je betaalt deze inkoopvergoeding per kWh teruglevering (boete)
+//  = 0 = geen terugleverkosten (je krijgt de kale marktprijs)
+//  < 0 = je ontvangt juist een vergoeding bovenop de marktprijs
+// Bron: Zonneplan-vergelijking dynamische contracten (mrt 2026), aangevuld per leverancier.
+// LET OP: 'tlvProv:true' = voorlopige aanname, bedrag nog niet hard bevestigd (zie lijst voor Emile).
 const SUPPLIERS = [
- {id:"average",name:"Algemeen gemiddelde",markup:0.0178,fixed:0},
- {id:"tibber",name:"Tibber",markup:0.0205,fixed:6.99},
- {id:"frank",name:"Frank Energie",markup:0.015,fixed:6.95},
- {id:"energyzero",name:"EnergyZero",markup:0.01853,fixed:5.95},
- {id:"anwb",name:"ANWB Energie",markup:0.018,fixed:6.5},
- {id:"vandebron",name:"Vandebron Dynamisch",markup:0.0165,fixed:7.5},
- {id:"zonneplan",name:"Zonneplan Dynamic",markup:0.0165,fixed:6.5},
- {id:"easy",name:"Easy Energy Dynamisch",markup:0.018,fixed:5.5},
- {id:"nextenergy",name:"NextEnergy",markup:0.0181,fixed:4.95},
- {id:"budget",name:"Budget Energie",markup:0.01405,fixed:4.95},
- {id:"eneco",name:"Eneco Dynamisch",markup:0.02,fixed:5.79},
- {id:"om",name:"om | nieuwe energie",markup:0.02066,fixed:8.57},
- {id:"vattenfall",name:"Vattenfall FlexPrijs",markup:0.021,fixed:4.95},
- {id:"coolblue",name:"Coolblue Energie",markup:0.01877,fixed:5.12},
- {id:"pure",name:"Pure Energie",markup:0.02479,fixed:2.41},
- {id:"essent",name:"Essent",markup:0.0209,fixed:6.19},
- {id:"greenchoice",name:"Greenchoice",markup:0.0185,fixed:6.2},
- {id:"engie",name:"ENGIE",markup:0.0157,fixed:5.74},
- {id:"energievanons",name:"Energie VanOns",markup:0.02397,fixed:5.78},
- {id:"innova",name:"Innova Energie",markup:0.01488,fixed:5.75},
- {id:"powerpeers",name:"Powerpeers",markup:0.0083,fixed:5.17},
- {id:"vrijopnaam",name:"Vrijopnaam",markup:0.0165,fixed:6.61},
+ {id:"average",name:"Algemeen gemiddelde",markup:0.0178,fixed:0,tlv:0.020},
+ {id:"tibber",name:"Tibber",markup:0.0205,fixed:6.99,tlv:0.0248},
+ {id:"frank",name:"Frank Energie",markup:0.015,fixed:6.95,tlv:-0.0182},
+ {id:"energyzero",name:"EnergyZero",markup:0.01853,fixed:5.95,tlv:0},
+ {id:"anwb",name:"ANWB Energie",markup:0.018,fixed:6.5,tlv:0},
+ {id:"vandebron",name:"Vandebron Dynamisch",markup:0.0165,fixed:7.5,tlv:0.0136},
+ {id:"zonneplan",name:"Zonneplan Dynamic",markup:0.0165,fixed:6.5,tlv:-0.020},
+ {id:"easy",name:"Easy Energy Dynamisch",markup:0.018,fixed:5.5,tlv:0.0218},
+ {id:"nextenergy",name:"NextEnergy",markup:0.0181,fixed:4.95,tlv:0.0219},
+ {id:"budget",name:"Budget Energie",markup:0.01405,fixed:4.95,tlv:0},
+ {id:"eneco",name:"Eneco Dynamisch",markup:0.02,fixed:5.79,tlv:0.0292},
+ {id:"om",name:"om | nieuwe energie",markup:0.02066,fixed:8.57,tlv:0.020,tlvProv:true},
+ {id:"vattenfall",name:"Vattenfall FlexPrijs",markup:0.021,fixed:4.95,tlv:0.0255},
+ {id:"coolblue",name:"Coolblue Energie",markup:0.01877,fixed:5.12,tlv:0},
+ {id:"pure",name:"Pure Energie",markup:0.02479,fixed:2.41,tlv:0.0370},
+ {id:"essent",name:"Essent",markup:0.0209,fixed:6.19,tlv:0.0253},
+ {id:"greenchoice",name:"Greenchoice",markup:0.0185,fixed:6.2,tlv:0,tlvProv:true},
+ {id:"engie",name:"ENGIE",markup:0.0157,fixed:5.74,tlv:0.020,tlvProv:true},
+ {id:"energievanons",name:"Energie VanOns",markup:0.02397,fixed:5.78,tlv:0,tlvProv:true},
+ {id:"innova",name:"Innova Energie",markup:0.01488,fixed:5.75,tlv:0.0306},
+ {id:"powerpeers",name:"Powerpeers",markup:0.0083,fixed:5.17,tlv:0.020,tlvProv:true},
+ {id:"vrijopnaam",name:"Vrijopnaam",markup:0.0165,fixed:6.61,tlv:0.020,tlvProv:true},
 ];
 const EB=0.0916, BTW=1.21;
 const SOLAR_PER_PANEL=350;
 const SOLAR_MONTH=[.02,.04,.08,.12,.14,.14,.13,.11,.09,.06,.04,.03];      // Jan..Dec
 const CONS_MONTH=[.095,.086,.086,.080,.076,.072,.072,.073,.078,.085,.094,.103];
+// Warmtepomp-verbruik volgt de stookbehoefte: sterk winter-zwaar (graaddagen-profiel).
+// Okt t/m mrt ~88% van het jaarverbruik, jun-aug vrijwel niets.
+const HP_MONTH=[.210,.155,.110,.055,.020,.005,.005,.010,.030,.085,.135,.180];   // Jan..Dec, som = 1
 const CONS_HOUR=[.022,.018,.016,.015,.016,.022,.038,.052,.050,.044,.042,.044,.046,.044,.042,.044,.052,.066,.074,.070,.060,.050,.040,.030];
 const SUNRISE=[8.4,7.7,6.9,5.7,5.0,4.5,4.7,5.4,6.2,7.0,7.0,8.0];
 const SUNSET =[16.7,17.5,18.4,19.3,20.1,20.9,20.9,20.1,18.9,17.8,16.7,16.4];
@@ -361,16 +378,32 @@ function solarDay(y,m,d,panels){
   for(let h=0;h<24;h++){const x=(h+0.5-sr)/(ss-sr);const val=(x>0&&x<1)?Math.sin(Math.PI*x):0;w.push(val);sum+=val;}
   return w.map(x=> sum>0? dayE*x/sum : 0);
 }
-function consDay(y,m,annual){
-  const monthE=annual*CONS_MONTH[m];
+function consDay(y,m,base,hp){
+  // base = huishoudverbruik (excl. warmtepomp), hp = warmtepomp-verbruik per jaar.
+  // Beide krijgen hun eigen maandprofiel; warmtepomp is sterk winter-zwaar.
+  const monthE=(base||0)*CONS_MONTH[m] + (hp||0)*HP_MONTH[m];
   const dayE=monthE/daysInMonth(y,m);
   let sum=CONS_HOUR.reduce((a,b)=>a+b,0);
   return CONS_HOUR.map(x=> dayE*x/sum);
 }
 function estimateConsumption(){
+  // Huishoudverbruik EXCL. warmtepomp (die zit in een aparte schakelaar).
   const base={1:1600,2:2500,3:3200,4:3900,5:4600}[+v('qPersons')];
-  const home=+v('qHome'), hp=+v('qHp'), ev=+v('qEv');
-  return Math.round((base*home+hp+ev)/50)*50;
+  const home=+v('qHome'), ev=+v('qEv');
+  return Math.round((base*home+ev)/50)*50;
+}
+function hpKwh(){ return v('qHpOn')==='1'? Math.max(0,+v('qHpKwh')||0) : 0; }
+function updateTlvNote(){
+  const el=$('tlvNote'); if(!el) return;
+  const sup=SUPPLIERS.find(s=>s.id===v('aanbieder'))||SUPPLIERS[0];
+  const t=sup.tlv||0;
+  const ct=Math.abs(t*100).toLocaleString('nl-NL',{minimumFractionDigits:1,maximumFractionDigits:2});
+  let txt;
+  if(t>0.0005) txt=`We rekenen met <b>${ct} ct per teruggeleverde kWh aan terugleverkosten</b> bij ${sup.name}. Dat gaat van je teruglever-opbrengst af.`;
+  else if(t<-0.0005) txt=`${sup.name} geeft een <b>vergoeding van ${ct} ct/kWh</b> bovenop de marktprijs voor teruglevering &#8211; daar rekenen we mee.`;
+  else txt=`Bij ${sup.name} rekenen we met <b>geen terugleverkosten</b>: je krijgt de kale marktprijs voor teruglevering.`;
+  if(sup.tlvProv) txt+=' <span style="font-style:italic">(voorlopige aanname, nog niet hard bevestigd)</span>';
+  el.innerHTML=txt;
 }
 
 // ---------- dispatch ----------
@@ -380,9 +413,9 @@ const SOLAR_THR={self:0, balanced:0.005, max:0.0};
 // net-inkoop: pas rendabel als het de belasting + slijtage goedmaakt (hogere drempel)
 const GRID_THR={self:0, balanced:0.06, max:0.01};
 
-function simulateDay(epex,solar,load,bat,markup,mode,socIn){
+function simulateDay(epex,solar,load,bat,markup,tlv,mode,socIn){
   const cp=epex.map(e=>(e/1000+markup+EB)*BTW);   // inkoop incl. belasting
-  const tb=epex.map(e=>e/1000);                   // teruglevering = kale epex
+  const tb=epex.map(e=>e/1000-(tlv||0));          // teruglevering = kale epex minus terugleverkosten per kWh
   const cap=bat.cap,pwr=bat.pwr,ce=bat.ce,de=bat.de,rt=ce*de;
   let soc=Math.min(socIn||0,cap);
   const imp=new Array(24).fill(0), expK=new Array(24).fill(0), sold=new Array(24).fill(0);
@@ -459,8 +492,8 @@ function simulateMonth(y,m,p,lastDay){
   const dn=lastDay||daysInMonth(y,m); let soc=0;
   const agg={solToLoad:0,batToLoad:0,expKwh:0,soldKwh:0,soldGridKwh:0,solarGen:0,charged:0,loadTot:0,costWithout:0,costWith:0,solSave:0,batSave:0,expRev:0,soldRev:0,arbProfit:0};
   for(let d=1;d<=dn;d++){
-    const epex=epexFor(y,m,d), solar=solarDay(y,m,d,p.panels), load=consDay(y,m,p.verbruik);
-    const f=simulateDay(epex,solar,load,{cap:p.cap,pwr:p.pwr,ce:p.ce,de:p.de},p.markup,p.mode,soc);
+    const epex=epexFor(y,m,d), solar=solarDay(y,m,d,p.panels), load=consDay(y,m,p.base,p.hp);
+    const f=simulateDay(epex,solar,load,{cap:p.cap,pwr:p.pwr,ce:p.ce,de:p.de},p.markup,p.tlv,p.mode,soc);
     soc=Math.min(f.socOut,p.cap);
     for(const k of Object.keys(agg)) agg[k]+=f[k];
   }
@@ -493,9 +526,10 @@ function currentParams(){
   const cap=Math.max(0,+v('batkwh'))*0.9; // bruikbaar
   let pwr=parseFloat(v('batkw')); if(!pwr||pwr<=0) pwr=Math.max(0,+v('batkwh'))*0.5; if(pwr<=0)pwr=0.01;
   const sup=SUPPLIERS.find(s=>s.id===v('aanbieder'))||SUPPLIERS[0];
-  const verbruik= state.verbruikMode==='kwh'? Math.max(0,+v('verbruik')) : estimateConsumption();
+  const base= state.verbruikMode==='kwh'? Math.max(0,+v('verbruik')) : estimateConsumption();
+  const hp= hpKwh();
   const [yy,mm]=v('maand').split('-').map(Number);
-  return {y:yy,m:mm,cap,pwr,ce:0.95,de:0.95,panels:Math.max(0,+v('panelen')),verbruik,markup:sup.markup,mode:state.mode};
+  return {y:yy,m:mm,cap,pwr,ce:0.95,de:0.95,panels:Math.max(0,+v('panelen')),base,hp,markup:sup.markup,tlv:sup.tlv,mode:state.mode};
 }
 
 async function render(){
@@ -503,6 +537,7 @@ async function render(){
   await ensureMonth(p.y,p.m);
   await ensureMonths(MONTHS);
   refreshDataNote();
+  updateTlvNote();
   renderAdvisor(p);
   const isPartial=(p.y===NOW.y&&p.m===NOW.m);
   const simDays= isPartial? Math.max(1, Math.min(TODAY_DAY-1, daysInMonth(p.y,p.m))) : daysInMonth(p.y,p.m);
@@ -550,7 +585,7 @@ function drawChart(p){
   const _part=(p.y===NOW.y&&p.m===NOW.m);
   const _last=_part? Math.max(1,Math.min(TODAY_DAY-1,daysInMonth(p.y,p.m))) : daysInMonth(p.y,p.m);
   const d=Math.max(1,Math.min(15,_last));
-  const epex=epexFor(p.y,p.m,d), solar=solarDay(p.y,p.m,d,p.panels), load=consDay(p.y,p.m,p.verbruik);
+  const epex=epexFor(p.y,p.m,d), solar=solarDay(p.y,p.m,d,p.panels), load=consDay(p.y,p.m,p.base,p.hp);
   const cp=epex.map(e=>(e/1000+p.markup+EB)*BTW*100); // ct/kWh
   $('dagInfo').textContent=`Voorbeeld: ${d} ${MNAMES[p.m]} ${p.y}. Prijs in ct/kWh (incl. belasting), zonopwek en verbruik in kWh per uur.`;
   const labels=[...Array(24).keys()].map(h=>h+'u');
@@ -642,8 +677,12 @@ function init(){
     $('verbruikVragen').classList.toggle('show', b.dataset.v==='schat');
     render();
   });
-  ['maand','batkwh','batkw','aanbieder','panelen','verbruik','prijs','qPersons','qHome','qHp','qEv'].forEach(id=>{
-    $(id).addEventListener('input',()=>{ if(['qPersons','qHome','qHp','qEv'].includes(id)) $('schatKwh').textContent=estimateConsumption().toLocaleString('nl-NL'); render(); });
+  ['maand','batkwh','batkw','aanbieder','panelen','verbruik','prijs','qPersons','qHome','qEv','qHpOn','qHpKwh'].forEach(id=>{
+    $(id).addEventListener('input',()=>{
+      if(['qPersons','qHome','qEv'].includes(id)) $('schatKwh').textContent=estimateConsumption().toLocaleString('nl-NL');
+      if(id==='qHpOn') $('qHpKwhBox').style.display = v('qHpOn')==='1'?'block':'none';
+      render();
+    });
   });
   render();
 }
