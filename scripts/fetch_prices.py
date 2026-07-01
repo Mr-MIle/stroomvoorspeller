@@ -70,6 +70,14 @@ _SCRIPT_DIR = Path(__file__).resolve().parent
 # Amsterdam tijdzone via IANA zoneinfo (DST automatisch correct)
 AMS_TZ = ZoneInfo("Europe/Amsterdam")
 
+# Hoeveel dagen terug (vanaf vandaag) we bij elke run controleren op gaten, naast
+# vandaag+morgen zelf. Vangt incidenten zoals 1 juli 2026 op: ENTSO-E's parser sloeg
+# toen 30 juni + 1 juli stil over (TimeSeries zonder punten, zie parse_entsoe_xml)
+# terwijl morgen gewoon compleet was — de oude check keek alléén naar morgen, dus dit
+# gat werd nooit hersteld. 3 dagen geeft ruim marge boven dat 2-daagse gat, zonder de
+# achtervang-APIs (die vooral recente data hebben) voor oude historie te belasten.
+RECENT_CHECK_DAYS = 3
+
 
 def amsterdam_now() -> datetime:
     """Huidige tijd in Amsterdam (DST-correct via zoneinfo)."""
@@ -307,6 +315,28 @@ def aggregate_to_hourly(prices: list[dict]) -> list[dict]:
         avg = sum(vals) / len(vals)
         out.append({"time": times[key], "price": round(avg, 2)})
     return out
+
+
+def find_missing_days(prices: list[dict], start_date: str, end_date: str) -> list[str]:
+    """Geeft de dagen (YYYY-MM-DD) in [start_date, end_date] die geen 24 volledige
+    uurprijzen hebben in `prices`. Dient om gaten te vinden die de ENTSO-E-parser
+    stilzwijgend kan laten vallen (parse_entsoe_xml: 'if not given: continue', geen
+    foutmelding) — niet alleen in morgen, maar in elke dag van de gecheckte periode.
+    """
+    d0 = datetime.strptime(start_date, "%Y-%m-%d").date()
+    d1 = datetime.strptime(end_date, "%Y-%m-%d").date()
+    counts: dict[str, int] = {}
+    for p in prices:
+        day = p["time"][:10]
+        counts[day] = counts.get(day, 0) + 1
+    missing = []
+    d = d0
+    while d <= d1:
+        key = d.isoformat()
+        if counts.get(key, 0) < 24:
+            missing.append(key)
+        d += timedelta(days=1)
+    return missing
 
 
 def generate_sample_prices(now_ams: datetime) -> list[dict]:
@@ -573,32 +603,53 @@ def main() -> int:
     # markt zélf laat publiceert hebben ze allebei nog niets.
     fallback_sources = (("energyzero", fetch_energyzero), ("energy-charts", fetch_epex))
 
-    def _count_day(plist: list[dict], day: str) -> int:
-        return sum(1 for p in plist if p["time"][:10] == day)
-
-    # Scenario a: ENTSO-E leverde data, maar morgen ontbreekt (deels). Vul de
-    # ontbrekende morgen-uren aan uit de eerste achtervang die ze heeft. Belangrijk:
-    # eerst naar uur aggregeren (energy-charts levert kwartierdata) vóór het mergen,
-    # anders komen er meerdere punten per uur in de uur-reeks.
-    if source == "entsoe" and _count_day(prices, tomorrow_date) < 24:
-        ontbreekt = 24 - _count_day(prices, tomorrow_date)
-        print(f"[info] ENTSO-E mist {ontbreekt} morgen-uren — achtervang bevragen.", file=sys.stderr)
-        have_hours = {p["time"][:13] for p in prices}
-        for name, fn in fallback_sources:
-            try:
-                raw = fn(today_date, tomorrow_date)
-            except Exception as exc:  # noqa: BLE001
-                print(f"[warn] achtervang {name} mislukt: {exc}", file=sys.stderr)
-                continue
-            hourly = aggregate_to_hourly(raw)
-            added = [p for p in hourly if p["time"][:13] not in have_hours]
-            if added:
-                prices.extend(added)
-                prices.sort(key=lambda x: x["time"])
-                fallback_source = name
-                print(f"[ok] Achtervang {name}: {len(added)} morgen-uren aangevuld.", file=sys.stderr)
-                break
-            print(f"[wait] Achtervang {name} had nog geen morgen-uren.", file=sys.stderr)
+    # Scenario a: ENTSO-E leverde data, maar er zitten gaten in de opgehaalde periode.
+    # Vroeger checkten we hier alléén morgen — maar op 1 juli 2026 sloeg de parser
+    # 30 juni + 1 juli (vandaag) stil over terwijl morgen gewoon compleet was, en
+    # dat gat werd nooit hersteld (de site toonde daardoor alleen "morgen" in de
+    # grafiek). Daarom nu: check elke dag van vandaag-RECENT_CHECK_DAYS t/m morgen,
+    # en vul elk gat aan via de achtervang — belangrijk: eerst naar uur aggregeren
+    # (energy-charts levert kwartierdata) vóór het mergen, anders komen er meerdere
+    # punten per uur in de uur-reeks.
+    if source == "entsoe":
+        recent_start_date = (today_start_ams - timedelta(days=RECENT_CHECK_DAYS)).strftime("%Y-%m-%d")
+        missing_days = find_missing_days(prices, recent_start_date, tomorrow_date)
+        if missing_days:
+            print(
+                f"[info] ENTSO-E-data onvolledig voor: {', '.join(missing_days)} — "
+                f"achtervang bevragen.", file=sys.stderr,
+            )
+            for name, fn in fallback_sources:
+                if not missing_days:
+                    break
+                gap_start, gap_end = missing_days[0], missing_days[-1]
+                try:
+                    raw = fn(gap_start, gap_end)
+                except Exception as exc:  # noqa: BLE001
+                    print(f"[warn] achtervang {name} mislukt: {exc}", file=sys.stderr)
+                    continue
+                hourly = aggregate_to_hourly(raw)
+                have_hours = {p["time"][:13] for p in prices}
+                added = [p for p in hourly if p["time"][:13] not in have_hours]
+                if added:
+                    prices.extend(added)
+                    prices.sort(key=lambda x: x["time"])
+                    fallback_source = f"{fallback_source}+{name}" if fallback_source else name
+                    print(
+                        f"[ok] Achtervang {name}: {len(added)} uren aangevuld "
+                        f"({gap_start}..{gap_end}).", file=sys.stderr,
+                    )
+                else:
+                    print(f"[wait] Achtervang {name} had niets nieuws voor {gap_start}..{gap_end}.", file=sys.stderr)
+                missing_days = find_missing_days(prices, recent_start_date, tomorrow_date)
+            if missing_days:
+                # Alle achtervang geprobeerd en er blijft een gat over — dit mag niet
+                # stil verdwijnen zoals op 1 juli. Vlag het in last_error zodat het
+                # zichtbaar wordt in payload.last_error i.p.v. dat de site zwijgend
+                # een lege dag toont.
+                warn = f"gaten in prijsdata na achtervang: {', '.join(missing_days)}"
+                print(f"[warn] {warn}", file=sys.stderr)
+                error_msg = f"{error_msg}; {warn}" if error_msg else warn
 
     # Scenario b: ENTSO-E leverde helemaal niets, maar er was wél een token (dus
     # productie, geen dev). Haal de hele periode — inclusief historie voor de forecast —

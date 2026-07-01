@@ -9,6 +9,9 @@ Gebruik:
     ENTSOE_TOKEN=xxx python scripts/check_new_prices.py
 
 Logica:
+0. Vandaag-vangnet: heeft prices.json <24 uur voor VANDAAG? → altijd exit 0 (pipeline
+   starten), ongeacht morgen. Voorkomt dat een gat in vandaag (zoals 1 juli 2026, zie
+   fetch_prices.py) de rest van de dag onopgemerkt blijft omdat morgen al compleet is.
 1. Bepaal "morgen" in Amsterdam-tijd.
 2. Als prices.json al ≥24 uurprijzen voor morgen heeft → exit 1.
 3. Vraag ENTSO-E om de eerste 2 uur van morgen (minimale API-call).
@@ -59,6 +62,25 @@ def tomorrow_date_ams() -> str:
     offset = amsterdam_offset()
     now_ams = datetime.now(timezone.utc) + offset
     return (now_ams + timedelta(days=1)).strftime("%Y-%m-%d")
+
+
+def today_date_ams() -> str:
+    """Geeft 'vandaag' als YYYY-MM-DD string in Amsterdam-tijd."""
+    offset = amsterdam_offset()
+    now_ams = datetime.now(timezone.utc) + offset
+    return now_ams.strftime("%Y-%m-%d")
+
+
+def prices_json_day_count(day: str) -> int:
+    """Aantal uurprijzen dat prices.json al heeft voor de gegeven dag (YYYY-MM-DD)."""
+    if not OUTPUT_FILE.exists():
+        return 0
+    try:
+        data = json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
+        return sum(1 for p in data.get("prices", []) if p.get("time", "")[:10] == day)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[warn] Kon prices.json niet lezen: {exc}", file=sys.stderr)
+        return 0
 
 
 def prices_json_tomorrow_source(tomorrow: str) -> str | None:
@@ -234,6 +256,21 @@ def main() -> None:
 
     tomorrow = tomorrow_date_ams()
     print(f"[check] Morgen in Amsterdam-tijd = {tomorrow}", file=sys.stderr)
+
+    # Extra vangnet (toegevoegd na het incident van 1 juli 2026 — zie fetch_prices.py):
+    # check ook of VANDAAG compleet is, niet alleen morgen. Zonder deze check merkt
+    # deze 15-minuten-poller een gat in vandaag nooit op zodra morgen al klaarstaat:
+    # de rest van de dag exit je dan steeds op de morgen-check (die al 'klaar' is),
+    # dus er komt geen nieuwe pipeline-run meer en het gat blijft de hele dag op de
+    # site staan. Deze check gaat vóór de morgen-logica en forceert altijd een run.
+    today = today_date_ams()
+    today_count = prices_json_day_count(today)
+    if today_count < 24:
+        print(
+            f"[go] prices.json mist vandaag ({today}): {today_count}/24 uur aanwezig "
+            f"— pipeline starten.", file=sys.stderr,
+        )
+        sys.exit(0)
 
     current_source = prices_json_tomorrow_source(tomorrow)
 
