@@ -154,11 +154,6 @@ h3{font-size:.95rem;margin:22px 0 6px}
 
       <div id="verfijnBox" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--c-border)">
         <div class="field">
-          <label>Maand <span class="hint">voor de maand-details onderaan</span></label>
-          <select id="maand"></select>
-        </div>
-
-        <div class="field">
           <label>Batterij <span class="hint">hoeveel stroom hij opslaat, in kWh</span></label>
           <div class="row2">
             <input type="number" id="batkwh" min="0" max="100" step="0.5" value="10" /> 
@@ -212,11 +207,16 @@ h3{font-size:.95rem;margin:22px 0 6px}
         <p class="muted" id="advNote" style="font-size:.8rem;margin-top:8px"></p>
       </div>
 
-      <div class="card" style="margin-top:22px">
+      <div class="field" style="margin:22px 0 0">
+        <label>Maand <span class="hint">voor de details en de dagcurve hieronder</span></label>
+        <select id="maand"></select>
+      </div>
+
+      <div class="card" style="margin-top:14px">
         <h2>E&#233;n maand in detail <span class="muted" id="resMaand" style="font-weight:400;font-size:.9rem"></span></h2>
         <div class="headline" id="headline"></div>
         <div class="kpi-row">
-          <div class="kpi"><div class="lbl">Bespaard deze maand</div><div class="val" id="kBesp"></div><div class="sub">vergeleken met geen zon en batterij</div></div>
+          <div class="kpi"><div class="lbl">Bespaard deze maand</div><div class="val" id="kBesp"></div><div class="sub" id="kBespSub">vergeleken met geen zon en batterij</div></div>
           <div class="kpi"><div class="lbl">Zelf voorzien</div><div class="val" id="kEigen"></div><div class="sub">deel van je verbruik uit eigen zon en batterij</div></div>
           <div class="kpi"><div class="lbl">Zonnestroom zelf gebruikt</div><div class="val" id="kZon"></div><div class="sub">de rest gaat terug het net op</div></div>
           <div class="kpi"><div class="lbl">Laadbeurten</div><div class="val" id="kCycli"></div><div class="sub" id="kCycliSub">per dag</div></div>
@@ -292,9 +292,9 @@ const SUPPLIERS = [
  {id:"coolblue",name:"Coolblue Energie",markup:0.01877,fixed:5.12,tlv:0},
  {id:"pure",name:"Pure Energie",markup:0.02479,fixed:2.41,tlv:0.0370},
  {id:"essent",name:"Essent",markup:0.0209,fixed:6.19,tlv:0.0253},
- {id:"greenchoice",name:"Greenchoice",markup:0.0185,fixed:6.2,tlv:0,tlvProv:true},
+ {id:"greenchoice",name:"Greenchoice",markup:0.0185,fixed:6.2,tlv:0},
  {id:"engie",name:"ENGIE",markup:0.0157,fixed:5.74,tlv:0.020,tlvProv:true},
- {id:"energievanons",name:"Energie VanOns",markup:0.02397,fixed:5.78,tlv:0,tlvProv:true},
+ {id:"energievanons",name:"Energie VanOns",markup:0.02397,fixed:5.78,tlv:0},
  {id:"innova",name:"Innova Energie",markup:0.01488,fixed:5.75,tlv:0.0306},
  {id:"powerpeers",name:"Powerpeers",markup:0.0083,fixed:5.17,tlv:0.020,tlvProv:true},
  {id:"vrijopnaam",name:"Vrijopnaam",markup:0.0165,fixed:6.61,tlv:0.020,tlvProv:true},
@@ -307,6 +307,9 @@ const CONS_MONTH=[.095,.086,.086,.080,.076,.072,.072,.073,.078,.085,.094,.103];
 // Okt t/m mrt ~88% van het jaarverbruik, jun-aug vrijwel niets.
 const HP_MONTH=[.210,.155,.110,.055,.020,.005,.005,.010,.030,.085,.135,.180];   // Jan..Dec, som = 1
 const CONS_HOUR=[.022,.018,.016,.015,.016,.022,.038,.052,.050,.044,.042,.044,.046,.044,.042,.044,.052,.066,.074,.070,.060,.050,.040,.030];
+// Warmtepomp trekt op koude dagen vrijwel de hele dag een constant vermogen (compressor blijft draaien),
+// anders dan het huishoud-piekpatroon hierboven — daarom een eigen, vlak uurprofiel.
+const HP_HOUR=Array(24).fill(1);
 const SUNRISE=[8.4,7.7,6.9,5.7,5.0,4.5,4.7,5.4,6.2,7.0,7.0,8.0];
 const SUNSET =[16.7,17.5,18.4,19.3,20.1,20.9,20.9,20.1,18.9,17.8,16.7,16.4];
 const BASE_MWH=[95,92,85,75,62,55,52,55,68,78,88,96]; // EUR/MWh by month
@@ -380,11 +383,13 @@ function solarDay(y,m,d,panels){
 }
 function consDay(y,m,base,hp){
   // base = huishoudverbruik (excl. warmtepomp), hp = warmtepomp-verbruik per jaar.
-  // Beide krijgen hun eigen maandprofiel; warmtepomp is sterk winter-zwaar.
-  const monthE=(base||0)*CONS_MONTH[m] + (hp||0)*HP_MONTH[m];
-  const dayE=monthE/daysInMonth(y,m);
-  let sum=CONS_HOUR.reduce((a,b)=>a+b,0);
-  return CONS_HOUR.map(x=> dayE*x/sum);
+  // Beide krijgen hun eigen maand- én uurprofiel: warmtepomp is winter-zwaar en loopt
+  // vlak door de dag (HP_HOUR), het huishoudverbruik volgt het ochtend/avond-piekpatroon (CONS_HOUR).
+  const baseDayE=(base||0)*CONS_MONTH[m]/daysInMonth(y,m);
+  const hpDayE=(hp||0)*HP_MONTH[m]/daysInMonth(y,m);
+  const baseSum=CONS_HOUR.reduce((a,b)=>a+b,0);
+  const hpSum=HP_HOUR.reduce((a,b)=>a+b,0);
+  return CONS_HOUR.map((x,h)=> baseDayE*x/baseSum + hpDayE*HP_HOUR[h]/hpSum);
 }
 function estimateConsumption(){
   // Huishoudverbruik EXCL. warmtepomp (die zit in een aparte schakelaar).
@@ -542,7 +547,9 @@ async function render(){
   const isPartial=(p.y===NOW.y&&p.m===NOW.m);
   const simDays= isPartial? Math.max(1, Math.min(TODAY_DAY-1, daysInMonth(p.y,p.m))) : daysInMonth(p.y,p.m);
   const a=simulateMonth(p.y,p.m,p,simDays);
+  const a0=simulateMonth(p.y,p.m,Object.assign({},p,{cap:0,pwr:0.01}),simDays); // zon zonder batterij, voor de batterij-bijdrage
   const saving=a.costWithout-a.costWith;
+  const batSaving=a0.costWith-a.costWith; // besparing die de batterij bóvenop de zonnepanelen toevoegt
   const selfSuff= a.loadTot>0? (a.solToLoad+a.batToLoad)/a.loadTot*100 : 0;
   const returned=a.expKwh+a.soldKwh-a.soldGridKwh;
   const solarSelf= a.solarGen>0? (a.solarGen-returned)/a.solarGen*100 : 0;
@@ -551,9 +558,12 @@ async function render(){
   const cycDay= cycMonth/dn;
   $('resMaand').textContent= isPartial? '— '+MNAMES[p.m]+' '+p.y+' · tot vandaag ('+simDays+' dagen)' : '— '+MNAMES[p.m]+' '+p.y;
   $('headline').innerHTML= isPartial
-    ? 'Zon en batterij hebben je deze maand tot nu <b>'+eur(saving)+'</b> bespaard. Dit is een deel van de maand.'
-    : 'Zon en batterij hadden je in deze maand <b>'+eur(saving)+'</b> bespaard.';
+    ? 'Zon en batterij hebben je deze maand tot nu <b>'+eur(saving)+'</b> bespaard, waarvan <b>'+eur(batSaving)+'</b> door de batterij. Dit is een deel van de maand.'
+    : 'Zon en batterij hadden je in deze maand <b>'+eur(saving)+'</b> bespaard, waarvan <b>'+eur(batSaving)+'</b> door de batterij.';
   $('kBesp').textContent=eur(saving);
+  $('kBespSub').innerHTML= p.cap>0
+    ? 'vs. geen zon en batterij &#183; waarvan <b>'+eur(batSaving)+'</b> door de batterij bovenop je zonnepanelen'
+    : 'vergeleken met geen zon en batterij';
   $('kEigen').textContent=Math.round(selfSuff)+'%';
   $('kZon').textContent=Math.round(solarSelf)+'%';
   $('kCycli').textContent=cycDay.toFixed(1).replace('.',',');
