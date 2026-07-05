@@ -35,8 +35,8 @@ on:
         default: "live"
         type: choice
         options: ["off", "live", "rolling"]
-      bias_opts:
-        description: "Extra rolling-MOS flags, bv: --bias-half-life 3 --bias-horizon-decay 0.9"
+      extra_opts:
+        description: "Extra backtest-flags, bv: --summer-scarcity --summer-scarcity-scale 1.5, of --scarcity, of --bias-half-life 3"
         required: false
         default: ""
       seasonal:
@@ -88,8 +88,8 @@ jobs:
           if [ -n "${{ github.event.inputs.bias_mode }}" ]; then
             EXTRA="$EXTRA --bias-mode ${{ github.event.inputs.bias_mode }}"
           fi
-          if [ -n "${{ github.event.inputs.bias_opts }}" ]; then
-            EXTRA="$EXTRA ${{ github.event.inputs.bias_opts }}"
+          if [ -n "${{ github.event.inputs.extra_opts }}" ]; then
+            EXTRA="$EXTRA ${{ github.event.inputs.extra_opts }}"
           fi
           if [ "${{ github.event.inputs.seasonal }}" = "true" ]; then
             EXTRA="$EXTRA --seasonal --seasonal-years ${{ github.event.inputs.seasonal_years }} --seasonal-window ${{ github.event.inputs.seasonal_window }}"
