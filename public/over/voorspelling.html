@@ -78,7 +78,7 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Over de voorspelling</h1>
-    <p class="legal-meta">Modelversie 3.1 · Bijgewerkt: 13 juni 2026</p>
+    <p class="legal-meta">Modelversie 3.2 · Bijgewerkt: 5 juli 2026</p>
 
     <section>
       <h2>Kort samengevat</h2>
@@ -156,7 +156,7 @@
       <p class="legal-formula">
         voorspelling = basisprijs × (1 + totaalpunten × 3%)
       </p>
-      <p>De tien factoren:</p>
+      <p>De elf factoren:</p>
       <ol>
         <li>
           <strong>Zonproductie</strong> — bewolkt geeft plus (duurder), zonnig geeft min.
@@ -208,14 +208,22 @@
           de afgelopen weken suggereren, dan stelt het de prijs navenant bij. Deze factor verlaagde
           in onze backtest de winterafwijking aanzienlijk.
         </li>
+        <li>
+          <strong>Zomerschaarste-cap</strong> — de zomerse tegenhanger van de schaarste-cap. Op
+          hete, windstille avonden (18–22 uur) valt de zonnestroom weg terwijl de vraag hoog
+          blijft, bijvoorbeeld door airco's. Gas zet dan de prijs en die kan hard omhoog: in juni
+          2026 zagen we avondpieken tot 578 EUR/MWh die het model 8 tot 12 cent per kWh te laag
+          inschatte. Deze factor duwt de voorspelling op zulke avonden gericht omhoog — zwaarder
+          naarmate het windstiller en heter is. Buiten die specifieke avonden staat hij op nul.
+        </li>
       </ol>
       <p>Klik in de grafiek op een voorspeld uur om te zien hoe elke factor bijdraagt.</p>
     </section>
 
     <section>
-      <h2>Drie marktregimes</h2>
+      <h2>Vier marktregimes</h2>
       <p>
-        Het model herkent drie situaties die ieder een andere dynamiek hebben:
+        Het model herkent vier situaties die ieder een andere dynamiek hebben:
       </p>
       <ul>
         <li>
@@ -235,10 +243,17 @@
           redelijk, maar de scherpe winterpieken onderschat het systematisch — zie
           <a href="#klopt-niet">Wanneer klopt de voorspelling niet?</a> hieronder.
         </li>
+        <li>
+          <strong style="color:#ef4444;">Zomerschaarste 🌡️</strong> — hete, windstille
+          zomeravonden (18–22 uur). De zon zakt weg, maar de vraag blijft hoog en er is geen wind
+          om het gat te vullen. De avondprijs kan dan een veelvoud van het dagniveau worden. Het
+          model herkent dit sinds juli 2026 en stelt de avonduren gericht opwaarts bij; net als bij
+          de winterse variant blijft de allerhoogste piek moeilijk exact te raken.
+        </li>
       </ul>
       <p>
         In de grafiek zie je het regime als kleur van de voorspellingspunten: blauw is normaal,
-        geel is oversupply, rood is schaarste.
+        geel is oversupply, rood is schaarste (winter én zomer).
       </p>
     </section>
 
@@ -347,6 +362,13 @@
           haalt 'm niet helemaal weg: bij de diepste pieken valt de werkelijke prijs nog steeds hoger
           uit dan het model schat. De seizoensfactor (factor 10) trekt het niveau juist iets omlaag
           en werkt hier dus tegen de schaarste-cap in.
+        </li>
+        <li>
+          <strong>Hete, windstille zomeravonden:</strong> in juni 2026 schoten avondprijzen naar
+          321 en zelfs 578 EUR/MWh terwijl het model 8 tot 12 cent per kWh lager zat. Sinds
+          modelversie 3.2 (juli 2026) duwt de zomerschaarste-cap (factor 11) zulke avonden gericht
+          omhoog. Dat verkleint de misser aanzienlijk, maar ook hier geldt: de richting en het
+          risico zie je, de exacte hoogte van de scherpste piek niet.
         </li>
         <li>
           <strong>Plotselinge marktschokken:</strong> een aardgasleiding die uitvalt, geopolitieke
