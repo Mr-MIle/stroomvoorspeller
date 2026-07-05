@@ -462,21 +462,52 @@ def run_backtest(
     thresholds: dict,
     bias_corrections: dict | None = None,
     seasonal_fn=None,
+    rolling_bias: dict | None = None,
 ) -> list[dict]:
     """Voor elke forecast_date x horizon x uur: forecast vs actual.
 
     Een forecast_date representeert de "vandaag waarop we voorspellen".
     De target is forecast_date + horizon dagen, en we voorspellen alle 24 uren ervan.
+
+    rolling_bias (v3.2, optioneel): walk-forward rolling MOS-simulatie. Dict met
+    keys half_life, horizon_decay, min_neff, min_eur, cap. Per run-datum worden
+    correcties per (regime, uur) berekend uit de fouten van doel-uren die op dat
+    moment al bekend zijn (target <= fc_date — geen look-ahead), exponentieel
+    gewogen op recentheid. Spiegelt compute_bias.py --mode rolling; per doel-uur
+    telt de hervoorspelling met de kleinste horizon (= 'predicted_raw_latest' live).
+    Sluit legacy bias_corrections uit (rolling heeft voorrang).
     """
     results: list[dict] = []
     skipped_no_baseline = 0
     skipped_no_actual = 0
     skipped_no_inputs = 0
 
+    # v3.2: walk-forward foutgeheugen voor rolling MOS.
+    # raw_errors[target_dt] = (horizon, regime, uur, fout) — kleinste horizon wint.
+    raw_errors: dict[datetime, tuple] = {}
+
     for fc_date in forecast_dates:
         # History = alles voor fc_date 23:59 (dwz. dag fc_date is bekend)
         cutoff = fc_date.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
         history_full = slice_history_until(prices, cutoff)
+
+        # v3.2: rolling MOS-correcties voor deze run-datum (alleen bekende fouten).
+        rolling_corr: dict[tuple, float] = {}
+        if rolling_bias:
+            acc: dict[tuple, list] = {}
+            for t_dt, (_h, _regime, _hour, _err) in raw_errors.items():
+                if t_dt >= cutoff:
+                    continue
+                age_days = (cutoff - t_dt).total_seconds() / 86400.0
+                w = 0.5 ** (age_days / rolling_bias["half_life"])
+                a = acc.setdefault((_regime, _hour), [0.0, 0.0])
+                a[0] += w * _err
+                a[1] += w
+            for cell, (we, wsum) in acc.items():
+                if wsum >= rolling_bias["min_neff"]:
+                    b = we / wsum
+                    if abs(b) >= rolling_bias["min_eur"]:
+                        rolling_corr[cell] = b
 
         # TTF op fc_date
         ttf_now = ttf_for_date(ttf, fc_date)
@@ -528,7 +559,22 @@ def run_backtest(
                 # Optioneel: dezelfde MOS bias-correctie als de live-pijplijn (run_forecast.py),
                 # zodat de backtest het model meet zoals bezoekers het zien.
                 predicted_val = fc.predicted
-                if bias_corrections:
+                bias_applied = 0.0
+                if rolling_bias:
+                    # v3.2: walk-forward rolling MOS — correctie uit fouten die op
+                    # fc_date bekend waren, met horizon-verval en cap.
+                    b = rolling_corr.get((fc.regime, hour))
+                    if b is not None:
+                        decay = rolling_bias["horizon_decay"] ** max(0, h - 2)
+                        cap = rolling_bias["cap"]
+                        bias_applied = max(-cap, min(cap, b * decay))
+                        predicted_val = round(fc.predicted + bias_applied, 2)
+                    # Fout bijschrijven voor láátere run-datums (kleinste horizon =
+                    # meest recente hervoorspelling wint, zoals live 'latest').
+                    prev = raw_errors.get(target_dt)
+                    if prev is None or h < prev[0]:
+                        raw_errors[target_dt] = (h, fc.regime, hour, actual - fc.predicted)
+                elif bias_corrections:
                     _fcd = {
                         "time": target_dt.isoformat(),
                         "predicted": fc.predicted,
@@ -551,6 +597,7 @@ def run_backtest(
                     "is_feestdag": is_feestdag(target_dt),
                     "actual": round(actual, 2),
                     "predicted": predicted_val,
+                    "bias_applied": round(bias_applied, 2),   # v3.2: rolling MOS-diagnose
                     "naive_baseline": round(naive, 2),
                     "total_points": fc.total_points,
                     "factors": [
@@ -982,7 +1029,27 @@ def main() -> int:
                              "(default gisteren). Handig om een specifieke winter/zomer te testen.")
     parser.add_argument("--apply-bias", action="store_true",
                         help="Pas dezelfde MOS bias-correctie toe als de live-site (run_forecast.py). "
-                             "Maakt de backtest representatief voor wat bezoekers werkelijk zien.")
+                             "Maakt de backtest representatief voor wat bezoekers werkelijk zien. "
+                             "Alias voor --bias-mode live.")
+    parser.add_argument("--bias-mode", choices=["off", "live", "rolling"], default=None,
+                        help="off = geen MOS (default). live = huidige bias_corrections.json "
+                             "toepassen (= --apply-bias). rolling = v3.2 walk-forward simulatie: "
+                             "recentheidsgewogen correcties per (regime, uur), per run-datum "
+                             "herberekend uit alleen dan-bekende fouten (geen look-ahead). "
+                             "Voor A/B: zelfde periode met --bias-mode off vs rolling.")
+    parser.add_argument("--bias-half-life", type=float, default=5.0,
+                        help="Rolling: halfwaardetijd recentheidsgewicht in dagen (default 5). "
+                             "Tuning-knop: 2 = agressief volgen, 10 = traag/stabiel.")
+    parser.add_argument("--bias-horizon-decay", type=float, default=1.0,
+                        help="Rolling: verval van de correctie per horizondag voorbij d2 "
+                             "(default 1.0 = geen verval, zoals live MOS vlak toepast). "
+                             "Tuning-knop: 0.9 = d7 krijgt ~59%% van de d2-correctie.")
+    parser.add_argument("--bias-min-neff", type=float, default=5.0,
+                        help="Rolling: minimale effectieve n (som gewichten) per cel (default 5).")
+    parser.add_argument("--bias-min-eur", type=float, default=5.0,
+                        help="Rolling: minimale absolute bias in EUR/MWh om te corrigeren (default 5).")
+    parser.add_argument("--bias-cap", type=float, default=50.0,
+                        help="Rolling: maximale toegepaste correctie in EUR/MWh (default 50, = live cap).")
     parser.add_argument("--seasonal", action="store_true",
                         help="Zet de experimentele seizoensfactor aan (archief van voorgaande jaren). "
                              "Voor A/B: draai dezelfde periode met en zonder deze vlag.")
@@ -1022,10 +1089,14 @@ def main() -> int:
     print(f"[info] Categorisatie-drempels (EUR/MWh): goedkoop<{thresholds['cheap']}, "
           f"duur>{thresholds['pricey']}.", file=sys.stderr)
 
+    # v3.2: --bias-mode bepaalt de MOS-variant; --apply-bias blijft werken als
+    # alias voor 'live'. Default (geen van beide): off.
+    bias_mode = args.bias_mode or ("live" if getattr(args, "apply_bias", False) else "off")
+
     bias_corrections: dict = {}
-    if getattr(args, "apply_bias", False):
+    if bias_mode == "live":
         if not _HAS_BIAS:
-            print("[warn] --apply-bias gevraagd, maar run_forecast-bias-functies niet "
+            print("[warn] --bias-mode live gevraagd, maar run_forecast-bias-functies niet "
                   "beschikbaar; backtest draait zonder bias-correctie.", file=sys.stderr)
         else:
             try:
@@ -1035,6 +1106,19 @@ def main() -> int:
             n_active = sum(1 for v in bias_corrections.values() if v.get("apply"))
             print(f"[info] MOS bias-correctie AAN: {len(bias_corrections)} cellen, "
                   f"{n_active} actief.", file=sys.stderr)
+
+    rolling_bias: dict | None = None
+    if bias_mode == "rolling":
+        rolling_bias = {
+            "half_life":     args.bias_half_life,
+            "horizon_decay": args.bias_horizon_decay,
+            "min_neff":      args.bias_min_neff,
+            "min_eur":       args.bias_min_eur,
+            "cap":           args.bias_cap,
+        }
+        print(f"[info] Rolling MOS AAN (walk-forward): half-life={args.bias_half_life}d, "
+              f"horizon-decay={args.bias_horizon_decay}, min-neff={args.bias_min_neff}, "
+              f"min-eur={args.bias_min_eur}, cap={args.bias_cap}.", file=sys.stderr)
 
     seasonal_fn = None
     if getattr(args, "seasonal", False):
@@ -1183,7 +1267,7 @@ def main() -> int:
 
     print(f"[info] Forecasts uitvoeren ({len(forecast_dates)} forecast-dagen x {len(horizons)} horizons x 24 uur)...",
           file=sys.stderr)
-    results = run_backtest(prices, weather, ttf, forecast_dates, horizons, thresholds, bias_corrections=bias_corrections, seasonal_fn=seasonal_fn)
+    results = run_backtest(prices, weather, ttf, forecast_dates, horizons, thresholds, bias_corrections=bias_corrections, seasonal_fn=seasonal_fn, rolling_bias=rolling_bias)
 
     if not results:
         print("[err] Geen resultaten; rapport wordt niet geschreven.", file=sys.stderr)

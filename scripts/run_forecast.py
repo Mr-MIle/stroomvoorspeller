@@ -365,7 +365,11 @@ def apply_bias_correction(fc_dict: dict, corrections: dict, target_dt: datetime)
     """
     Pas bias-correctie toe op fc_dict (in-place mutatie).
 
-    - Laad cel-sleutel op basis van uur, regime_bucket, maand.
+    Ondersteunt twee celformaten (v3.2):
+    - rolling: sleutel '{regime}_h{uur:02d}' (compute_bias.py --mode rolling) —
+      heeft voorrang als aanwezig. Recentheidsgewogen fout per regime×uur.
+    - legacy:  sleutel '{regime}_h{uur:02d}_m{maand:02d}' — gedrag van vóór v3.2.
+
     - Pas additief toe als apply == true; clip op +/-BIAS_CORRECTION_MAX_EUR.
     - Voeg factor 'bias_correctie' toe aan fc_dict["factors"] voor transparantie.
     - Retourneer fc_dict (ook gemuteerd in-place).
@@ -376,9 +380,13 @@ def apply_bias_correction(fc_dict: dict, corrections: dict, target_dt: datetime)
     hour  = target_dt.hour
     month = target_dt.month
     regime_bucket = infer_regime_bucket_for_bias(fc_dict)
-    cell_key = f"{regime_bucket}_h{hour:02d}_m{month:02d}"
 
+    # v3.2: rolling-cel (zonder maand) heeft voorrang; val terug op legacy-cel.
+    cell_key = f"{regime_bucket}_h{hour:02d}"
     cell = corrections.get(cell_key)
+    if cell is None:
+        cell_key = f"{regime_bucket}_h{hour:02d}_m{month:02d}"
+        cell = corrections.get(cell_key)
     if cell is None or not cell.get("apply"):
         return fc_dict
 
@@ -436,8 +444,14 @@ def log_predictions(forecasts: list, log_file: Path) -> None:
         plausibility_label: event plausibility label (v2.1)
         analog_sample_size: aantal historische analogen gevonden (v2.1)
         actual            : werkelijke EPEX-prijs (null totdat update_log.py vult)
+        predicted_raw     : kale voorspelling vóór MOS (v3.2)
+        predicted_raw_latest / predicted_latest / days_ahead_latest:
+                            meest recente (her)voorspelling voor dit doel-uur,
+                            ververst per run zolang actual null is (v3.2) —
+                            input voor compute_bias.py --mode rolling
 
-    Entries ouder dan PREDICTION_LOG_MAX_DAYS worden gesnoeid.
+    Entries ouder dan PREDICTION_LOG_MAX_DAYS worden gesnoeid; bestaande entries
+    worden bij een nieuwe run niet gedupliceerd maar krijgen verse 'latest'-velden.
     """
     existing: list = []
     if log_file.exists():
@@ -447,21 +461,34 @@ def log_predictions(forecasts: list, log_file: Path) -> None:
         except (json.JSONDecodeError, ValueError):
             existing = []
 
-    logged_times: set = {e["target_time"] for e in existing}
-
     cutoff_str = (datetime.now(timezone.utc) - timedelta(days=PREDICTION_LOG_MAX_DAYS)).isoformat()
     existing = [e for e in existing if e.get("target_time", "") >= cutoff_str[:10]]
 
+    by_target: dict = {e.get("target_time"): e for e in existing}
+
     added = 0
+    updated = 0
     for fc in forecasts:
         t = fc.get("time", "")
-        if t in logged_times:
+        entry = by_target.get(t)
+        if entry is not None:
+            # v3.2: doel-uur al gelogd (eerste keer = verste horizon). Ververs de
+            # 'latest'-velden zolang de actual nog niet bekend is: de meest recente
+            # kale voorspelling (kortste horizon) is de beste maat voor de actuele
+            # systematische fout — daar leert de rolling MOS van. De originele
+            # velden blijven staan voor de plausibility-laag en horizon-analyses.
+            if entry.get("actual") is None:
+                entry["predicted_raw_latest"] = fc.get("predicted_raw", fc.get("predicted"))
+                entry["predicted_latest"]     = fc.get("predicted")
+                entry["days_ahead_latest"]    = fc.get("days_ahead")
+                updated += 1
             continue
         existing.append({
             # Voorspellings-metadata
             "target_time":    t,
             "days_ahead":     fc.get("days_ahead"),
             "predicted":      fc.get("predicted"),
+            "predicted_raw":  fc.get("predicted_raw", fc.get("predicted")),
             "baseline":       fc.get("baseline"),
             "total_points":   fc.get("total_points"),
             "model_version":  MODEL_VERSION,
@@ -481,13 +508,13 @@ def log_predictions(forecasts: list, log_file: Path) -> None:
         })
         added += 1
 
-    if added == 0:
+    if added == 0 and updated == 0:
         return
 
     log_file.parent.mkdir(parents=True, exist_ok=True)
     log_file.write_bytes(json.dumps(existing, indent=2, ensure_ascii=False).encode("utf-8"))
-    print(f"[info] prediction_log: {added} nieuwe entries toegevoegd "
-          f"(totaal {len(existing)}).", file=sys.stderr)
+    print(f"[info] prediction_log: {added} nieuwe entries toegevoegd, "
+          f"{updated} 'latest' ververst (totaal {len(existing)}).", file=sys.stderr)
 
 
 # ---------------------------------------------------------------------------
@@ -704,6 +731,10 @@ def main() -> int:
                 "time":            target_dt.isoformat(),
                 "baseline":        fc.baseline,
                 "predicted":       fc.predicted,
+                # v3.2: kale modeluitvoer vóór MOS — de rolling bias-correctie
+                # leert van deze waarde, niet van het gecorrigeerde getal
+                # (voorkomt een feedback-lus waarin correcties op correcties stapelen).
+                "predicted_raw":   fc.predicted,
                 "lower":           round(fc.lower, 2),
                 "upper":           round(fc.upper, 2),
                 "uncertainty_pct": fc.uncertainty_pct,
