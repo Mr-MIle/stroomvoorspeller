@@ -64,7 +64,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from forecast import (  # noqa: E402
     POINT_WEIGHT,
-    REGIME_NORMAL, REGIME_OVERSUPPLY, REGIME_SCARCITY, REGIME_TRANSITION,
+    REGIME_NORMAL, REGIME_OVERSUPPLY, REGIME_SCARCITY, REGIME_SCARCITY_SUMMER,
+    REGIME_TRANSITION,
     Forecast,
     FactorScore,
     compute_baseline,
@@ -784,6 +785,11 @@ def compute_metrics(results: list[dict]) -> dict:
 
 # ---- Rapport ----
 
+# v3.2: de gebruikte CLI-flags, gezet in main(). Zonder dit was uit een rapport
+# niet te herleiden met welke instellingen (bias-mode, scarcity, ...) het draaide.
+RUN_SETTINGS: str = ""
+
+
 def write_report(
     metrics: dict,
     results: list[dict],
@@ -804,6 +810,8 @@ def write_report(
     lines.append(f"**Periode**: {period_start.strftime('%Y-%m-%d')} t/m {period_end.strftime('%Y-%m-%d')}")
     lines.append(f"**Databron**: {source}")
     lines.append(f"**Datapunten**: {metrics['total_points']}")
+    if RUN_SETTINGS:
+        lines.append(f"**Instellingen**: `{RUN_SETTINGS}`")
     lines.append("")
     lines.append("Dit rapport is automatisch gegenereerd door `02-code/scripts/backtest.py`.")
     lines.append("Het evalueert het 6-puntenmodel uit `forecast.py` retrospectief.")
@@ -956,14 +964,40 @@ def write_report(
         REGIME_NORMAL:     "Normaal",
         REGIME_OVERSUPPLY: "Oversupply (hernieuwbaar)",
         REGIME_SCARCITY:   "Schaarste / Dunkelflaute",
+        REGIME_SCARCITY_SUMMER: "Zomerschaarste (windstille hitte)",  # v3.2 #71
         REGIME_TRANSITION: "Transitie",
     }
-    for reg in [REGIME_NORMAL, REGIME_OVERSUPPLY, REGIME_SCARCITY, REGIME_TRANSITION]:
+    for reg in [REGIME_NORMAL, REGIME_OVERSUPPLY, REGIME_SCARCITY,
+                REGIME_SCARCITY_SUMMER, REGIME_TRANSITION]:
         rd = rb.get(reg)
         if rd and rd["n"] > 0:
             label = regime_labels.get(reg, reg)
             lines.append(f"| {label} | {rd['n']} | {rd['mae']:.2f} | {rd['bias']:+.2f} |")
     lines.append("")
+    lines.append("")
+
+    # v3.2: MAE per uurblok — de avonduren zijn de kritieke zone (#71) en waren
+    # eerder alleen uit de ruwe JSON te halen.
+    lines.append("## MAE per uurblok")
+    lines.append("")
+    lines.append("| Uurblok | n | MAE (EUR/MWh) | Bias |")
+    lines.append("|:---|---:|---:|---:|")
+    uurblokken = [
+        ("00-05u nacht",     range(0, 6)),
+        ("06-08u ochtend",   range(6, 9)),
+        ("09-16u midden",    range(9, 17)),
+        ("17-18u vooravond", range(17, 19)),
+        ("19-21u avondpiek", range(19, 22)),
+        ("22-23u laat",      range(22, 24)),
+    ]
+    for blok_naam, blok_uren in uurblokken:
+        blok_rs = [r for r in results if r["hour"] in blok_uren]
+        if not blok_rs:
+            continue
+        blok_errs = [r["actual"] - r["predicted"] for r in blok_rs]
+        blok_mae  = statistics.mean(abs(e) for e in blok_errs)
+        blok_bias = statistics.mean(blok_errs)
+        lines.append(f"| {blok_naam} | {len(blok_rs)} | {blok_mae:.2f} | {blok_bias:+.2f} |")
     lines.append("")
 
     lines.append("## Caveats")
@@ -1066,10 +1100,24 @@ def main() -> int:
                         help="Globale schaal op de schaarste-amplifier (default 1.5 = live). "
                              "Tuning-knop: 0.5 = halve correctie, 1.5 = sterker. Alleen "
                              "actief samen met --scarcity.")
+    parser.add_argument("--summer-scarcity", action="store_true",
+                        help="Zet het experimentele zomer-schaarste-regime + amplifier "
+                             "(v3.2, #71) aan: windstille hitte tijdens de avondramp "
+                             "(18-22u) wordt als schaars herkend en omhoog gecorrigeerd. "
+                             "Voor A/B: draai dezelfde periode met en zonder deze vlag en "
+                             "vergelijk 'Zomerschaarste' in het regime-overzicht plus de "
+                             "avonduren-MAE.")
+    parser.add_argument("--summer-scarcity-scale", type=float, default=1.0,
+                        help="Globale schaal op de zomerschaarste-amplifier (default 1.0). "
+                             "Alleen actief samen met --summer-scarcity.")
     parser.add_argument("--output-dir", type=str, default=None,
                         help="Schrijf rapport en JSON naar deze map (handig in CI). "
                              "Default: rapport naar 01-documenten/, JSON naar 03-data/.")
     args = parser.parse_args()
+
+    # v3.2: instellingen-echo in het rapport (herleidbaarheid van A/B-runs)
+    global RUN_SETTINGS
+    RUN_SETTINGS = " ".join(sys.argv[1:]) or "(defaults)"
 
     horizons = [int(x) for x in args.horizons.split(",") if x.strip()]
     test_days = args.days
@@ -1149,6 +1197,17 @@ def main() -> int:
         print(f"[info] Schaarste-amplifier AAN (scale={args.scarcity_scale}). "
               f"A/B: vergelijk de bias bij 'Schaarste / Dunkelflaute' in het "
               f"regime-overzicht met de run zonder --scarcity.", file=sys.stderr)
+
+    # v3.2 (#71): zomer-schaarste-regime + amplifier. Zet zowel de regime-detectie
+    # als de factor aan; strikt gated, raakt het normaal-regime per definitie niet.
+    if getattr(args, "summer_scarcity", False):
+        import forecast as _fc_mod
+        _fc_mod.ENABLE_SUMMER_SCARCITY_REGIME = True
+        _fc_mod.ENABLED_FACTORS.add("zomerschaarste")
+        _fc_mod.SUMMER_SCARCITY_SCALE = args.summer_scarcity_scale
+        print(f"[info] Zomerschaarste-amplifier AAN (scale={args.summer_scarcity_scale}). "
+              f"A/B: vergelijk 'Zomerschaarste' in het regime-overzicht en de "
+              f"avonduren-MAE met de run zonder --summer-scarcity.", file=sys.stderr)
 
     now = amsterdam_now()
     # Periode: testperiode = laatste `test_days` dagen, eindigend gisteren.

@@ -87,6 +87,13 @@ SEASONAL_WINDOW = 10
 ENABLE_SCARCITY = True
 SCARCITY_SCALE = 1.5
 
+# Zomer-schaarste-regime + amplifier (v3.2, #71): windstille hitte-avondpieken
+# (juni 2026: 78-122 EUR/MWh te laag op 20-21u). Zelfde uitrolpad als v3.0/v3.1:
+# LIVE pas na archief-backtest A/B — tot die tijd staat deze flag UIT.
+# Kill-switch: terug op False.
+ENABLE_SUMMER_SCARCITY = False
+SUMMER_SCARCITY_SCALE = 1.0
+
 # ---------------------------------------------------------------------------
 # Paden
 # ---------------------------------------------------------------------------
@@ -562,6 +569,16 @@ def main() -> int:
         _forecast_mod.ENABLED_FACTORS.add("scarcity")
         _forecast_mod.SCARCITY_SCALE = SCARCITY_SCALE
         print(f"[info] Schaarste-amplifier AAN (scale={SCARCITY_SCALE}).", file=sys.stderr)
+
+    # v3.2 (#71): zomer-schaarste-regime + amplifier (default uit). Zet zowel de
+    # regime-detectie als de factor aan — alleen hier in main(), zodat importeren
+    # van run_forecast de globale forecast-state niet muteert.
+    if ENABLE_SUMMER_SCARCITY:
+        _forecast_mod.ENABLE_SUMMER_SCARCITY_REGIME = True
+        _forecast_mod.ENABLED_FACTORS.add("zomerschaarste")
+        _forecast_mod.SUMMER_SCARCITY_SCALE = SUMMER_SCARCITY_SCALE
+        print(f"[info] Zomerschaarste-amplifier AAN (scale={SUMMER_SCARCITY_SCALE}).",
+              file=sys.stderr)
 
     now_ams     = amsterdam_now()
     today_start = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
