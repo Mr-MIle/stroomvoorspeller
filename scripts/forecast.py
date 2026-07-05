@@ -694,19 +694,30 @@ def scarcity_correction(
 # ervoor en erna wegen minder mee. Gas-hefboom als bij winter: bij weinig wind en
 # geen zon zet gas de marginale avondprijs.
 #
-# Voorbeeld hittegolf-avond (wind 2 m/s, temp 27C, 20u, ttf 1.0, scale 1.0):
-#   wind = (3.0)^2 * 0.9 = 8.1;  heat = (4.0)^2 * 0.10 = 1.6
-#   severity = 9.7 * ramp 1.0 = 9.7 -> +10 punten -> +30% op de baseline
-# Extreem (wind 1, temp 30, 20u): 14.4 + 4.9 = 19.3 -> plafond +18 -> +54%.
+# Afstelling v2 (5 juli 2026, na Z0/Z1-backtest-diagnose op juni 2026):
+#   - TEMP_MIN 23 -> 20: de piekdagen 1 en 23 juni (gat +115 resp. +430 EUR/MWh
+#     op 20u) hadden daggemiddelden in de band 18-23 °C en triggerden NIET;
+#     de heat_term blijft bij 20-23 °C vrijwel nul, dus dit verruimt vooral
+#     de trigger — de kracht blijft uit de windterm komen.
+#   - K_WIND 0.9 -> 1.5: bij de wél getriggerde juni-uren was de gemiddelde
+#     correctie +11,4 EUR/MWh tegen een gemiddeld gat van +96,6 (0 van 120 uren
+#     bereikte het plafond). De windterm was te vlak voor wind 2,5-4 m/s.
+#   Z5-run (koele zomer 2025) bewaakt dat de ruimere trigger niet te los staat.
+#
+# Voorbeeld stevige hittegolf-avond (wind 3 m/s, temp 26C, 20u, ttf 1.0):
+#   wind = (2.0)^2 * 1.5 = 6.0;  heat = (6.0)^2 * 0.10 = 3.6
+#   severity = 9.6 * ramp 1.0 = 9.6 -> +10 punten -> +30% op de baseline
+# Randgeval (wind 3.5, temp 22, 20u): 3.4 + 0.4 = 3.8 -> +4 punten (mild, gewenst)
+# Extreem (wind 2, temp 27, 20u): 13.5 + 4.9 = 18.4 -> plafond +18 -> +54%.
 # Bewust conservatief: een 578-piek wordt zo niet geraakt, wel gesignaleerd —
 # het doel is het risico op tijd zien, niet de piek millimeter-precies voorspellen.
 ENABLE_SUMMER_SCARCITY_REGIME = False  # regime-flag (default UIT; zie detect_regime)
 SUMMER_SCARCITY_MONTHS   = (5, 6, 7, 8, 9)  # mei t/m september
 SUMMER_SCARCITY_HOURS    = (18, 22)  # avondramp (inclusief grenzen)
 SUMMER_SCARCITY_WIND_MAX = 5.0       # m/s — zelfde windstil-drempel als winter
-SUMMER_SCARCITY_TEMP_MIN = 23.0      # °C daggemiddelde — hittegolf-niveau De Bilt
+SUMMER_SCARCITY_TEMP_MIN = 20.0      # °C daggemiddelde (v2: was 23, zie boven)
 SUMMER_SCARCITY_SCALE    = 1.0       # globale schaal (backtest A/B-knop)
-SUMMER_K_WIND            = 0.9       # windstil: (WIND_MAX - wind)^2 * K
+SUMMER_K_WIND            = 1.5       # windstil: (WIND_MAX - wind)^2 * K (v2: was 0.9)
 SUMMER_K_HEAT            = 0.10      # heet:     (temp - TEMP_MIN)^2 * K
 SUMMER_K_GAS             = 1.0       # gas-hefboom: severity *= (1 + max(0, ttf-1) * K)
 SUMMER_RAMP_WEIGHT       = {18: 0.5, 19: 0.8, 20: 1.0, 21: 1.0, 22: 0.7}
@@ -1127,37 +1138,43 @@ if __name__ == "__main__":
         assert detect_regime(1.2, 2.0, 18.0, hitte_dt) == REGIME_NORMAL, "niet heet genoeg"
         assert detect_regime(1.2, 2.0, 27.0, datetime(2026, 2, 10, 20, 0)) != \
             REGIME_SCARCITY_SUMMER, "februari is geen zomermaand"
-        # Amplifier: gated, voorbeeldwaarde en plafond
-        z_uit = summer_scarcity_correction(2.0, 27.0, 1.0, REGIME_NORMAL, 20)
+        # Amplifier: gated, voorbeeldwaarde en plafond (afstelling v2: K_WIND 1.5, TEMP_MIN 20)
+        z_uit = summer_scarcity_correction(3.0, 26.0, 1.0, REGIME_NORMAL, 20)
         assert z_uit.points == 0, "buiten zomerschaarste-regime altijd 0"
-        z_voor = summer_scarcity_correction(2.0, 27.0, 1.0, REGIME_SCARCITY_SUMMER, 20)
+        z_voor = summer_scarcity_correction(3.0, 26.0, 1.0, REGIME_SCARCITY_SUMMER, 20)
         assert z_voor.points == 10, f"voorbeeld hittegolf-avond: +10 verwacht, kreeg {z_voor.points}"
-        z_cap = summer_scarcity_correction(0.0, 32.0, 1.3, REGIME_SCARCITY_SUMMER, 20)
+        z_cap = summer_scarcity_correction(2.0, 27.0, 1.0, REGIME_SCARCITY_SUMMER, 20)
         assert z_cap.points == SUMMER_SCARCITY_MAX_POINTS, \
-            f"verwachtte plafond {SUMMER_SCARCITY_MAX_POINTS}, kreeg {z_cap.points}"
+            f"extreem geval moet plafond {SUMMER_SCARCITY_MAX_POINTS} raken, kreeg {z_cap.points}"
+        # Randgeval blijft mild: wind 3.5, temp 22 -> +4
+        z_mild = summer_scarcity_correction(3.5, 22.0, 1.0, REGIME_SCARCITY_SUMMER, 20)
+        assert z_mild.points == 4, f"randgeval: +4 verwacht, kreeg {z_mild.points}"
         # Ramp-gewicht: 18u weegt half t.o.v. 20u
-        z_rand = summer_scarcity_correction(2.0, 27.0, 1.0, REGIME_SCARCITY_SUMMER, 18)
-        assert z_rand.points < z_voor.points, "18u (ramp 0.5) moet lager scoren dan 20u"
+        z_rand = summer_scarcity_correction(3.0, 26.0, 1.0, REGIME_SCARCITY_SUMMER, 18)
+        assert z_rand.points == 5, f"18u (ramp 0.5): +5 verwacht, kreeg {z_rand.points}"
+        # Gas-hefboom: ttf 1.2 tilt het voorbeeld naar +12
+        z_gas = summer_scarcity_correction(3.0, 26.0, 1.2, REGIME_SCARCITY_SUMMER, 20)
+        assert z_gas.points == 12, f"gas-hefboom: +12 verwacht, kreeg {z_gas.points}"
         # Schaal-knop lineair: scale 0 -> 0 punten
         _saved_zscale = SUMMER_SCARCITY_SCALE
         globals()["SUMMER_SCARCITY_SCALE"] = 0.0
-        assert summer_scarcity_correction(2.0, 27.0, 1.0, REGIME_SCARCITY_SUMMER, 20).points == 0
+        assert summer_scarcity_correction(3.0, 26.0, 1.0, REGIME_SCARCITY_SUMMER, 20).points == 0
         globals()["SUMMER_SCARCITY_SCALE"] = _saved_zscale
         # Integratie: telt alleen mee als 'zomerschaarste' in ENABLED_FACTORS staat
         hitte_hist = [
             {"time": datetime(2026, 6, d, 20, 0).isoformat(), "price": 110.0}
             for d in (16, 17, 18, 19, 22)
         ]
-        f_z_uit = forecast_one(hitte_dt, hitte_hist, shortwave_ratio=1.2, wind_ms=2.0,
-                               temp_c=27.0, ttf_ratio=1.0, days_ahead=2)
+        f_z_uit = forecast_one(hitte_dt, hitte_hist, shortwave_ratio=1.2, wind_ms=3.0,
+                               temp_c=26.0, ttf_ratio=1.0, days_ahead=2)
         assert f_z_uit is not None and f_z_uit.regime == REGIME_SCARCITY_SUMMER
         z_pts = next(x for x in f_z_uit.factors if x.name == "zomerschaarste").points
         assert z_pts == 10, "factor zichtbaar in uitleg, ook als uit"
         pts_zonder_z = f_z_uit.total_points
         ENABLED_FACTORS.add("zomerschaarste")
         try:
-            f_z_aan = forecast_one(hitte_dt, hitte_hist, shortwave_ratio=1.2, wind_ms=2.0,
-                                   temp_c=27.0, ttf_ratio=1.0, days_ahead=2)
+            f_z_aan = forecast_one(hitte_dt, hitte_hist, shortwave_ratio=1.2, wind_ms=3.0,
+                                   temp_c=26.0, ttf_ratio=1.0, days_ahead=2)
             assert f_z_aan is not None
             assert f_z_aan.total_points == pts_zonder_z + z_pts, \
                 f"met zomerschaarste AAN moet total +{z_pts}: {f_z_aan.total_points} vs {pts_zonder_z}"

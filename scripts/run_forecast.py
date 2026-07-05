@@ -67,7 +67,8 @@ except Exception:  # noqa: BLE001
 
 # Modelversie — komt mee in de output zodat de frontend hem kan tonen.
 # v2.1: EVENT_PLAUSIBILITY_LAYER toegevoegd als post-processing stap.
-MODEL_VERSION = "3.1"   # v3.1: schaarste-amplifier (factor 10) live; v3.0: seizoensfactor
+MODEL_VERSION = "3.2"   # v3.2: zomerschaarste-regime + amplifier (factor 11, #71) live;
+                        # v3.1: schaarste-amplifier (factor 10); v3.0: seizoensfactor
 
 # Seizoensfactor (v3.0): niveaucorrectie uit het prijsarchief van de voorgaande
 # jaren. Nj=2 gekozen na backtest winter+zomer 2024/25 (verslaat de naïeve baseline
@@ -88,10 +89,13 @@ ENABLE_SCARCITY = True
 SCARCITY_SCALE = 1.5
 
 # Zomer-schaarste-regime + amplifier (v3.2, #71): windstille hitte-avondpieken
-# (juni 2026: 78-122 EUR/MWh te laag op 20-21u). Zelfde uitrolpad als v3.0/v3.1:
-# LIVE pas na archief-backtest A/B — tot die tijd staat deze flag UIT.
+# (juni 2026: 78-122 EUR/MWh te laag op 20-21u). LIVE sinds 5 juli 2026 na
+# backtest Z0/Z1 (45d t/m 4 jul): mechanisme bevestigd — overall MAE op elke
+# horizon lager, trigger selectief (120/3923 uren, precies de rampzalige),
+# uurblokken buiten de trigger byte-identiek. Afstelling v2 (TEMP_MIN 20,
+# K_WIND 1.5) na diagnose dat v1 te zwak was en 1+23 juni miste.
 # Kill-switch: terug op False.
-ENABLE_SUMMER_SCARCITY = False
+ENABLE_SUMMER_SCARCITY = True
 SUMMER_SCARCITY_SCALE = 1.0
 
 # ---------------------------------------------------------------------------

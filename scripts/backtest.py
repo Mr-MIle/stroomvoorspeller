@@ -994,7 +994,8 @@ def write_report(
         blok_rs = [r for r in results if r["hour"] in blok_uren]
         if not blok_rs:
             continue
-        blok_errs = [r["actual"] - r["predicted"] for r in blok_rs]
+        # Zelfde tekenconventie als de rest van het rapport: negatief = model te laag.
+        blok_errs = [r["predicted"] - r["actual"] for r in blok_rs]
         blok_mae  = statistics.mean(abs(e) for e in blok_errs)
         blok_bias = statistics.mean(blok_errs)
         lines.append(f"| {blok_naam} | {len(blok_rs)} | {blok_mae:.2f} | {blok_bias:+.2f} |")
