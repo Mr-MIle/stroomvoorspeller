@@ -1,8 +1,9 @@
 name: Alert X-post bij extreme stroomprijzen
 
 # Wanneer:
-#   update-prices draait op 0,3,6,9,12,15,18,21 UTC.
-#   Wij draaien 45 minuten later zodat prices.json altijd vers is.
+#   8× per dag op :45 (0,3,6,9,12,15,18,21 UTC), zodat prices.json — bijgewerkt
+#   door check-prices.yml (elke 15 min via Pipedream) of update-prices.yml
+#   (dagelijks 14:01 CEST) — ruim binnen is voordat wij kijken.
 #   Manueel via 'Run workflow' in de GitHub UI voor testen.
 on:
   schedule:
@@ -30,8 +31,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: requirements-ci.txt
 
       - name: Installeer dependencies
+        # Wheels komen uit de gedeelde pip-cache (zie requirements-ci.txt).
         run: pip install tweepy
 
       - name: Check extreme prijzen + post alert indien nodig

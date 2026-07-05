@@ -42,11 +42,13 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: requirements-ci.txt
 
       - name: Installeer dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install tweepy pillow matplotlib
+        # Wheels komen uit de pip-cache (zie requirements-ci.txt) — scheelt
+        # ~30-60 s per run t.o.v. elke keer opnieuw downloaden.
+        run: pip install tweepy pillow matplotlib
 
       - name: Genereer + post X-bericht
         # Mag falen zonder dat dit alarm geeft — een hobbysite zonder cijfers vandaag
