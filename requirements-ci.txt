@@ -1,0 +1,8 @@
+# CI-dependencies voor de tweet-workflows (daily/weekly/alert/article).
+# Dit bestand dient als cache-sleutel voor actions/setup-python (cache: pip):
+# de runner hergebruikt de gedownloade wheels zolang dit bestand ongewijzigd is.
+# De prijzen-pipeline (check-prices/update-prices/update-forecast) gebruikt
+# uitsluitend stdlib en installeert niets.
+tweepy
+pillow
+matplotlib
