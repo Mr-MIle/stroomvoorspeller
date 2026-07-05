@@ -29,11 +29,16 @@ on:
         description: "Einddatum testperiode YYYY-MM-DD (leeg = gisteren). Voor historische winters/zomers."
         required: false
         default: ""
-      apply_bias:
-        description: "MOS bias-correctie toepassen (zoals live). Aan = eerlijke vergelijking met productie."
+      bias_mode:
+        description: "MOS: off / live (huidige bias_corrections.json, zoals productie) / rolling (v3.2 walk-forward, voor A/B)"
         required: false
-        default: true
-        type: boolean
+        default: "live"
+        type: choice
+        options: ["off", "live", "rolling"]
+      bias_opts:
+        description: "Extra rolling-MOS flags, bv: --bias-half-life 3 --bias-horizon-decay 0.9"
+        required: false
+        default: ""
       seasonal:
         description: "Experimentele seizoensfactor aanzetten (archief vorige jaren). Voor A/B-test."
         required: false
@@ -80,8 +85,11 @@ jobs:
           if [ -n "${{ github.event.inputs.end_date }}" ]; then
             EXTRA="$EXTRA --end-date ${{ github.event.inputs.end_date }}"
           fi
-          if [ "${{ github.event.inputs.apply_bias }}" = "true" ]; then
-            EXTRA="$EXTRA --apply-bias"
+          if [ -n "${{ github.event.inputs.bias_mode }}" ]; then
+            EXTRA="$EXTRA --bias-mode ${{ github.event.inputs.bias_mode }}"
+          fi
+          if [ -n "${{ github.event.inputs.bias_opts }}" ]; then
+            EXTRA="$EXTRA ${{ github.event.inputs.bias_opts }}"
           fi
           if [ "${{ github.event.inputs.seasonal }}" = "true" ]; then
             EXTRA="$EXTRA --seasonal --seasonal-years ${{ github.event.inputs.seasonal_years }} --seasonal-window ${{ github.event.inputs.seasonal_window }}"
