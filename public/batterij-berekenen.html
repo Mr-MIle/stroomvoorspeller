@@ -27,9 +27,17 @@
  {"@type":"WebApplication","name":"Welke thuisbatterij past bij jou? Bereken de opbrengst","url":"https://stroomvoorspeller.nl/batterij-berekenen","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"inLanguage":"nl-NL","isPartOf":{"@id":"https://stroomvoorspeller.nl/#website"}},
  {"@type":"BreadcrumbList","itemListElement":[
    {"@type":"ListItem","position":1,"name":"Home","item":"https://stroomvoorspeller.nl/"},
-   {"@type":"ListItem","position":2,"name":"Batterij berekenen","item":"https://stroomvoorspeller.nl/batterij-berekenen"}]}
+   {"@type":"ListItem","position":2,"name":"Batterij berekenen","item":"https://stroomvoorspeller.nl/batterij-berekenen"}]},
+ {"@type":"FAQPage","mainEntity":[
+   {"@type":"Question","name":"Heb ik een dynamisch energiecontract nodig?","acceptedAnswer":{"@type":"Answer","text":"Voor het meeste voordeel wel. Met een dynamisch contract betaal je elk uur de marktprijs, en juist die verschillen maken slim laden winstgevend. Heb je een vast contract, dan blijft alleen het opslaan van je eigen zonnestroom over; dat levert nu weinig op en wordt pas interessant zodra de saldering stopt."}},
+   {"@type":"Question","name":"Werkt een thuisbatterij ook zonder zonnepanelen?","acceptedAnswer":{"@type":"Answer","text":"Ja. De batterij koopt dan goedkope stroom in en gebruikt die tijdens de dure uren, of levert terug. De opbrengst is kleiner dan met panelen."}},
+   {"@type":"Question","name":"Hoe lang gaat een thuisbatterij mee?","acceptedAnswer":{"@type":"Answer","text":"Reken op zo'n 15 jaar of ongeveer 6.000 laadbeurten; fabrieksgarantie is meestal 10 jaar."}},
+   {"@type":"Question","name":"Wat verandert er als de saldering stopt?","acceptedAnswer":{"@type":"Answer","text":"Vanaf 2027 mag je opgewekte stroom niet meer wegstrepen tegen je verbruik. Terugleveren levert dan minder op en zelf gebruiken juist meer, precies waar een batterij bij helpt."}},
+   {"@type":"Question","name":"Hoe zeker zijn deze bedragen?","acceptedAnswer":{"@type":"Answer","text":"Het zijn schattingen op de echte uurprijzen van de afgelopen 12 maanden. Hoe de prijzen zich de komende jaren ontwikkelen, kan niemand voorspellen. Aan de uitkomsten kun je geen rechten ontlenen."}}
+ ]}
 ]}
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 <style>
 
 *{box-sizing:border-box}
@@ -72,8 +80,29 @@ table.bd tr.you td{background:#eef4fb;font-weight:600}
 .muted{color:var(--c-text-mute)}
 .chart-box{position:relative;height:300px;margin-top:8px}
 h3{font-size:.95rem;margin:22px 0 6px}
-.payback{font-size:.95rem;margin-top:10px;padding:12px 14px;background:#fff4d6;border:1px solid #efdca0;border-radius:var(--radius-sm)}
 .modus-note{font-size:.8rem;color:var(--c-text-mute);margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{border:1px solid var(--c-border);background:#fff;border-radius:999px;padding:7px 14px;font-family:inherit;font-size:.85rem;cursor:pointer;color:var(--c-text-soft)}
+.chips button.on{background:var(--c-brand);border-color:var(--c-brand);color:#fff;font-weight:600}
+.res-kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:480px){.res-kpis{grid-template-columns:1fr}}
+.res-kpi{background:var(--c-cheap-bg);border:1px solid #bfe3cb;border-radius:var(--radius-sm);padding:13px 14px}
+.res-kpi .lbl{font-size:.76rem;color:var(--c-text-mute);margin-bottom:3px}
+.res-kpi .val{font-size:1.55rem;font-weight:700;color:#1c7a37;line-height:1.1}
+.res-kpi .sub{font-size:.76rem;color:var(--c-text-soft);margin-top:3px}
+.chart-box-sm{height:220px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
+@media(max-width:680px){.steps{grid-template-columns:1fr}}
+.step{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);padding:16px}
+.step .nr{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--c-brand);color:#fff;font-weight:700;font-size:.85rem;margin-bottom:8px}
+.step h3{margin:0 0 6px;font-size:.95rem}
+.step p{margin:0;font-size:.85rem;color:var(--c-text-soft)}
+.explain{margin-top:44px}
+.explain h2{font-size:1.25rem;margin:34px 0 10px}
+.explain p{max-width:70ch;font-size:.95rem;line-height:1.55}
+.faq details{border:1px solid var(--c-border);border-radius:var(--radius-sm);background:var(--c-surface);padding:0 16px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-weight:600;font-size:.95rem;padding:13px 0}
+.faq details p{margin:0 0 14px;font-size:.9rem;color:var(--c-text-soft);line-height:1.5}
 .foot{font-size:.78rem;color:var(--c-text-mute);margin-top:26px;border-top:1px solid var(--c-border);padding-top:14px}
 .disclaimer{background:#fff4d6;border:1px solid #efdca0;border-left:4px solid #e0a800;border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:18px;font-size:.9rem;line-height:1.5;color:var(--c-text)}
 .disclaimer b{color:#8a6d00}
@@ -155,11 +184,17 @@ h3{font-size:.95rem;margin:22px 0 6px}
       <div id="verfijnBox" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--c-border)">
         <div class="field">
           <label>Batterij <span class="hint">hoeveel stroom hij opslaat, in kWh</span></label>
-          <div class="row2">
-            <input type="number" id="batkwh" min="0" max="100" step="0.5" value="10" /> 
-            <select id="batpreset"><option value="">kWh</option></select>
+          <div class="chips" id="capChips">
+            <button type="button" data-c="5">5 kWh</button>
+            <button type="button" data-c="10" class="on">10 kWh</button>
+            <button type="button" data-c="15">15 kWh</button>
+            <button type="button" data-c="20">20 kWh</button>
+            <button type="button" data-c="other">Anders</button>
           </div>
-          <button type="button" class="adv-toggle" id="advBtn">+ laadsnelheid instellen</button>
+          <div id="capOther" style="display:none;margin-top:8px">
+            <input type="number" id="batkwh" min="0" max="100" step="0.5" value="10" />
+          </div>
+          <button type="button" class="adv-toggle" id="advBtn" style="margin-top:8px">+ laadsnelheid instellen</button>
           <div class="adv" id="advBox">
             <label style="font-weight:600;font-size:.82rem">Laadsnelheid (kW)
               <span class="hint">leeg laten = automatisch</span></label>
@@ -197,7 +232,18 @@ h3{font-size:.95rem;margin:22px 0 6px}
       <div class="disclaimer" role="note">
         <b>Let op: dit is een schatting, geen garantie.</b> De bedragen hieronder zijn een berekening op basis van gemiddelde aannames over zon, verbruik en prijzen &#8211; geen voorspelling en geen meterstand. Je werkelijke opbrengst hangt af van je eigen verbruik, het weer, je batterij en toekomstige prijzen, en kan daardoor afwijken. Aan deze uitkomsten kun je geen rechten ontlenen.
       </div>
-      <div class="card" id="advCard">
+      <div class="card" id="resultCard">
+        <h2>Jouw resultaat</h2>
+        <div class="res-kpis">
+          <div class="res-kpi"><div class="lbl">Batterij bespaart per jaar</div><div class="val" id="rJaar"></div><div class="sub">bovenop je zonnepanelen, gemiddeld over de laatste 12 maanden</div></div>
+          <div class="res-kpi"><div class="lbl">Terugverdientijd</div><div class="val" id="rPayback"></div><div class="sub" id="rPaybackSub"></div></div>
+        </div>
+        <div id="cumWrap">
+          <div class="chart-box chart-box-sm"><canvas id="cumChart"></canvas></div>
+        </div>
+        <p class="muted" id="cumNote" style="font-size:.8rem;margin:8px 0 0"></p>
+      </div>
+      <div class="card" id="advCard" style="margin-top:22px">
         <h2>Welke batterij past bij jou?</h2>
         <div class="headline" id="advRec"></div>
         <table class="bd">
@@ -228,8 +274,6 @@ h3{font-size:.95rem;margin:22px 0 6px}
           <thead><tr><th>Onderdeel</th><th class="num">kWh</th><th class="num">Euro</th></tr></thead>
           <tbody id="bdBody"></tbody>
         </table>
-
-        <div class="payback" id="payback" style="display:none"></div>
       </div>
 
       <div class="card" style="margin-top:22px">
@@ -240,7 +284,33 @@ h3{font-size:.95rem;margin:22px 0 6px}
     </div>
   </div>
 
-  <p class="foot">Hoe we rekenen: ongeveer 350 kWh zonnestroom per paneel per jaar, op het zuiden. Voor je verbruik gebruiken we een gemiddeld dagpatroon. De batterij verliest een beetje stroom bij laden en ontladen (ruwweg 1 op de 10 kWh) en je kunt hem niet helemaal vol of leeg gebruiken. Voor stroom die je inkoopt betaal je de marktprijs plus belasting; voor stroom die je teruglevert krijg je de kale marktprijs zonder belasting, minus de terugleverkosten van je leverancier (per aanbieder verschillend &#8211; sommige rekenen niets, een enkele geeft juist een vergoeding). Heb je een warmtepomp aangezet, dan stuwt dat je verbruik in oktober&#8211;maart op, precies wanneer je zonnepanelen weinig leveren; de batterij levert in die periode dan ook minder op. De batterij stuurt op de prijzen die een dag van tevoren bekend zijn. De bedragen zijn een onderbouwde schatting, geen meterstand. Let op: we rekenen zonder de salderingsregeling (die per 2027 stopt); zolang saldering nog geldt, levert teruglevering iets meer op. De werkelijke opbrengst kan afwijken en aan deze uitkomsten kun je geen rechten ontlenen.</p>
+  <section class="explain">
+    <h2>Zo verdient een thuisbatterij zich terug</h2>
+    <div class="steps">
+      <div class="step"><span class="nr">1</span><h3>Laden als stroom goedkoop is</h3><p>&#8217;s Nachts en rond de middag is stroom vaak goedkoop, soms zelfs gratis. Heb je zonnepanelen, dan vult de batterij zich overdag met je eigen stroom.</p></div>
+      <div class="step"><span class="nr">2</span><h3>Gebruiken in de dure uren</h3><p>Tussen 17:00 en 21:00 is stroom het duurst. De batterij levert dan jouw opgeslagen stroom aan je huis, of verkoopt het overschot terug aan het net.</p></div>
+      <div class="step"><span class="nr">3</span><h3>De besturing regelt het zelf</h3><p>De uurprijzen voor morgen zijn elke middag rond 13:00 bekend. De batterij plant daarmee zijn dag: wanneer laden, wanneer leveren. Jij hoeft er niets voor te doen.</p></div>
+    </div>
+
+    <h2>Wat kost een thuisbatterij?</h2>
+    <p>In 2026 betaal je inclusief installatie ongeveer &#8364;4.000 voor 5 kWh, &#8364;6.000 voor 10 kWh, &#8364;8.000 voor 15 kWh en &#8364;11.000 voor 20 kWh. Heb je zonnepanelen, dan geldt bij veel installateurs 0% btw. Per kWh opslag wordt een grotere batterij dus goedkoper, maar elke extra kWh levert ook minder op &#8211; de tabel bij jouw resultaat laat per maat zien waar dat omslaat.</p>
+
+    <h2>Waar hangt de terugverdientijd van af?</h2>
+    <p>Vier dingen. Het prijsverschil tussen goedkope en dure uren: hoe groter, hoe meer de batterij verdient. Je leverancier: Zonneplan geeft 2 cent vergoeding per teruggeleverde kWh, Pure Energie rekent 3,7 cent kosten &#8211; bij 2.000 kWh teruglevering per jaar scheelt dat ruim &#8364;100. Je eigen situatie: veel panelen en een hoog verbruik geven de batterij meer te doen. En de aanschafprijs zelf: wie scherp inkoopt, is jaren eerder klaar.</p>
+
+    <h2>Hoe we rekenen</h2>
+    <p>Per paneel rekenen we met ongeveer 350 kWh zonnestroom per jaar, gericht op het zuiden. Je verbruik volgt een gemiddeld dagpatroon; zet je een warmtepomp aan, dan komt dat verbruik er winterzwaar bovenop, precies wanneer je panelen weinig leveren. De batterij verliest wat stroom bij laden en ontladen (ruwweg 1 op de 10 kWh) en gebruikt 90% van zijn opgegeven capaciteit.</p>
+    <p>Voor stroom die je inkoopt betaal je de marktprijs plus belasting; voor teruglevering krijg je de kale marktprijs, minus de terugleverkosten van je leverancier. De batterij stuurt op de prijzen die een dag van tevoren bekend zijn. We rekenen zonder salderingsregeling; zolang die nog geldt (tot 2027) levert terugleveren iets meer op. De werkelijke opbrengst kan afwijken en aan deze uitkomsten kun je geen rechten ontlenen.</p>
+
+    <h2>Veelgestelde vragen over thuisbatterijen</h2>
+    <div class="faq">
+      <details><summary>Heb ik een dynamisch energiecontract nodig?</summary><p>Voor het meeste voordeel wel. Met een dynamisch contract betaal je elk uur de marktprijs, en juist die verschillen maken slim laden winstgevend. Heb je een vast contract, dan blijft alleen het opslaan van je eigen zonnestroom over; dat levert nu weinig op en wordt pas interessant zodra de saldering stopt.</p></details>
+      <details><summary>Werkt een thuisbatterij ook zonder zonnepanelen?</summary><p>Ja. De batterij koopt dan goedkope stroom in en gebruikt die tijdens de dure uren, of levert terug. De opbrengst is kleiner dan met panelen. Vul hierboven 0 panelen in en je ziet direct wat het in jouw situatie oplevert.</p></details>
+      <details><summary>Hoe lang gaat een thuisbatterij mee?</summary><p>Reken op zo&#8217;n 15 jaar of ongeveer 6.000 laadbeurten; fabrieksgarantie is meestal 10 jaar. In de grafiek bij jouw resultaat rekenen we daarom over 15 jaar, met elk jaar 2% minder opbrengst door slijtage.</p></details>
+      <details><summary>Wat verandert er als de saldering stopt?</summary><p>Vanaf 2027 mag je opgewekte stroom niet meer wegstrepen tegen je verbruik. Terugleveren levert dan minder op en zelf gebruiken juist meer &#8211; precies waar een batterij bij helpt. Deze tool rekent nu al zonder saldering, dus de uitkomsten blijven ook na 2027 bruikbaar.</p></details>
+      <details><summary>Hoe zeker zijn deze bedragen?</summary><p>Het zijn schattingen op de echte uurprijzen van de afgelopen 12 maanden. Hoe de prijzen zich de komende jaren ontwikkelen, kan niemand voorspellen; wij ook niet. Zie de uitkomst als een onderbouwd startpunt en ontleen er geen rechten aan.</p></details>
+    </div>
+  </section>
 </div>
   </main>
 
@@ -543,6 +613,7 @@ async function render(){
   await ensureMonths(MONTHS);
   refreshDataNote();
   updateTlvNote();
+  renderResult(p);
   renderAdvisor(p);
   const isPartial=(p.y===NOW.y&&p.m===NOW.m);
   const simDays= isPartial? Math.max(1, Math.min(TODAY_DAY-1, daysInMonth(p.y,p.m))) : daysInMonth(p.y,p.m);
@@ -577,17 +648,6 @@ async function render(){
   ];
   $('bdBody').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]==null?'&#8211;':kwh(r[1])}</td><td class="num">${eur2(r[2])}</td></tr>`).join('')
     +`<tr class="tot"><td>Totale besparing</td><td class="num"></td><td class="num">${eur2(saving)}</td></tr>`;
-  // payback (jaarbasis)
-  const prijs=parseFloat(v('prijs'));
-  if(prijs>0){
-    const curKwh=Math.max(0,+v('batkwh'));
-    const batYear=yearSaving(p,curKwh)-yearSaving(p,0);
-    const years=batYear>0? prijs/batYear : Infinity;
-    $('payback').style.display='block';
-    $('payback').innerHTML= batYear>0
-      ? `Deze batterij (${curKwh} kWh) bespaart op jaarbasis ongeveer <b>${eur(batYear)}</b> bovenop je zonnepanelen. Terugverdientijd bij ${eur(prijs)}: <b>${years.toFixed(1).replace('.',',')} jaar</b>.`
-      : 'Met deze instellingen levert de batterij op jaarbasis niets extra op, dus is er geen terugverdientijd.';
-  } else { $('payback').style.display='none'; }
   drawChart(p);
 }
 
@@ -623,22 +683,72 @@ function batPrice(s){
   return 8000+600*(s-15);
 }
 const BAT_LIFESPAN=15;           // jaar; stap loont als hij zich binnen de levensduur terugverdient
+const DEGRADE=0.98;              // 2% minder opbrengst per jaar door slijtage (alleen resultaatpaneel)
 function yearSaving(p, capKwh){
   const cap=capKwh*0.9; let pwr=capKwh*0.5; if(pwr<=0) pwr=0.01;
   let tot=0;
   for(const o of MONTHS){ const ap=Object.assign({},p,{y:o.y,m:o.m,cap,pwr}); const a=simulateMonth(o.y,o.m,ap); tot+=(a.costWithout-a.costWith); }
   return tot;
 }
+// memo: dezelfde jaarberekening wordt door resultaatpaneel én adviestabel gebruikt
+const ysCache={};
+function yearSavingM(p, capKwh){
+  const key=[p.panels,p.base,p.hp,p.markup,p.tlv,p.mode,capKwh].join('|');
+  if(!(key in ysCache)) ysCache[key]=yearSaving(p,capKwh);
+  return ysCache[key];
+}
+
+// ---------- resultaatpaneel ----------
+let cumChart=null;
+function renderResult(p){
+  const curKwh=Math.max(0,+v('batkwh'));
+  const batYear= curKwh>0? yearSavingM(p,curKwh)-yearSavingM(p,0) : 0;
+  const userPr=parseFloat(v('prijs'));
+  const price= userPr>0? userPr : batPrice(curKwh);
+  // opgeteld bespaard per jaar, met slijtage
+  const cum=[]; let tot=0;
+  for(let k=0;k<BAT_LIFESPAN;k++){ tot+=batYear*Math.pow(DEGRADE,k); cum.push(tot); }
+  // terugverdientijd = waar de opgetelde besparing de aanschafprijs kruist
+  let pb=Infinity;
+  if(batYear>0&&price>0){
+    for(let k=0;k<BAT_LIFESPAN;k++){ if(cum[k]>=price){ const prev=k>0?cum[k-1]:0; pb=k+(price-prev)/(cum[k]-prev); break; } }
+  }
+  $('rJaar').textContent= eur(Math.max(0,batYear));
+  $('rPayback').textContent= batYear<=0? '–' : (isFinite(pb)? pb.toFixed(1).replace('.',',')+' jaar' : '> '+BAT_LIFESPAN+' jaar');
+  $('rPaybackSub').innerHTML= userPr>0
+    ? 'bij jouw prijs van '+eur(price)
+    : 'bij een richtprijs van '+eur(price)+' incl. installatie &#8211; vul je eigen prijs in voor een precieze uitkomst';
+  if(batYear<=0){
+    $('cumWrap').style.display='none';
+    $('cumNote').textContent='Met deze instellingen levert de batterij niets extra op bovenop je zonnepanelen.';
+    if(cumChart){cumChart.destroy();cumChart=null;}
+    return;
+  }
+  $('cumWrap').style.display='block';
+  $('cumNote').innerHTML='Opgeteld bespaard door de batterij, jaar na jaar, met elk jaar 2% minder opbrengst door slijtage. De gestreepte lijn is de aanschafprijs: waar de balken erboven uitkomen, heb je de batterij terugverdiend.';
+  const labels=[...Array(BAT_LIFESPAN).keys()].map(k=>'jr '+(k+1));
+  const colors=cum.map(c=> c>=price? '#1c7a37':'#9fd3ae');
+  const cfg={type:'bar',data:{labels,datasets:[
+    {type:'line',label:'Aanschafprijs',data:Array(BAT_LIFESPAN).fill(Math.round(price)),borderColor:'#c9a227',borderDash:[6,4],pointRadius:0,borderWidth:2},
+    {label:'Bespaard (opgeteld)',data:cum.map(x=>Math.round(x)),backgroundColor:colors},
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{boxWidth:12,font:{size:11}}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+eur(c.parsed.y)}}},
+    scales:{y:{beginAtZero:true,ticks:{callback:x=>'€'+x.toLocaleString('nl-NL')}},
+      x:{ticks:{font:{size:10}}}}}};
+  if(cumChart)cumChart.destroy();
+  cumChart=new Chart($('cumChart'),cfg);
+}
 function renderAdvisor(p){
-  const base0=yearSaving(p,0);
+  const base0=yearSavingM(p,0);
   const pr=parseFloat(v('prijs')), userKwh=Math.max(0,+v('batkwh'));
   const hasPrice=(pr>0 && userKwh>0);
-  let rows=ADV_SIZES.map(s=>({s,batSave:yearSaving(p,s)-base0,price:batPrice(s),std:true}));
+  let rows=ADV_SIZES.map(s=>({s,batSave:yearSavingM(p,s)-base0,price:batPrice(s),std:true}));
   let userRow=null;
   if(hasPrice){
     const ex=rows.find(r=>Math.abs(r.s-userKwh)<0.01);
     if(ex){ ex.price=pr; ex.isUser=true; userRow=ex; }
-    else { userRow={s:userKwh,batSave:yearSaving(p,userKwh)-base0,price:pr,isUser:true}; rows.push(userRow); rows.sort((a,b)=>a.s-b.s); }
+    else { userRow={s:userKwh,batSave:yearSavingM(p,userKwh)-base0,price:pr,isUser:true}; rows.push(userRow); rows.sort((a,b)=>a.s-b.s); }
   }
   rows.forEach(r=> r.payback = r.batSave>0? r.price/r.batSave : Infinity);
   const std=rows.filter(r=>r.std);
@@ -672,8 +782,12 @@ function renderAdvisor(p){
 function init(){
   buildMonths();
   $('aanbieder').innerHTML=SUPPLIERS.map(s=>`<option value="${s.id}" ${s.id==='average'?'selected':''}>${s.name}</option>`).join('');
-  $('batpreset').innerHTML='<option value="">snel</option>'+[5,10,15,20,25].map(x=>`<option value="${x}">${x} kWh</option>`).join('');
-  $('batpreset').onchange=e=>{ if(e.target.value){$('batkwh').value=e.target.value; e.target.value=''; render();} };
+  document.querySelectorAll('#capChips button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#capChips button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    if(b.dataset.c==='other'){ $('capOther').style.display='block'; $('batkwh').focus(); }
+    else { $('capOther').style.display='none'; $('batkwh').value=b.dataset.c; render(); }
+  });
   $('advBtn').onclick=()=>{ $('advBox').classList.toggle('show'); };
   $('modusNote').innerHTML=MODUS_TXT['balanced'];
   document.querySelectorAll('#modus button').forEach(b=>b.onclick=()=>{
