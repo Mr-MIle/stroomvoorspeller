@@ -958,7 +958,7 @@
     },
     afterDatasetsDraw(chart, _args, opts) {
       const { ctx, chartArea } = chart;
-      const { timeline, holidays } = opts;
+      const { timeline, holidays, hideWeekdayLabel } = opts;
       if (!timeline || timeline.length < 2 || !chartArea) return;
       const step = (chartArea.right - chartArea.left) / timeline.length;
       const dayMap = svBuildDayMap(timeline);
@@ -977,6 +977,9 @@
         if (isNL && isCB) { text = "NL + EU feestdag"; color = "rgba(110, 70, 0, 0.90)"; minW = 92; }
         else if (isNL)    { text = "NL feestdag";      color = "rgba(110, 70, 0, 0.88)"; minW = 64; }
         else if (isCB)    { text = "EU-feestdag";      color = "rgba(140, 70, 0, 0.90)"; minW = 60; }
+        else if (hideWeekdayLabel) {
+          return; // weekdag staat al als kolomkop boven de grafiek
+        }
         else {
           const wd = dObj.toLocaleDateString("nl-NL", { weekday: "short" }).replace(".", "");
           text = `${wd} ${dObj.getDate()}`;
@@ -1188,7 +1191,7 @@
   // Tekent één prijs-grafiek (dag óf voorspelling) op het opgegeven canvas en geeft
   // de Chart-instance terug. De aanroeper levert de timeline + opties; legenda en
   // context-zin worden door de aanroeper toegevoegd.
-  function buildPriceChart(canvas, { timeline, isQuarter, chartNowIdx, boundaries, holidays, priceZones }) {
+  function buildPriceChart(canvas, { timeline, isQuarter, chartNowIdx, boundaries, holidays, priceZones, yMin, yMax, hideWeekdayLabel }) {
     const n = timeline.length;
     const labels = timeline.map((t) => fmtChartLabel(t.time, isQuarter));
 
@@ -1220,7 +1223,7 @@
     // want de dag staat nu bovenin als label. 12u op breed scherm, 24u op smal.
     // De weekdag/datum komt uit dayBandPlugin; de uur-as blijft daardoor rustig.
     const narrow = typeof window !== "undefined" && window.innerWidth < 640;
-    const hStep = narrow ? 24 : 12;
+    const hStep = narrow ? 12 : 6;
     const xTickCallback = isQuarter
       ? function (value, index) {
           const iso = timeline[index] && timeline[index].time;
@@ -1295,13 +1298,15 @@
             grid: { display: false, drawTicks: false },
           },
           y: {
+            min: yMin,
+            max: yMax,
             ticks: { color: "#7c8a99", font: { size: 11 }, callback: (v) => v + " ct" },
             grid: { color: "rgba(0,0,0,0.06)" },
           },
         },
         plugins: {
           svPriceZone: { zones: priceZones },
-          svDayBand: { timeline, holidays },
+          svDayBand: { timeline, holidays, hideWeekdayLabel },
           svBoundary: { boundaries, n },
           legend: { display: false },
           tooltip: {
@@ -1372,11 +1377,14 @@
     return chart;
   }
 
-  // ---- Dag-grafiek: alleen vandaag & morgen ----
+  // ---- Dag-grafieken: vandaag en morgen als twee losse grafieken naast elkaar ----
   function renderChart() {
-    const canvas = document.getElementById("dayChart");
-    if (!canvas || typeof Chart === "undefined") return;
-    if (state.chart) { state.chart.destroy(); state.chart = null; }
+    const canvasToday    = document.getElementById("dayChartToday");
+    const canvasTomorrow = document.getElementById("dayChartTomorrow");
+    const splitEl        = document.getElementById("day-charts-split");
+    if (!canvasToday || !canvasTomorrow || typeof Chart === "undefined") return;
+    if (state.chartToday)    { state.chartToday.destroy();    state.chartToday = null; }
+    if (state.chartTomorrow) { state.chartTomorrow.destroy(); state.chartTomorrow = null; }
 
     const holidays   = buildHolidayLookup();
     const priceZones = buildPriceZones();
@@ -1388,45 +1396,70 @@
       : state.dayPrices.map((p) => ({ kind: "actual", time: p.time, price: p.price }));
     const chartNowIdx = isQuarter ? state.nowIdx15m : state.nowIdx;
 
-    // Is morgen nog niet bekend? Dan de voorspelling voor morgen erachter tonen,
-    // zodat de bezoeker toch een beeld van morgen heeft (duidelijk als schatting).
-    // De kwartier-modus kent geen prognose, dus alleen in uur-modus.
+    // Is morgen nog niet bekend? Dan de voorspelling voor morgen tonen (alleen uur-modus).
     const tomorrowForecast = state.tomorrowForecast || [];
     if (!isQuarter && tomorrowForecast.length) {
       tomorrowForecast.forEach((f) => timeline.push({ kind: "forecast", time: f.time, forecast: f }));
     }
 
-    // Grens tussen vandaag en morgen markeren. Is morgen een voorspelling, dan met
-    // tint + label "Morgen · voorspelling"; anders de normale "Morgen"-scheidslijn.
-    const tomorrowStr = (() => {
-      const d = new Date();
-      d.setDate(d.getDate() + 1);
-      return d.toISOString().slice(0, 10);
-    })();
-    const tomorrowIdx = timeline.findIndex((pt) => pt.time.slice(0, 10) === tomorrowStr);
-    let boundaries = [];
-    if (tomorrowIdx >= 0) {
-      const isForecastBoundary = timeline[tomorrowIdx].kind === "forecast";
-      boundaries = [{
-        index: tomorrowIdx,
-        label: isForecastBoundary ? "Morgen · voorspelling" : "Morgen",
-        labelSide: "right",
-        tint: isForecastBoundary,
-      }];
+    // Splitsen op datum: het eerste dag-blok is vandaag, de rest is morgen.
+    const firstDate  = timeline.length ? timeline[0].time.slice(0, 10) : null;
+    const todayTL    = timeline.filter((t) => t.time.slice(0, 10) === firstDate);
+    const tomorrowTL = timeline.filter((t) => t.time.slice(0, 10) !== firstDate);
+    const tomorrowIsForecast = tomorrowTL.length > 0 && tomorrowTL.every((t) => t.kind === "forecast");
+
+    // Gedeelde y-schaal, zodat de twee grafieken eerlijk te vergelijken zijn.
+    const yVals = [];
+    timeline.forEach((t) => {
+      if (t.kind === "actual") yVals.push(priceCents(t.price));
+      else if (t.forecast) yVals.push(priceCents(t.forecast.lower), priceCents(t.forecast.upper));
+    });
+    let yMin, yMax;
+    if (yVals.length) {
+      const lo = Math.min(...yVals), hi = Math.max(...yVals);
+      const pad = Math.max(2, (hi - lo) * 0.08);
+      yMin = Math.floor(lo - pad);
+      yMax = Math.ceil(hi + pad);
     }
 
-    const dayHasForecast = timeline.some((t) => t.kind === "forecast");
+    // Kolomkoppen met de datum.
+    const titleFmt = (d) => d.toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short" }).replace(/\./g, "");
+    const todayD = new Date(); todayD.setHours(0, 0, 0, 0);
+    const tomorrowD = new Date(todayD); tomorrowD.setDate(tomorrowD.getDate() + 1);
+    const tEl = document.getElementById("day-title-today");
+    const mEl = document.getElementById("day-title-tomorrow");
+    if (tEl) tEl.textContent = `Vandaag · ${titleFmt(todayD)}`;
+    if (mEl) mEl.textContent = tomorrowTL.length
+      ? `Morgen · ${titleFmt(tomorrowD)}${tomorrowIsForecast ? " · voorspelling" : ""}`
+      : "Morgen";
 
-    state.chart = buildPriceChart(canvas, { timeline, isQuarter, chartNowIdx, boundaries, holidays, priceZones });
+    // Vandaag: met 'nu'-stip.
+    state.chartToday = buildPriceChart(canvasToday, {
+      timeline: todayTL, isQuarter, chartNowIdx, boundaries: [], holidays, priceZones,
+      yMin, yMax, hideWeekdayLabel: true,
+    });
 
-    // ── Legenda onder de grafiek ───────────────────────────────────────────────
+    // Morgen: geen 'nu'-stip. Bij nog niet gepubliceerde prijzen tonen we de voorspelling
+    // (gestippelde lijn) — de kolomkop meldt dat al. Is er niets, verberg de kolom.
+    const tomorrowCol = canvasTomorrow.closest(".day-chart-col");
+    if (tomorrowTL.length) {
+      if (tomorrowCol) tomorrowCol.style.display = "";
+      state.chartTomorrow = buildPriceChart(canvasTomorrow, {
+        timeline: tomorrowTL, isQuarter, chartNowIdx: -1, boundaries: [], holidays, priceZones,
+        yMin, yMax, hideWeekdayLabel: true,
+      });
+    } else if (tomorrowCol) {
+      tomorrowCol.style.display = "none";
+    }
+
+    // ── Gedeelde legenda onder beide grafieken ─────────────────────────────────
     const _existingLegend = document.getElementById("chart-regime-legend");
     if (_existingLegend) _existingLegend.remove();
-    {
+    if (splitEl) {
       const wrap = document.createElement("div");
       wrap.id = "chart-regime-legend";
       wrap.setAttribute("aria-hidden", "true");
-      wrap.style.cssText = "margin:6px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;line-height:1.8;";
+      wrap.style.cssText = "margin:10px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;line-height:1.8;";
       const dot = (color, label) =>
         `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
         `<span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></span>` +
@@ -1438,16 +1471,15 @@
         dot("#c92a2a", "Duur") +
         dot("#0f6cbd", "Nu") +
         (isQuarter
-          ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Kwartierlijkse day-ahead prijzen voor vandaag en morgen.</span>`
-          : `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag.</span>`
+          ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Kwartierlijkse day-ahead prijzen. Beide grafieken delen dezelfde schaal.</span>`
+          : `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag. Beide grafieken delen dezelfde schaal.</span>`
         ) +
-        (dayHasForecast
-          ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">De <strong>gestippelde lijn</strong> rechts is de voorspelling voor morgen — de day-ahead prijzen voor morgen zijn nog niet gepubliceerd.</span>`
+        (tomorrowIsForecast
+          ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">De <strong>gestippelde lijn</strong> bij morgen is de voorspelling — de day-ahead prijzen voor morgen zijn nog niet gepubliceerd.</span>`
           : ``);
-      (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", wrap);
+      splitEl.insertAdjacentElement("afterend", wrap);
 
-      // Context-zin (#63, optie 2): hoe liggen vandaag+morgen t.o.v. het 30-daags
-      // gemiddelde? Vervangt de oude referentielijn — concreter en zonder grafiek-ruis.
+      // Context-zin (#63, optie 2): hoe liggen vandaag+morgen t.o.v. het 30-daags gemiddelde?
       const _existingCtx = document.getElementById("chart-ref-context");
       if (_existingCtx) _existingCtx.remove();
       const avgSup = (state.config.suppliers || []).find((s) => s.id === "average");

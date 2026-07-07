@@ -229,7 +229,6 @@
       <div class="container">
         <h1 class="hero-heading">Actuele en voorspelde stroomprijzen voor Nederland</h1>
         <p class="hero-tagline">De Buienradar voor stroomprijzen.</p>
-        <p class="hero-sub">Bekijk wanneer je het voordeligst je EV laadt, wasmachine draait of apparaten aanzet.</p>
         <div class="mode-toggle" role="group" aria-label="Prijsweergave kiezen">
           <span class="mode-toggle-label">Toon prijzen</span>
           <div class="mode-toggle-buttons">
@@ -305,10 +304,20 @@
           <p id="res-toggle-note" class="res-toggle-note" hidden></p>
         </div>
       </div>
-      <div class="chart-wrapper">
-        <canvas id="dayChart" aria-label="Lijngrafiek met stroomprijzen per uur voor vandaag en morgen"></canvas>
+      <div class="day-charts-split" id="day-charts-split">
+        <div class="day-chart-col">
+          <h3 class="day-chart-title" id="day-title-today">Vandaag</h3>
+          <div class="chart-wrapper day-chart-wrapper">
+            <canvas id="dayChartToday" aria-label="Lijngrafiek met stroomprijzen per uur voor vandaag"></canvas>
+          </div>
+        </div>
+        <div class="day-chart-col">
+          <h3 class="day-chart-title" id="day-title-tomorrow">Morgen</h3>
+          <div class="chart-wrapper day-chart-wrapper">
+            <canvas id="dayChartTomorrow" aria-label="Lijngrafiek met stroomprijzen per uur voor morgen"></canvas>
+          </div>
+        </div>
       </div>
-<p class="chart-note">De schakelaar bovenaan wisselt tussen <strong>incl. belasting</strong> (energiebelasting + 21% btw erbij — wat je feitelijk betaalt) en <strong>excl. belasting</strong> (kale marktprijs + leveranciersopslag). De tooltip toont alle drie varianten per uur.</p>
     </section>
 
     <!-- Quick-summary: goedkoopste/duurste/gemiddelde vandaag — na grafiek zodat grafiek direct zichtbaar is op mobiel (#56) -->
@@ -400,24 +409,16 @@
       </div>
       <div class="explain-grid">
         <article>
-          <h3>3-fase: max ~17 kW tegelijk</h3>
-          <p>Een standaard 3-fase aansluiting (3×25A) levert maximaal 17,25 kW. Draai je wasmachine, droger, oven én auto tegelijk op een goedkoop uur? Dan riskeer je een zekeringuitval. Verdeel zware apparaten over verschillende uren.</p>
-        </article>
-        <article>
-          <h3>1-fase: max ~5,75 kW</h3>
-          <p>Heb je een 1-fase aansluiting met een 25 ámpere zekering? Dan is je plafond slechts 5,75 kW. Bij een 35 ámpere zekering is dat ongeveer 8,00 kW. Een 11 kW laadpaal is dan fysiek niet mogelijk. Controleer dit vóór je een laadpaal of thuisbatterij aanschaft.</p>
-        </article>
-        <article>
-          <h3>Fase-verdeling in de gaten houden</h3>
-          <p>Bij 3-fase zit de belasting vaak ongelijkmatig verdeeld over de drie fasen — en veel slimme meters tonen alleen het totaal. Met een <a href="https://homey.app/nl-nl/homey-energy-dongle/" target="_blank" rel="noopener">Homey Energy Dongle</a> zie je het verbruik per fase in realtime en krijg je een waarschuwing zodra een fase boven de 90% komt.</p>
+          <h3>Let op de grens van je aansluiting</h3>
+          <p>Een 3-fase aansluiting (3×25A) levert maximaal 17,25 kW tegelijk; een 1-fase aansluiting met 25 ampère blijft op 5,75 kW steken (35 ampère: ongeveer 8 kW). Draai je wasmachine, droger, oven en auto samen op een goedkoop uur, dan vliegt de zekering eruit. Een 11 kW laadpaal past sowieso niet op 1-fase — controleer dit vóór je een laadpaal of thuisbatterij koopt.</p>
         </article>
         <article>
           <h3>Niet alles tegelijk starten</h3>
-          <p>Goedkope uren verleiden ertoe om alles in één klap aan te zetten. Maar je netaansluiting is een harde grens. Schuif zware apparaten 30–60 minuten uit elkaar om piekbelasting te vermijden.</p>
+          <p>Goedkope uren verleiden je om alles in één klap aan te zetten. Je netaansluiting is een harde grens. Schuif zware apparaten 30–60 minuten uit elkaar om piekbelasting te voorkomen.</p>
         </article>
         <article>
           <h3>Teruglevering bij negatieve prijzen</h3>
-          <p>Als de prijs negatief is, <em>betaal</em> je om stroom terug te leveren. Overweeg dan je zonnepanelen handmatig of automatisch te beperken. Sommige omvormers regelen dit zelf — maar heb je ook een thuisbatterij, dan moet je het hele systeem aansturen. <a href="/kennisbank/zonnepanelen-uitzetten-negatieve-prijs">Lees hoe het werkt per omvormer-merk en welke diensten er zijn →</a></p>
+          <p>Bij een negatieve prijs <em>betaal</em> je om stroom terug te leveren. Beperk dan je zonnepanelen, handmatig of automatisch. Sommige omvormers regelen dit zelf; met een thuisbatterij stuur je het hele systeem aan. <a href="/kennisbank/zonnepanelen-uitzetten-negatieve-prijs">Lees hoe het werkt per omvormer-merk en welke diensten er zijn →</a></p>
         </article>
       </div>
     </section>

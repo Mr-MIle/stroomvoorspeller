@@ -691,6 +691,26 @@ a:hover { text-decoration: underline; }
   box-shadow: var(--shadow-sm);
   height: 360px;
 }
+
+/* Vandaag/morgen naast elkaar; stapelen op smal scherm. */
+.day-charts-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.day-chart-col { min-width: 0; }
+.day-chart-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: var(--c-text);
+}
+.day-charts-split .chart-wrapper { height: 320px; }
+@media (max-width: 640px) {
+  .day-charts-split { grid-template-columns: 1fr; gap: 20px; }
+  .day-charts-split .chart-wrapper { height: 280px; }
+}
 .chart-note {
   font-size: 0.83rem;
   color: var(--c-text-mute);
