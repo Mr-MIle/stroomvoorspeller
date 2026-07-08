@@ -30,7 +30,7 @@ jobs:
       - name: Bouw URL-lijst uit public/
         run: |
           find public -type f -name '*.html' -printf '%P\n' \
-            | sed -E 's#\.html$##; s#(^|/)index$#\1#' \
+            | sed -E 's#\.html$##; s#(^|/)index$#\1#; s#(.+)/$#\1#' \
             | sed 's#^#https://stroomvoorspeller.nl/#' \
             | sort -u > urls.txt
           echo "Aantal URL's: $(wc -l < urls.txt)"
