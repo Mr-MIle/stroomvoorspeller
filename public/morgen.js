@@ -775,6 +775,10 @@
         q: "Wat is de gemiddelde stroomprijs voor morgen?",
         a: `De gemiddelde stroomprijs voor morgen is ${avgCt} ct/kWh all-in (energiebelasting + btw + gemiddelde leveranciersopslag). De exacte prijs hangt af van jouw leverancier en opslag.`,
       },
+      {
+        q: "Wat is de verwachting voor de stroomprijs morgen?",
+        a: `De prijzen voor morgen staan meestal na 14:00 vast: dan publiceert de day-ahead markt de officiële uurprijzen. Voor morgen ligt het daggemiddelde rond ${avgCt} ct/kWh all-in, met het goedkoopste uur om ${cheapT} (${cheapCt} ct/kWh). Een voorspelling voor de dagen daarna vind je op de voorpagina.`,
+      },
     ];
 
     // Zichtbaar FAQ
