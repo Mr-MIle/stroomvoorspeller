@@ -2341,3 +2341,101 @@ body.has-neg-alert .site-header { top: 56px; }
   }
   .primary-nav .nav-menu a { white-space: nowrap; padding: 10px 10px; border-radius: 0; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Mobiele-check 8 juli 2026 — leesbaarheid, tap-targets, comfort
+   (bron: 04-notities/mobiele-check-2026-07-08.md)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Nav-caret weer >=12px (was ~10px op 0.7em) */
+.primary-nav .nav-caret { font-size: 0.8rem; }
+
+/* Scroll-schaduw + veeg-hint voor brede tabellen (iOS verbergt de scrollbar) */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background:
+    linear-gradient(to right, var(--c-surface), rgba(255,255,255,0)) 0 0,
+    linear-gradient(to left,  var(--c-surface), rgba(255,255,255,0)) 100% 0,
+    radial-gradient(farthest-side at 0 50%, rgba(24,34,46,.14), rgba(24,34,46,0)) 0 0,
+    radial-gradient(farthest-side at 100% 50%, rgba(24,34,46,.14), rgba(24,34,46,0)) 100% 0;
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+.scroll-hint {
+  display: none;
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  color: var(--c-text-mute);
+}
+
+/* Terug-naar-boven-knop (nav.js voegt hem op elke pagina toe) */
+.to-top {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 60;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  background: var(--c-surface);
+  color: var(--c-brand-deep);
+  box-shadow: 0 4px 14px rgba(24,34,46,.16);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.to-top.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+@media (hover: hover) { .to-top:hover { background: var(--c-bg); } }
+
+/* Aanbieders-kaarten: op mobiel inklapbaar. Standaard (desktop) alles zichtbaar. */
+.aanbieder-toggle {
+  display: none;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-bg);
+  color: var(--c-brand-deep);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.aanbieder-toggle .caret { transition: transform .15s ease; }
+.aanbieder-card.open .aanbieder-toggle .caret { transform: rotate(180deg); }
+.aanbieder-details { display: flex; flex-direction: column; gap: 14px; }
+
+@media (max-width: 640px) {
+  /* #46 nav-strip weer horizontaal scrollend (de tweede .primary-nav-regel overschreef 'm) */
+  .primary-nav { flex-wrap: nowrap; overflow-x: auto; gap: 0; }
+
+  /* Header niet meer plakken op mobiel — geeft permanent schermruimte terug */
+  .site-header { position: static; }
+  body.has-neg-alert .site-header { top: auto; }
+
+  /* Tap-targets naar de 44px-richtlijn */
+  .mode-btn, .res-btn { min-height: 44px; padding-top: 0; padding-bottom: 0; }
+  .share-btn { width: 44px; height: 44px; }
+  .suppliers-table .td-supplier a { display: inline-block; padding: 6px 0; min-height: 40px; }
+
+  /* Collapse aanbieders-kaarten (alleen met JS, anders blijft alles leesbaar) */
+  .has-js .aanbieder-toggle { display: flex; }
+  .has-js .aanbieder-card:not(.open) .aanbieder-details { display: none; }
+
+  /* Veeg-hint zichtbaar op smal scherm */
+  .scroll-hint { display: block; }
+}

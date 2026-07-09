@@ -567,7 +567,8 @@
     });
 
     el.innerHTML = `
-      <div class="morgen-cmp-wrap">
+      <p class="scroll-hint" aria-hidden="true">Veeg opzij voor de verschil-kolom →</p>
+      <div class="morgen-cmp-wrap scroll-x">
         <table class="morgen-cmp-table">
           <thead>
             <tr>

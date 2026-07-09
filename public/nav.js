@@ -109,9 +109,41 @@
     });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { build(location.pathname); });
-  } else {
+  // Terug-naar-boven-knop: verschijnt op elke pagina zodra je ver genoeg scrolt.
+  function initToTop() {
+    if (document.querySelector(".to-top")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "to-top";
+    btn.setAttribute("aria-label", "Terug naar boven");
+    btn.innerHTML = '<span aria-hidden="true">↑</span>';
+    btn.addEventListener("click", function () {
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    });
+    document.body.appendChild(btn);
+
+    var ticking = false;
+    function update() {
+      ticking = false;
+      if (window.pageYOffset > 600) btn.classList.add("is-visible");
+      else btn.classList.remove("is-visible");
+    }
+    window.addEventListener("scroll", function () {
+      if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    update();
+  }
+
+  function init() {
+    document.documentElement.classList.add("has-js");
     build(location.pathname);
+    initToTop();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
   }
 })();
