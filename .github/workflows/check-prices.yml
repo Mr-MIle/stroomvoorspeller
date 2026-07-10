@@ -18,7 +18,9 @@ name: Check & update prijzen
 #   hoef je niet te triggeren.
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  
+  schedule:
+    - cron: "00 13,14,15,16,17,18 * * *"
 
 permissions:
   contents: write
