@@ -114,16 +114,50 @@
     return subtotal * (t.btw_factor || 1) * 100;
   }
 
+  // ---- #13: relatieve drempels (hybride, begrensd) ----
+  // Goedkoop/duur volgen de kwartielen (P25/P75) van de getoonde prijzen, maar
+  // begrensd op de vaste cheap/pricey-band uit config (22-28 ct): nooit "goedkoop"
+  // boven 28, nooit "duur" onder 22. Negatief en de extremen (14/38) blijven
+  // absoluut. Vlakke dagen (kwartielspreiding < 3 ct) vallen terug op de vaste
+  // drempels; de banners blijven bewust op de absolute drempels (uitzonderings-
+  // signalen, geen dagelijkse kwartielen).
+  function relativeThresholds(cts, thr) {
+    const fixedCheap  = thr.cheap  ?? 22;
+    const fixedPricey = thr.pricey ?? 28;
+    const vals = (cts || []).filter(Number.isFinite).sort((a, b) => a - b);
+    if (vals.length < 12) return { cheap: fixedCheap, pricey: fixedPricey };
+    const q = (frac) => {
+      const i = (vals.length - 1) * frac, lo = Math.floor(i), hi = Math.ceil(i);
+      return vals[lo] + (vals[hi] - vals[lo]) * (i - lo);
+    };
+    const p25 = q(0.25), p75 = q(0.75);
+    if (p75 - p25 < 3) return { cheap: fixedCheap, pricey: fixedPricey };
+    const clamp = (v) => Math.min(Math.max(v, fixedCheap), fixedPricey);
+    return { cheap: clamp(p25), pricey: clamp(p75) };
+  }
+  let effThrCache = null;
+  function effectiveThresholds() {
+    const thr = (state.config && state.config.thresholds_ct_kwh_inclusive) || {};
+    const d   = state.dayPrices || [];
+    const key = state.supplierId + "|" + state.customMarkup + "|" + d.length + "|" + (d[0] ? d[0].time : "");
+    if (effThrCache && effThrCache.key === key) return effThrCache;
+    const cts = d.map((pp) => priceCents(pp.price, "inclusive"));
+    const r = relativeThresholds(cts, thr);
+    effThrCache = { key: key, cheap: r.cheap, pricey: r.pricey };
+    return effThrCache;
+  }
+
   function classify(eurMwh) {
     // Classificeer altijd op basis van de consumentenprijs incl. energiebelasting + btw
     // + leverancieropslag (= wat de bezoeker daadwerkelijk betaalt), niet op kale EPEX.
-    const ct = priceCents(eurMwh, "inclusive");
-    const t  = state.config.thresholds_ct_kwh_inclusive || {};
+    const ct  = priceCents(eurMwh, "inclusive");
+    const t   = state.config.thresholds_ct_kwh_inclusive || {};
+    const eff = effectiveThresholds();
     if (ct < 0)                          return "negative";
     if (ct < (t.very_cheap ?? 14))       return "very_cheap";
-    if (ct < (t.cheap      ?? 22))       return "cheap";
+    if (ct < eff.cheap)                  return "cheap";
     if (ct > (t.very_pricey ?? 38))      return "very_pricey";
-    if (ct > (t.pricey      ?? 28))      return "pricey";
+    if (ct > eff.pricey)                 return "pricey";
     return "normal";
   }
   function classifyToCard(c) {
@@ -1177,12 +1211,13 @@
       return ct_incl / (taxes.btw_factor || 1.21) - (taxes.energiebelasting_per_kwh || 0) * 100;
     }
     const thr = (state.config && state.config.thresholds_ct_kwh_inclusive) || {};
+    const eff = effectiveThresholds(); // #13: cheap/pricey-grens beweegt mee met de dag
     return [
       { min: null,                            max: thToChart(0),                       color: "rgba(112,72,232,0.10)" },
       { min: thToChart(0),                    max: thToChart(thr.very_cheap ?? 14),    color: "rgba(26,122,49,0.08)"  },
-      { min: thToChart(thr.very_cheap ?? 14), max: thToChart(thr.cheap ?? 22),         color: "rgba(47,158,68,0.07)"  },
+      { min: thToChart(thr.very_cheap ?? 14), max: thToChart(eff.cheap),               color: "rgba(47,158,68,0.07)"  },
       // normaal: geen kleur
-      { min: thToChart(thr.pricey ?? 28),     max: thToChart(thr.very_pricey ?? 38),   color: "rgba(201,42,42,0.08)"  },
+      { min: thToChart(eff.pricey),           max: thToChart(thr.very_pricey ?? 38),   color: "rgba(201,42,42,0.08)"  },
       { min: thToChart(thr.very_pricey ?? 38), max: null,                              color: "rgba(156,26,26,0.10)"  },
     ];
   }
@@ -1518,8 +1553,6 @@
     }
 
     const thr      = state.config.thresholds_ct_kwh_inclusive || {};
-    const cheapT   = thr.very_cheap ?? 14;
-    const priceyT  = thr.pricey     ?? 28;
     const NEG_PROB = 0.30; // model-kans op negatieve kale marktprijs
     const p        = state.profile || {};
 
@@ -1528,6 +1561,12 @@
       const prob = typeof f.P_negative === "number" ? f.P_negative : null;
       return { time: f.time, t: new Date(f.time), ct, prob };
     });
+
+    // #13: goedkoopst/duurst relatief aan het voorspelvenster (begrensd), zodat
+    // er ook in vlakke zomers/winters altijd een bruikbaar signaal is.
+    const effW    = relativeThresholds(hours.map((h) => h.ct), thr);
+    const cheapT  = effW.cheap;
+    const priceyT = effW.pricey;
 
     function dagdeelLabel(d) {
       const h    = d.getHours();

@@ -62,14 +62,43 @@
   }
   function priceCentsRaw(eurMwh) { return (eurMwh / 1000) * 100; }
 
+  // #13: relatieve drempels (hybride, begrensd) — zelfde regels als app.js.
+  // Kwartielen van de morgen-uren, geklemd op de vaste cheap/pricey-band (22-28 ct);
+  // negatief en de extremen (14/38) blijven absoluut, vlakke dagen vallen terug op vast.
+  function relativeThresholds(cts, thr) {
+    const fixedCheap  = thr.cheap  ?? 22;
+    const fixedPricey = thr.pricey ?? 28;
+    const vals = (cts || []).filter(Number.isFinite).sort((a, b) => a - b);
+    if (vals.length < 12) return { cheap: fixedCheap, pricey: fixedPricey };
+    const q = (frac) => {
+      const i = (vals.length - 1) * frac, lo = Math.floor(i), hi = Math.ceil(i);
+      return vals[lo] + (vals[hi] - vals[lo]) * (i - lo);
+    };
+    const p25 = q(0.25), p75 = q(0.75);
+    if (p75 - p25 < 3) return { cheap: fixedCheap, pricey: fixedPricey };
+    const clamp = (v) => Math.min(Math.max(v, fixedCheap), fixedPricey);
+    return { cheap: clamp(p25), pricey: clamp(p75) };
+  }
+  let effThrCache = null;
+  function effectiveThresholds() {
+    const thr = (state.config && state.config.thresholds_ct_kwh_inclusive) || {};
+    const d   = state.tomorrowPrices || [];
+    const key = state.supplierId + "|" + state.customMarkup + "|" + d.length + "|" + (d[0] ? d[0].time : "");
+    if (effThrCache && effThrCache.key === key) return effThrCache;
+    const r = relativeThresholds(d.map((pp) => priceCents(pp.price, "inclusive")), thr);
+    effThrCache = { key: key, cheap: r.cheap, pricey: r.pricey };
+    return effThrCache;
+  }
+
   function classify(eurMwh) {
-    const ct = priceCents(eurMwh, "inclusive");
-    const t = state.config.thresholds_ct_kwh_inclusive || {};
+    const ct  = priceCents(eurMwh, "inclusive");
+    const t   = state.config.thresholds_ct_kwh_inclusive || {};
+    const eff = effectiveThresholds();
     if (ct < 0)                          return "negative";
     if (ct < (t.very_cheap ?? 14))       return "very_cheap";
-    if (ct < (t.cheap      ?? 22))       return "cheap";
+    if (ct < eff.cheap)                  return "cheap";
     if (ct > (t.very_pricey ?? 38))      return "very_pricey";
-    if (ct > (t.pricey      ?? 28))      return "pricey";
+    if (ct > eff.pricey)                 return "pricey";
     return "normal";
   }
 
