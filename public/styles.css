@@ -2338,7 +2338,9 @@ body.has-neg-alert .site-header { top: 56px; }
     padding: 0;
     min-width: 0;
     background: none;
+    flex: none; /* niet laten krimpen in de scrollstrip, anders schuiven labels over elkaar (iPhone) */
   }
+  .primary-nav .nav-top { flex: none; }
   .primary-nav .nav-menu a { white-space: nowrap; padding: 10px 10px; border-radius: 0; }
 }
 
