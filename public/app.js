@@ -495,6 +495,9 @@
 
     if (tp.length >= 12) {
       // ── Morgen-data beschikbaar ────────────────────────────────────────────────
+      // #70: zelfde profiel-personalisatie als de nu-kaart en de week-strip.
+      const laadZin = profielActie("laad");
+      const duurZin = profielActie("duur");
       const negHours = tp.filter((p) => priceCents(p.price, "inclusive") < 0);
 
       if (negHours.length > 0) {
@@ -503,6 +506,7 @@
         setVariant("neg", "⚡");
         textEl.innerHTML =
           `<strong>Morgen negatieve prijzen</strong> tussen ${fmtTime(first.time)}–${fmtEnd(last.time)} — gratis stroom, apparaten aan! ` +
+          (laadZin ? laadZin + " " : "") +
           `<a href="/morgen">Bekijk alle morgen-uren →</a>`;
 
       } else {
@@ -514,6 +518,7 @@
           textEl.innerHTML =
             `<strong>Morgen goedkoop laden</strong> tussen ${fmtTime(m.startIso)}–${fmtEnd(m.endIso)} ` +
             `(gem. ${avgCt} ct/kWh incl. btw). ` +
+            (laadZin ? laadZin + " " : "") +
             `<a href="/morgen">Bekijk alle morgen-uren →</a>`;
 
         } else {
@@ -522,6 +527,7 @@
             setVariant("pricey", "⚠");
             textEl.innerHTML =
               `<strong>Morgen duur</strong> tussen ${fmtTime(expBlock.startIso)}–${fmtEnd(expBlock.endIso)} — zware apparaten liever 's nachts. ` +
+              (duurZin ? duurZin + " " : "") +
               `<a href="/morgen">Bekijk alle morgen-uren →</a>`;
           } else {
             const avg = tp.reduce((s, p) => s + priceCents(p.price, "inclusive"), 0) / tp.length;

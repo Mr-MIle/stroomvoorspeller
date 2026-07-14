@@ -6,6 +6,18 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "stroomvoorspeller.online" }],
+      "destination": "https://stroomvoorspeller.nl/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.stroomvoorspeller.online" }],
+      "destination": "https://stroomvoorspeller.nl/:path*",
+      "permanent": true
+    },
+    {
       "source": "/gids/wateraccu",
       "destination": "/kennisbank/wateraccu",
       "permanent": true
