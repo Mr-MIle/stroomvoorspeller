@@ -1,99 +1,99 @@
 {
-  "generated_at": "2026-07-15T06:45:16Z",
+  "generated_at": "2026-07-15T12:10:46Z",
   "model_version": "3.2",
   "evaluation_window_days": 30,
-  "first_date": "2026-06-30",
-  "last_date": "2026-07-15",
+  "first_date": "2026-07-01",
+  "last_date": "2026-07-16",
   "overall": {
     "n_hours": 2304,
-    "mae_eur_mwh": 34.61,
-    "mae_vs_naive_pct": -6.6,
-    "direction_hit_rate": 0.644,
-    "within_band_pct": 0.39,
+    "mae_eur_mwh": 34.44,
+    "mae_vs_naive_pct": 21.2,
+    "direction_hit_rate": 0.566,
+    "within_band_pct": 0.378,
     "error_distribution": {
       "n_hours": 2304,
-      "p50_eur_mwh": 27.54,
-      "p80_eur_mwh": 52.74,
-      "p90_eur_mwh": 74.44,
+      "p50_eur_mwh": 27.7,
+      "p80_eur_mwh": 53.04,
+      "p90_eur_mwh": 73.75,
       "empirical_band_ct": 5.3,
       "share_within": [
         {
           "ct": 2,
-          "pct": 0.381
+          "pct": 0.376
         },
         {
           "ct": 3,
-          "pct": 0.531
+          "pct": 0.522
         },
         {
           "ct": 4,
-          "pct": 0.669
+          "pct": 0.659
         },
         {
           "ct": 5,
-          "pct": 0.769
+          "pct": 0.768
         }
       ],
       "signed_error_hist": [
         {
           "label": "< -5 ct",
           "center_ct": -5.5,
-          "n": 273
+          "n": 279
         },
         {
           "label": "-5..-4 ct",
           "center_ct": -4.5,
-          "n": 159
+          "n": 179
         },
         {
           "label": "-4..-3 ct",
           "center_ct": -3.5,
-          "n": 244
+          "n": 243
         },
         {
           "label": "-3..-2 ct",
           "center_ct": -2.5,
-          "n": 247
+          "n": 237
         },
         {
           "label": "-2..-1 ct",
           "center_ct": -1.5,
-          "n": 238
+          "n": 230
         },
         {
           "label": "-1..0 ct",
           "center_ct": -0.5,
-          "n": 251
+          "n": 247
         },
         {
           "label": "0..1 ct",
           "center_ct": 0.5,
-          "n": 247
+          "n": 245
         },
         {
           "label": "1..2 ct",
           "center_ct": 1.5,
-          "n": 142
+          "n": 144
         },
         {
           "label": "2..3 ct",
           "center_ct": 2.5,
-          "n": 98
+          "n": 99
         },
         {
           "label": "3..4 ct",
           "center_ct": 3.5,
-          "n": 74
+          "n": 73
         },
         {
           "label": "4..5 ct",
           "center_ct": 4.5,
-          "n": 72
+          "n": 73
         },
         {
           "label": "> 5 ct",
           "center_ct": 5.5,
-          "n": 259
+          "n": 255
         }
       ]
     }
@@ -102,166 +102,166 @@
     {
       "horizon_days": 2,
       "n_hours": 384,
-      "mae_eur_mwh": 29.57,
-      "mae_vs_naive_pct": -20.4,
-      "direction_hit_rate": 0.664
+      "mae_eur_mwh": 29.89,
+      "mae_vs_naive_pct": 6.5,
+      "direction_hit_rate": 0.594
     },
     {
       "horizon_days": 3,
       "n_hours": 384,
-      "mae_eur_mwh": 33.23,
-      "mae_vs_naive_pct": -12.0,
-      "direction_hit_rate": 0.658
+      "mae_eur_mwh": 33.38,
+      "mae_vs_naive_pct": 17.4,
+      "direction_hit_rate": 0.553
     },
     {
       "horizon_days": 4,
       "n_hours": 384,
-      "mae_eur_mwh": 35.35,
-      "mae_vs_naive_pct": -5.5,
-      "direction_hit_rate": 0.614
+      "mae_eur_mwh": 35.77,
+      "mae_vs_naive_pct": 26.6,
+      "direction_hit_rate": 0.514
     },
     {
       "horizon_days": 5,
       "n_hours": 384,
-      "mae_eur_mwh": 35.01,
-      "mae_vs_naive_pct": -5.4,
-      "direction_hit_rate": 0.617
+      "mae_eur_mwh": 34.86,
+      "mae_vs_naive_pct": 23.2,
+      "direction_hit_rate": 0.544
     },
     {
       "horizon_days": 6,
       "n_hours": 384,
-      "mae_eur_mwh": 35.12,
-      "mae_vs_naive_pct": -4.3,
-      "direction_hit_rate": 0.656
+      "mae_eur_mwh": 34.36,
+      "mae_vs_naive_pct": 21.4,
+      "direction_hit_rate": 0.586
     },
     {
       "horizon_days": 7,
       "n_hours": 384,
-      "mae_eur_mwh": 39.38,
-      "mae_vs_naive_pct": 8.1,
-      "direction_hit_rate": 0.653
+      "mae_eur_mwh": 38.4,
+      "mae_vs_naive_pct": 32.2,
+      "direction_hit_rate": 0.606
     }
   ],
   "by_hour_of_day": [
     {
       "hour": 0,
       "n_hours": 96,
-      "mae_eur_mwh": 24.46
+      "mae_eur_mwh": 24.43
     },
     {
       "hour": 1,
       "n_hours": 96,
-      "mae_eur_mwh": 22.57
+      "mae_eur_mwh": 23.28
     },
     {
       "hour": 2,
       "n_hours": 96,
-      "mae_eur_mwh": 22.79
+      "mae_eur_mwh": 23.31
     },
     {
       "hour": 3,
       "n_hours": 96,
-      "mae_eur_mwh": 23.52
+      "mae_eur_mwh": 23.85
     },
     {
       "hour": 4,
       "n_hours": 96,
-      "mae_eur_mwh": 24.35
+      "mae_eur_mwh": 24.46
     },
     {
       "hour": 5,
       "n_hours": 96,
-      "mae_eur_mwh": 25.13
+      "mae_eur_mwh": 25.23
     },
     {
       "hour": 6,
       "n_hours": 96,
-      "mae_eur_mwh": 24.05
+      "mae_eur_mwh": 23.58
     },
     {
       "hour": 7,
       "n_hours": 96,
-      "mae_eur_mwh": 28.77
+      "mae_eur_mwh": 28.13
     },
     {
       "hour": 8,
       "n_hours": 96,
-      "mae_eur_mwh": 29.39
+      "mae_eur_mwh": 29.42
     },
     {
       "hour": 9,
       "n_hours": 96,
-      "mae_eur_mwh": 33.61
+      "mae_eur_mwh": 34.25
     },
     {
       "hour": 10,
       "n_hours": 96,
-      "mae_eur_mwh": 30.53
+      "mae_eur_mwh": 31.78
     },
     {
       "hour": 11,
       "n_hours": 96,
-      "mae_eur_mwh": 31.27
+      "mae_eur_mwh": 32.67
     },
     {
       "hour": 12,
       "n_hours": 96,
-      "mae_eur_mwh": 33.2
+      "mae_eur_mwh": 34.07
     },
     {
       "hour": 13,
       "n_hours": 96,
-      "mae_eur_mwh": 31.87
+      "mae_eur_mwh": 33.11
     },
     {
       "hour": 14,
       "n_hours": 96,
-      "mae_eur_mwh": 33.41
+      "mae_eur_mwh": 34.88
     },
     {
       "hour": 15,
       "n_hours": 96,
-      "mae_eur_mwh": 34.43
+      "mae_eur_mwh": 36.52
     },
     {
       "hour": 16,
       "n_hours": 96,
-      "mae_eur_mwh": 40.9
+      "mae_eur_mwh": 42.94
     },
     {
       "hour": 17,
       "n_hours": 96,
-      "mae_eur_mwh": 51.46
+      "mae_eur_mwh": 50.44
     },
     {
       "hour": 18,
       "n_hours": 96,
-      "mae_eur_mwh": 47.22
+      "mae_eur_mwh": 41.57
     },
     {
       "hour": 19,
       "n_hours": 96,
-      "mae_eur_mwh": 54.56
+      "mae_eur_mwh": 46.16
     },
     {
       "hour": 20,
       "n_hours": 96,
-      "mae_eur_mwh": 69.69
+      "mae_eur_mwh": 67.0
     },
     {
       "hour": 21,
       "n_hours": 96,
-      "mae_eur_mwh": 55.85
+      "mae_eur_mwh": 56.86
     },
     {
       "hour": 22,
       "n_hours": 96,
-      "mae_eur_mwh": 34.23
+      "mae_eur_mwh": 34.57
     },
     {
       "hour": 23,
       "n_hours": 96,
-      "mae_eur_mwh": 23.37
+      "mae_eur_mwh": 24.15
     }
   ],
   "by_price_bucket": [
@@ -286,30 +286,23 @@
     {
       "bucket": "normal",
       "n_hours": 570,
-      "mae_eur_mwh": 34.21,
-      "recall": 0.486
+      "mae_eur_mwh": 35.61,
+      "recall": 0.463
     },
     {
       "bucket": "pricey",
-      "n_hours": 1104,
-      "mae_eur_mwh": 31.56,
-      "recall": 0.506
+      "n_hours": 1122,
+      "mae_eur_mwh": 31.92,
+      "recall": 0.496
     },
     {
       "bucket": "very_pricey",
-      "n_hours": 60,
-      "mae_eur_mwh": 90.76,
-      "recall": 0.617
+      "n_hours": 42,
+      "mae_eur_mwh": 78.22,
+      "recall": 0.405
     }
   ],
   "daily_series": [
-    {
-      "date": "2026-06-30",
-      "n_hours": 144,
-      "mae_eur_mwh": 44.44,
-      "avg_actual_eur_mwh": 200.38,
-      "avg_forecast_eur_mwh": 163.26
-    },
     {
       "date": "2026-07-01",
       "n_hours": 144,
@@ -414,6 +407,13 @@
       "mae_eur_mwh": 25.71,
       "avg_actual_eur_mwh": 123.45,
       "avg_forecast_eur_mwh": 102.9
+    },
+    {
+      "date": "2026-07-16",
+      "n_hours": 144,
+      "mae_eur_mwh": 41.81,
+      "avg_actual_eur_mwh": 150.85,
+      "avg_forecast_eur_mwh": 110.87
     }
   ],
   "model_history": [
