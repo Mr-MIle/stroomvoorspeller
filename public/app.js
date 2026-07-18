@@ -1710,6 +1710,8 @@
       const f = t && t.forecast;
       if (!f || !Array.isArray(f.factors) || !f.factors.length) return;
       renderFactorPanel(panel, f);
+      // Mobiel: het paneel staat onder het beeld na een tik — breng het in beeld.
+      if (window.innerWidth < 640) panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
 
     // ── Legenda onder de voorspellingsgrafiek ──────────────────────────────────
