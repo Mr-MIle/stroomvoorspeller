@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Stroomvoorspeller — actuele en voorspelde stroomprijzen voor Nederland</title>
-  <meta name="description" content="Bekijk wanneer stroom morgen goedkoop is — actuele day-ahead prijzen, slimste laadmomenten voor je EV en wasmachine, en een 5-daagse voorspelling." />
+  <title>Stroomprijzen vandaag, morgen en komende week — voorspelling | Stroomvoorspeller.nl</title>
+  <meta name="description" content="Stroomprijzen per uur voor vandaag en morgen, all-in prijs voor 25 aanbieders en een eigen voorspelling voor de komende week — elke dag gemeten tegen de echte prijzen." />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <meta name="google-site-verification" content="0HRoe9BYvP6T9f7w2NzVEJbv9rXI6yCferCZ_4hLLsE" />
@@ -15,8 +15,8 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="nl_NL" />
   <meta property="og:site_name" content="Stroomvoorspeller.nl" />
-  <meta property="og:title" content="Stroomvoorspeller — actuele en voorspelde stroomprijzen voor Nederland" />
-  <meta property="og:description" content="Day-ahead stroomprijzen voor vandaag en morgen, plus een eigen 5-7 daagse voorspelling. Voor mensen met een dynamisch energiecontract." />
+  <meta property="og:title" content="Stroomprijzen vandaag, morgen en komende week — voorspelling | Stroomvoorspeller.nl" />
+  <meta property="og:description" content="Stroomprijzen per uur voor vandaag en morgen, plus een eigen voorspelling voor de komende week. Elke dag publiek gemeten tegen de echte prijzen." />
   <meta property="og:url" content="https://stroomvoorspeller.nl/" />
   <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
   <meta property="og:image:width" content="1200" />
@@ -24,8 +24,8 @@
   <meta property="og:image:alt" content="Stroomvoorspeller.nl — onafhankelijke Nederlandse stroomprijs-tracker" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Stroomvoorspeller — actuele en voorspelde stroomprijzen" />
-  <meta name="twitter:description" content="Day-ahead prijzen voor vandaag en morgen, plus een transparante 5-7 daagse voorspelling." />
+  <meta name="twitter:title" content="Stroomprijzen vandaag, morgen en komende week — voorspelling" />
+  <meta name="twitter:description" content="Uurprijzen voor vandaag en morgen, all-in per aanbieder, en een voorspelling voor de komende week." />
   <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
 
   <link rel="alternate" type="application/rss+xml" title="Stroomvoorspeller.nl — day-ahead prijzen" href="/data/feed.xml" />
@@ -78,46 +78,12 @@
         "@type": "FAQPage",
         "@id": "https://stroomvoorspeller.nl/#faq",
         "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Wanneer is stroom morgen goedkoop?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "De EPEX-beurs publiceert elke werkdag rond 14:00 de uurprijzen voor de volgende dag. Op stroomvoorspeller.nl zie je direct de goedkoopste uren van morgen en welke tijdvensters het best zijn voor je EV, wasmachine of warmtepomp."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Wanneer kan ik het beste mijn EV laden?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "De 'Slimste momenten'-sectie toont de goedkoopste 2-uurs vensters van vandaag en morgen. Voor EV-laden zijn dat meestal de vroege ochtend (01:00–06:00) of de middag (11:00–15:00) wanneer er veel zon- en windstroom is."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Wat zijn negatieve stroomprijzen?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Soms produceren zonnepanelen en windmolens meer stroom dan er verbruikt wordt. De prijs daalt dan onder nul: energiebedrijven betalen om stroom kwijt te raken. Met een dynamisch contract profiteer jij mee: laden of verbruiken kost dan niets, of je krijgt zelfs geld terug."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Hoe werkt een dynamisch energiecontract?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Bij een dynamisch contract betaal je per uur de actuele marktprijs (EPEX day-ahead) plus een vaste opslag van je leverancier, energiebelasting en btw. Je kunt je verbruik verschuiven naar goedkope uren en zo flink besparen, zeker met een EV of thuisbatterij."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Waar komen de stroomprijzen vandaan?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "De prijzen zijn afkomstig van ENTSO-E Transparency Platform, de officiële bron voor Europese day-ahead elektriciteitsmarkten. Stroomvoorspeller.nl haalt de data elke paar uur op en toont de uurgemiddelden voor de Nederlandse biedzone."
-            }
-          }
+          {"@type": "Question", "name": "Wanneer is stroom vandaag en morgen het goedkoopst?", "acceptedAnswer": {"@type": "Answer", "text": "De lijst bovenaan de pagina zet de goedkoopste vensters van vandaag en morgen op een rij; kies zelf of je 1, 2, 3 of 5 uur nodig hebt. Meestal is stroom 's middags het goedkoopst en tussen 17:00 en 21:00 het duurst."}},
+          {"@type": "Question", "name": "Wat betaal ik echt per kWh?", "acceptedAnswer": {"@type": "Answer", "text": "De kale beursprijs plus de opslag van je leverancier (zo'n 2 cent), energiebelasting (9,16 cent in 2026) en daarover 21% btw. Een kale prijs van 5 cent komt zo all-in op ongeveer 20 cent uit. De aanbieder-tabel op de homepage rekent dit per leverancier voor je uit."}},
+          {"@type": "Question", "name": "Hoe laat zijn de prijzen van morgen bekend?", "acceptedAnswer": {"@type": "Answer", "text": "De Europese stroombeurs EPEX publiceert elke dag rond 14:00 de uurprijzen voor de volgende dag. Kort daarna staan ze op stroomvoorspeller.nl, ook op de morgen-pagina."}},
+          {"@type": "Question", "name": "Wanneer is stroom gratis?", "acceptedAnswer": {"@type": "Answer", "text": "Bij veel zon en wind zakt de kale beursprijs soms onder nul, vooral op zonnige middagen in het weekend en op feestdagen. Gratis wordt stroom pas als ook de prijs inclusief belasting en opslag onder nul komt; dat zie je op de site aan het label “gratis”."}},
+          {"@type": "Question", "name": "Hoe goed klopt de voorspelling?", "acceptedAnswer": {"@type": "Answer", "text": "Dat meet ik elke dag: de voorspelling gaat naast de echte prijzen en de uitkomst staat voor iedereen zichtbaar op de nauwkeurigheidspagina. Het juiste dagdeel zit er meestal in; de exacte cent vaak niet."}},
+          {"@type": "Question", "name": "Welke aanbieders hebben een dynamisch contract?", "acceptedAnswer": {"@type": "Answer", "text": "Op de aanbiederspagina vergelijk ik er 25, met opslag, vaste kosten en terugleverkosten. Ze volgen allemaal dezelfde beursprijs; het verschil zit in de opslag, de vaste kosten en de app."}}
         ]
       }
     ]
@@ -341,6 +307,7 @@
       <div class="section-head">
         <h2>Voorspelling 5–7 dagen vooruit</h2>
         <p class="section-sub">Eigen model-voorspelling voor de dagen ná morgen: een <strong>gestippelde lijn</strong> met een onzekerheidsband eromheen. Tik of hover op een uur voor de factor-bijdrage (zon, wind, temperatuur, gas, dagtype, uurpatroon). Verder vooruit wordt de schatting onzekerder; <a href="/kennisbank/waarom-stroomprijzen-moeilijk-te-voorspellen">waarom stroomprijzen lastig te voorspellen zijn</a>, lees je in de kennisbank.</p>
+        <p class="forecast-accuracy" id="forecast-accuracy" hidden></p>
       </div>
       <button type="button" id="profile-nudge" class="profile-nudge" hidden>
         <span class="profile-nudge-icon" aria-hidden="true">⚙</span>
@@ -397,7 +364,13 @@
     <section id="tips" class="moments-section container">
       <div class="section-head">
         <h2>Wanneer is stroom vandaag en morgen het goedkoopst?</h2>
-        <p class="section-sub">Goedkoopste vensters van twee uur — handig voor wasmachine, droger, EV laden of warmtepomp. Prijzen weergegeven als <span data-field="mode-label">incl. belasting</span>.</p>
+        <p class="section-sub">Kies hoeveel uur je aaneengesloten nodig hebt: 1 uur voor de oven, 2 voor wasmachine of droger, 5 voor warmtepomp of EV. Prijzen weergegeven als <span data-field="mode-label">incl. belasting</span>.</p>
+      </div>
+      <div class="moment-chips" id="moment-chips" role="group" aria-label="Duur van het venster">
+        <button type="button" data-hours="1">1 uur</button>
+        <button type="button" data-hours="2" class="on">2 uur</button>
+        <button type="button" data-hours="3">3 uur</button>
+        <button type="button" data-hours="5">5 uur</button>
       </div>
       <ul class="moments-list" data-field="best-moments">
         <li class="moment-loading">Berekenen…</li>
@@ -477,7 +450,7 @@
       <div class="explain-grid">
         <article>
           <h3>Day-ahead prijzen</h3>
-          <p>Elke werkdag rond 14:00 publiceert de Europese stroombeurs EPEX de prijzen voor elk uur van de volgende dag. Mensen met een dynamisch contract betalen die uurprijs plus een vaste opslag van hun leverancier, energiebelasting en btw. <a href="/over/voorspelling">Lees hoe de voorspelling werkt →</a></p>
+          <p>Elke dag rond 14:00 publiceert de Europese stroombeurs EPEX de prijzen voor elk uur van de volgende dag. Mensen met een dynamisch contract betalen die uurprijs plus een vaste opslag van hun leverancier, energiebelasting en btw. <a href="/over/voorspelling">Lees hoe de voorspelling werkt →</a></p>
         </article>
       </div>
     </section>
@@ -522,6 +495,39 @@
       <p class="legal-related" style="margin-top:14px;"><a href="/kennisbank">Alle artikelen in de kennisbank &rarr;</a></p>
     </section>
   </main>
+
+    <!-- FAQ -->
+    <section id="faq" class="explain-section container">
+      <div class="section-head">
+        <h2>Veelgestelde vragen</h2>
+      </div>
+      <div class="explain-grid">
+        <article>
+          <h3>Wanneer is stroom vandaag en morgen het goedkoopst?</h3>
+          <p>De lijst bovenaan de pagina zet de goedkoopste vensters van vandaag en morgen op een rij; kies zelf of je 1, 2, 3 of 5 uur nodig hebt. Meestal is stroom 's middags het goedkoopst en tussen 17:00 en 21:00 het duurst.</p>
+        </article>
+        <article>
+          <h3>Wat betaal ik echt per kWh?</h3>
+          <p>De kale beursprijs plus de opslag van je leverancier (zo'n 2 cent), energiebelasting (9,16 cent in 2026) en daarover 21% btw. Een kale prijs van 5 cent komt zo all-in op ongeveer 20 cent uit. De aanbieder-tabel hierboven rekent dit per leverancier voor je uit.</p>
+        </article>
+        <article>
+          <h3>Hoe laat zijn de prijzen van morgen bekend?</h3>
+          <p>De Europese stroombeurs EPEX publiceert elke dag rond 14:00 de uurprijzen voor de volgende dag. Kort daarna staan ze hier en op de <a href="/morgen">morgen-pagina</a>.</p>
+        </article>
+        <article>
+          <h3>Wanneer is stroom gratis?</h3>
+          <p>Bij veel zon en wind zakt de kale beursprijs soms onder nul, vooral op zonnige middagen in het weekend en op feestdagen. Gratis wordt stroom pas als ook de prijs inclusief belasting en opslag onder nul komt; dat zie je hierboven aan het label “gratis”. <a href="/kennisbank/negatieve-stroomprijzen">Lees hoe negatieve prijzen werken →</a></p>
+        </article>
+        <article>
+          <h3>Hoe goed klopt de voorspelling?</h3>
+          <p>Dat meet ik elke dag: de voorspelling gaat naast de echte prijzen en de uitkomst staat voor iedereen zichtbaar op de <a href="/over/performance">nauwkeurigheidspagina</a>. Het juiste dagdeel zit er meestal in; de exacte cent vaak niet.</p>
+        </article>
+        <article>
+          <h3>Welke aanbieders hebben een dynamisch contract?</h3>
+          <p>Op de <a href="/aanbieders">aanbiederspagina</a> vergelijk ik er 25, met opslag, vaste kosten en terugleverkosten. Ze volgen allemaal dezelfde beursprijs; het verschil zit in de opslag, de vaste kosten en de app.</p>
+        </article>
+      </div>
+    </section>
 
   <footer class="site-footer">
     <div class="container footer-grid">

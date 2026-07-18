@@ -33,6 +33,7 @@
     supplierId: "average",
     customMarkup: 0.025,
     profile: { ev: false, solar: false, battery: false },  // 'Mijn situatie' — personalisatie
+    momentWindow: 2,     // vensterduur (uren) voor de 'goedkoopste vensters'-lijst
     chart: null,
   };
 
@@ -670,9 +671,10 @@
   }
 
   function renderMoments() {
-    const prices = state.dayPrices;  // altijd uurresolutie voor 2-uurs vensters
+    const prices = state.dayPrices;  // altijd uurresolutie voor de venster-lijst
     const fromIdx = state.nowIdx >= 0 ? state.nowIdx : 0;
-    const moments = findBestMoments(prices, fromIdx, 3, 2);
+    const w = state.momentWindow || 2;
+    const moments = findBestMoments(prices, fromIdx, 3, w);
     const list = document.querySelector('[data-field="best-moments"]');
     if (!list) return;
     list.innerHTML = "";
@@ -690,7 +692,7 @@
         <span class="moment-rank">${i + 1}</span>
         <span class="moment-when">
           ${fmtDateTime(m.startIso)} – ${fmtTime(m.endIso, { hour: "2-digit", minute: "2-digit" })}
-          <small>(2 uur)</small>
+          <small>(${w} uur)</small>
         </span>
         <span class="moment-price">${fmtCents(m.avg)} ct/kWh${badge}</span>
       `;
@@ -1730,6 +1732,35 @@
         renderAll();
       });
     });
+
+    // Vensterduur-chips bij 'goedkoopste vensters' (1/2/3/5 uur)
+    document.querySelectorAll("#moment-chips button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const h = parseInt(btn.dataset.hours, 10);
+        if (!h || h === state.momentWindow) return;
+        state.momentWindow = h;
+        document.querySelectorAll("#moment-chips button").forEach((b) => b.classList.toggle("on", b === btn));
+        renderMoments();
+      });
+    });
+
+    // Trefzekerheid-regel onder de voorspelling-intro (zelfde bron als /over/performance)
+    const accEl = document.getElementById("forecast-accuracy");
+    if (accEl) {
+      fetch("/data/performance.json?nocache=" + Date.now())
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          const dist = d && d.overall && d.overall.error_distribution;
+          const share = dist && Array.isArray(dist.share_within)
+            ? dist.share_within.find((x) => x.ct === 5) : null;
+          if (!share || !share.pct) return;
+          const tienden = Math.round(share.pct * 10);
+          const periode = d.evaluation_window_days ? `afgelopen ${d.evaluation_window_days} dagen` : "afgelopen weken";
+          accEl.innerHTML = `In de ${periode} zat ${tienden} van de 10 voorspelde uren binnen ±5 ct van de echte prijs — elke dag opnieuw gemeten. <a href="/over/performance">Bekijk alle cijfers →</a>`;
+          accEl.hidden = false;
+        })
+        .catch(() => {});
+    }
 
     // Instellingen-panel
     const toggleBtn = document.getElementById("settings-toggle");
