@@ -306,7 +306,7 @@
     <section id="voorspelling" class="forecast-section container">
       <div class="section-head">
         <h2>Voorspelling 5–7 dagen vooruit</h2>
-        <p class="section-sub">Eigen model-voorspelling voor de dagen ná morgen: een <strong>gestippelde lijn</strong> met een onzekerheidsband eromheen. Tik of hover op een uur voor de factor-bijdrage (zon, wind, temperatuur, gas, dagtype, uurpatroon). Verder vooruit wordt de schatting onzekerder; <a href="/kennisbank/waarom-stroomprijzen-moeilijk-te-voorspellen">waarom stroomprijzen lastig te voorspellen zijn</a>, lees je in de kennisbank.</p>
+        <p class="section-sub">Eigen model-voorspelling voor de dagen ná morgen: een <strong>gestippelde lijn</strong> met een onzekerheidsband eromheen. Klik of tik op een voorspeld uur: onder de grafiek verschijnt dan de opbouw per factor (zon, wind, temperatuur, gas, dagtype, uurpatroon). Verder vooruit wordt de schatting onzekerder; <a href="/kennisbank/waarom-stroomprijzen-moeilijk-te-voorspellen">waarom stroomprijzen lastig te voorspellen zijn</a>, lees je in de kennisbank.</p>
         <p class="forecast-accuracy" id="forecast-accuracy" hidden></p>
       </div>
       <button type="button" id="profile-nudge" class="profile-nudge" hidden>
@@ -317,6 +317,7 @@
       <div class="chart-wrapper">
         <canvas id="forecastChart" aria-label="Lijngrafiek met voorspelde stroomprijzen voor de komende 5 tot 7 dagen"></canvas>
       </div>
+      <div id="factor-panel" class="factor-panel" hidden></div>
       <details class="forecast-explainer forecast-details">
         <summary class="forecast-details-summary">Hoe werkt de voorspelling?</summary>
         <p>

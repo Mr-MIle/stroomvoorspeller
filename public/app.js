@@ -1699,6 +1699,19 @@
       timeline, isQuarter: false, chartNowIdx: -1, boundaries: [], holidays, priceZones,
     });
 
+    // ── Factor-panel: klik op een voorspeld uur → opbouw per factor onder de grafiek ──
+    canvas.onclick = (evt) => {
+      const chart = state.forecastChart;
+      const panel = document.getElementById("factor-panel");
+      if (!chart || !panel) return;
+      const els = chart.getElementsAtEventForMode(evt, "nearest", { intersect: false }, true);
+      if (!els.length) return;
+      const t = timeline[els[0].index];
+      const f = t && t.forecast;
+      if (!f || !Array.isArray(f.factors) || !f.factors.length) return;
+      renderFactorPanel(panel, f);
+    };
+
     // ── Legenda onder de voorspellingsgrafiek ──────────────────────────────────
     const _existingFc = document.getElementById("forecast-regime-legend");
     if (_existingFc) _existingFc.remove();
@@ -1717,6 +1730,26 @@
         `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Eigen model voor de dagen ná morgen. Hoe verder vooruit, hoe breder de band. Geen garantie — bij extreme situaties (PV-overschot, gascrisis, centrale-uitval) kan de prijs erbuiten vallen.</span>`;
       (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", wrap);
     }
+  }
+
+  // Opbouw per factor voor één voorspeld uur (gevuld bij klik op de voorspelgrafiek)
+  function renderFactorPanel(panel, f) {
+    const sign = (n) => (n > 0 ? `+${n}` : `${n}`);
+    const total = f.factors.reduce((sum, x) => sum + (x.points || 0), 0);
+    const rows = f.factors.map((x) => {
+      const p = x.points || 0;
+      const cls = p > 0 ? "fp-pts up" : p < 0 ? "fp-pts down" : "fp-pts";
+      return `<tr><td>${x.name}</td><td class="${cls}">${sign(p)}</td><td>${x.reason || ""}</td></tr>`;
+    }).join("");
+    panel.innerHTML = `
+      <div class="fp-head">
+        <strong>Opbouw van ${fmtDateTime(f.time)}</strong>
+        <button type="button" class="fp-close" aria-label="Sluiten">×</button>
+      </div>
+      <table class="fp-table"><tbody>${rows}</tbody></table>
+      <p class="fp-total">Samen ${sign(total)} punten (plus = duurder, min = goedkoper) · voorspeld ${fmtNum(priceCents(f.predicted), 2)} ct/kWh. <a href="/over/voorspelling">Hoe de punten werken →</a></p>`;
+    panel.hidden = false;
+    panel.querySelector(".fp-close").onclick = () => { panel.hidden = true; };
   }
 
   // ---- Event wiring ----

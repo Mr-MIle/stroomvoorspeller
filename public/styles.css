@@ -2449,3 +2449,14 @@ body.has-neg-alert .site-header { top: 56px; }
 
 /* Trefzekerheid-regel onder de voorspelling-intro */
 .forecast-accuracy { margin: 6px 0 0; color: var(--c-text-soft); font-size: 0.95rem; }
+
+/* Factor-panel onder de voorspelgrafiek (klik op een voorspeld uur) */
+.factor-panel { margin: 10px 0 0; border: 1px solid var(--c-border); border-radius: 10px; background: var(--c-surface); padding: 12px 14px; font-size: 0.92rem; }
+.fp-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+.fp-close { border: none; background: none; font-size: 1.3rem; line-height: 1; cursor: pointer; color: var(--c-text-soft); padding: 4px 10px; min-height: 44px; }
+.fp-table { width: 100%; border-collapse: collapse; }
+.fp-table td { padding: 3px 10px 3px 0; vertical-align: top; }
+.fp-pts { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+.fp-pts.up { color: #b45309; }
+.fp-pts.down { color: #1a7f37; }
+.fp-total { margin: 8px 0 0; color: var(--c-text-soft); }
