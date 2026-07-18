@@ -67,7 +67,10 @@ def amsterdam_now() -> datetime:
     while october.weekday() != 6:
         october -= timedelta(days=1)
     offset = timedelta(hours=2) if march <= now_utc < october else timedelta(hours=1)
-    return now_utc + offset
+    # astimezone i.p.v. optellen: zelfde kloktijd, maar met correct offset-label
+    # (+02:00/+01:00) zodat 'generated' niet als UTC wordt gelezen door bijv. een
+    # Home Assistant timestamp-sensor.
+    return now_utc.astimezone(timezone(offset))
 
 
 def get_tax_params(config: dict) -> dict:

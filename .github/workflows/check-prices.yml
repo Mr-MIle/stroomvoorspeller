@@ -84,6 +84,20 @@ jobs:
         continue-on-error: true
         run: python scripts/generate_feed.py
 
+      - name: Genereer Home Assistant feed
+        # Schrijft public/data/ha.json (vandaag + morgen + voorspelling). Zonder deze
+        # stap blijft de HA-feed op de ochtendversie staan als deze workflow - en niet
+        # update-prices - de morgen-prijzen als eerste publiceert.
+        if: steps.check.outcome == 'success'
+        continue-on-error: true
+        run: python scripts/generate_ha.py
+
+      - name: Genereer prijsduiding
+        # Leest ha.json + forecast.json; draait daarom na generate_ha.py.
+        if: steps.check.outcome == 'success'
+        continue-on-error: true
+        run: python scripts/genereer_duiding.py --prod public/data/ha.json public/data/duiding.json public/data/forecast.json
+
       - name: Genereer performance-dashboard
         if: steps.check.outcome == 'success'
         continue-on-error: true
@@ -97,6 +111,8 @@ jobs:
           git config user.email "bot@stroomvoorspeller.nl"
           git add public/data/prices.json public/data/forecast.json 2>/dev/null || true
           git add public/data/feed.xml 2>/dev/null || true
+          git add public/data/ha.json 2>/dev/null || true
+          git add public/data/duiding.json 2>/dev/null || true
           git add public/data/performance.json 2>/dev/null || true
           git add public/data/forecast_archive/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
