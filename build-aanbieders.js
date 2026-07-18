@@ -50,7 +50,7 @@ function cardHtml(s, verbruik) {
     ? `          <div class="aanbieder-let-op">⚠️ ${esc(s.let_op)}</div>\n`
     : "";
 
-  return `      <article class="aanbieder-card">
+  return `      <article class="aanbieder-card" data-id="${esc(s.id)}">
         <div class="aanbieder-card-header">
           <div class="aanbieder-naam"><a href="${url}" target="_blank" rel="noopener">${esc(s.name)}</a></div>
           <span class="aanbieder-score ${scoreClass(s.score)}">${scoreTxt}</span>
@@ -60,6 +60,7 @@ function cardHtml(s, verbruik) {
           <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">${vastPrefix}€ ${fmtEur2(s.fixed_per_month)}<span class="tarief-eenheid">excl. btw</span></span></div>
         </div>
         <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € ${fmtEur0(jk)} / jaar</strong><span class="jk-sub">opslag + vastrecht bij ${fmtEur0(verbruik)} kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
+        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="${esc(s.id)}"> Vergelijk</label>
         <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
         <div class="aanbieder-details">
 ${letOp}          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">${esc(s.app_text)}</p></div>

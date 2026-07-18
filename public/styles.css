@@ -2460,3 +2460,113 @@ body.has-neg-alert .site-header { top: 56px; }
 .fp-pts.up { color: #b45309; }
 .fp-pts.down { color: #1a7f37; }
 .fp-total { margin: 8px 0 0; color: var(--c-text-soft); }
+
+
+/* ── Aanbieders: vergelijker (checkbox + balk + tabel) ────────────────── */
+.aanbieder-vergelijk {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--c-text-soft);
+  cursor: pointer;
+  user-select: none;
+  min-height: 28px;
+}
+.aanbieder-vergelijk input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--c-brand);
+  cursor: pointer;
+}
+
+.vergelijk-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
+  background: var(--c-surface);
+  border-top: 1px solid var(--c-border);
+  box-shadow: 0 -4px 16px rgba(20, 30, 50, 0.10);
+}
+.vergelijk-bar span { font-size: 0.92rem; color: var(--c-text-soft); }
+.btn-vergelijk {
+  background: var(--c-brand);
+  color: #fff;
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+.btn-vergelijk:disabled { opacity: 0.45; cursor: default; }
+.btn-vergelijk-wis {
+  background: none;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9rem;
+  color: var(--c-text-soft);
+  cursor: pointer;
+  min-height: 44px;
+}
+body.heeft-vergelijk-bar { padding-bottom: 4.4rem; }
+
+.vergelijk-paneel {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 1rem 1.1rem;
+  margin: 0 0 1.4rem;
+}
+.vergelijk-kop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.vergelijk-kop h2 { margin: 0; font-size: 1.15rem; }
+.vergelijk-sluit {
+  background: none;
+  border: 0;
+  color: var(--c-text-mute);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0.35rem 0.5rem;
+  min-height: 44px;
+}
+.vergelijk-noot { font-size: 0.82rem; color: var(--c-text-mute); margin: 0.35rem 0 0.8rem; }
+.vergelijk-tabel { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.vergelijk-tabel th,
+.vergelijk-tabel td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--c-border);
+  text-align: left;
+  vertical-align: top;
+}
+.vergelijk-tabel thead th { font-size: 0.98rem; }
+.vergelijk-tabel tbody th {
+  font-weight: 600;
+  color: var(--c-text-soft);
+  width: 26%;
+  min-width: 8.5rem;
+}
+.vergelijk-tabel td.best { background: var(--c-cheap-bg); color: var(--c-cheap); font-weight: 600; }
+
+@media (max-width: 640px) {
+  .vergelijk-tabel { font-size: 0.84rem; }
+  .vergelijk-tabel tbody th { min-width: 6.5rem; width: auto; }
+  .vergelijk-bar { gap: 0.6rem; }
+  .vergelijk-paneel { padding: 0.8rem 0.75rem; }
+}
