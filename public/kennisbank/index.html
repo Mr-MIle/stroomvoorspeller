@@ -162,6 +162,25 @@
       </div>
     </a>
 
+
+    <!-- ── Zoeken & filteren (JS vult dit aan; zonder JS blijft het verborgen) ── -->
+    <div class="kb-filter" id="kb-filter" hidden>
+      <input type="search" id="kb-search" class="kb-filter-search" placeholder="Zoek een onderwerp, bijvoorbeeld: batterij, salderen, warmtepomp…" aria-label="Zoek in de kennisbank">
+      <div class="kb-filter-row" role="group" aria-label="Filter op categorie">
+        <button class="kb-chip is-active" data-cat="alle" type="button" aria-pressed="true">Alles</button>
+        <button class="kb-chip" data-cat="cat-dynamisch" type="button" aria-pressed="false">⚡ Prijzen</button>
+        <button class="kb-chip" data-cat="cat-batterij" type="button" aria-pressed="false">🔋 Batterij</button>
+        <button class="kb-chip" data-cat="cat-zon" type="button" aria-pressed="false">☀️ Zonnepanelen</button>
+        <button class="kb-chip" data-cat="cat-slim" type="button" aria-pressed="false">💡 Slim besparen</button>
+      </div>
+      <div class="kb-filter-row" role="group" aria-label="Filter op niveau">
+        <button class="kb-chip" data-level="begin" type="button" aria-pressed="false">Beginner</button>
+        <button class="kb-chip" data-level="mid" type="button" aria-pressed="false">Gemiddeld</button>
+        <button class="kb-chip" data-level="adv" type="button" aria-pressed="false">Gevorderd</button>
+      </div>
+    </div>
+    <p class="kb-filter-empty" id="kb-filter-empty" hidden>Geen artikelen gevonden. Probeer een andere zoekterm of <button type="button" id="kb-filter-reset" class="kb-filter-reset">wis de filters</button>.</p>
+
     <!-- ══════════════════════════════════════════════
          CATEGORIE 1 — Dynamisch contract & prijzen
          ══════════════════════════════════════════════ -->
@@ -641,6 +660,9 @@
       6. Overweeg het uitgelicht-artikel (kb-featured) te updaten.
 
       7. Update de hero-chips (artikelen-teller + categorieën-teller) als nodig.
+
+      8. Zoeken/filteren werkt automatisch: nieuwe kaarten doen vanzelf mee,
+         er is geen extra stap nodig.
       ══════════════════════════════════════════════════════
     -->
 
@@ -666,6 +688,76 @@
   </footer>
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script>
+  (function(){
+    var box=document.getElementById('kb-filter');
+    if(!box)return;
+    box.hidden=false;
+    var search=document.getElementById('kb-search');
+    var empty=document.getElementById('kb-filter-empty');
+    var cats=[].slice.call(document.querySelectorAll('.kb-cat'));
+    var leerpad=document.querySelector('.kb-leerpad');
+    var featured=document.querySelector('.kb-featured');
+    var norm=function(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');};
+    cats.forEach(function(sec){
+      var cnt=sec.querySelector('.kb-cat-count');
+      sec.dataset.count=cnt?cnt.textContent:'';
+      [].forEach.call(sec.querySelectorAll('.kb-card'),function(c){
+        c.dataset.zoek=norm(c.textContent);
+        var lvl=c.querySelector('.kb-level');
+        c.dataset.level=!lvl?'mid':lvl.className.indexOf('begin')>-1?'begin':lvl.className.indexOf('adv')>-1?'adv':'mid';
+      });
+    });
+    var activeCat='alle', activeLevel='';
+    function apply(){
+      var q=norm(search.value.trim());
+      var filtering=!!(q||activeLevel||activeCat!=='alle');
+      var total=0;
+      cats.forEach(function(sec){
+        var secId=sec.querySelector('.kb-cat-title').id;
+        var n=0;
+        [].forEach.call(sec.querySelectorAll('.kb-card'),function(c){
+          var hit=(activeCat==='alle'||secId===activeCat)
+            &&(!activeLevel||c.dataset.level===activeLevel)
+            &&(!q||c.dataset.zoek.indexOf(q)>-1);
+          c.style.display=hit?'':'none';
+          if(hit)n++;
+        });
+        sec.style.display=n?'':'none';
+        var cnt=sec.querySelector('.kb-cat-count');
+        if(cnt)cnt.textContent=filtering?n+' van '+sec.dataset.count:sec.dataset.count;
+        total+=n;
+      });
+      if(leerpad)leerpad.style.display=filtering?'none':'';
+      if(featured)featured.style.display=filtering?'none':'';
+      empty.hidden=total>0;
+    }
+    [].forEach.call(box.querySelectorAll('.kb-chip'),function(b){
+      b.addEventListener('click',function(){
+        if(b.dataset.cat){
+          activeCat=b.dataset.cat;
+          [].forEach.call(box.querySelectorAll('.kb-chip[data-cat]'),function(x){
+            var on=x===b;x.classList.toggle('is-active',on);x.setAttribute('aria-pressed',on);
+          });
+        }else{
+          activeLevel=activeLevel===b.dataset.level?'':b.dataset.level;
+          [].forEach.call(box.querySelectorAll('.kb-chip[data-level]'),function(x){
+            var on=x.dataset.level===activeLevel;x.classList.toggle('is-active',on);x.setAttribute('aria-pressed',on);
+          });
+        }
+        apply();
+      });
+    });
+    search.addEventListener('input',apply);
+    document.getElementById('kb-filter-reset').addEventListener('click',function(){
+      search.value='';activeCat='alle';activeLevel='';
+      [].forEach.call(box.querySelectorAll('.kb-chip'),function(x){
+        var on=x.dataset.cat==='alle';x.classList.toggle('is-active',on);x.setAttribute('aria-pressed',on);
+      });
+      apply();
+    });
+  })();
+  </script>
   <script src="/nav.js" defer></script>
 </body>
 </html>

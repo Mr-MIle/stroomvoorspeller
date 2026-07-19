@@ -1363,6 +1363,80 @@ body.has-neg-alert .site-header { top: 56px; }
   font-weight: 500;
 }
 
+/* ── Kennisbank zoeken & filteren ───────────────────────── */
+.kb-filter {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px 16px;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.kb-filter-search {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 9px 14px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-bg);
+  color: var(--c-text);
+}
+.kb-filter-search:focus {
+  outline: none;
+  border-color: var(--c-brand);
+  box-shadow: 0 0 0 2px rgba(15,108,189,0.18);
+}
+.kb-filter-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.kb-chip {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--c-border);
+  background: var(--c-bg);
+  color: var(--c-text-soft);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.kb-chip:hover {
+  border-color: var(--c-brand);
+  color: var(--c-brand);
+}
+.kb-chip.is-active {
+  background: var(--c-brand);
+  border-color: var(--c-brand);
+  color: #fff;
+}
+.kb-filter-empty {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  margin-bottom: 28px;
+  color: var(--c-text-soft);
+  font-size: 0.95rem;
+}
+.kb-filter-empty[hidden] { display: none; }
+.kb-filter-reset {
+  font: inherit;
+  font-size: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--c-brand);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* ── Leerpad-stepper ────────────────────────────────────── */
 .kb-leerpad {
   background: var(--c-surface);
