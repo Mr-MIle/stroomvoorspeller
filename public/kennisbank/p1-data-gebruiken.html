@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Je P1-meter draait, en dan? Van sluipverbruik tot je eigen kWh-prijs — Stroomvoorspeller.nl</title>
+  <meta name="description" content="De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: je basislast opsporen, pieken thuisbrengen, je eigen gewogen kWh-prijs berekenen en verbruik verschuiven." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/kennisbank/p1-data-gebruiken" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Je P1-meter draait, en dan? Van sluipverbruik tot je eigen kWh-prijs" />
+  <meta property="og:description" content="De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: je basislast opsporen, pieken thuisbrengen, je eigen gewogen kWh-prijs berekenen en verbruik verschuiven." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/kennisbank/p1-data-gebruiken" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Stroomvoorspeller.nl — wat je met de data uit je P1-poort kunt doen" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Je P1-meter draait, en dan? Van sluipverbruik tot je eigen kWh-prijs" />
+  <meta name="twitter:description" content="De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: je basislast opsporen, pieken thuisbrengen, je eigen gewogen kWh-prijs berekenen en verbruik verschuiven." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <style>
+    .artikel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 1.25rem 0 1.75rem;
+    }
+    .artikel-table th {
+      background: #0f6cbd;
+      color: #fff;
+      text-align: left;
+      padding: 0.55rem 0.75rem;
+      font-weight: 600;
+    }
+    .artikel-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border, #e2e8f0);
+      vertical-align: top;
+    }
+    .artikel-table tbody tr:nth-child(even) td {
+      background: #f0f7ff;
+    }
+    .artikel-table .col-label { font-weight: 600; }
+    .artikel-table-wrap { overflow-x: auto; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
+          { "@type": "ListItem", "position": 3, "name": "Wat doe je met je P1-data", "item": "https://stroomvoorspeller.nl/kennisbank/p1-data-gebruiken" }
+        ]
+      },
+      {
+        "@type": "Article",
+        "headline": "Je P1-meter draait, en dan? Van sluipverbruik tot je eigen kWh-prijs",
+        "description": "De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: je basislast opsporen, pieken thuisbrengen, je eigen gewogen kWh-prijs berekenen en verbruik verschuiven.",
+        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
+        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "datePublished": "2026-08-07",
+        "dateModified": "2026-08-07",
+        "inLanguage": "nl-NL",
+        "image": "https://stroomvoorspeller.nl/og-image.png",
+        "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/p1-data-gebruiken"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Wat is een normaal sluipverbruik voor een huishouden?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Als vuistregel: onder de 80 watt zit je goed, tussen 80 en 150 watt valt er nog wat te halen, en boven de 150 watt draait er waarschijnlijk iets dat uit kan. Een basislast van 50 watt komt neer op ongeveer 440 kilowattuur per jaar. Wie zonnepanelen of een thuisbatterij heeft, telt daar het eigen verbruik van de omvormer bij op; dat kan alleen al 10 tot 30 watt zijn." }
+          },
+          {
+            "@type": "Question",
+            "name": "Hoeveel kost 1 watt sluipverbruik per jaar?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Eén watt die het hele jaar doorloopt is 8,76 kilowattuur. Bij een all-in prijs van ongeveer 24 cent per kilowattuur kost dat 2,10 euro per jaar. Een decoder van 15 watt die altijd aan staat, kost je dus zo'n 32 euro per jaar." }
+          },
+          {
+            "@type": "Question",
+            "name": "Kan ik met mijn P1-meter zien welk apparaat stroom verbruikt?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Niet rechtstreeks. De P1-poort geeft het totaal van je hele huis, zonder te vertellen waar het vandaan komt. Je brengt apparaten thuis door te kijken naar de sprong in de grafiek: een waterkoker springt ongeveer 2.200 watt omhoog, een oven 2.000 tot 2.500 watt, een auto op een gewone laadpaal 3.700 of 11.000 watt. Wil je het per apparaat weten, dan heb je een slimme stekker met meting nodig." }
+          },
+          {
+            "@type": "Question",
+            "name": "Levert een P1-meter zelf geld op?",
+            "acceptedAnswer": { "@type": "Answer", "text": "De meter zelf verdient niets terug; hij laat alleen zien wat er gebeurt. Het geld zit in wat je daarna doet: apparaten uitzetten die onnodig doorlopen, en zwaar verbruik naar goedkopere uren verschuiven. Met een dynamisch contract levert een uur verschuiven van de avondpiek naar de middagdip al gauw 10 cent per kilowattuur op." }
+          },
+          {
+            "@type": "Question",
+            "name": "Zie ik in mijn P1-data ook mijn kwartierverbruik?",
+            "acceptedAnswer": { "@type": "Answer", "text": "De kwartierwaarden waarop je leverancier afrekent staan niet als kant-en-klaar getal in het bericht dat je meter uitstuurt. Wat er wel in staat zijn de meterstanden en het vermogen op dat moment. Je uitlezer rekent daar zelf kwartier- en uurtotalen uit, en die kloppen goed zolang de dongle geen periodes mist." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank" aria-current="page">Kennisbank</a>
+        <a href="/historisch">Historisch</a>
+        <a href="/batterij">Batterij</a>
+        <a href="/integraties">Integraties</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="legal-page container">
+    <p class="legal-breadcrumb"><a href="/kennisbank">← terug naar de kennisbank</a></p>
+    <h1>Je P1-meter draait, en dan? Van sluipverbruik tot je eigen kWh-prijs</h1>
+    <p class="legal-meta">7 augustus 2026 · leestijd ~9 minuten</p>
+
+    <p>De dongle zit in de meterkast, de app staat op je telefoon, en je ziet nu elke seconde hoeveel watt er door je meter loopt. Van kijken alleen wordt je rekening niet lager. Er moet iets uit die grafiek komen dat je kunt veranderen.</p>
+    <p>Hieronder staan vier stappen die dat opleveren, in volgorde van moeite. De eerste kost je een avond en verdient zichzelf meestal binnen een maand terug. De laatste is de interessantste als je een dynamisch contract hebt: je legt je eigen verbruik naast de uurprijzen en ziet wat jíj gemiddeld per kilowattuur betaalt. Dat getal wijkt bijna altijd af van de dagprijs, en meestal de verkeerde kant op.</p>
+    <p>Heb je nog geen uitlezer? Begin dan bij <a href="/kennisbank/p1-poort-uitlezen">de slimme meter uitlezen via de P1-poort</a>; daar staat welke hardware je nodig hebt en hoe je hem aansluit.</p>
+
+    <section>
+      <h2>Wat je P1-poort doorgeeft, en wat er niet in zit</h2>
+      <p>Je slimme meter stuurt een tekstbericht naar buiten. Bij een meter van na 2016 gebeurt dat elke seconde, bij oudere modellen elke 10 seconden. In dat bericht staan je meterstanden voor levering en teruglevering, apart voor het piek- en het daltarief, plus het vermogen op dat moment in watt. De gasstand loopt achter op de rest: afhankelijk van je meter komt die elke 5 minuten of één keer per uur binnen.</p>
+      <p>Twee dingen zitten er níét in. Het bericht vertelt nooit wélk apparaat stroom trekt — je krijgt het totaal van je hele huis. En de kwartierwaarden waarop je leverancier afrekent staan er niet als kant-en-klaar getal in. Je uitlezer telt die zelf op uit de meterstanden. Dat gaat prima, zolang je dongle geen periodes mist doordat de wifi wegvalt.</p>
+      <p>Dat "totaal van je hele huis" is minder beperkend dan het klinkt. Alles wat aan- en uitgaat, zie je als een sprong in de grafiek. Aan de hoogte van die sprong herken je het apparaat.</p>
+    </section>
+
+    <section>
+      <h2>Stap 1 — begin bij wat er om 3 uur 's nachts draait</h2>
+      <p>Kijk in je app naar de nacht, tussen 02:00 en 05:00. Iedereen slaapt, er wordt niets bewust aangezet, en wat je dan ziet is je basislast: het vermogen dat 24 uur per dag doorloopt. Zoek de laagste vlakke lijn van de nacht en noteer dat getal in watt.</p>
+      <p>Eén watt die het hele jaar doorloopt is 8,76 kilowattuur. Bij een all-in prijs van ongeveer 24 cent per kilowattuur — beursprijs, opslag, <a href="/kennisbank/energiebelasting-vaste-kosten-uitgelegd">energiebelasting en btw</a> bij elkaar — kost die watt je 2,10 euro per jaar. Zo reken je je basislast direct om naar euro's.</p>
+      <div class="artikel-table-wrap">
+      <table class="artikel-table">
+        <thead>
+          <tr>
+            <th>Basislast 's nachts</th>
+            <th>Per jaar</th>
+            <th>Oordeel</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="col-label">40 – 80 watt</td>
+          <td>350 – 700 kWh · ongeveer 85 – 170 euro</td>
+          <td>Normaal voor een modern huishouden</td>
+        </tr>
+        <tr>
+          <td class="col-label">80 – 150 watt</td>
+          <td>700 – 1.300 kWh · ongeveer 170 – 315 euro</td>
+          <td>Er draait iets dat uit kan</td>
+        </tr>
+        <tr>
+          <td class="col-label">boven 150 watt</td>
+          <td>meer dan 1.300 kWh · meer dan 315 euro</td>
+          <td>Ga zoeken, hier ligt geld</td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+      <p>De grootste stille verbruikers zijn meestal de decoder van je tv, een oude modem-router-combinatie, een tv in netwerkstand-by, een spelcomputer die niet echt uitgaat en een pc in slaapstand. Bij elkaar tikt dat makkelijk 60 watt aan. Heb je zonnepanelen, tel dan het eigen verbruik van de omvormer mee: 10 tot 30 watt is normaal, ook 's nachts.</p>
+      <p>Zoeken doe je door één ding tegelijk uit de stekker te trekken en de grafiek te bekijken. Wacht een minuut of twee, want de meeste apps middelen over korte periodes. Zakt de lijn zichtbaar, dan heb je hem.</p>
+    </section>
+
+    <section>
+      <h2>Stap 2 — breng de pieken van de dag thuis</h2>
+      <p>Bekijk daarna de daggrafiek. Je ziet blokken en pieken; de kunst is te weten welk apparaat welke piek maakt. Dat lukt verrassend goed op basis van de hoogte alleen.</p>
+      <div class="artikel-table-wrap">
+      <table class="artikel-table">
+        <thead>
+          <tr>
+            <th>Sprong in de grafiek</th>
+            <th>Waarschijnlijk</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="col-label">300 – 800 watt</td>
+          <td>Warmtepompdroger, koelkast die aanslaat, airco op laag</td>
+        </tr>
+        <tr>
+          <td class="col-label">1.800 – 2.500 watt</td>
+          <td>Vaatwasser of wasmachine tijdens het opwarmen, oven, waterkoker</td>
+        </tr>
+        <tr>
+          <td class="col-label">2.000 – 3.000 watt</td>
+          <td>Warmtepomp op een koude dag, elektrische boiler</td>
+        </tr>
+        <tr>
+          <td class="col-label">3.700 watt</td>
+          <td>Elektrische auto op één fase, 16 ampère</td>
+        </tr>
+        <tr>
+          <td class="col-label">7.400 – 11.000 watt</td>
+          <td>Laadpaal op drie fasen</td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Let vooral op de blokken die lang duren. Een waterkoker van 2.200 watt staat 3 minuten aan en kost je 2,6 cent. Een auto die vier uur op 3.700 watt hangt, is bijna 15 kilowattuur en dus rond de 3,50 euro. Daar zit de winst, niet in de waterkoker.</p>
+    </section>
+
+    <section>
+      <h2>Stap 3 — leg je verbruik naast de uurprijs</h2>
+      <p>Dit is de stap die een dynamisch contract van een vast contract onderscheidt, en waar je P1-data pas echt geld waard wordt. Je weet nu per uur hoeveel je verbruikt. De beurs weet per uur wat stroom kostte. Vermenigvuldig die twee met elkaar en je krijgt je eigen gewogen gemiddelde prijs.</p>
+      <p>Een voorbeeld van een gewone doordeweekse dag. Het huishouden verbruikt 8 kilowattuur, verdeeld zoals de meeste gezinnen dat doen: weinig overdag, veel tussen vijf en negen 's avonds.</p>
+      <div class="artikel-table-wrap">
+      <table class="artikel-table">
+        <thead>
+          <tr>
+            <th>Periode</th>
+            <th>Verbruik</th>
+            <th>Marktprijs</th>
+            <th>Kosten</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="col-label">07:00 – 09:00</td>
+          <td>1,5 kWh</td>
+          <td>11 ct/kWh</td>
+          <td>16,5 cent</td>
+        </tr>
+        <tr>
+          <td class="col-label">09:00 – 17:00</td>
+          <td>2,0 kWh</td>
+          <td>5 ct/kWh</td>
+          <td>10,0 cent</td>
+        </tr>
+        <tr>
+          <td class="col-label">17:00 – 21:00</td>
+          <td>3,5 kWh</td>
+          <td>15 ct/kWh</td>
+          <td>52,5 cent</td>
+        </tr>
+        <tr>
+          <td class="col-label">21:00 – 07:00</td>
+          <td>1,0 kWh</td>
+          <td>7 ct/kWh</td>
+          <td>7,0 cent</td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Samen 8 kilowattuur voor 86 cent. Gedeeld door 8 komt dat neer op 10,75 cent per kilowattuur. Het gemiddelde van die dag, gewogen naar de 24 uren, was 8,0 cent. Dit huishouden betaalt dus 2,75 cent per kilowattuur méér dan de markt die dag gemiddeld deed, puur door het moment waarop het de stroom afneemt.</p>
+      <p>Reken dat door naar een jaar met 2.500 kilowattuur en je zit op bijna 69 euro kale meerkosten, of ruim 83 euro als je de btw meetelt. Dat is geld dat je met dezelfde apparaten en hetzelfde comfort kunt terugpakken, alleen door de timing te veranderen.</p>
+      <p>Doe deze rekensom een keer of vijf voor verschillende dagen — een winterdag, een zonnige zomerdag, een weekenddag. Zit je structureel boven de dagprijs, dan is verschuiven de moeite waard. Zit je eronder, dan doe je het al goed. De uurprijzen van elke dag vind je op de <a href="/">prijzen-pagina</a>, en oudere dagen staan in het <a href="/historisch">historisch overzicht</a>.</p>
+    </section>
+
+    <section>
+      <h2>Stap 4 — verschuiven, en wat het echt oplevert</h2>
+      <p>Neem het voorbeeld hierboven. Verplaats 1,5 kilowattuur van de avondpiek naar de middagdip — de vaatwasser en de wasmachine op de klok zetten, of de auto overdag laden in plaats van meteen bij thuiskomst. Het verschil is 10 cent per kilowattuur, dus 15 cent op die dag.</p>
+      <p>Elke dag lukt dat niet. Reken op 200 dagen per jaar, en je houdt 30 euro kaal over, ongeveer 36 euro met btw. Geen vermogen, wel gratis. En de rekensom schaalt: wie een auto laadt of een <a href="/kennisbank/warmtepomp-dynamisch-contract">warmtepomp op de prijs stuurt</a>, verschuift geen 1,5 maar 10 tot 15 kilowattuur per dag. Dan praat je over een paar honderd euro per jaar.</p>
+      <p>Wat je realistisch kunt verschuiven en wat dat per scenario oplevert, staat uitgerekend in <a href="/kennisbank/hoeveel-bespaar-je-dynamisch-contract">hoeveel bespaar je met een dynamisch contract</a>. Overweeg je een thuisbatterij om het automatisch te laten doen, reken dat dan eerst door met de <a href="/batterij-berekenen">batterij-rekentool</a> voordat je iets koopt.</p>
+    </section>
+
+    <section>
+      <h2>Wat er verandert nu de prijs per kwartier gaat</h2>
+      <p>De beurs zet de prijs sinds oktober 2025 per kwartier vast, en in de zomer van 2026 stapten de eerste leveranciers over op afrekenen per kwartier. Voor je P1-data betekent dat één ding: het loont om je verbruik ook per kwartier te bekijken in plaats van per uur, want binnen een uur kunnen de vier kwartierprijzen flink uiteenlopen.</p>
+      <p>De meeste uitlezers kunnen dat al; de gegevens komen immers per seconde binnen. Handmatig ga je hier weinig mee doen — een vaatwasser plan je niet op een kwartier nauwkeurig. Voor automatische sturing van een batterij of laadpaal maakt het wel verschil. Wat er precies veranderde en welke leveranciers al om zijn, staat in <a href="/kennisbank/kwartierprijzen-stroom">kwartierprijzen stroom</a>.</p>
+    </section>
+
+    <section>
+      <h2>Wanneer meten je weinig oplevert</h2>
+      <p>Twee situaties waarin ik je de moeite bespaar. Heb je een vast contract, dan maakt het moment van verbruiken niets uit voor je rekening; alleen het totaal telt. Stap 1 en 2 hebben dan nog zin, stap 3 en 4 niet.</p>
+      <p>En heb je weinig verschuifbaar verbruik — geen auto, geen warmtepomp, geen droger, en je kookt op gas — dan is je verbruik grotendeels vast op de momenten dat je thuis bent. Dan blijft de winst beperkt tot je basislast. Dat is nog steeds tientallen euro's per jaar, maar verwacht er geen honderden van.</p>
+      <p>Zonnepanelen maken het beeld nog wat anders: dan is de vraag vooral hoeveel van je eigen opwek je zelf gebruikt. Daarvoor is <a href="/kennisbank/eigen-verbruik-zonne-energie">eigen gebruik van zonne-energie verhogen</a> het betere startpunt.</p>
+    </section>
+
+    <section>
+      <h2>Veelgestelde vragen</h2>
+
+      <h3>Wat is een normaal sluipverbruik voor een huishouden?</h3>
+      <p>Als vuistregel: onder de 80 watt zit je goed, tussen 80 en 150 watt valt er nog wat te halen, en boven de 150 watt draait er waarschijnlijk iets dat uit kan. Een basislast van 50 watt komt neer op ongeveer 440 kilowattuur per jaar. Wie zonnepanelen of een thuisbatterij heeft, telt daar het eigen verbruik van de omvormer bij op; dat kan alleen al 10 tot 30 watt zijn.</p>
+
+      <h3>Hoeveel kost 1 watt sluipverbruik per jaar?</h3>
+      <p>Eén watt die het hele jaar doorloopt is 8,76 kilowattuur. Bij een all-in prijs van ongeveer 24 cent per kilowattuur kost dat 2,10 euro per jaar. Een decoder van 15 watt die altijd aan staat, kost je dus zo'n 32 euro per jaar.</p>
+
+      <h3>Kan ik met mijn P1-meter zien welk apparaat stroom verbruikt?</h3>
+      <p>Niet rechtstreeks. De P1-poort geeft het totaal van je hele huis, zonder te vertellen waar het vandaan komt. Je brengt apparaten thuis door te kijken naar de sprong in de grafiek: een waterkoker springt ongeveer 2.200 watt omhoog, een oven 2.000 tot 2.500 watt, een auto op een gewone laadpaal 3.700 of 11.000 watt. Wil je het per apparaat weten, dan heb je een slimme stekker met meting nodig.</p>
+
+      <h3>Levert een P1-meter zelf geld op?</h3>
+      <p>De meter zelf verdient niets terug; hij laat alleen zien wat er gebeurt. Het geld zit in wat je daarna doet: apparaten uitzetten die onnodig doorlopen, en zwaar verbruik naar goedkopere uren verschuiven. Met een dynamisch contract levert een uur verschuiven van de avondpiek naar de middagdip al gauw 10 cent per kilowattuur op.</p>
+
+      <h3>Zie ik in mijn P1-data ook mijn kwartierverbruik?</h3>
+      <p>De kwartierwaarden waarop je leverancier afrekent staan niet als kant-en-klaar getal in het bericht dat je meter uitstuurt. Wat er wel in staat zijn de meterstanden en het vermogen op dat moment. Je uitlezer rekent daar zelf kwartier- en uurtotalen uit, en die kloppen goed zolang de dongle geen periodes mist.</p>
+    </section>
+
+    <section>
+      <h2>Tot slot</h2>
+      <p>Begin met de nacht. Die ene avond zoeken naar wat er stiekem doorloopt, levert bijna iedereen 50 tot 150 euro per jaar op, en je hoeft er daarna nooit meer naar om te kijken.</p>
+      <p>Stap 3 is meer werk en meer opbrengst. Zodra je weet hoeveel je eigen kilowattuurprijs afwijkt van de dagprijs, weet je ook precies of verschuiven of automatiseren in jouw geval de moeite waard is. Reken het één keer uit met de <a href="/">actuele uurprijzen</a> erbij, dan hoef je het niet op gevoel te schatten.</p>
+    </section>
+
+    <section>
+      <h2>Bronnen</h2>
+      <ol class="legal-sources">
+        <li><a href="https://www.netbeheernederland.nl/publicatie/dsmr-502-p1-companion-standard" rel="noopener noreferrer" target="_blank">Netbeheer Nederland — DSMR 5.0.2 P1 Companion Standard</a></li>
+        <li><a href="https://www.home-assistant.io/integrations/dsmr/" rel="noopener noreferrer" target="_blank">Home Assistant — DSMR-integratie (telegramfrequentie en snelheden per meterversie)</a></li>
+        <li><a href="https://www.homewizard.com/nl/blog/sluipverbruik-verminderen/" rel="noopener noreferrer" target="_blank">HomeWizard — wat is sluipverbruik en hoe verminder je het</a></li>
+        <li><a href="https://www.netbeheernederland.nl/artikelen/nieuws/nieuwe-energiewet-vereist-vervangen-oudere-meters" rel="noopener noreferrer" target="_blank">Netbeheer Nederland — nieuwe Energiewet vereist vervangen oudere meters</a></li>
+      </ol>
+    </section>
+
+    <section class="kb-lees-ook">
+      <p class="kb-lees-ook-label">Lees ook</p>
+      <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/">
+          <span class="kb-lees-ook-tag">⚡ Prijzen</span>
+          <span class="kb-lees-ook-title">Bekijk de actuele uurprijzen en kwartierprijzen</span>
+          <span class="kb-lees-ook-meta">▸ Live prijzen-tool</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/p1-poort-uitlezen">
+          <span class="kb-lees-ook-tag">💡 Slim besparen · Beginner</span>
+          <span class="kb-lees-ook-title">Slimme meter P1 poort uitlezen: zo zie je je verbruik per uur</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/hoeveel-bespaar-je-dynamisch-contract">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Hoeveel bespaar je met een dynamisch energiecontract? Eerlijk rekenvoorbeeld 2026</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/kwartierprijzen-stroom">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Kwartierprijzen stroom: van uur naar kwartier op de day-ahead-markt</span>
+          <span class="kb-lees-ook-meta">⏱ 6 min leestijd</span>
+        </a>
+      </div>
+      <p class="legal-related" style="margin-top:14px;"><a href="/kennisbank">← Terug naar de Kennisbank</a> · <a href="/disclaimer">Disclaimer</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a> ·
+          <a href="/over/voorspelling">Voorspelling</a> ·
+          <a href="/aanbieders">Aanbieders</a> ·
+          <a href="/kennisbank">Kennisbank</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script src="/nav.js" defer></script>
+</body>
+</html>
