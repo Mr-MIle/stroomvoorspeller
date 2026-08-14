@@ -1,94 +1,94 @@
 {
-  "generated_at": "2026-08-14T06:45:21Z",
+  "generated_at": "2026-08-14T12:10:46Z",
   "model_version": "3.2",
   "evaluation_window_days": 30,
-  "first_date": "2026-07-30",
-  "last_date": "2026-08-14",
+  "first_date": "2026-07-31",
+  "last_date": "2026-08-15",
   "overall": {
     "n_hours": 2304,
-    "mae_eur_mwh": 24.75,
-    "mae_vs_naive_pct": 12.0,
+    "mae_eur_mwh": 24.78,
+    "mae_vs_naive_pct": 11.1,
     "direction_hit_rate": 0.671,
-    "within_band_pct": 0.572,
+    "within_band_pct": 0.564,
     "error_distribution": {
       "n_hours": 2304,
       "p50_eur_mwh": 16.42,
-      "p80_eur_mwh": 41.11,
-      "p90_eur_mwh": 58.98,
+      "p80_eur_mwh": 41.19,
+      "p90_eur_mwh": 59.11,
       "empirical_band_ct": 4.1,
       "share_within": [
         {
           "ct": 2,
-          "pct": 0.565
+          "pct": 0.569
         },
         {
           "ct": 3,
-          "pct": 0.707
+          "pct": 0.705
         },
         {
           "ct": 4,
-          "pct": 0.795
+          "pct": 0.794
         },
         {
           "ct": 5,
-          "pct": 0.865
+          "pct": 0.864
         }
       ],
       "signed_error_hist": [
         {
           "label": "< -5 ct",
           "center_ct": -5.5,
-          "n": 229
+          "n": 232
         },
         {
           "label": "-5..-4 ct",
           "center_ct": -4.5,
-          "n": 106
+          "n": 107
         },
         {
           "label": "-4..-3 ct",
           "center_ct": -3.5,
-          "n": 135
+          "n": 144
         },
         {
           "label": "-3..-2 ct",
           "center_ct": -2.5,
-          "n": 194
+          "n": 209
         },
         {
           "label": "-2..-1 ct",
           "center_ct": -1.5,
-          "n": 315
+          "n": 367
         },
         {
           "label": "-1..0 ct",
           "center_ct": -0.5,
-          "n": 438
+          "n": 441
         },
         {
           "label": "0..1 ct",
           "center_ct": 0.5,
-          "n": 372
+          "n": 350
         },
         {
           "label": "1..2 ct",
           "center_ct": 1.5,
-          "n": 177
+          "n": 153
         },
         {
           "label": "2..3 ct",
           "center_ct": 2.5,
-          "n": 134
+          "n": 104
         },
         {
           "label": "3..4 ct",
           "center_ct": 3.5,
-          "n": 67
+          "n": 62
         },
         {
           "label": "4..5 ct",
           "center_ct": 4.5,
-          "n": 55
+          "n": 53
         },
         {
           "label": "> 5 ct",
@@ -102,166 +102,166 @@
     {
       "horizon_days": 2,
       "n_hours": 384,
-      "mae_eur_mwh": 22.63,
-      "mae_vs_naive_pct": 2.2,
-      "direction_hit_rate": 0.697
+      "mae_eur_mwh": 22.6,
+      "mae_vs_naive_pct": 1.2,
+      "direction_hit_rate": 0.717
     },
     {
       "horizon_days": 3,
       "n_hours": 384,
-      "mae_eur_mwh": 23.16,
-      "mae_vs_naive_pct": 5.2,
-      "direction_hit_rate": 0.703
+      "mae_eur_mwh": 23.29,
+      "mae_vs_naive_pct": 2.3,
+      "direction_hit_rate": 0.692
     },
     {
       "horizon_days": 4,
       "n_hours": 384,
-      "mae_eur_mwh": 24.08,
-      "mae_vs_naive_pct": 9.3,
-      "direction_hit_rate": 0.669
+      "mae_eur_mwh": 24.16,
+      "mae_vs_naive_pct": 7.6,
+      "direction_hit_rate": 0.678
     },
     {
       "horizon_days": 5,
       "n_hours": 384,
-      "mae_eur_mwh": 26.53,
-      "mae_vs_naive_pct": 20.2,
-      "direction_hit_rate": 0.65
+      "mae_eur_mwh": 26.63,
+      "mae_vs_naive_pct": 18.2,
+      "direction_hit_rate": 0.658
     },
     {
       "horizon_days": 6,
       "n_hours": 384,
-      "mae_eur_mwh": 25.36,
-      "mae_vs_naive_pct": 15.1,
+      "mae_eur_mwh": 25.07,
+      "mae_vs_naive_pct": 13.3,
       "direction_hit_rate": 0.656
     },
     {
       "horizon_days": 7,
       "n_hours": 384,
-      "mae_eur_mwh": 26.73,
-      "mae_vs_naive_pct": 20.2,
-      "direction_hit_rate": 0.65
+      "mae_eur_mwh": 26.93,
+      "mae_vs_naive_pct": 23.8,
+      "direction_hit_rate": 0.625
     }
   ],
   "by_hour_of_day": [
     {
       "hour": 0,
       "n_hours": 96,
-      "mae_eur_mwh": 15.23
+      "mae_eur_mwh": 15.88
     },
     {
       "hour": 1,
       "n_hours": 96,
-      "mae_eur_mwh": 14.56
+      "mae_eur_mwh": 15.21
     },
     {
       "hour": 2,
       "n_hours": 96,
-      "mae_eur_mwh": 14.62
+      "mae_eur_mwh": 15.28
     },
     {
       "hour": 3,
       "n_hours": 96,
-      "mae_eur_mwh": 14.75
+      "mae_eur_mwh": 15.33
     },
     {
       "hour": 4,
       "n_hours": 96,
-      "mae_eur_mwh": 15.26
+      "mae_eur_mwh": 15.52
     },
     {
       "hour": 5,
       "n_hours": 96,
-      "mae_eur_mwh": 17.74
+      "mae_eur_mwh": 17.49
     },
     {
       "hour": 6,
       "n_hours": 96,
-      "mae_eur_mwh": 15.39
+      "mae_eur_mwh": 14.41
     },
     {
       "hour": 7,
       "n_hours": 96,
-      "mae_eur_mwh": 14.98
+      "mae_eur_mwh": 14.09
     },
     {
       "hour": 8,
       "n_hours": 96,
-      "mae_eur_mwh": 17.01
+      "mae_eur_mwh": 16.65
     },
     {
       "hour": 9,
       "n_hours": 96,
-      "mae_eur_mwh": 22.75
+      "mae_eur_mwh": 24.96
     },
     {
       "hour": 10,
       "n_hours": 96,
-      "mae_eur_mwh": 29.1
+      "mae_eur_mwh": 32.11
     },
     {
       "hour": 11,
       "n_hours": 96,
-      "mae_eur_mwh": 29.91
+      "mae_eur_mwh": 29.41
     },
     {
       "hour": 12,
       "n_hours": 96,
-      "mae_eur_mwh": 22.75
+      "mae_eur_mwh": 22.56
     },
     {
       "hour": 13,
       "n_hours": 96,
-      "mae_eur_mwh": 19.97
+      "mae_eur_mwh": 19.35
     },
     {
       "hour": 14,
       "n_hours": 96,
-      "mae_eur_mwh": 23.64
+      "mae_eur_mwh": 21.65
     },
     {
       "hour": 15,
       "n_hours": 96,
-      "mae_eur_mwh": 36.85
+      "mae_eur_mwh": 33.18
     },
     {
       "hour": 16,
       "n_hours": 96,
-      "mae_eur_mwh": 45.41
+      "mae_eur_mwh": 45.26
     },
     {
       "hour": 17,
       "n_hours": 96,
-      "mae_eur_mwh": 44.98
+      "mae_eur_mwh": 46.08
     },
     {
       "hour": 18,
       "n_hours": 96,
-      "mae_eur_mwh": 31.66
+      "mae_eur_mwh": 31.14
     },
     {
       "hour": 19,
       "n_hours": 96,
-      "mae_eur_mwh": 39.89
+      "mae_eur_mwh": 39.85
     },
     {
       "hour": 20,
       "n_hours": 96,
-      "mae_eur_mwh": 41.05
+      "mae_eur_mwh": 41.24
     },
     {
       "hour": 21,
       "n_hours": 96,
-      "mae_eur_mwh": 31.58
+      "mae_eur_mwh": 31.82
     },
     {
       "hour": 22,
       "n_hours": 96,
-      "mae_eur_mwh": 20.97
+      "mae_eur_mwh": 21.09
     },
     {
       "hour": 23,
       "n_hours": 96,
-      "mae_eur_mwh": 13.86
+      "mae_eur_mwh": 15.17
     }
   ],
   "by_price_bucket": [
@@ -279,37 +279,30 @@
     },
     {
       "bucket": "cheap",
-      "n_hours": 276,
-      "mae_eur_mwh": 24.09,
-      "recall": 0.551
+      "n_hours": 288,
+      "mae_eur_mwh": 23.65,
+      "recall": 0.528
     },
     {
       "bucket": "normal",
-      "n_hours": 240,
-      "mae_eur_mwh": 49.13,
-      "recall": 0.221
+      "n_hours": 228,
+      "mae_eur_mwh": 49.26,
+      "recall": 0.206
     },
     {
       "bucket": "pricey",
-      "n_hours": 1464,
-      "mae_eur_mwh": 19.77,
-      "recall": 0.801
+      "n_hours": 1470,
+      "mae_eur_mwh": 20.07,
+      "recall": 0.8
     },
     {
       "bucket": "very_pricey",
-      "n_hours": 72,
-      "mae_eur_mwh": 70.3,
-      "recall": 0.403
+      "n_hours": 66,
+      "mae_eur_mwh": 75.43,
+      "recall": 0.379
     }
   ],
   "daily_series": [
-    {
-      "date": "2026-07-30",
-      "n_hours": 144,
-      "mae_eur_mwh": 23.09,
-      "avg_actual_eur_mwh": 124.65,
-      "avg_forecast_eur_mwh": 125.5
-    },
     {
       "date": "2026-07-31",
       "n_hours": 144,
@@ -414,6 +407,13 @@
       "mae_eur_mwh": 19.65,
       "avg_actual_eur_mwh": 141.91,
       "avg_forecast_eur_mwh": 134.02
+    },
+    {
+      "date": "2026-08-15",
+      "n_hours": 144,
+      "mae_eur_mwh": 23.61,
+      "avg_actual_eur_mwh": 122.87,
+      "avg_forecast_eur_mwh": 102.01
     }
   ],
   "model_history": [
