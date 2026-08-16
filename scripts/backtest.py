@@ -1111,6 +1111,21 @@ def main() -> int:
     parser.add_argument("--summer-scarcity-scale", type=float, default=1.0,
                         help="Globale schaal op de zomerschaarste-amplifier (default 1.0). "
                              "Alleen actief samen met --summer-scarcity.")
+    parser.add_argument("--level-shift", action="store_true",
+                        help="Zet de experimentele niveauverschuiving-detectie (v3.3, optie 1) "
+                             "aan: als de nieuwste waarneming een echte niveausprong is "
+                             "(vers, relatief >=ratio en absoluut >=min-gap), schuift de "
+                             "baseline naar die waarneming in plaats van op de mediaan te "
+                             "blijven hangen. Voor A/B: draai dezelfde periode met en zonder "
+                             "deze vlag en vergelijk MAE/bias per horizon.")
+    parser.add_argument("--level-shift-weight", type=float, default=1.0,
+                        help="Hoe ver de baseline naar de sprong schuift: 0 = niets (gelijk "
+                             "aan uit), 1 = volledig vervangen (default). Alleen actief "
+                             "samen met --level-shift.")
+    parser.add_argument("--level-shift-ratio", type=float, default=3.0,
+                        help="Relatieve drempel voor de sprongdetectie (default 3.0).")
+    parser.add_argument("--level-shift-min-gap", type=float, default=40.0,
+                        help="Absolute drempel in EUR/MWh voor de sprongdetectie (default 40).")
     parser.add_argument("--output-dir", type=str, default=None,
                         help="Schrijf rapport en JSON naar deze map (handig in CI). "
                              "Default: rapport naar 01-documenten/, JSON naar 03-data/.")
@@ -1209,6 +1224,19 @@ def main() -> int:
         print(f"[info] Zomerschaarste-amplifier AAN (scale={args.summer_scarcity_scale}). "
               f"A/B: vergelijk 'Zomerschaarste' in het regime-overzicht en de "
               f"avonduren-MAE met de run zonder --summer-scarcity.", file=sys.stderr)
+
+    # v3.3 (optie 1): niveauverschuiving-detectie in compute_baseline.
+    # Raakt geen factoren, alleen het niveau waar de factoren op werken.
+    if getattr(args, "level_shift", False):
+        import forecast as _fc_mod
+        _fc_mod.ENABLE_LEVEL_SHIFT = True
+        _fc_mod.LEVEL_SHIFT_WEIGHT = args.level_shift_weight
+        _fc_mod.LEVEL_SHIFT_RATIO = args.level_shift_ratio
+        _fc_mod.LEVEL_SHIFT_MIN_GAP = args.level_shift_min_gap
+        print(f"[info] Niveauverschuiving-detectie AAN (weight={args.level_shift_weight}, "
+              f"ratio={args.level_shift_ratio}, min-gap={args.level_shift_min_gap}). "
+              f"A/B: vergelijk MAE en bias per horizon met de run zonder --level-shift.",
+              file=sys.stderr)
 
     now = amsterdam_now()
     # Periode: testperiode = laatste `test_days` dagen, eindigend gisteren.
@@ -1321,6 +1349,9 @@ def main() -> int:
         source = source + f" + seizoensfactor (Nj={args.seasonal_years}, w={args.seasonal_window})"
     if getattr(args, "scarcity", False):
         source = source + f" + schaarste-amplifier (scale={args.scarcity_scale})"
+    if getattr(args, "level_shift", False):
+        source = source + (f" + niveauverschuiving (w={args.level_shift_weight}, "
+                           f"ratio={args.level_shift_ratio}, gap={args.level_shift_min_gap})")
 
     # Forecast-dates: elke dag in de testperiode
     forecast_dates = [test_start_day + timedelta(days=i) for i in range(test_days)]
