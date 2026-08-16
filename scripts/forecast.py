@@ -211,7 +211,7 @@ def compute_baseline(
             # v1.7: werkdag-baseline mag geen cross-border feestdagen bevatten.
             if target_type == "werkdag" and is_crossborder_feestdag(t):
                 continue
-            matches.append(entry["price"])
+            matches.append((t, entry["price"]))
         return matches
 
     matches = _collect(cutoff_start)
@@ -238,14 +238,124 @@ def compute_baseline(
                 continue
             if dagtype(t) != "weekend":
                 continue
-            matches.append(entry["price"])
+            matches.append((t, entry["price"]))
 
     if not matches:
         return None
-    s = sorted(matches)
+
+    med = _median([p for _, p in matches])
+
+    # v3.3 (optie 1): niveauverschuiving-detectie. Default UIT.
+    if ENABLE_LEVEL_SHIFT:
+        shifted = detect_level_shift(matches, history)
+        if shifted is not None:
+            w = LEVEL_SHIFT_WEIGHT
+            return (1.0 - w) * med + w * shifted
+
+    return med
+
+
+def _median(values: list[float]) -> float:
+    s = sorted(values)
     n = len(s)
     mid = n // 2
     return s[mid] if n % 2 else (s[mid - 1] + s[mid]) / 2
+
+
+# ---- Niveauverschuiving-detectie (v3.3, optie 1) ----
+#
+# PROBLEEM. De baseline is de mediaan van ~5 werkdagen op hetzelfde uur. Die
+# mediaan is per constructie ongevoelig voor de nieuwste dag: één nieuw punt
+# schuift de mediaan van positie 3 naar positie 3. Bij een echte
+# niveauverschuiving (markt springt van ~5 naar ~150 EUR/MWh) blijft de
+# baseline dus wekenlang op het oude niveau hangen.
+#
+# Voorbeeld 18 aug 2026, uur 14 (werkdagen 11/12/13/14/17 aug):
+#   [-1.94, -4.53, 5.00, 24.00, 141.27] -> mediaan 5.00
+# Terwijl 17 aug (de enige dag die het nieuwe niveau kent) op 141.27 zat.
+# De factoren kunnen dat niet repareren: die zijn multiplicatief (+3% per punt),
+# dus +10 punten op 5.00 levert 6.50 op terwijl het gat 135 EUR/MWh is.
+#
+# AANPAK. Detecteer of de nieuwste waarneming een niveausprong is in plaats van
+# ruis, en schuif de baseline dan (deels) naar die waarneming.
+#
+# Drie tests moeten alledrie slagen, anders gebeurt er niets:
+#   1. VERSHEID  — de nieuwste match moet echt de verste informatie zijn, niet
+#      een oude uitschieter ergens in het venster. Max LEVEL_SHIFT_MAX_AGE_DAYS
+#      oud t.o.v. het einde van de bekende history. (3.5 dagen zodat een
+#      vrijdag-sprong nog meetelt voor een maandag-target.)
+#   2. RELATIEF  — hi / max(lo, FLOOR) >= LEVEL_SHIFT_RATIO, met hi/lo = de
+#      hoogste/laagste van {nieuwste, mediaan-van-de-rest}. Deze vorm is
+#      SYMMETRISCH: een sprong 1.5 -> 141 en een val 100 -> 5 scoren allebei.
+#      Een simpele (nieuw - mediaan)/mediaan zou dat niet doen, want een val is
+#      begrensd door nul en haalt nooit factor 3.
+#      De FLOOR voorkomt deling door een mediaan rond nul (zonnedagen!).
+#   3. ABSOLUUT  — |hi - lo| >= LEVEL_SHIFT_MIN_GAP EUR/MWh. Zonder deze test
+#      vuurt de relatieve test op ruis: 0.5 -> 2.0 is ook "factor 4".
+#
+# RISICO dat de A/B moet meten: dit is precies de robuustheid die de mediaan
+# bood. Was de sprong een eendaagse uitschieter (storing, veiling-incident) en
+# valt de markt terug, dan schiet het model nu de andere kant op. Daarom een
+# gewicht tussen 0 en 1 in plaats van hard vervangen, en daarom draait dit
+# achter een vlag met een gewichtsknop voor de backtest.
+#
+# INTERACTIE. compute_baseline wordt ook aangeroepen voor prior_baseline
+# (factor vorige_dag). Met de verschuiving aan wordt prior_ratio ~1.0 in plaats
+# van 32x, dus factor_vorige_dag stopt met dubbeltellen. Dat is gewenst: het
+# signaal hoort nu in het niveau te zitten, niet in een gecapte factor.
+
+ENABLE_LEVEL_SHIFT       = False  # vlag (default UIT; backtest zet hem aan)
+LEVEL_SHIFT_WEIGHT       = 1.0    # 0..1 — hoe ver de baseline naar de sprong schuift
+LEVEL_SHIFT_RATIO        = 3.0    # relatieve drempel (hi / max(lo, FLOOR))
+LEVEL_SHIFT_MIN_GAP      = 40.0   # EUR/MWh — absolute drempel
+LEVEL_SHIFT_FLOOR        = 5.0    # EUR/MWh — vloer onder de noemer
+LEVEL_SHIFT_MAX_AGE_DAYS = 3.5    # versheidseis t.o.v. einde history
+LEVEL_SHIFT_MIN_MATCHES  = 3      # minder punten -> mediaan is toch al zwak
+
+
+def detect_level_shift(
+    matches: list[tuple],
+    history: list[dict],
+) -> Optional[float]:
+    """
+    Bepaal of de nieuwste match een niveauverschuiving is.
+
+    matches: lijst van (datetime, prijs) voor hetzelfde uur en dagtype.
+    history: volledige prijsgeschiedenis (voor de versheidstest).
+
+    Return: de prijs waar de baseline naartoe mag schuiven, of None.
+    """
+    if len(matches) < LEVEL_SHIFT_MIN_MATCHES:
+        return None
+
+    ordered = sorted(matches, key=lambda m: m[0])
+    newest_dt, newest = ordered[-1]
+    rest = [p for _, p in ordered[:-1]]
+    if not rest:
+        return None
+
+    # 1. Versheid: is dit echt de laatste informatie die we hebben?
+    if history:
+        history_end = max(datetime.fromisoformat(e["time"]) for e in history)
+        age_days = (history_end - newest_dt).total_seconds() / 86400.0
+        if age_days > LEVEL_SHIFT_MAX_AGE_DAYS:
+            return None
+
+    med_rest = _median(rest)
+    hi, lo = max(newest, med_rest), min(newest, med_rest)
+
+    # Twee negatieve/nul niveaus: geen zinnige ratio, en de absolute test
+    # zou hier toch al zelden vuren.
+    if hi <= 0:
+        return None
+
+    # 2. Relatief (symmetrisch) en 3. absoluut.
+    if hi / max(lo, LEVEL_SHIFT_FLOOR) < LEVEL_SHIFT_RATIO:
+        return None
+    if (hi - lo) < LEVEL_SHIFT_MIN_GAP:
+        return None
+
+    return newest
 
 
 # ---- Factor 1: Zonproductie ----
@@ -1076,15 +1186,24 @@ if __name__ == "__main__":
     assert scarcity_correction(0.3, 2.0, -2.0, 1.2, REGIME_NORMAL).points == 0
     assert scarcity_correction(0.3, 2.0, -2.0, 1.2, REGIME_OVERSUPPLY).points == 0
     assert scarcity_correction(1.0, 8.0, 12.0, 1.0, REGIME_SCARCITY).points == 0, "geen severity -> 0"
-    # Diepe Dunkelflaute: wind=(3)^2*0.9=8.1, cold=(10)^2*0.04=4.0, solar=(0.3)^2*6=0.54
-    # severity=12.64; gas_mult=1+0.2=1.2 -> 15.17 -> +15
-    deep = scarcity_correction(0.30, 2.0, -2.0, 1.20, REGIME_SCARCITY)
-    assert deep.points == 15, f"Verwachtte +15 in diepe Dunkelflaute, kreeg {deep.points}"
-    assert deep.points > 0, "schaarste moet OMHOOG corrigeren"
-    # Milde schaarste aan de regime-rand: wind=(1)^2*0.9=0.9, cold=(2)^2*0.04=0.16,
-    # solar=(0.1)^2*6=0.06 -> 1.12; gas_mult 1.0 -> +1
-    mild = scarcity_correction(0.50, 4.0, 6.0, 1.00, REGIME_SCARCITY)
-    assert mild.points == 1, f"Verwachtte +1 bij milde schaarste, kreeg {mild.points}"
+    # De twee rekenvoorbeelden hieronder zijn uitgeschreven voor SCARCITY_SCALE=1.0.
+    # De live default staat sinds v3.1 op 1.5, dus pin de schaal voor deze asserts —
+    # anders test je de schaal in plaats van de formule. Deze pin repareert een test
+    # die sinds de 1.5-uitrol faalde en daarmee de rest van de suite blokkeerde.
+    _scale_backup = SCARCITY_SCALE
+    globals()["SCARCITY_SCALE"] = 1.0
+    try:
+        # Diepe Dunkelflaute: wind=(3)^2*0.9=8.1, cold=(10)^2*0.04=4.0, solar=(0.3)^2*6=0.54
+        # severity=12.64; gas_mult=1+0.2=1.2 -> 15.17 -> +15
+        deep = scarcity_correction(0.30, 2.0, -2.0, 1.20, REGIME_SCARCITY)
+        assert deep.points == 15, f"Verwachtte +15 in diepe Dunkelflaute, kreeg {deep.points}"
+        assert deep.points > 0, "schaarste moet OMHOOG corrigeren"
+        # Milde schaarste aan de regime-rand: wind=(1)^2*0.9=0.9, cold=(2)^2*0.04=0.16,
+        # solar=(0.1)^2*6=0.06 -> 1.12; gas_mult 1.0 -> +1
+        mild = scarcity_correction(0.50, 4.0, 6.0, 1.00, REGIME_SCARCITY)
+        assert mild.points == 1, f"Verwachtte +1 bij milde schaarste, kreeg {mild.points}"
+    finally:
+        globals()["SCARCITY_SCALE"] = _scale_backup
     # Plafond: extreme kou mag niet exploderen
     capped = scarcity_correction(0.0, 0.0, -20.0, 2.0, REGIME_SCARCITY)
     assert capped.points == SCARCITY_MAX_POINTS, f"Verwachtte plafond {SCARCITY_MAX_POINTS}, kreeg {capped.points}"
@@ -1102,23 +1221,30 @@ if __name__ == "__main__":
         {"time": datetime(2025, 12, d, 18, 0).isoformat(), "price": 90.0}
         for d in (4, 5, 8, 9, 10)
     ]
-    f_off = forecast_one(dunkel_dt, dunkel_hist, shortwave_ratio=0.3, wind_ms=2.0,
-                         temp_c=-2.0, ttf_ratio=1.2, days_ahead=2)
-    assert f_off is not None and f_off.regime == REGIME_SCARCITY
-    sc_off = next(x for x in f_off.factors if x.name == "scarcity")
-    assert sc_off.points == 15, "factor zichtbaar in uitleg, ook als uit"
-    # 'scarcity' staat NIET in ENABLED_FACTORS -> draagt niet bij aan total
-    points_zonder = f_off.total_points
-    ENABLED_FACTORS.add("scarcity")
+    # Ook hier de schaal pinnen op 1.0: het verwachte puntenaantal (15) hoort bij
+    # de uitgeschreven formule, niet bij de live SCARCITY_SCALE.
+    _scale_backup2 = SCARCITY_SCALE
+    globals()["SCARCITY_SCALE"] = 1.0
     try:
-        f_on = forecast_one(dunkel_dt, dunkel_hist, shortwave_ratio=0.3, wind_ms=2.0,
-                            temp_c=-2.0, ttf_ratio=1.2, days_ahead=2)
-        assert f_on is not None
-        assert f_on.total_points == points_zonder + 15, (
-            f"Met scarcity AAN moet total +15 hoger zijn: {f_on.total_points} vs {points_zonder}")
-        assert f_on.predicted > f_off.predicted, "scarcity AAN moet voorspelling omhoog duwen"
+        f_off = forecast_one(dunkel_dt, dunkel_hist, shortwave_ratio=0.3, wind_ms=2.0,
+                             temp_c=-2.0, ttf_ratio=1.2, days_ahead=2)
+        assert f_off is not None and f_off.regime == REGIME_SCARCITY
+        sc_off = next(x for x in f_off.factors if x.name == "scarcity")
+        assert sc_off.points == 15, "factor zichtbaar in uitleg, ook als uit"
+        # 'scarcity' staat NIET in ENABLED_FACTORS -> draagt niet bij aan total
+        points_zonder = f_off.total_points
+        ENABLED_FACTORS.add("scarcity")
+        try:
+            f_on = forecast_one(dunkel_dt, dunkel_hist, shortwave_ratio=0.3, wind_ms=2.0,
+                                temp_c=-2.0, ttf_ratio=1.2, days_ahead=2)
+            assert f_on is not None
+            assert f_on.total_points == points_zonder + 15, (
+                f"Met scarcity AAN moet total +15 hoger zijn: {f_on.total_points} vs {points_zonder}")
+            assert f_on.predicted > f_off.predicted, "scarcity AAN moet voorspelling omhoog duwen"
+        finally:
+            ENABLED_FACTORS.discard("scarcity")
     finally:
-        ENABLED_FACTORS.discard("scarcity")
+        globals()["SCARCITY_SCALE"] = _scale_backup2
     print(f"[ok] forecast_one schaarste: uit={points_zonder:+d}p ({f_off.predicted}), "
           f"aan=+{15}p toggle werkt, default UIT bevestigd")
 
@@ -1186,4 +1312,62 @@ if __name__ == "__main__":
     print(f"[ok] zomerschaarste (v3.2 #71): regime-flag, gating, +{z_voor.points}p voorbeeld, "
           f"plafond {z_cap.points}, ramp-gewicht en toggle werken; default UIT bevestigd")
 
-    print("\n[ok] Self-test geslaagd; v3.1 schaarste-amplifier + v3.2 zomerschaarste (beide default uit).")
+    # ---- v3.3 (optie 1): niveauverschuiving-detectie ----
+    # Echte casus: doel di 18 aug 2026 14:00. Werkdagen op uur 14 in het venster:
+    # 11 aug -1.94, 12 aug -4.53, 13 aug 5.00, 14 aug 24.00, 17 aug 141.27.
+    # Mediaan = 5.00 terwijl de markt op 141 zit.
+    ls_dt = datetime(2026, 8, 18, 14, 0)
+    ls_hist = [
+        {"time": datetime(2026, 8, d, 14, 0).isoformat(), "price": p}
+        for d, p in ((11, -1.94), (12, -4.53), (13, 5.00), (14, 24.00), (17, 141.27))
+    ]
+    assert abs(compute_baseline(ls_dt, ls_hist) - 5.00) < 0.01, "default UIT moet de mediaan geven"
+
+    _ls_backup = (ENABLE_LEVEL_SHIFT, LEVEL_SHIFT_WEIGHT)
+    try:
+        globals()["ENABLE_LEVEL_SHIFT"] = True
+        globals()["LEVEL_SHIFT_WEIGHT"] = 1.0
+        b_vol = compute_baseline(ls_dt, ls_hist)
+        assert abs(b_vol - 141.27) < 0.01, f"gewicht 1.0 -> volledig naar de sprong, kreeg {b_vol}"
+        globals()["LEVEL_SHIFT_WEIGHT"] = 0.5
+        b_half = compute_baseline(ls_dt, ls_hist)
+        assert abs(b_half - (0.5 * 5.00 + 0.5 * 141.27)) < 0.01, f"gewicht 0.5, kreeg {b_half}"
+
+        # Symmetrie: dezelfde sprong omlaag moet ook vuren.
+        drop_hist = [
+            {"time": datetime(2026, 8, d, 14, 0).isoformat(), "price": p}
+            for d, p in ((11, 100.0), (12, 105.0), (13, 98.0), (14, 102.0), (17, 5.0))
+        ]
+        globals()["LEVEL_SHIFT_WEIGHT"] = 1.0
+        b_drop = compute_baseline(ls_dt, drop_hist)
+        assert abs(b_drop - 5.0) < 0.01, f"val moet ook vuren, kreeg {b_drop}"
+
+        # Ruis mag NIET vuren: relatief groot, absoluut klein (0.5 -> 3.0).
+        ruis_hist = [
+            {"time": datetime(2026, 8, d, 14, 0).isoformat(), "price": p}
+            for d, p in ((11, 0.4), (12, 0.6), (13, 0.5), (14, 0.5), (17, 3.0))
+        ]
+        assert abs(compute_baseline(ls_dt, ruis_hist) - 0.5) < 0.01, "kleine absolute sprong: niet vuren"
+
+        # Absoluut groot, relatief klein (150 -> 200) mag ook niet vuren.
+        vlak_hist = [
+            {"time": datetime(2026, 8, d, 14, 0).isoformat(), "price": p}
+            for d, p in ((11, 150.0), (12, 155.0), (13, 148.0), (14, 152.0), (17, 200.0))
+        ]
+        assert abs(compute_baseline(ls_dt, vlak_hist) - 152.0) < 0.01, "relatief kleine sprong: niet vuren"
+
+        # Versheidstest: een sprong die 5 dagen oud is, telt niet meer.
+        oud_dt = datetime(2026, 8, 24, 14, 0)
+        oud_hist = ls_hist + [
+            {"time": datetime(2026, 8, d, 14, 0).isoformat(), "price": p}
+            for d, p in ((18, 4.0), (19, 3.0), (20, 6.0), (21, 5.0))
+        ]
+        b_oud = compute_baseline(oud_dt, oud_hist)
+        assert b_oud is not None and b_oud < 10.0, f"oude sprong mag niet meer schuiven, kreeg {b_oud}"
+        print("[ok] niveauverschuiving (v3.3 optie 1): vuurt op sprong, symmetrisch, negeert "
+              "ruis/vlakke stijging/oude sprong, default UIT bevestigd")
+    finally:
+        globals()["ENABLE_LEVEL_SHIFT"], globals()["LEVEL_SHIFT_WEIGHT"] = _ls_backup
+
+    print("\n[ok] Self-test geslaagd; v3.1 schaarste-amplifier + v3.2 zomerschaarste + "
+          "v3.3 niveauverschuiving (alle drie default uit).")
