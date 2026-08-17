@@ -78,14 +78,14 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Over de voorspelling</h1>
-    <p class="legal-meta">Modelversie 3.2 · Bijgewerkt: 5 juli 2026</p>
+    <p class="legal-meta">Modelversie 4.0 · Bijgewerkt: 17 augustus 2026</p>
 
     <section>
       <h2>Kort samengevat</h2>
       <p class="legal-summary">
-        De voorspelling kijkt naar <strong>wat de prijs de afgelopen 1–2 weken op hetzelfde uur deed</strong>
-        en past dat aan op basis van het verwachte weer (zon, wind, temperatuur), de gasprijs, het
-        type dag en hoe de prijs in dezelfde periode van voorgaande jaren lag. Daarbovenop herkent
+        De voorspelling kijkt naar <strong>wat de prijs de afgelopen vier weken op hetzelfde uur deed</strong>
+        en past dat aan op basis van de verwachte wind, de gasprijs, het type dag en de prijs van
+        gisteren. Daarbovenop herkent
         het model drie <strong>marktregimes</strong>: een gewone dag,
         een dag met veel hernieuwbare energie (oversupply) en een schaarse dag. Bij oversupply — veel
         zon en wind tegelijk, zeker in het weekend — kunnen prijzen negatief worden tot ver onder nul;
@@ -134,42 +134,46 @@
     <section>
       <h2>Hoe werkt het model?</h2>
 
-      <h3>Stap 1 — Beginprijs uit de afgelopen week</h3>
+      <h3>Stap 1 — Beginprijs uit de afgelopen vier weken</h3>
       <p>
         Voor elk toekomstig uur zoeken we de werkelijke prijzen op van
-        <em>hetzelfde uur op vergelijkbare dagen de afgelopen week</em>. De mediaan daarvan wordt de
-        <strong>basisprijs</strong>. Die absorbeert het dagelijkse patroon (nacht goedkoop,
-        ochtend en avond duurder, middag soms goedkoop door zon) zonder dat we parameters hoeven
-        te kiezen.
+        <em>hetzelfde uur op de afgelopen 28 dagen</em>, gesplitst in werkdagen en weekenddagen.
+        De mediaan daarvan wordt de <strong>basisprijs</strong>. Die absorbeert het dagelijkse
+        patroon (nacht goedkoop, ochtend en avond duurder, middag vaak goedkoop door zon) zonder
+        dat we parameters hoeven te kiezen.
       </p>
       <p>
-        Herkent het model een dag als <strong>oversupply</strong>? Dan kijken we voor de middaguren
-        maar 2 dagen terug in plaats van 7. De reden: zonnige lentedagen veranderen snel — een
-        mediaan van vorige week geeft dan een te hoge startprijs.
+        Tot augustus 2026 keken we maar 7 dagen terug. Dat zijn ongeveer 5 prijzen per uur, en op
+        vijf dagen vooruit vielen de meeste daarvan buiten wat we op dat moment al wisten. Een
+        venster van 28 dagen geeft een rustiger startpunt: over de hele prijshistorie sinds 2021
+        scheelt het 8 tot 10% in gemiddelde afwijking, in de zomer van 2026 zelfs 15%.
+      </p>
+      <p>
+        Twee dingen houden het venster wendbaar. De prijzen van de afgelopen week tellen voor een
+        kwart extra mee, zodat een verse verandering doorkomt. En loopt het gemiddelde van de
+        laatste 7 dagen op of neer ten opzichte van de laatste 28, dan schuift de basisprijs
+        gedempt mee. Een markt die in een week 20% duurder wordt, tilt de basisprijs zo ongeveer
+        5% op.
       </p>
 
-      <h3>Stap 2 — Elf factoren stellen bij</h3>
+      <h3>Stap 2 — Zeven factoren stellen bij</h3>
       <p>
-        Elf factoren geven elk een score in <strong>punten</strong>. Het totaal verschuift de
-        basisprijs met 3% per punt:
+        Zeven factoren geven elk een score in <strong>punten</strong>. Het totaal verschuift de
+        basisprijs met 1,5% per punt:
       </p>
       <p class="legal-formula">
-        voorspelling = basisprijs × (1 + totaalpunten × 3%)
+        voorspelling = basisprijs × (1 + totaalpunten × 1,5%)
       </p>
-      <p>De elf factoren:</p>
+      <p>
+        Tot augustus 2026 waren het elf factoren met 3% per punt. Zon, temperatuur, uurpatroon en
+        seizoen zijn eruit: de basisprijs is per uur, dus die wist het zonnedal en de avondspits
+        al. Ze telden dat een tweede keer mee en maakten de voorspelling daardoor slechter. Wat de
+        zon doet, zie je nog steeds terug — het zit in de basisprijs van dat uur.
+      </p>
+      <p>De zeven factoren:</p>
       <ol>
         <li>
-          <strong>Zonproductie</strong> — bewolkt geeft plus (duurder), zonnig geeft min.
-          Het model kijkt per uur naar de verwachte straling — op een heldere dag kan het middaguur
-          dubbel zo zonnig zijn als het daggemiddelde, waardoor de prijs op dat uur harder reageert
-          dan op de rest van de dag.
-        </li>
-        <li>
           <strong>Windproductie</strong> — windstil geeft plus, stormachtig geeft min.
-        </li>
-        <li>
-          <strong>Temperatuur</strong> — vorst geeft een grote plus (warmtepompen op vol vermogen);
-          aangenaam voorjaarsweer geeft een minpunt.
         </li>
         <li>
           <strong>Gasprijs (TTF)</strong> — vergelijkt de actuele gasprijs met het 30-daags gemiddelde.
@@ -180,10 +184,6 @@
           Werkdagen zitten al impliciet in de basisprijs.
         </li>
         <li>
-          <strong>Uurcorrectie</strong> — kleine seizoenscorrectie: de avondspits weegt in de winter
-          zwaarder dan in de zomer.
-        </li>
-        <li>
           <strong>Vorige dag</strong> — vergelijkt de prijs van hetzelfde uur gisteren met de
           basisprijs. Een dag die opvallend anders liep dan verwacht (grote veiling-meevaller of
           -tegenvaller) trekt de volgende dag meetbaar mee.
@@ -192,7 +192,10 @@
           <strong>Oversupply-cap</strong> — nonlineaire correctie bij extreme oversupply-situaties.
           Als zon én wind gelijktijdig piekeren terwijl de vraag laag is, versterkt het model de
           neerwaartse bijstelling extra, want lineaire factoren onderschatten dan systematisch hoe
-          ver de prijs kan zakken.
+          ver de prijs kan zakken. Sinds versie 4.0 zit er een bodem onder: de correctie mag de
+          voorspelling hoogstens een paar procent omlaag duwen. Zonder die bodem kon een uur vlak
+          na zonsopgang, waar de gemeten straling ver boven de norm voor dat uur uitkomt, de
+          voorspelling door nul heen trekken.
         </li>
         <li>
           <strong>Schaarste-cap</strong> — het spiegelbeeld van de oversupply-cap, maar omhoog. Bij
@@ -200,13 +203,6 @@
           niet-lineair omhoog. De lineaire zon- en windfactoren vangen dat niet, dus versterkt het
           model de opwaartse bijstelling extra, zwaarder naarmate het kouder en windstiller is en de
           gasprijs hoger ligt. Werkt alleen in dat schaarste-regime; in alle andere uren staat hij op nul.
-        </li>
-        <li>
-          <strong>Seizoen</strong> — vergelijkt het huidige niveau met dezelfde periode (zelfde uur
-          en dagtype) in de twee voorgaande jaren uit ons prijsarchief. Zo corrigeert het model voor
-          het patroon over het jaar heen: ligt deze tijd van het jaar historisch hoger of lager dan
-          de afgelopen weken suggereren, dan stelt het de prijs navenant bij. Deze factor verlaagde
-          in onze backtest de winterafwijking aanzienlijk.
         </li>
         <li>
           <strong>Zomerschaarste-cap</strong> — de zomerse tegenhanger van de schaarste-cap. Op
@@ -261,13 +257,17 @@
       <h2>Onzekerheidsband</h2>
       <p>
         Bij elke voorspelling tonen we een <strong>schaduwzone</strong>: het gebied waarbinnen de
-        prijs naar verwachting valt. De band wordt breder naarmate:
+        prijs naar verwachting valt. De band is zo gekozen dat ongeveer <strong>8 van de 10 uren</strong>
+        er ook echt in vallen. Hij is 1,7 cent per kWh breed plus een kwart van de voorspelde prijs
+        zelf, aan beide kanten. Bij een voorspelling van 20 cent loopt de band dus grofweg van
+        13 tot 27 cent.
       </p>
-      <ul>
-        <li>het verder vooruit is (dag 7 is onzekerder dan dag 2),</li>
-        <li>de totaalscore extremer is (sterk positief of negatief is zeldzamer),</li>
-        <li>het regime op oversupply staat (grotere prijsuitslagen mogelijk).</li>
-      </ul>
+      <p>
+        Tot augustus 2026 was die band veel smaller: hij dekte 4 tot 5 van de 10 uren, terwijl hij
+        eruitziet alsof de prijs er wel in valt. De nieuwe band is breder en eerlijker. Bij een
+        negatieve voorspelling klopte de oude berekening bovendien niet — de grenzen wisselden dan
+        van plek. Dat is nu opgelost.
+      </p>
       <p>
         De <strong>kleur</strong> van de band geeft aan hoe goed het model weet wat het doet
         voor dat uur — zie de volgende sectie voor uitleg.
@@ -357,16 +357,16 @@
         </li>
         <li>
           <strong>Winterse Dunkelflaute:</strong> koude, windstille dagen met weinig zon. Het model
-          herkent de schaarste en duwt de prijs sinds v3.1 met de schaarste-cap (factor 9) gericht
+          herkent de schaarste en duwt de prijs sinds v3.1 met de schaarste-cap gericht
           omhoog. Dat halveert de structurele onderschatting in onze winter-backtest ruwweg, maar
           haalt 'm niet helemaal weg: bij de diepste pieken valt de werkelijke prijs nog steeds hoger
-          uit dan het model schat. De seizoensfactor (factor 10) trekt het niveau juist iets omlaag
+          uit dan het model schat. Sinds versie 4.0 vangt de vierwekelijkse basisprijs een deel daarvan op
           en werkt hier dus tegen de schaarste-cap in.
         </li>
         <li>
           <strong>Hete, windstille zomeravonden:</strong> in juni 2026 schoten avondprijzen naar
           321 en zelfs 578 EUR/MWh terwijl het model 8 tot 12 cent per kWh lager zat. Sinds
-          modelversie 3.2 (juli 2026) duwt de zomerschaarste-cap (factor 11) zulke avonden gericht
+          modelversie 3.2 (juli 2026) duwt de zomerschaarste-cap zulke avonden gericht
           omhoog. Dat verkleint de misser aanzienlijk, maar ook hier geldt: de richting en het
           risico zie je, de exacte hoogte van de scherpste piek niet.
         </li>

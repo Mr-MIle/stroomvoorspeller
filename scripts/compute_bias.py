@@ -68,6 +68,7 @@ BIAS_CORRECTIONS_FILE = PROJECT_ROOT / "03-data" / "bias_corrections.json"
 # ---------------------------------------------------------------------------
 WINDOW_DAYS  = 60      # Rollerend venster voor bias-berekening
 MIN_SAMPLES  = 7       # legacy: minimaal aantal datapunten voor 'apply'
+MIN_ENTRIES_FOR_MODEL_FILTER = 150   # v4: puur informatief in het log
 MIN_BIAS_EUR = 5.0     # Minimale absolute bias (EUR/MWh) om correctie te activeren
 
 # rolling-modus (v3.2) — defaults; overschrijfbaar via CLI voor backtest-tuning
@@ -203,6 +204,10 @@ def main() -> int:
                              f"(rolling, default {MIN_N_EFF}).")
     parser.add_argument("--window-days", type=int, default=WINDOW_DAYS,
                         help=f"Rollerend datavenster in dagen (default {WINDOW_DAYS}).")
+    parser.add_argument("--model-prefix", type=str, default=None,
+                        help="Gebruik alleen log-entries van deze modelgeneratie, bv. '4.'. "
+                             "Zonder deze vlag pakt het script automatisch de generatie "
+                             "van de nieuwste entry (zie MIN_ENTRIES_FOR_MODEL_FILTER).")
     args = parser.parse_args()
 
     print(f"[info] compute_bias.py gestart (mode={args.mode}).", file=sys.stderr)
@@ -212,6 +217,33 @@ def main() -> int:
     window_start = now_utc - timedelta(days=args.window_days)
 
     entries_with_actual = [e for e in log if e.get("actual") is not None]
+
+    # v4: alleen leren van de huidige modelgeneratie.
+    # Bij een modelwissel zit de oude generatie nog 60 dagen in het venster. De
+    # correcties die daaruit komen horen bij het oude model — v3.2 zat ruim 9
+    # EUR/MWh te laag, met juni-avondcellen tot +200 — en zouden het nieuwe model
+    # fors scheeftrekken. Zonder --model-prefix bepaalt het script de generatie
+    # zelf uit de nieuwste entry. Zijn er nog te weinig verse entries, dan komen
+    # de cellen onder MIN_SAMPLES uit en staat de correctie vanzelf uit; dat is
+    # precies wat je wilt in de eerste dagen na een modelwissel.
+    prefix = args.model_prefix
+    if prefix is None and log:
+        laatste = ""
+        for e in reversed(log):
+            if e.get("model_version"):
+                laatste = str(e["model_version"])
+                break
+        prefix = laatste.split(".")[0] + "." if laatste else None
+    if prefix:
+        van_generatie = [e for e in entries_with_actual
+                         if str(e.get("model_version", "")).startswith(prefix)]
+        print(f"[info] modelfilter '{prefix}': {len(van_generatie)} van "
+              f"{len(entries_with_actual)} entries met actuals.", file=sys.stderr)
+        if len(van_generatie) < MIN_ENTRIES_FOR_MODEL_FILTER:
+            print(f"[info] dat is minder dan {MIN_ENTRIES_FOR_MODEL_FILTER}; de meeste "
+                  f"cellen komen onder min_samples en blijven dus uit.", file=sys.stderr)
+        entries_with_actual = van_generatie
+
     print(f"[info] {len(entries_with_actual)} entries met actuals (voor window-filter).",
           file=sys.stderr)
 

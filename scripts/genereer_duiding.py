@@ -247,6 +247,48 @@ def _niveau_klasse(typ_ct: float) -> str:
     return "duur"
 
 
+def _weer_uit_rijen(rows: list) -> dict:
+    """Leidt zon- en temperatuursignaal af uit de weerswaarden in forecast.json.
+
+    Vanaf model 4.0 staan de factoren 'zon' en 'temperatuur' niet meer in de
+    puntensom (ze dubbelden met een baseline die al per uur werkt), en dus ook
+    niet meer in de factorlijst. De weerswaarden zelf staan er nog wel: per uur
+    `sw_ratio_daily` (straling gedeeld door de seizoensnorm) en `temp_c`.
+    """
+    out = {}
+    zon = [r.get("sw_ratio_daily") for r in rows if r.get("sw_ratio_daily") is not None]
+    if zon:
+        ratio = median(zon)
+        if ratio < 0.50:
+            punten, tekst = 3, f"bewolkt ({ratio * 100:.0f}% van seizoen)"
+        elif ratio < 0.80:
+            punten, tekst = 1, f"iets minder zon ({ratio * 100:.0f}%)"
+        elif ratio <= 1.20:
+            punten, tekst = 0, f"normaal ({ratio * 100:.0f}%)"
+        elif ratio <= 1.50:
+            punten, tekst = -1, f"zonnig ({ratio * 100:.0f}%)"
+        elif ratio <= 2.00:
+            punten, tekst = -3, f"heel zonnig ({ratio * 100:.0f}%)"
+        else:
+            punten, tekst = -5, f"extreem zonnig ({ratio * 100:.0f}%)"
+        out["zon"] = {"points": punten, "reason": tekst, "waarde": round(ratio * 100)}
+    temps = [r.get("temp_c") for r in rows if r.get("temp_c") is not None]
+    if temps:
+        t = median(temps)
+        if t < 0:
+            punten, tekst = 2, f"vorst ({t:.1f}°C)"
+        elif t < 10:
+            punten, tekst = 1, f"koud ({t:.1f}°C)"
+        elif t < 18:
+            punten, tekst = 0, f"mild ({t:.1f}°C)"
+        elif t <= 26:
+            punten, tekst = -1, f"lekker ({t:.1f}°C)"
+        else:
+            punten, tekst = 0, f"warm ({t:.1f}°C)"
+        out["temperatuur"] = {"points": punten, "reason": tekst, "waarde": round(t, 1)}
+    return out
+
+
 def lees_factoren(forecast_path: str, date: str) -> dict | None:
     """
     Leest de gemeten weersfactoren voor één dag uit forecast.json.
@@ -267,6 +309,11 @@ def lees_factoren(forecast_path: str, date: str) -> dict | None:
     if not rows:
         return None
     out = {}
+    # v4: zon en temperatuur tellen niet meer mee als factor en staan dus niet
+    # meer in forecast.json. De duiding gebruikt ze wel om de dag uit te leggen,
+    # dus leiden we ze af uit de weerswaarden die per uur al in het bestand staan
+    # (sw_ratio_daily en temp_c), met dezelfde drempels als het model gebruikte.
+    afgeleid = _weer_uit_rijen(rows)
     for naam in ("zon", "wind", "gas", "temperatuur"):
         punten, reason = [], ""
         for r in rows:
@@ -275,6 +322,8 @@ def lees_factoren(forecast_path: str, date: str) -> dict | None:
                     punten.append(f.get("points", 0))
                     reason = f.get("reason", "") or reason
         if not punten:
+            if naam in afgeleid:
+                out[naam] = afgeleid[naam]
             continue
         m = re.search(r"\(([-\d.]+)", reason)
         waarde = None

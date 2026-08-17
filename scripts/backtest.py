@@ -1126,6 +1126,22 @@ def main() -> int:
                         help="Relatieve drempel voor de sprongdetectie (default 3.0).")
     parser.add_argument("--level-shift-min-gap", type=float, default=40.0,
                         help="Absolute drempel in EUR/MWh voor de sprongdetectie (default 40).")
+    parser.add_argument("--model-v4", action="store_true",
+                        help="Zet het complete v4-pakket aan (#75): niveauschatter v4, "
+                             "factorset {wind, gas, vorige_dag, dagtype, nonlinear, scarcity, "
+                             "zomerschaarste}, puntgewicht 0.015, bodem -3 onder de "
+                             "niet-lineaire correctie en de 80%%-band. Voor A/B: draai "
+                             "dezelfde periode met en zonder deze vlag.")
+    parser.add_argument("--baseline", choices=["legacy", "v4"], default=None,
+                        help="Alleen de niveauschatter omzetten, zonder de rest van v4.")
+    parser.add_argument("--point-weight", type=float, default=None,
+                        help="Overschrijf POINT_WEIGHT (productie: 0.030, v4: 0.015).")
+    parser.add_argument("--nonlinear-floor", type=float, default=None,
+                        help="Bodem in punten onder de niet-lineaire oversupply-correctie, "
+                             "bv. -3. Zonder deze vlag blijft de correctie onbegrensd.")
+    parser.add_argument("--factors", type=str, default=None,
+                        help="Comma-gescheiden factorset die meetelt in de puntensom, bv. "
+                             "'wind,gas,vorige_dag,dagtype,nonlinear'. Overschrijft de default.")
     parser.add_argument("--output-dir", type=str, default=None,
                         help="Schrijf rapport en JSON naar deze map (handig in CI). "
                              "Default: rapport naar 01-documenten/, JSON naar 03-data/.")
@@ -1237,6 +1253,29 @@ def main() -> int:
               f"ratio={args.level_shift_ratio}, min-gap={args.level_shift_min_gap}). "
               f"A/B: vergelijk MAE en bias per horizon met de run zonder --level-shift.",
               file=sys.stderr)
+
+    # v4 (#75): pakket of losse onderdelen.
+    import forecast as _fc_mod   # noqa: F811 (ook geimporteerd in de takken hierboven)
+    if args.model_v4:
+        _fc_mod.BASELINE_MODE = "v4"
+        _fc_mod.UNCERTAINTY_MODE = "v4"
+        _fc_mod.NONLINEAR_FLOOR = -3.0
+        _fc_mod.POINT_WEIGHT = 0.015
+        _fc_mod.ENABLED_FACTORS = {"wind", "gas", "vorige_dag", "dagtype", "nonlinear",
+                                   "scarcity", "zomerschaarste"}
+        print("[info] Model v4 AAN (baseline v4, punten x0.015, bodem -3, 80%-band).",
+              file=sys.stderr)
+    if args.baseline:
+        _fc_mod.BASELINE_MODE = args.baseline
+    if args.point_weight is not None:
+        _fc_mod.POINT_WEIGHT = args.point_weight
+    if args.nonlinear_floor is not None:
+        _fc_mod.NONLINEAR_FLOOR = args.nonlinear_floor
+    if args.factors:
+        _fc_mod.ENABLED_FACTORS = {f.strip() for f in args.factors.split(",") if f.strip()}
+    print(f"[info] baseline={_fc_mod.BASELINE_MODE} point_weight={_fc_mod.POINT_WEIGHT} "
+          f"nonlinear_floor={_fc_mod.NONLINEAR_FLOOR} factoren={sorted(_fc_mod.ENABLED_FACTORS)}",
+          file=sys.stderr)
 
     now = amsterdam_now()
     # Periode: testperiode = laatste `test_days` dagen, eindigend gisteren.

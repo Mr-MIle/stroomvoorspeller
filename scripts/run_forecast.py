@@ -98,6 +98,26 @@ SCARCITY_SCALE = 1.5
 ENABLE_SUMMER_SCARCITY = True
 SUMMER_SCARCITY_SCALE = 1.0
 
+# v4 (backlog #75): nieuwe niveauschatter + opgeschoonde factorset + eerlijke band.
+# Uitkomst van de A/B van 17 augustus 2026 (rapport:
+# 01-documenten/ab-model-v4-uitkomst.md), gemeten op 334.501 backtestrijen
+# 2021-2026 en op 15.425 teruggerekende productievoorspellingen mei-aug 2026:
+#   - niveauschatter v4 (28-daagse mediaan op de werkdag/weekend-groep, kwart
+#     gewicht op de oude korte mediaan, gedempte trendfactor): -9,3% MAE
+#   - bodem onder de niet-lineaire oversupply-correctie: haalt de uitschieters weg
+#     die het model in dat regime op MAE 136 brachten (kale baseline: 39)
+#   - factorset teruggebracht tot wind, gas, vorige_dag, dagtype, schaarste,
+#     zomerschaarste en nonlinear; zon, temperatuur, uurpatroon en seizoen
+#     dubbelden met de per-uur-baseline en maakten de fout groter
+#   - puntgewicht van 0,030 naar 0,015
+# Samen: MAE 30,46 -> 24,1 op de replay, en voor het eerst beter dan de naieve
+# baseline op elke horizon. Kill-switch: terug op False.
+ENABLE_MODEL_V4 = True
+V4_POINT_WEIGHT = 0.015
+V4_FACTORS = {"wind", "gas", "vorige_dag", "dagtype", "nonlinear",
+              "scarcity", "zomerschaarste"}
+V4_NONLINEAR_FLOOR = -3.0
+
 # ---------------------------------------------------------------------------
 # Paden
 # ---------------------------------------------------------------------------
@@ -557,7 +577,10 @@ def main() -> int:
 
     # v3.0: seizoensfactor aanzetten (alleen hier, in main, zodat het importeren van
     # run_forecast door andere scripts de globale ENABLED_FACTORS niet muteert).
-    seasonal_enabled = ENABLE_SEASONAL and _load_same_period is not None
+    # v4: de seizoensfactor telt niet meer mee, dus het archief inlezen kost alleen
+    # tijd. Zet ENABLE_MODEL_V4 uit en de oude route komt ongewijzigd terug.
+    seasonal_enabled = (ENABLE_SEASONAL and not ENABLE_MODEL_V4
+                        and _load_same_period is not None)
     if seasonal_enabled:
         _forecast_mod.ENABLED_FACTORS.add("seizoen")
         print(f"[info] Seizoensfactor AAN (Nj={SEASONAL_YEARS}, w={SEASONAL_WINDOW}).",
@@ -583,6 +606,19 @@ def main() -> int:
         _forecast_mod.SUMMER_SCARCITY_SCALE = SUMMER_SCARCITY_SCALE
         print(f"[info] Zomerschaarste-amplifier AAN (scale={SUMMER_SCARCITY_SCALE}).",
               file=sys.stderr)
+
+    # v4 (#75): niveauschatter, factorset, puntgewicht en band in een keer.
+    # Staat na de andere vlaggen zodat V4_FACTORS de eerder toegevoegde factoren
+    # overschrijft in plaats van andersom.
+    if ENABLE_MODEL_V4:
+        _forecast_mod.BASELINE_MODE = "v4"
+        _forecast_mod.NONLINEAR_FLOOR = V4_NONLINEAR_FLOOR
+        _forecast_mod.UNCERTAINTY_MODE = "v4"
+        _forecast_mod.POINT_WEIGHT = V4_POINT_WEIGHT
+        _forecast_mod.ENABLED_FACTORS = set(V4_FACTORS)
+        globals()["MODEL_VERSION"] = "4.0"   # komt mee in forecast.json en het log
+        print(f"[info] Model v4 AAN (baseline v4, punten x{V4_POINT_WEIGHT}, "
+              f"factoren {sorted(V4_FACTORS)}, band 80%).", file=sys.stderr)
 
     now_ams     = amsterdam_now()
     today_start = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -768,9 +804,13 @@ def main() -> int:
                 "wind_ms":         round(wind, 2),
                 "temp_c":          round(temp, 1),
                 "P_negative":      fc.extreme_event_prob,
+                # v4: alleen de factoren die meetellen komen mee naar de site.
+                # Vóór v4 stonden er ook factoren in met permanent 0 punten; die
+                # maakten het factor-paneel langer zonder iets uit te leggen.
                 "factors":         [
                     {"name": fs.name, "points": fs.points, "reason": fs.reason}
                     for fs in fc.factors
+                    if fs.name in _forecast_mod.ENABLED_FACTORS
                 ],
             }
 

@@ -111,13 +111,21 @@ class Forecast:
     days_ahead: int
     regime: str = REGIME_NORMAL          # v1.7: gedetecteerd marktregime
     extreme_event_prob: float = 0.0      # v1.7: kans op negatieve prijs (0..1)
+    band_half: Optional[float] = None    # v4: halve bandbreedte in EUR/MWh
 
+    # v4: de band wordt als absolute halfbreedte bijgehouden zodra die bekend is.
+    # De oude vorm (predicted x (1 +/- pct)) klapt om bij een negatieve voorspelling:
+    # bij predicted = -20 en pct = 1,2 kwam de ondergrens boven de bovengrens uit.
     @property
     def lower(self) -> float:
+        if self.band_half is not None:
+            return self.predicted - self.band_half
         return self.predicted * (1 - self.uncertainty_pct)
 
     @property
     def upper(self) -> float:
+        if self.band_half is not None:
+            return self.predicted + self.band_half
         return self.predicted * (1 + self.uncertainty_pct)
 
 
@@ -179,6 +187,9 @@ def compute_baseline(
     regime:  REGIME_OVERSUPPLY verkort het window; andere waarden gebruiken standaard.
     Return:  baseline in EUR/MWh, of None als er geen data is.
     """
+    if BASELINE_MODE == "v4":
+        return compute_baseline_v4(target_dt, history)
+
     target_hour = target_dt.hour
     target_type = dagtype(target_dt)
 
@@ -253,6 +264,113 @@ def compute_baseline(
             return (1.0 - w) * med + w * shifted
 
     return med
+
+
+# ================= v4: niveauschatter (backlog #75) =================
+# WAAROM. De baseline was de mediaan van hetzelfde uur en hetzelfde dagtype over
+# 7 dagen (14 in het weekend). Dat zijn ~5 datapunten, en op horizon 5-7 vallen
+# de meeste daarvan buiten de bekende historie, waardoor het venster stilletjes
+# terugvalt op nog minder punten. Een backtest over 2021-2026 (alle uren, alle
+# horizonten) laat zien dat een langer venster op de werkdag/weekend-groep
+# stelselmatig nauwkeuriger is: 28 dagen scheelt 8-10% MAE, in de zomer van 2026
+# zelfs 15%. De korte mediaan blijft voor een kwart meewegen zodat een verse
+# dagtype-eigenaardigheid niet helemaal verdwijnt, en een gedempte trendfactor
+# (gemiddelde van 7 dagen gedeeld door dat van 28 dagen, tot de macht 0,25)
+# vangt op dat een lang venster in een stijgende of dalende markt achterloopt.
+#
+# Deze route is bewust anders dan de niveauverschuiving-detectie van v3.3: die
+# probeerde één verse waarneming te laten winnen van de mediaan en kon een
+# eendaagse uitschieter niet van een echte verschuiving onderscheiden. Hier
+# verandert niet de gevoeligheid voor één punt, maar de steekproefgrootte.
+
+BASELINE_MODE = "legacy"      # "legacy" | "v4"  (run_forecast zet dit)
+V4_SHORT_WEIGHT = 0.25        # gewicht van de korte mediaan (het oude gedrag)
+V4_LONG_DAYS = 28             # lang venster, werkdag/weekend-groep
+V4_TREND_POWER = 0.25         # demping van de trendfactor
+V4_TREND_SHORT = 7
+V4_TREND_LONG = 28
+V4_TREND_CLIP = (0.5, 2.0)    # trendfactor nooit verder dan halvering/verdubbeling
+
+
+def _v4_parts(target_dt: datetime, history: list[dict]):
+    """Korte mediaan, lange mediaan en trendfactor uit de bekende historie."""
+    if not history:
+        return None, None, 1.0
+
+    parsed = [(datetime.fromisoformat(e["time"]), e["price"]) for e in history]
+    # Anker = het laatste bekende uur VOOR het doel-uur. Door hier al op het
+    # doel-uur af te kappen kan een aanroeper die per ongeluk latere prijzen
+    # meestuurt de vensters niet verschuiven: prijzen op of na het doel-uur
+    # veranderen de uitkomst niet (zie self-test onderaan).
+    earlier = [t for t, _ in parsed if t < target_dt]
+    if not earlier:
+        return None, None, 1.0
+    end = max(earlier) + timedelta(hours=1)
+    target_hour = target_dt.hour
+    ttype = dagtype(target_dt)
+    t_weekendish = ttype in ("weekend", "feestdag")
+
+    short_days = 14 if t_weekendish else 7
+    lo_short = end - timedelta(days=short_days)
+    lo_long = end - timedelta(days=V4_LONG_DAYS)
+
+    short_vals: list[float] = []
+    long_vals: list[float] = []
+    for t, price in parsed:
+        if t >= end or t.hour != target_hour:
+            continue
+        if ttype == "werkdag" and is_crossborder_feestdag(t):
+            continue
+        if t >= lo_short and dagtype(t) == ttype:
+            short_vals.append(price)
+        if t >= lo_long and (dagtype(t) in ("weekend", "feestdag")) == t_weekendish:
+            long_vals.append(price)
+
+    def _daymean(days_back: int):
+        lo = end - timedelta(days=days_back)
+        vals = [p for t, p in parsed if lo <= t < end]
+        return sum(vals) / len(vals) if vals else None
+
+    recent, longer = _daymean(V4_TREND_SHORT), _daymean(V4_TREND_LONG)
+    ratio = 1.0
+    if recent is not None and longer is not None and abs(longer) > 5:
+        ratio = min(V4_TREND_CLIP[1], max(V4_TREND_CLIP[0], recent / longer))
+
+    ms = _median(short_vals) if short_vals else None
+    ml = _median(long_vals) if long_vals else None
+    return ms, ml, ratio
+
+
+def compute_baseline_v4(target_dt: datetime, history: list[dict]) -> Optional[float]:
+    """Niveauschatter v4: gewogen korte + lange mediaan, met gedempte trendfactor."""
+    ms, ml, ratio = _v4_parts(target_dt, history)
+    if ms is None and ml is None:
+        return None
+    if ms is None:
+        base = ml
+    elif ml is None:
+        base = ms
+    else:
+        base = V4_SHORT_WEIGHT * ms + (1.0 - V4_SHORT_WEIGHT) * ml
+    return base * (ratio ** V4_TREND_POWER)
+
+
+# ---- v4: bodem onder de niet-lineaire oversupply-correctie ----
+# De correctie is kwadratisch en had geen ondergrens. Bij een uurlijkse zonratio
+# van 3 of hoger (komt voor rond zonsopgang en na zware bewolking) levert dat
+# tientallen minpunten op, en met POINT_WEIGHT 0,03 kantelt de voorspelling dan
+# door nul heen. In de backtest 2021-2026 is dit veruit de grootste bron van
+# fouten in het oversupply-regime (MAE 136 tegen 39 voor de kale baseline).
+NONLINEAR_FLOOR: Optional[float] = None   # bv. -3.0; None = ongewijzigd gedrag
+
+
+# ---- v4: bandbreedte ----
+# De relatieve band (10% + 2%/dag + 1%/punt) dekte 36-53% van de werkelijke
+# prijzen, terwijl bezoekers hem als "hier ligt de prijs" lezen. Een band van
+# BAND_ABS + BAND_REL x |voorspelling| dekt op dezelfde data 80%.
+UNCERTAINTY_MODE = "legacy"   # "legacy" | "v4"
+BAND_ABS = 17.0               # EUR/MWh  (80%-dekking gemeten op de replay mei-aug 2026)
+BAND_REL = 0.25
 
 
 def _median(values: list[float]) -> float:
@@ -695,6 +813,8 @@ def nonlinear_correction(solar_ratio: float, wind_ms: float, regime: str) -> Fac
     solar_extra = -(max(0.0, solar_ratio - 1.3) ** 2) * 14.0  # v1.12: drempel 1.5→1.3
     wind_extra  = -(max(0.0, wind_ms - 16.0) ** 2) * 0.25
     total_float = solar_extra + wind_extra
+    if NONLINEAR_FLOOR is not None:
+        total_float = max(total_float, NONLINEAR_FLOOR)
     pts = round(total_float)
 
     parts = []
@@ -993,6 +1113,10 @@ def forecast_one(
     total = sum(f.points for f in factors if f.name in ENABLED_FACTORS)
     predicted = baseline * (1 + total * POINT_WEIGHT)
     unc = uncertainty(days_ahead, abs(total))
+    band_half = None
+    if UNCERTAINTY_MODE == "v4":
+        band_half = BAND_ABS + BAND_REL * abs(predicted)
+        unc = band_half / abs(predicted) if abs(predicted) > 1e-6 else 1.0
     ep = calc_extreme_event_prob(shortwave_ratio, wind_ms, regime)  # v1.7
 
     return Forecast(
@@ -1005,6 +1129,7 @@ def forecast_one(
         days_ahead=days_ahead,
         regime=regime,
         extreme_event_prob=ep,
+        band_half=band_half,
     )
 
 
@@ -1368,6 +1493,70 @@ if __name__ == "__main__":
               "ruis/vlakke stijging/oude sprong, default UIT bevestigd")
     finally:
         globals()["ENABLE_LEVEL_SHIFT"], globals()["LEVEL_SHIFT_WEIGHT"] = _ls_backup
+
+
+    # ---- v4: niveauschatter, bodem en band ----
+    _v4_start = datetime(2026, 7, 1, 0, 0)
+
+    def _mk_hist(late_price):
+        rows = []
+        for _d in range(28):
+            for _h in range(24):
+                _t = _v4_start + timedelta(days=_d, hours=_h)
+                rows.append({"time": _t.isoformat(),
+                             "price": 50.0 if _d < 21 else late_price})
+        return rows
+
+    _target = _v4_start + timedelta(days=29, hours=12)
+    _prev_mode = BASELINE_MODE
+    BASELINE_MODE = "v4"
+    _vlak = compute_baseline(_target, _mk_hist(50.0))
+    _sprong = compute_baseline(_target, _mk_hist(150.0))
+    BASELINE_MODE = "legacy"
+    _legacy_sprong = compute_baseline(_target, _mk_hist(150.0))
+    BASELINE_MODE = _prev_mode
+
+    assert _vlak is not None and abs(_vlak - 50.0) < 0.01, f"vlakke reeks moet 50 geven: {_vlak}"
+    assert 50.0 < _sprong < 150.0, f"v4 hoort tussen oud en nieuw niveau te liggen: {_sprong}"
+    assert _sprong > 55.0, f"trendfactor doet te weinig: {_sprong}"
+    assert _legacy_sprong is not None and _sprong < _legacy_sprong, \
+        "v4 hoort trager te reageren dan het 7/14-daagse venster"
+    # geen look-ahead: prijzen op of na het doel-uur mogen de uitkomst niet raken
+    BASELINE_MODE = "v4"
+    _na = [{"time": (_target + timedelta(hours=_k)).isoformat(), "price": 900.0}
+           for _k in range(0, 72)]
+    _zonder = compute_baseline(_target, _mk_hist(150.0))
+    _met = compute_baseline(_target, _mk_hist(150.0) + _na)
+    BASELINE_MODE = _prev_mode
+    assert abs(_zonder - _met) < 1e-9, f"look-ahead: {_zonder} vs {_met}"
+    print(f"[ok] v4-baseline: vlak {_vlak:.1f}; na een niveausprong {_sprong:.1f} "
+          f"(legacy {_legacy_sprong:.1f}) — trager maar niet blind; "
+          f"prijzen na het doel-uur veranderen niets")
+
+    _prev_floor = NONLINEAR_FLOOR
+    NONLINEAR_FLOOR = None
+    _diep = nonlinear_correction(3.0, 5.0, REGIME_OVERSUPPLY)
+    NONLINEAR_FLOOR = -3.0
+    _begrensd = nonlinear_correction(3.0, 5.0, REGIME_OVERSUPPLY)
+    NONLINEAR_FLOOR = _prev_floor
+    assert _diep.points <= -40, f"verwachtte een diepe correctie, kreeg {_diep.points}"
+    assert _begrensd.points == -3, f"bodem werkt niet: {_begrensd.points}"
+    assert nonlinear_correction(1.0, 5.0, REGIME_NORMAL).points == 0
+    print(f"[ok] bodem nonlinear: {_diep.points}p -> {_begrensd.points}p, normaal-regime blijft 0")
+
+    _prev_unc = UNCERTAINTY_MODE
+    UNCERTAINTY_MODE = "v4"
+    _f_band = forecast_one(
+        target_dt=target, history=history, shortwave_ratio=0.45, wind_ms=6.0,
+        temp_c=8.0, ttf_ratio=1.05, days_ahead=4)
+    UNCERTAINTY_MODE = _prev_unc
+    _half = _f_band.upper - _f_band.predicted
+    _verwacht = BAND_ABS + BAND_REL * abs(_f_band.predicted)
+    assert abs(_half - _verwacht) < 0.5, f"band klopt niet: {_half} vs {_verwacht}"
+    assert BASELINE_MODE == "legacy" and NONLINEAR_FLOOR is None and UNCERTAINTY_MODE == "legacy", \
+        "v4-schakelaars moeten standaard uit staan"
+    print(f"[ok] v4-band: +-{_half:.1f} EUR/MWh bij voorspelling {_f_band.predicted:.1f}; "
+          f"alle v4-schakelaars default UIT bevestigd")
 
     print("\n[ok] Self-test geslaagd; v3.1 schaarste-amplifier + v3.2 zomerschaarste + "
           "v3.3 niveauverschuiving (alle drie default uit).")
