@@ -1,0 +1,72 @@
+name: Exp model-lab — inputcache bouwen
+
+# Draait bij elke push naar branch exp/model-lab die het dumpscript of het
+# request-bestand raakt. Reden voor die trigger: workflow_dispatch is niet
+# aanroepbaar vanuit de ontwikkelomgeving (api.github.com geeft daar 403),
+# een push wel.
+#
+# De job haalt prijzen (archief + ENTSO-E-aanvulling), uurlijkse weerdata
+# (Open-Meteo ERA5) en TTF op, en commit het resultaat als gzip terug naar
+# deze branch onder exp-data/. Vanaf dat moment kunnen modelvarianten offline
+# op exact dezelfde inputs vergeleken worden.
+#
+# main wordt hier niet geraakt.
+
+on:
+  push:
+    branches: [exp/model-lab]
+    paths:
+      - 'scripts/dump_backtest_inputs.py'
+      - 'exp-data/request.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: exp-model-lab
+  cancel-in-progress: false
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: exp/model-lab
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Lees parameters uit exp-data/request.txt
+        id: params
+        run: |
+          START=$(grep -E '^start=' exp-data/request.txt | head -1 | cut -d= -f2)
+          END=$(grep -E '^end=' exp-data/request.txt | head -1 | cut -d= -f2)
+          echo "start=${START:-2021-01-01}" >> "$GITHUB_OUTPUT"
+          echo "end=${END}" >> "$GITHUB_OUTPUT"
+
+      - name: Bouw inputcache
+        env:
+          ENTSOE_TOKEN: ${{ secrets.ENTSOE_TOKEN }}
+        run: |
+          ARGS="--start ${{ steps.params.outputs.start }}"
+          if [ -n "${{ steps.params.outputs.end }}" ]; then
+            ARGS="$ARGS --end ${{ steps.params.outputs.end }}"
+          fi
+          python scripts/dump_backtest_inputs.py $ARGS --out exp-data/inputs.json.gz
+
+      - name: Commit cache terug naar de branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f exp-data/inputs.json.gz
+          if git diff --cached --quiet; then
+            echo "geen wijziging in de cache"
+          else
+            git commit -m "exp: inputcache ververst [skip ci]"
+            git push origin HEAD:exp/model-lab
+          fi
