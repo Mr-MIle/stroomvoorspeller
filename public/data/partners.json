@@ -1,7 +1,7 @@
 {
   "versie": 1,
   "bijgewerkt": "2026-08-23",
-  "toelichting": "Eén bron voor de verwijslink-blokken. 'actief' op false zet een partner site-breed uit. De uitgaande link staat NIET hier maar in public/uit/<naam>.html, zodat klikken meetellen in Cloudflare Web Analytics.",
+  "toelichting": "Eén bron voor de verwijslink-blokken. 'actief' op false zet een partner site-breed uit. 'auto' plaatst een blok vanzelf op elke pagina met de bijbehorende <meta name=\"kb-categorie\">. De uitgaande link staat NIET hier maar in public/uit/<naam>.html, zodat klikken meetellen in Cloudflare Web Analytics.",
   "partners": {
     "joulo": {
       "actief": true,
@@ -13,6 +13,14 @@
       "verberg_dagen": 60
     }
   },
+  "auto": [
+    {
+      "categorie": "Elektrisch rijden",
+      "slot": "joulo-ev",
+      "voor": "section.kb-lees-ook",
+      "toelichting": "Elk kennisbank-artikel met <meta name=\"kb-categorie\" content=\"Elektrisch rijden\" /> krijgt dit blok automatisch boven de Lees ook-sectie. Staat er al een blok van dezelfde partner op de pagina (zoals in het ERE-artikel), dan slaat de regel over."
+    }
+  ],
   "slots": {
     "joulo-ere-top": {
       "partner": "joulo",

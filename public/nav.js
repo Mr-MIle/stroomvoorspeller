@@ -135,10 +135,26 @@
     update();
   }
 
+  // Verwijslink-blokken (public/partner.js) alleen laden waar er ook een blok
+  // kan verschijnen: een pagina met een .partner-slot, of een kennisbank-artikel
+  // dat zijn categorie meldt via <meta name="kb-categorie">. Zo krijgt elk nieuw
+  // artikel in zo'n categorie het blok vanzelf, zonder extra scripttag.
+  function initPartner() {
+    if (document.querySelector('script[src="/partner.js"]')) return;
+    var nodig = document.querySelector(".partner-slot") ||
+                document.querySelector('meta[name="kb-categorie"]');
+    if (!nodig) return;
+    var s = document.createElement("script");
+    s.src = "/partner.js";
+    s.defer = true;
+    document.body.appendChild(s);
+  }
+
   function init() {
     document.documentElement.classList.add("has-js");
     build(location.pathname);
     initToTop();
+    initPartner();
   }
 
   if (document.readyState === "loading") {

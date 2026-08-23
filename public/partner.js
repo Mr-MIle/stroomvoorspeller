@@ -2,13 +2,26 @@
  * partner.js — verwijslink-blokken voor stroomvoorspeller.nl
  * -------------------------------------------------------------------------
  * Eén bron voor alle partnerblokken: public/data/partners.json.
- * Zet op een pagina waar het blok mag staan:
  *
- *     <div class="partner-slot" data-partner="joulo-ere-top"></div>
+ * Twee manieren waarop een blok op een pagina komt:
  *
- * en dit script vult die plek met een kaart. Staat de slot-id niet in de
- * JSON, of staat de partner op "actief": false, dan blijft de plek leeg —
- * zo zet je alles in één keer uit zonder pagina's te bewerken.
+ * 1. HANDMATIG — zet de plek zelf in de pagina:
+ *        <div class="partner-slot" data-partner="joulo-ere-top"></div>
+ *
+ * 2. AUTOMATISCH — via de regels onder "auto" in partners.json. Een regel
+ *    kijkt naar de categorie van de pagina:
+ *        <meta name="kb-categorie" content="Elektrisch rijden" />
+ *    en zet het blok dan zelf neer (standaard boven de "Lees ook"-sectie).
+ *    Elk nieuw kennisbank-artikel met die meta krijgt het blok dus vanzelf.
+ *    Staat er al een blok van dezelfde partner op de pagina, dan slaat de
+ *    automatische regel over — geen dubbele blokken.
+ *
+ * partner.js wordt geladen door nav.js, en alleen op pagina's waar een blok
+ * kan verschijnen (een .partner-slot of een <meta name="kb-categorie">).
+ *
+ * Staat de slot-id niet in de JSON, of staat de partner op "actief": false,
+ * dan blijft alles leeg — zo zet je het site-breed uit zonder pagina's te
+ * bewerken.
  *
  * De uitgaande link wijst altijd naar een interne tussenpagina (/uit/<naam>),
  * zodat Cloudflare Web Analytics de klik als paginaweergave telt. De echte
@@ -23,12 +36,22 @@
   var BRON = "/data/partners.json";
   var OPSLAG_PREFIX = "sv-partner-weg:";
   var STANDAARD_DAGEN = 60;
+  var STANDAARD_ANKER = "section.kb-lees-ook";
 
   function maak(tag, cls, tekst) {
     var n = document.createElement(tag);
     if (cls) n.className = cls;
     if (tekst != null) n.textContent = tekst;
     return n;
+  }
+
+  function alleSlots() {
+    return Array.prototype.slice.call(document.querySelectorAll(".partner-slot[data-partner]"));
+  }
+
+  function categorieVanPagina() {
+    var m = document.querySelector('meta[name="kb-categorie"]');
+    return m ? (m.getAttribute("content") || "").trim() : "";
   }
 
   function isWeggeklikt(sleutel, dagen) {
@@ -98,11 +121,53 @@
     return kaart;
   }
 
+  /* Zet volgens data.auto ontbrekende slots neer op basis van de categorie
+     van de pagina. Geeft de nieuw aangemaakte plekken terug. */
+  function maakAutoSlots(data) {
+    var regels = data.auto || [];
+    var cat = categorieVanPagina();
+    var nieuw = [];
+    if (!cat || !regels.length) return nieuw;
+
+    var slots = data.slots || {};
+    var aanwezig = {};
+    alleSlots().forEach(function (plek) {
+      var def = slots[plek.getAttribute("data-partner")];
+      if (def && def.partner) aanwezig[def.partner] = true;
+    });
+
+    regels.forEach(function (regel) {
+      if (!regel || !regel.slot || !regel.categorie) return;
+      if (regel.categorie !== cat) return;
+
+      var def = slots[regel.slot];
+      if (!def) return;
+      if (aanwezig[def.partner]) return;      // al een blok van deze partner
+
+      var plek = maak("div", "partner-slot");
+      plek.setAttribute("data-partner", regel.slot);
+
+      var anker = document.querySelector(regel.voor || STANDAARD_ANKER);
+      if (anker && anker.parentNode) {
+        anker.parentNode.insertBefore(plek, anker);
+      } else {
+        var main = document.querySelector("main");
+        if (!main) return;
+        main.appendChild(plek);
+      }
+      aanwezig[def.partner] = true;
+      nieuw.push(plek);
+    });
+
+    return nieuw;
+  }
+
   function vul(data, plekken) {
     var slots = data.slots || {};
     var partners = data.partners || {};
 
     plekken.forEach(function (plek) {
+      if (plek.querySelector(".partner-card")) return;
       var def = slots[plek.getAttribute("data-partner")];
       if (!def) return;
       var partnerSleutel = def.partner;
@@ -114,13 +179,18 @@
   }
 
   function start() {
-    var plekken = Array.prototype.slice.call(document.querySelectorAll(".partner-slot[data-partner]"));
-    if (!plekken.length) return;
+    var heeftSlot = alleSlots().length > 0;
+    var heeftCategorie = categorieVanPagina() !== "";
+    if (!heeftSlot && !heeftCategorie) return;
     if (!window.fetch) return;
 
     fetch(BRON, { credentials: "same-origin" })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) { if (data) vul(data, plekken); })
+      .then(function (data) {
+        if (!data) return;
+        maakAutoSlots(data);
+        vul(data, alleSlots());
+      })
       .catch(function () { /* geen partnerblok is geen probleem */ });
   }
 
