@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Je gaat door naar Joulo</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Doorverwijspagina naar Joulo." />
+  <!-- Tussenpagina voor de verwijslink. Bestaat om twee redenen:
+       1. de klik telt als paginaweergave in Cloudflare Web Analytics, zodat
+          zichtbaar is of de blokken iets doen;
+       2. de echte verwijslink staat op één plek — hier. Wijzig je hem, wijzig
+          dan ook de tekstlinks in /kennisbank/ere-certificaten-laadpaal.
+       Doel: https://joulo.nl/r/GV2Y62 -->
+  <meta http-equiv="refresh" content="3;url=https://joulo.nl/r/GV2Y62" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .uit-wrap { max-width: 560px; margin: 12vh auto 0; padding: 0 20px; text-align: center; }
+    .uit-wrap h1 { font-size: 1.35rem; margin: 0 0 10px; }
+    .uit-wrap p { color: var(--c-text-soft); line-height: 1.6; margin: 0 0 14px; }
+    .uit-knop {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--c-brand); color: #fff; font-weight: 600;
+      border-radius: 999px; padding: 11px 20px; text-decoration: none;
+    }
+    .uit-knop:hover { background: var(--c-brand-deep); text-decoration: none; }
+    .uit-klein { font-size: 0.85rem; color: var(--c-text-mute); margin-top: 18px; }
+  </style>
+</head>
+<body>
+  <main class="uit-wrap">
+    <h1>Je gaat door naar Joulo</h1>
+    <p>Een moment. Gebeurt er niets, klik dan zelf verder.</p>
+    <p>
+      <a class="uit-knop" id="uit-link" href="https://joulo.nl/r/GV2Y62" rel="sponsored nofollow noopener noreferrer">Naar joulo.nl →</a>
+    </p>
+    <p class="uit-klein">
+      Dit is een verwijslink van stroomvoorspeller.nl. Meld je je via deze link aan, dan betaal je
+      19 procent servicekosten in plaats van 20, en ik heb er zelf ook voordeel bij. Zie de
+      <a href="/disclaimer">disclaimer</a> en het artikel over
+      <a href="/kennisbank/ere-certificaten-laadpaal">ERE-certificaten</a>.
+    </p>
+  </main>
+  <script>
+    // Kleine vertraging zodat de analytics-beacon de weergave nog kan melden.
+    setTimeout(function () {
+      window.location.replace("https://joulo.nl/r/GV2Y62");
+    }, 900);
+  </script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+</body>
+</html>

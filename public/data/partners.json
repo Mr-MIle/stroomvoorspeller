@@ -1,0 +1,50 @@
+{
+  "versie": 1,
+  "bijgewerkt": "2026-08-23",
+  "toelichting": "Eén bron voor de verwijslink-blokken. 'actief' op false zet een partner site-breed uit. De uitgaande link staat NIET hier maar in public/uit/<naam>.html, zodat klikken meetellen in Cloudflare Web Analytics.",
+  "partners": {
+    "joulo": {
+      "actief": true,
+      "naam": "Joulo",
+      "label": "Verwijslink",
+      "url": "/uit/joulo",
+      "cta": "Naar Joulo",
+      "wegklikbaar": true,
+      "verberg_dagen": 60
+    }
+  },
+  "slots": {
+    "joulo-ere-top": {
+      "partner": "joulo",
+      "bron": "ere-top",
+      "titel": "Ik boek mijn eigen laadpaal in bij Joulo",
+      "tekst": "Via mijn link betaal je 19 procent servicekosten in plaats van 20. Ik heb er zelf voordeel bij, dus lees vooral eerst de vergelijking verderop in dit artikel."
+    },
+    "joulo-ere-slot": {
+      "partner": "joulo",
+      "bron": "ere-slot",
+      "titel": "1 procentpunt korting via mijn link",
+      "tekst": "Aanmelden kost een paar minuten en je betaalt daarna 19 procent servicekosten in plaats van 20. Bij 2.000 kWh per jaar scheelt dat zo'n 3 euro. Dit is een verwijslink."
+    },
+    "joulo-ev": {
+      "partner": "joulo",
+      "bron": "ev-artikel",
+      "titel": "Laad je thuis? Daar zit sinds 2026 geld in",
+      "tekst": "Elke kilowattuur die je thuis in de auto laadt levert een ERE-vergoeding op, ongeveer 10 tot 13 cent. Ik regel dat via Joulo en heb voordeel bij je aanmelding.",
+      "meer": {
+        "url": "/kennisbank/ere-certificaten-laadpaal",
+        "tekst": "Eerst lezen hoe ERE-certificaten werken →"
+      }
+    },
+    "joulo-aanbieders": {
+      "partner": "joulo",
+      "bron": "aanbieders",
+      "titel": "Rijd je elektrisch? Vergeet de ERE-vergoeding niet",
+      "tekst": "Dit staat los van je energiecontract: thuisladen levert sinds 2026 zo'n 10 tot 13 cent per kWh op. Ik boek het in via Joulo; via mijn link betaal je 19 procent servicekosten in plaats van 20.",
+      "meer": {
+        "url": "/kennisbank/ere-certificaten-laadpaal",
+        "tekst": "Zo werken ERE-certificaten →"
+      }
+    }
+  }
+}

@@ -2645,3 +2645,94 @@ body.heeft-vergelijk-bar { padding-bottom: 4.4rem; }
   .vergelijk-bar { gap: 0.6rem; }
   .vergelijk-paneel { padding: 0.8rem 0.75rem; }
 }
+
+/* ----- Verwijslink-blok (partner.js + data/partners.json) -----
+   Lichte kaart in sitestijl; nadrukkelijk gelabeld als verwijslink, zodat het
+   verschil met de redactionele inhoud zichtbaar blijft. */
+.partner-slot:empty { display: none; }
+
+.partner-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 26px 0;
+  padding: 16px 46px 16px 18px;
+  background: #f2f8fe;
+  border: 1px solid #cfe2f5;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.partner-body { flex: 1; min-width: 0; }
+.partner-label {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--c-text-mute);
+}
+.partner-title {
+  margin: 4px 0 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--c-text);
+}
+.partner-text {
+  margin: 0;
+  font-size: 0.89rem;
+  line-height: 1.55;
+  color: var(--c-text-soft);
+}
+.partner-meer { margin: 8px 0 0; font-size: 0.85rem; }
+.partner-meer a { font-weight: 600; }
+
+.partner-cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  background: var(--c-brand);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 11px 20px;
+  text-decoration: none;
+  transition: background 0.12s;
+}
+.partner-cta:hover { background: var(--c-brand-deep); color: #fff; text-decoration: none; }
+.partner-cta:focus-visible { outline: 2px solid var(--c-brand-deep); outline-offset: 2px; }
+
+.partner-dismiss {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  line-height: 1;
+  font-size: 1.15rem;
+  color: var(--c-text-mute);
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.partner-dismiss:hover { background: #e2edf8; color: var(--c-text); }
+
+@media (max-width: 640px) {
+  .partner-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px 14px 16px;
+  }
+  .partner-dismiss { top: 4px; right: 4px; }
+  .partner-title { padding-right: 26px; }
+  .partner-cta { justify-content: center; }
+}
+
+@media print {
+  .partner-card { display: none; }
+}
