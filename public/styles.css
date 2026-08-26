@@ -2572,26 +2572,6 @@ body.has-neg-alert .site-header { top: 56px; }
 .to-top.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
 @media (hover: hover) { .to-top:hover { background: var(--c-bg); } }
 
-/* Aanbieders-kaarten: op mobiel inklapbaar. Standaard (desktop) alles zichtbaar. */
-.aanbieder-toggle {
-  display: none;
-  width: 100%;
-  min-height: 44px;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  background: var(--c-bg);
-  color: var(--c-brand-deep);
-  font-family: inherit;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-.aanbieder-toggle .caret { transition: transform .15s ease; }
-.aanbieder-card.open .aanbieder-toggle .caret { transform: rotate(180deg); }
-.aanbieder-details { display: flex; flex-direction: column; gap: 14px; }
 
 @media (max-width: 640px) {
   /* #46 nav-strip weer horizontaal scrollend (de tweede .primary-nav-regel overschreef 'm) */
@@ -2605,10 +2585,6 @@ body.has-neg-alert .site-header { top: 56px; }
   .mode-btn, .res-btn { min-height: 44px; padding-top: 0; padding-bottom: 0; }
   .share-btn { width: 44px; height: 44px; }
   .suppliers-table .td-supplier a { display: inline-block; padding: 6px 0; min-height: 40px; }
-
-  /* Collapse aanbieders-kaarten (alleen met JS, anders blijft alles leesbaar) */
-  .has-js .aanbieder-toggle { display: flex; }
-  .has-js .aanbieder-card:not(.open) .aanbieder-details { display: none; }
 
   /* Veeg-hint zichtbaar op smal scherm */
   .scroll-hint { display: block; }
@@ -2635,25 +2611,6 @@ body.has-neg-alert .site-header { top: 56px; }
 
 
 /* ── Aanbieders: vergelijker (checkbox + balk + tabel) ────────────────── */
-.aanbieder-vergelijk {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-top: 0.55rem;
-  font-size: 0.86rem;
-  font-weight: 600;
-  color: var(--c-text-soft);
-  cursor: pointer;
-  user-select: none;
-  min-height: 28px;
-}
-.aanbieder-vergelijk input {
-  width: 1.05rem;
-  height: 1.05rem;
-  accent-color: var(--c-brand);
-  cursor: pointer;
-}
-
 .vergelijk-bar[hidden] { display: none; }
 .vergelijk-bar {
   position: fixed;

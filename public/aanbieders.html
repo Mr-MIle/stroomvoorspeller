@@ -143,119 +143,143 @@
       margin: 0;
     }
 
-    .aanbieder-grid {
+    /* ── Uitgelichte top 3 ──────────────────────────────────────────── */
+    .aanb-top {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
     }
-    @media (min-width: 640px) {
-      .aanbieder-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    .aanbieder-card {
+    .aanb-top[hidden] { display: none; }
+    .top-kaart {
       background: var(--c-surface);
       border: 1px solid var(--c-border);
+      border-top: 3px solid var(--c-brand);
       border-radius: var(--radius);
-      padding: 20px 22px 22px;
+      padding: 14px 16px 12px;
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
-      gap: 14px;
     }
-    .aanbieder-card-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .aanbieder-naam {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--c-text);
-    }
-    .aanbieder-naam a {
-      color: var(--c-brand);
-      text-decoration: none;
-    }
-    .aanbieder-naam a:hover { text-decoration: underline; }
-    .aanbieder-score {
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 20px;
-      white-space: nowrap;
-    }
-    .score-goed   { background: var(--c-cheap-bg);  color: var(--c-cheap); }
-    .score-matig  { background: var(--c-normal-bg); color: var(--c-normal); }
-    .score-slecht { background: var(--c-pricey-bg); color: var(--c-pricey); }
+    .top-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--c-brand); }
+    .top-naam { margin: 5px 0 0; font-size: 1.05rem; font-weight: 700; }
+    .top-naam a { color: var(--c-text); text-decoration: none; }
+    .top-naam a:hover { color: var(--c-brand); text-decoration: underline; }
+    .top-jk { margin: 2px 0 0; font-size: 1.3rem; font-weight: 700; color: var(--c-brand-deep); }
+    .top-jk span { font-size: 0.8rem; font-weight: 400; color: var(--c-text-mute); }
+    .top-sub { margin: 3px 0 0; font-size: 0.8rem; color: var(--c-text-mute); }
+    .top-waarom { margin: 8px 0 0; font-size: 0.85rem; color: var(--c-text-soft); line-height: 1.5; flex: 1 1 auto; }
+    .top-vergelijk { display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 10px; font-size: 0.84rem; font-weight: 600; color: var(--c-text-soft); cursor: pointer; user-select: none; min-height: 28px; }
+    .top-vergelijk input { width: 1.05rem; height: 1.05rem; accent-color: var(--c-brand); cursor: pointer; }
+    .rest-kop { margin: 0 0 8px; font-size: 0.9rem; font-weight: 700; color: var(--c-text-soft); }
+    .rest-kop[hidden] { display: none; }
 
-    .aanbieder-tarieven {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
+    /* ── Compacte lijst: één regel per aanbieder ─────────────────────── */
+    .aanb-lijst {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      --aanb-cols: minmax(0, 1fr) 92px 92px 112px 62px 22px;
     }
-    .tarief-blok { text-align: left; }
-    .tarief-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--c-text-mute);
-      display: block;
-      margin-bottom: 2px;
+    .aanb-lijst[hidden] { display: none; }
+    .aanb-koprij {
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      padding-left: 16px;
+      background: #f2f6fa;
+      border-bottom: 1px solid var(--c-border);
     }
-    .tarief-waarde {
-      font-size: 1.0rem;
-      font-weight: 700;
-      color: var(--c-text);
-    }
-    .tarief-eenheid {
-      font-size: 0.78rem;
-      font-weight: 400;
-      color: var(--c-text-mute);
-      margin-left: 2px;
-    }
-
-    .aanbieder-jaarkosten {
-      font-size: 0.9rem;
-      color: var(--c-text-soft);
-      background: var(--c-cheap-bg);
-      border-radius: var(--radius-sm);
-      padding: 9px 12px;
-      margin: 0;
-      line-height: 1.4;
-    }
-    .aanbieder-jaarkosten strong { color: var(--c-text); font-size: 1.0rem; }
-    .jk-sub { display: block; font-size: 0.76rem; color: var(--c-text-mute); margin-top: 2px; }
-
-    .aanbieder-sectie-label {
-      font-size: 0.72rem;
+    .aanb-koprij-inner {
+      display: grid;
+      grid-template-columns: var(--aanb-cols);
+      gap: 10px;
+      align-items: end;
+      padding: 9px 16px 9px 0;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      color: var(--c-text-mute);
       font-weight: 700;
-      color: var(--c-text-mute);
-      margin-bottom: 4px;
     }
-    .aanbieder-app-tekst,
-    .aanbieder-wie-tekst {
-      font-size: 0.9rem;
-      color: var(--c-text-soft);
-      line-height: 1.55;
-      margin: 0;
-    }
+    .aanb-koprij i { display: block; font-style: normal; font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 0.66rem; opacity: 0.85; }
+    .aanb-th-num { text-align: right; }
 
-    .aanbieder-opzegtermijn {
-      font-size: 0.82rem;
-      color: var(--c-text-mute);
-      border-top: 1px solid var(--c-border);
-      padding-top: 10px;
-      margin-top: 2px;
+    .aanb-rij { border-bottom: 1px solid var(--c-border); position: relative; }
+    #aanbieder-grid .aanb-rij:last-child { border-bottom: none; }
+    .aanb-rij-kop { display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: center; padding-left: 16px; }
+    .aanb-rij.open .aanb-rij-kop { background: #f4f9fd; }
+    .aanb-open {
+      display: grid;
+      grid-template-columns: var(--aanb-cols);
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      min-height: 44px;
+      text-align: left;
+      background: none;
+      border: none;
+      font: inherit;
+      padding: 10px 16px 10px 0;
+      cursor: pointer;
     }
-    .aanbieder-let-op {
-      font-size: 0.82rem;
-      background: var(--c-pricey-bg);
-      color: var(--c-pricey);
-      border-radius: var(--radius-sm);
-      padding: 7px 11px;
+    .aanb-open:hover { background: #f7fafd; }
+    .aanb-naam { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; font-weight: 700; font-size: 0.95rem; color: var(--c-brand-deep); }
+    .aanb-badges { display: inline-flex; gap: 5px; flex-wrap: wrap; }
+    .aanb-badge { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; padding: 2px 7px; border-radius: 999px; background: #eef2f7; color: var(--c-text-mute); }
+    .badge-groen { background: var(--c-cheap-bg); color: var(--c-cheap); }
+    .badge-smart { background: #eaf3fb; color: var(--c-brand-deep); }
+    .badge-tlv   { background: var(--c-free-bg); color: var(--c-free); }
+    .badge-let   { background: var(--c-normal-bg); color: #8a6608; }
+    .aanb-cel { text-align: right; font-size: 0.9rem; color: var(--c-text-soft); white-space: nowrap; }
+    .aanb-cel strong { color: var(--c-text); font-weight: 600; }
+    .aanb-jk strong { color: var(--c-brand-deep); font-weight: 700; }
+    .aanb-cel-label { display: none; }
+    .aanb-score { justify-self: end; font-size: 0.78rem; font-weight: 700; padding: 3px 7px; border-radius: 999px; white-space: nowrap; }
+    .aanb-caret { justify-self: end; color: var(--c-text-mute); transition: transform 0.15s ease; }
+    .aanb-rij.open .aanb-caret { transform: rotate(180deg); }
+    .score-goed   { background: var(--c-cheap-bg);  color: var(--c-cheap); }
+    .score-matig  { background: var(--c-normal-bg); color: #8a6608; }
+    .score-slecht { background: var(--c-pricey-bg); color: var(--c-pricey); }
+
+    .aanb-vergelijk { display: inline-flex; align-items: center; justify-content: center; width: 30px; min-height: 44px; cursor: pointer; }
+    .aanb-vergelijk input { width: 1.05rem; height: 1.05rem; accent-color: var(--c-brand); cursor: pointer; }
+
+    .aanb-details[hidden] { display: none; }
+    .aanb-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px 24px;
+      padding: 2px 16px 16px 46px;
+      background: #f8fbfe;
+      border-top: 1px dashed var(--c-border);
+    }
+    .aanb-details p { margin: 0; font-size: 0.89rem; line-height: 1.6; color: var(--c-text-soft); }
+    .aanb-sectie-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--c-text-mute); font-weight: 700; margin: 10px 0 3px; }
+    .aanb-opzeg { grid-column: 1 / -1; margin-top: 10px; font-size: 0.82rem; color: var(--c-text-mute); }
+    .aanb-let-op { grid-column: 1 / -1; margin-top: 10px; background: var(--c-normal-bg); border-radius: var(--radius-sm); padding: 8px 11px; font-size: 0.85rem; color: #7a5c05; line-height: 1.5; }
+    .aanb-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 720px) {
+      .aanb-koprij { display: none; }
+      .aanb-open {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas: "naam score" "jk jk" "klein klein";
+        row-gap: 5px;
+        padding: 11px 28px 11px 0;
+      }
+      .aanb-naam { grid-area: naam; font-size: 1rem; }
+      .aanb-score { grid-area: score; }
+      .aanb-jk { grid-area: jk; justify-self: start; text-align: left; }
+      .aanb-jk strong { font-size: 1.05rem; }
+      .aanb-jk .aanb-cel-label { font-size: 0.78rem; }
+      .aanb-cel[data-k="opslag"] { grid-area: klein; justify-self: start; }
+      .aanb-cel[data-k="vast"] { grid-area: klein; justify-self: end; }
+      .aanb-cel { display: inline-flex; gap: 5px; align-items: baseline; text-align: left; }
+      .aanb-cel-label { display: inline; color: var(--c-text-mute); font-size: 0.74rem; }
+      .aanb-caret { position: absolute; right: 12px; top: 15px; }
+      .aanb-details { grid-template-columns: 1fr; padding-left: 16px; }
     }
 
     .aanbieders-footer-note {
@@ -297,7 +321,7 @@
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Dynamische energieaanbieders</h1>
     <p class="intro">
-      Overzicht van 25 Nederlandse energieleveranciers met een dynamisch contract. Sinds 2026 bieden vrijwel alle grote namen dit aan. Vul je jaarverbruik in en sorteer op geschatte kosten, opslag, vaste lasten of klanttevredenheid. Twijfel je tussen een paar namen? Vink “Vergelijk” aan op hun kaarten en zet 2 of 3 aanbieders naast elkaar in één tabel.
+      Overzicht van 25 Nederlandse energieleveranciers met een dynamisch contract. Sinds 2026 bieden vrijwel alle grote namen dit aan. Vul je jaarverbruik in en sorteer op geschatte kosten, opslag, vaste lasten of klanttevredenheid. Twijfel je tussen een paar namen? Vink “Vergelijk” aan op hun regel en zet 2 of 3 aanbieders naast elkaar in één tabel.
     </p>
 
     <div class="aanbieders-disclaimer">
@@ -333,464 +357,454 @@
 
     <section class="vergelijk-paneel" id="vergelijk-paneel" hidden aria-label="aanbieders naast elkaar"></section>
 
-    <div class="aanbieder-grid" id="aanbieder-grid">
+    <!-- Uitgelichte top 3 — automatisch bepaald uit de data, niet handmatig bijhouden -->
+    <section class="aanb-top" id="aanb-top" aria-label="uitgelichte aanbieders">
+      <!-- BUILD:TOP:START — automatisch gegenereerd door build-aanbieders.js; niet handmatig bewerken -->
+      <article class="top-kaart" data-id="powerpeers">
+        <span class="top-label">Laagste kosten</span>
+        <p class="top-naam"><a href="https://powerpeers.nl" target="_blank" rel="noopener">Powerpeers</a></p>
+        <p class="top-jk">± € 86 <span>/ jaar</span></p>
+        <p class="top-sub">0,83 ct opslag &middot; € 5,17 vast &middot; 4,6 ★</p>
+        <p class="top-waarom">Laagste geschatte jaarkosten van de vergelijking: zeer lage opslag (0,83 ct) met een gematigd vastrecht.</p>
+        <label class="top-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="powerpeers"> Vergelijk</label>
+      </article>
+      <article class="top-kaart" data-id="anwb">
+        <span class="top-label">Best beoordeeld</span>
+        <p class="top-naam"><a href="https://www.anwb.nl/energie" target="_blank" rel="noopener">ANWB Energie</a></p>
+        <p class="top-jk">± € 130 <span>/ jaar</span></p>
+        <p class="top-sub">1,80 ct opslag &middot; € 6,50 vast &middot; 4,6 ★</p>
+        <p class="top-waarom">ANWB-leden die alles bij een bekende naam willen regelen.</p>
+        <label class="top-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="anwb"> Vergelijk</label>
+      </article>
+      <article class="top-kaart" data-id="frank">
+        <span class="top-label">Slimste app</span>
+        <p class="top-naam"><a href="https://www.frankenergie.nl" target="_blank" rel="noopener">Frank Energie</a></p>
+        <p class="top-jk">± € 127 <span>/ jaar</span></p>
+        <p class="top-sub">1,50 ct opslag &middot; € 6,95 vast &middot; 4,5 ★</p>
+        <p class="top-waarom">Prijs-bewuste gebruikers en techneuten die willen automatiseren.</p>
+        <label class="top-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="frank"> Vergelijk</label>
+      </article>
+      <!-- BUILD:TOP:END -->
+    </section>
+
+    <p class="rest-kop" id="rest-kop">Alle overige aanbieders</p>
+    <div class="aanb-lijst" id="aanb-lijst">
+      <div class="aanb-koprij" aria-hidden="true">
+        <span></span>
+        <div class="aanb-koprij-inner">
+          <span>Aanbieder</span>
+          <span class="aanb-th-num">Opslag<i>ct/kWh excl. btw</i></span>
+          <span class="aanb-th-num">Vast<i>&euro; / maand</i></span>
+          <span class="aanb-th-num">Per jaar<i>bij <span id="koprij-verbruik">2.900</span> kWh</i></span>
+          <span class="aanb-th-num">Score</span>
+          <span></span>
+        </div>
+      </div>
+      <div id="aanbieder-grid">
       <!-- BUILD:CARDS:START — automatisch gegenereerd door build-aanbieders.js; niet handmatig bewerken -->
-      <article class="aanbieder-card" data-id="powerpeers">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://powerpeers.nl" target="_blank" rel="noopener">Powerpeers</a></div>
-          <span class="aanbieder-score score-goed">4,6/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">0,83 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,17<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 86 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="powerpeers"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Vattenfall-dochter, sinds najaar 2025 gericht op dynamisch. Vernieuwde app voor verbruiksinzicht.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Laagste geschatte jaarkosten van de vergelijking: zeer lage opslag (0,83 ct) met een gematigd vastrecht. Vattenfall-dochter met een vernieuwde app.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="budget">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.budgetthuis.nl/energie/dynamisch-energiecontract" target="_blank" rel="noopener">Budget Energie</a></div>
-          <span class="aanbieder-score score-slecht">2,1/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,41 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 4,95<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 100 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="budget"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Budget Thuis-app met inzicht in actuele tarieven en uurverbruik. Tarieven worden een dag van tevoren getoond zodat je verbruik kunt plannen. Geen geavanceerde smart home-integratie of EV-functies.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Prijsbewuste huishoudens die de laagst mogelijke opslag willen bij een grote, gevestigde leverancier (1,2+ miljoen klanten). Geen terugleverkosten voor zonnepaneelhouders. Winnaar Keuze.nl 2025 voor laagste prijs dynamisch. Let op: lage klanttevredenheid (2,1/5 op Trustpilot).</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="pure">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://pure-energie.nl/energiecontract/dynamisch-energiecontract/" target="_blank" rel="noopener">Pure Energie</a></div>
-          <span class="aanbieder-score score-goed">4,3/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">2,48 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 2,41<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 101 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="pure"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Basis-app voor verbruiksinzicht. 100% Nederlandse groene stroom uit eigen wind- en zonneparken. Geen smart-laad- of Home Assistant-functies.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Huishoudens die aantoonbaar Nederlandse groene stroom willen tegen de laagste vaste kosten van de vergelijking (€ 2,41/maand). Let op: geen terugleververgoeding voor zonnepaneelhouders.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="mega">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.mega.nl" target="_blank" rel="noopener">Mega</a></div>
-          <span class="aanbieder-score score-matig">3,0/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,50 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,00<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 104 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="mega"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div class="aanbieder-let-op">⚠️ Bij teruglevering houdt Mega ±3,0 ct/kWh (incl. btw) in op de beursprijs.</div>
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Van oorsprong Belgische leverancier, daar een van de grotere spelers. Eenvoudige app met prijzen en verbruik; op Trustpilot scoort Mega Nederland 3,0.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Prijsbewuste overstappers: opslag van 1,5 ct excl. btw en €5,00 vaste kosten horen bij de laagste van dit overzicht. De gasopslag (9,5 ct/m³ incl. btw) is juist aan de hoge kant.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="nextenergy">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.nextenergy.nl" target="_blank" rel="noopener">NextEnergy</a></div>
-          <span class="aanbieder-score score-goed">4,4/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,81 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 4,95<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 112 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="nextenergy"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Goede app met prijsalerts en verbruiksinzicht per uur. Eigen P1-meter en slim laden voor EV ingebouwd. NextSolar-contract voor zonnepaneelhouders: geen terugleverkosten én 50% zonnebonus op teruggeleverde stroom tussen 22:00 en 06:00.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Actieve gebruikers die hun verbruik willen automatiseren en slim omgaan met dalmomenten. Sterk voor huishoudens met zonnepanelen of een thuisbatterij — NextEnergy biedt specifieke producten voor beide. Lage vaste kosten.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: dagelijks opzegbaar, geen minimum</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="innova">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.innova-energie.nl" target="_blank" rel="noopener">Innova Energie</a></div>
-          <span class="aanbieder-score score-goed">4,0/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,49 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,75<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 112 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="innova"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Leverancier met focus op vaste én dynamische contracten. Basis-app voor verbruiksinzicht, geen EV- of Home Assistant-automatisering.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Prijsbewuste huishoudens: een van de laagste opslagen van het veld (1,49 ct excl. btw), met een gemiddeld vastrecht. Solide Trustpilot-score op ruim 5.000 reviews.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="delta">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.deltaenergie.nl" target="_blank" rel="noopener">DELTA Energie</a></div>
-          <span class="aanbieder-score score-goed">4,1/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,04 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 7,02<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 114 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="delta"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Eenvoudige app met uurprijzen en verbruik; automatische sturing van apparaten zit er niet in. Op Trustpilot scoort DELTA 4,1 — de hoogste van de gevestigde namen in dit overzicht.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Wie een gevestigde leverancier zoekt met een lage opslag (1,04 ct excl. btw) en teruglevering tegen de volle beursprijs. Daar staan de hoogste vaste kosten van dit overzicht tegenover (€8,49/maand incl. btw).</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="engie">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.engie.nl/energie/dynamisch-energiecontract" target="_blank" rel="noopener">ENGIE</a></div>
-          <span class="aanbieder-score score-slecht">2,6/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,57 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,74<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 114 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="engie"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">App scoort goed in de stores (circa 8,8). Grote internationale leverancier. Geen open API of Home Assistant-integratie.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Huishoudens die bij een grote, gevestigde leverancier willen zitten en daar een dynamisch contract willen. Let op: Trustpilot-score laag (2,6 op ruim 2.000 reviews).</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="coolblue">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.coolblue.nl/energiecontracten/dynamische-energie" target="_blank" rel="noopener">Coolblue Energie</a></div>
-          <span class="aanbieder-score score-matig">3,6/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,88 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,12<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 116 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="coolblue"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div class="aanbieder-let-op">⚠️ Levert alleen stroom, geen gas.</div>
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Strakke app met duidelijke facturen en maandelijkse besparingsoverzichten. Geen open API of Home Assistant-integratie. Achteraf betalen in plaats van voorschot.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Huishoudens die de eenvoud en service van het Coolblue-merk waarderen en geen gas via dezelfde leverancier hoeven. Geen vaste terugleverkosten; teruglevering tegen de marktprijs van dat moment.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="oxxio">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.oxxio.nl" target="_blank" rel="noopener">Oxxio</a></div>
-          <span class="aanbieder-score score-matig">3,9/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,85 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,36<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 118 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="oxxio"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div class="aanbieder-let-op">⚠️ Bij teruglevering houdt Oxxio ±2,2 ct/kWh (incl. btw) in op de beursprijs.</div>
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Volledig digitale dochter van Eneco: klantcontact loopt via app en chat. De app is duidelijk over verbruik en termijnbedrag; op Trustpilot scoort Oxxio 3,9.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Wie dynamische prijzen wil zonder wisselend maandbedrag: Oxxio werkt met een vast termijnbedrag en verrekent achteraf. Digitale zelfbediening moet je wel liggen.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="easy">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.easyenergy.com" target="_blank" rel="noopener">Easy Energy Dynamisch</a></div>
-          <span class="aanbieder-score score-matig">3,9/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,80 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,50<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 118 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="easy"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Eenvoudige app met prijsoverzicht en verbruiksdata. Geen bijzondere smart-features of EV-integratie. Functioneel voor de basis.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Kleine huishoudens en laagverbruikers voor wie het vaste maandbedrag het zwaarst weegt. Minder geschikt als je geavanceerde domotica-integratie zoekt.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="energiedirect">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.energiedirect.nl" target="_blank" rel="noopener">Energiedirect</a></div>
-          <span class="aanbieder-score score-slecht">1,3/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,69 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,78<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 118 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="energiedirect"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div class="aanbieder-let-op">⚠️ Trustpilot-score 1,3 — de laagste in dit overzicht, met vooral klachten over facturen en bereikbaarheid. Bij een terugleveroverschot rekent Energiedirect 2,05 ct/kWh verkoopvergoeding.</div>
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Regelneef-app toont vanaf 13:00 de stroomprijzen voor morgen en je verbruik per uur. Slim Laden voor EV's zit ingebouwd: de auto laadt automatisch op goedkope uren.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Wie een grote leverancier (onderdeel van Essent) wil met ingebouwd slim EV-laden. Weeg de klantbeoordelingen mee voordat je kiest.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, opzegtermijn 5 werkdagen</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="vattenfall">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.vattenfall.nl/energie-aanbiedingen/flexprijs/" target="_blank" rel="noopener">Vattenfall FlexPrijs</a></div>
-          <span class="aanbieder-score score-slecht">2,9/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">2,10 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 4,95<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 120 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="vattenfall"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Eigen app scoort hoog in de stores. Geen open API of Home Assistant-integratie. Vattenfall mag de opslag maximaal vier keer per jaar wijzigen en meldt dat vooraf.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Wie de zekerheid van een grote, stabiele leverancier wil (Beste Energieleverancier 2026 volgens Overstappen). Trustpilot-score laag (2,9). Geen vaste terugleverkosten; teruglevering tegen marktprijs.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="energyzero">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.energyzero.nl" target="_blank" rel="noopener">EnergyZero</a></div>
-          <span class="aanbieder-score score-goed">4,0/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,85 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,95<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 125 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="energyzero"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Functionele app met directe ENTSO-E prijzen. Geen extra smart-laad features. Transparant over de prijsopbouw.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Gebruikers die transparantie en lage vaste lasten zoeken zonder extra gadgets. Compenseer de opslag met slim gebruik op goedkope uren.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="zonneplan">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.zonneplan.nl" target="_blank" rel="noopener">Zonneplan Dynamic</a></div>
-          <span class="aanbieder-score score-goed">4,2/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,65 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 6,50<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 126 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="zonneplan"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Vernieuwde app (2026) die zonnepanelen, thuisbatterij, laadpaal én energiecontract in één dashboard combineert. Trustpilot-score 4,2 (ruim 2.200 reviews) — hoogste onder de all-in-one spelers.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Huishoudens met zonnepanelen, thuisbatterij of EV die alles in één app willen beheren. Beste keuze als je meerdere energiesystemen in één app wilt koppelen en beheren.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="frank">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.frankenergie.nl" target="_blank" rel="noopener">Frank Energie</a></div>
-          <span class="aanbieder-score score-goed">4,5/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,50 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 6,95<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 127 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="frank"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Goede app met prijsoverzicht en verbruiksdata. Uitstekende integratiemogelijkheden via de ENTSO-E-gebaseerde prijsdata — populair bij Home Assistant- en EVCC-gebruikers. Winnaar Overstappen.nl Energie Award 2026.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Prijs-bewuste gebruikers en techneuten die willen automatiseren. Een van de laagste opslagen onder de pure-play dynamisch-spelers. Minder extra features voor zonnepaneel-eigenaren.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="vrijopnaam">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.vrijopnaam.nl" target="_blank" rel="noopener">Vrijopnaam</a></div>
-          <span class="aanbieder-score score-goed">4,0/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,65 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 6,61<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 127 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="vrijopnaam"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Coöperatief en groen, met focus op dynamisch. Basis-app voor verbruiksinzicht, geen geavanceerde smart-functies.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Huishoudens die groen en coöperatief willen met een dynamisch contract. Gemiddelde tarieven; sterk als je waarde hecht aan coöperatief eigenaarschap.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="eneco">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.eneco.nl/duurzame-energie/dynamisch-energiecontract/" target="_blank" rel="noopener">Eneco Dynamisch</a></div>
-          <span class="aanbieder-score score-matig">3,8/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">2,00 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,79<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 127 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="eneco"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Mijn Eneco-app met verbruiksoverzicht en tariefinzicht. Integratie met Toon-thermostaat. Geen geavanceerde EV-laad- of Home Assistant-functies. Eneco was in september 2023 de eerste grote Nederlandse leverancier met dynamische tarieven.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Huishoudens die de zekerheid van een grote leverancier (circa 2 miljoen klanten) willen combineren met een dynamisch tarief. Hogere opslag én vaste kosten dan de pure dynamisch-spelers. Minder aantrekkelijk voor zonnepaneelhouders: terugleverkosten van toepassing.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="greenchoice">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.greenchoice.nl/stroom-en-gas/dynamisch-energiecontract/" target="_blank" rel="noopener">Greenchoice</a></div>
-          <span class="aanbieder-score score-slecht">1,5/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,85 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 6,20<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 128 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="greenchoice"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">App scoort goed in de stores (circa 8,7). 100% groen profiel. Geen open API of Home Assistant-integratie.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Huishoudens met voorkeur voor een gevestigde groene leverancier die dynamisch wil. Let op: Trustpilot-score laag (1,5 op ruim 1.000 reviews).</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="anwb">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.anwb.nl/energie" target="_blank" rel="noopener">ANWB Energie</a></div>
-          <span class="aanbieder-score score-goed">4,6/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,80 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 6,50<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 130 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="anwb"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Basis app zonder geavanceerde smart-features. Geen officiële Home Assistant-integratie of EV-laad-optimalisatie. Geschikt als je gewoon je verbruik wilt inzien.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">ANWB-leden die alles bij een bekende naam willen regelen. Minder interessant voor techneuten of EV-rijders die willen automatiseren. Trustpilot-score hoog (4,6), al stuurt ANWB tevreden klanten actief naar Trustpilot — weeg dat mee.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: 30 dagen</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="essent">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.essent.nl/energie/energiecontract/dynamisch" target="_blank" rel="noopener">Essent</a></div>
-          <span class="aanbieder-score score-slecht">1,4/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">2,09 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 6,19<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 135 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="essent"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Grootste leverancier van Nederland met een ruime app. Geen open API of Home Assistant-integratie. Teruglever-verkoopvergoeding €0,0253/kWh.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Wie de zekerheid van de grootste en financieel sterkste leverancier zoekt. Let op: laagste Trustpilot-score van de hele vergelijking (1,4).</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="vandebron">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://vandebron.nl" target="_blank" rel="noopener">Vandebron Dynamisch</a></div>
-          <span class="aanbieder-score score-goed">4,0/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">1,65 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 7,50<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 138 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="vandebron"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">App met inzicht in verbruik en herkomst van energie (direct van producenten). Geen geavanceerde smart-laad functies. Focus op duurzaamheid en transparantie.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Huishoudens die waarde hechten aan aantoonbaar groene energie direct van de bron. Relatief hoog vast maandbedrag; compenseer dat met hoog verbruik op goedkope uren.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="energievanons">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://energie.vanons.org" target="_blank" rel="noopener">Energie VanOns</a></div>
-          <span class="aanbieder-score score-slecht">2,9/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">2,40 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 5,78<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 139 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="energievanons"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Coöperatieve leverancier; stroom van lokale, vaak noordelijke opwekprojecten. Basis-app voor verbruiksinzicht, geen smart-laad- of Home Assistant-functies.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Huishoudens die 100% lokaal opgewekte groene stroom via een coöperatie willen. Hoge opslag van de vergelijking; geen technische meerwaarde voor wie wil automatiseren.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="tibber">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://tibber.com/nl" target="_blank" rel="noopener">Tibber</a></div>
-          <span class="aanbieder-score score-matig">3,9/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">2,05 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 6,99<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 143 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="tibber"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div class="aanbieder-let-op">⚠️ Per 1 januari 2026 betaalt Tibber geen terugleveringsvergoeding meer voor zonnepanelen. Minder geschikt als je PV hebt.</div>
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Beste app van het veld. Officiële Home Assistant-integratie, GraphQL API, Tibber Pulse (slim energiemonitor), Grid Rewards (bonus op goedkope uren) en slim EV-laden ingebouwd. Op Trustpilot scoort Tibber 3,9 — lager dan de app-reputatie doet vermoeden.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Tech-enthousiastelingen, EV-rijders en Home Assistant-gebruikers. Niet de goedkoopste opslag, maar de rijkste app-functies. Minder aantrekkelijk als je zonnepanelen hebt.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar</p>
-        </div>
-      </article>
-      <article class="aanbieder-card" data-id="om">
-        <div class="aanbieder-card-header">
-          <div class="aanbieder-naam"><a href="https://www.samenom.nl" target="_blank" rel="noopener">om | nieuwe energie</a></div>
-          <span class="aanbieder-score score-goed">4,3/5 ★</span>
-        </div>
-        <div class="aanbieder-tarieven">
-          <div class="tarief-blok"><span class="tarief-label">Opslag</span><span class="tarief-waarde">2,07 ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>
-          <div class="tarief-blok"><span class="tarief-label">Vast per maand</span><span class="tarief-waarde">€ 8,57<span class="tarief-eenheid">excl. btw</span></span></div>
-        </div>
-        <p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € 163 / jaar</strong><span class="jk-sub">opslag + vastrecht bij 2.900 kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>
-        <label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="om"> Vergelijk</label>
-        <button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>
-        <div class="aanbieder-details">
-          <div><p class="aanbieder-sectie-label">App &amp; slim laden</p><p class="aanbieder-app-tekst">Eigen app voor verbruiksinzicht en energiebeheer. Geen geavanceerde smart-laad- of Home Assistant-integratie. Focus ligt op coöperatieve samenwerking en lokale opwek in plaats van technische automatisering.</p></div>
-          <div><p class="aanbieder-sectie-label">Voor wie geschikt?</p><p class="aanbieder-wie-tekst">Huishoudens die 100% lokaal opgewekte, aantoonbaar groene stroom willen van een coöperatief zonder winstoogmerk. Uniek in het veld: om werkt samen met meer dan 80 lokale energiecoöperaties door heel Nederland. Hogere vaste kosten dan de meeste andere aanbieders. Let op: vaste terugleveringskosten zijn van toepassing voor zonnepaneelhouders.</p></div>
-          <p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: 30 dagen</p>
-        </div>
-      </article>
+      <div class="aanb-rij" data-id="budget">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="budget"><span class="aanb-sr">Vergelijk Budget Energie</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-budget">
+            <span class="aanb-naam">Budget Energie<span class="aanb-badges"><span class="aanb-badge badge-tlv">geen tlv-kosten</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,41 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 4,95</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 100</strong></span>
+            <span class="aanb-score score-slecht">2,1 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-budget" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Budget Thuis-app met inzicht in actuele tarieven en uurverbruik. Tarieven worden een dag van tevoren getoond zodat je verbruik kunt plannen. Geen geavanceerde smart home-integratie of EV-functies.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Prijsbewuste huishoudens die de laagst mogelijke opslag willen bij een grote, gevestigde leverancier (1,2+ miljoen klanten). Geen terugleverkosten voor zonnepaneelhouders. Winnaar Keuze.nl 2025 voor laagste prijs dynamisch. Let op: lage klanttevredenheid (2,1/5 op Trustpilot).</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.budgetthuis.nl/energie/dynamisch-energiecontract" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="pure">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="pure"><span class="aanb-sr">Vergelijk Pure Energie</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-pure">
+            <span class="aanb-naam">Pure Energie<span class="aanb-badges"><span class="aanb-badge badge-groen">groen</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>2,48 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 2,41</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 101</strong></span>
+            <span class="aanb-score score-goed">4,3 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-pure" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Basis-app voor verbruiksinzicht. 100% Nederlandse groene stroom uit eigen wind- en zonneparken. Geen smart-laad- of Home Assistant-functies.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Huishoudens die aantoonbaar Nederlandse groene stroom willen tegen de laagste vaste kosten van de vergelijking (€ 2,41/maand). Let op: geen terugleververgoeding voor zonnepaneelhouders.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://pure-energie.nl/energiecontract/dynamisch-energiecontract/" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="mega">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="mega"><span class="aanb-sr">Vergelijk Mega</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-mega">
+            <span class="aanb-naam">Mega</span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,50 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 5,00</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 104</strong></span>
+            <span class="aanb-score score-matig">3,0 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-mega" hidden>
+          <div class="aanb-let-op">⚠️ Bij teruglevering houdt Mega ±3,0 ct/kWh (incl. btw) in op de beursprijs.</div>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Van oorsprong Belgische leverancier, daar een van de grotere spelers. Eenvoudige app met prijzen en verbruik; op Trustpilot scoort Mega Nederland 3,0.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Prijsbewuste overstappers: opslag van 1,5 ct excl. btw en €5,00 vaste kosten horen bij de laagste van dit overzicht. De gasopslag (9,5 ct/m³ incl. btw) is juist aan de hoge kant.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.mega.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="nextenergy">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="nextenergy"><span class="aanb-sr">Vergelijk NextEnergy</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-nextenergy">
+            <span class="aanb-naam">NextEnergy<span class="aanb-badges"><span class="aanb-badge badge-smart">slim laden</span><span class="aanb-badge badge-tlv">geen tlv-kosten</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,81 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 4,95</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 112</strong></span>
+            <span class="aanb-score score-goed">4,4 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-nextenergy" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Goede app met prijsalerts en verbruiksinzicht per uur. Eigen P1-meter en slim laden voor EV ingebouwd. NextSolar-contract voor zonnepaneelhouders: geen terugleverkosten én 50% zonnebonus op teruggeleverde stroom tussen 22:00 en 06:00.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Actieve gebruikers die hun verbruik willen automatiseren en slim omgaan met dalmomenten. Sterk voor huishoudens met zonnepanelen of een thuisbatterij — NextEnergy biedt specifieke producten voor beide. Lage vaste kosten.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: dagelijks opzegbaar, geen minimum &middot; <a href="https://www.nextenergy.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="innova">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="innova"><span class="aanb-sr">Vergelijk Innova Energie</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-innova">
+            <span class="aanb-naam">Innova Energie</span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,49 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 5,75</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 112</strong></span>
+            <span class="aanb-score score-goed">4,0 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-innova" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Leverancier met focus op vaste én dynamische contracten. Basis-app voor verbruiksinzicht, geen EV- of Home Assistant-automatisering.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Prijsbewuste huishoudens: een van de laagste opslagen van het veld (1,49 ct excl. btw), met een gemiddeld vastrecht. Solide Trustpilot-score op ruim 5.000 reviews.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.innova-energie.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="delta">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="delta"><span class="aanb-sr">Vergelijk DELTA Energie</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-delta">
+            <span class="aanb-naam">DELTA Energie<span class="aanb-badges"><span class="aanb-badge badge-tlv">geen tlv-kosten</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,04 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 7,02</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 114</strong></span>
+            <span class="aanb-score score-goed">4,1 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-delta" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Eenvoudige app met uurprijzen en verbruik; automatische sturing van apparaten zit er niet in. Op Trustpilot scoort DELTA 4,1 — de hoogste van de gevestigde namen in dit overzicht.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Wie een gevestigde leverancier zoekt met een lage opslag (1,04 ct excl. btw) en teruglevering tegen de volle beursprijs. Daar staan de hoogste vaste kosten van dit overzicht tegenover (€8,49/maand incl. btw).</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.deltaenergie.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="engie">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="engie"><span class="aanb-sr">Vergelijk ENGIE</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-engie">
+            <span class="aanb-naam">ENGIE</span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,57 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 5,74</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 114</strong></span>
+            <span class="aanb-score score-slecht">2,6 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-engie" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>App scoort goed in de stores (circa 8,8). Grote internationale leverancier. Geen open API of Home Assistant-integratie.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Huishoudens die bij een grote, gevestigde leverancier willen zitten en daar een dynamisch contract willen. Let op: Trustpilot-score laag (2,6 op ruim 2.000 reviews).</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.engie.nl/energie/dynamisch-energiecontract" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="coolblue">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="coolblue"><span class="aanb-sr">Vergelijk Coolblue Energie</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-coolblue">
+            <span class="aanb-naam">Coolblue Energie<span class="aanb-badges"><span class="aanb-badge badge-tlv">geen tlv-kosten</span><span class="aanb-badge badge-let">geen gas</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,88 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 5,12</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 116</strong></span>
+            <span class="aanb-score score-matig">3,6 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-coolblue" hidden>
+          <div class="aanb-let-op">⚠️ Levert alleen stroom, geen gas.</div>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Strakke app met duidelijke facturen en maandelijkse besparingsoverzichten. Geen open API of Home Assistant-integratie. Achteraf betalen in plaats van voorschot.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Huishoudens die de eenvoud en service van het Coolblue-merk waarderen en geen gas via dezelfde leverancier hoeven. Geen vaste terugleverkosten; teruglevering tegen de marktprijs van dat moment.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.coolblue.nl/energiecontracten/dynamische-energie" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="oxxio">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="oxxio"><span class="aanb-sr">Vergelijk Oxxio</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-oxxio">
+            <span class="aanb-naam">Oxxio</span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,85 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 5,36</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 118</strong></span>
+            <span class="aanb-score score-matig">3,9 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-oxxio" hidden>
+          <div class="aanb-let-op">⚠️ Bij teruglevering houdt Oxxio ±2,2 ct/kWh (incl. btw) in op de beursprijs.</div>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Volledig digitale dochter van Eneco: klantcontact loopt via app en chat. De app is duidelijk over verbruik en termijnbedrag; op Trustpilot scoort Oxxio 3,9.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Wie dynamische prijzen wil zonder wisselend maandbedrag: Oxxio werkt met een vast termijnbedrag en verrekent achteraf. Digitale zelfbediening moet je wel liggen.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.oxxio.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="easy">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="easy"><span class="aanb-sr">Vergelijk Easy Energy Dynamisch</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-easy">
+            <span class="aanb-naam">Easy Energy Dynamisch</span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,80 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 5,50</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 118</strong></span>
+            <span class="aanb-score score-matig">3,9 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-easy" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Eenvoudige app met prijsoverzicht en verbruiksdata. Geen bijzondere smart-features of EV-integratie. Functioneel voor de basis.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Kleine huishoudens en laagverbruikers voor wie het vaste maandbedrag het zwaarst weegt. Minder geschikt als je geavanceerde domotica-integratie zoekt.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.easyenergy.com" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="energiedirect">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="energiedirect"><span class="aanb-sr">Vergelijk Energiedirect</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-energiedirect">
+            <span class="aanb-naam">Energiedirect<span class="aanb-badges"><span class="aanb-badge badge-smart">slim laden</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,69 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 5,78</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 118</strong></span>
+            <span class="aanb-score score-slecht">1,3 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-energiedirect" hidden>
+          <div class="aanb-let-op">⚠️ Trustpilot-score 1,3 — de laagste in dit overzicht, met vooral klachten over facturen en bereikbaarheid. Bij een terugleveroverschot rekent Energiedirect 2,05 ct/kWh verkoopvergoeding.</div>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Regelneef-app toont vanaf 13:00 de stroomprijzen voor morgen en je verbruik per uur. Slim Laden voor EV's zit ingebouwd: de auto laadt automatisch op goedkope uren.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Wie een grote leverancier (onderdeel van Essent) wil met ingebouwd slim EV-laden. Weeg de klantbeoordelingen mee voordat je kiest.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, opzegtermijn 5 werkdagen &middot; <a href="https://www.energiedirect.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="vattenfall">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="vattenfall"><span class="aanb-sr">Vergelijk Vattenfall FlexPrijs</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-vattenfall">
+            <span class="aanb-naam">Vattenfall FlexPrijs<span class="aanb-badges"><span class="aanb-badge badge-tlv">geen tlv-kosten</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>2,10 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 4,95</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 120</strong></span>
+            <span class="aanb-score score-slecht">2,9 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-vattenfall" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Eigen app scoort hoog in de stores. Geen open API of Home Assistant-integratie. Vattenfall mag de opslag maximaal vier keer per jaar wijzigen en meldt dat vooraf.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Wie de zekerheid van een grote, stabiele leverancier wil (Beste Energieleverancier 2026 volgens Overstappen). Trustpilot-score laag (2,9). Geen vaste terugleverkosten; teruglevering tegen marktprijs.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.vattenfall.nl/energie-aanbiedingen/flexprijs/" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="energyzero">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="energyzero"><span class="aanb-sr">Vergelijk EnergyZero</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-energyzero">
+            <span class="aanb-naam">EnergyZero</span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,85 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 5,95</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 125</strong></span>
+            <span class="aanb-score score-goed">4,0 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-energyzero" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Functionele app met directe ENTSO-E prijzen. Geen extra smart-laad features. Transparant over de prijsopbouw.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Gebruikers die transparantie en lage vaste lasten zoeken zonder extra gadgets. Compenseer de opslag met slim gebruik op goedkope uren.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.energyzero.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="zonneplan">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="zonneplan"><span class="aanb-sr">Vergelijk Zonneplan Dynamic</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-zonneplan">
+            <span class="aanb-naam">Zonneplan Dynamic<span class="aanb-badges"><span class="aanb-badge badge-groen">groen</span><span class="aanb-badge badge-smart">slim laden</span><span class="aanb-badge badge-tlv">geen tlv-kosten</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,65 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 6,50</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 126</strong></span>
+            <span class="aanb-score score-goed">4,2 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-zonneplan" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Vernieuwde app (2026) die zonnepanelen, thuisbatterij, laadpaal én energiecontract in één dashboard combineert. Trustpilot-score 4,2 (ruim 2.200 reviews) — hoogste onder de all-in-one spelers.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Huishoudens met zonnepanelen, thuisbatterij of EV die alles in één app willen beheren. Beste keuze als je meerdere energiesystemen in één app wilt koppelen en beheren.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.zonneplan.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="vrijopnaam">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="vrijopnaam"><span class="aanb-sr">Vergelijk Vrijopnaam</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-vrijopnaam">
+            <span class="aanb-naam">Vrijopnaam<span class="aanb-badges"><span class="aanb-badge badge-groen">groen</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,65 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 6,61</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 127</strong></span>
+            <span class="aanb-score score-goed">4,0 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-vrijopnaam" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Coöperatief en groen, met focus op dynamisch. Basis-app voor verbruiksinzicht, geen geavanceerde smart-functies.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Huishoudens die groen en coöperatief willen met een dynamisch contract. Gemiddelde tarieven; sterk als je waarde hecht aan coöperatief eigenaarschap.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.vrijopnaam.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="eneco">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="eneco"><span class="aanb-sr">Vergelijk Eneco Dynamisch</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-eneco">
+            <span class="aanb-naam">Eneco Dynamisch</span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>2,00 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 5,79</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 127</strong></span>
+            <span class="aanb-score score-matig">3,8 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-eneco" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Mijn Eneco-app met verbruiksoverzicht en tariefinzicht. Integratie met Toon-thermostaat. Geen geavanceerde EV-laad- of Home Assistant-functies. Eneco was in september 2023 de eerste grote Nederlandse leverancier met dynamische tarieven.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Huishoudens die de zekerheid van een grote leverancier (circa 2 miljoen klanten) willen combineren met een dynamisch tarief. Hogere opslag én vaste kosten dan de pure dynamisch-spelers. Minder aantrekkelijk voor zonnepaneelhouders: terugleverkosten van toepassing.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.eneco.nl/duurzame-energie/dynamisch-energiecontract/" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="greenchoice">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="greenchoice"><span class="aanb-sr">Vergelijk Greenchoice</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-greenchoice">
+            <span class="aanb-naam">Greenchoice<span class="aanb-badges"><span class="aanb-badge badge-groen">groen</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,85 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 6,20</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 128</strong></span>
+            <span class="aanb-score score-slecht">1,5 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-greenchoice" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>App scoort goed in de stores (circa 8,7). 100% groen profiel. Geen open API of Home Assistant-integratie.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Huishoudens met voorkeur voor een gevestigde groene leverancier die dynamisch wil. Let op: Trustpilot-score laag (1,5 op ruim 1.000 reviews).</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.greenchoice.nl/stroom-en-gas/dynamisch-energiecontract/" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="essent">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="essent"><span class="aanb-sr">Vergelijk Essent</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-essent">
+            <span class="aanb-naam">Essent</span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>2,09 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 6,19</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 135</strong></span>
+            <span class="aanb-score score-slecht">1,4 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-essent" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Grootste leverancier van Nederland met een ruime app. Geen open API of Home Assistant-integratie. Teruglever-verkoopvergoeding €0,0253/kWh.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Wie de zekerheid van de grootste en financieel sterkste leverancier zoekt. Let op: laagste Trustpilot-score van de hele vergelijking (1,4).</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://www.essent.nl/energie/energiecontract/dynamisch" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="vandebron">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="vandebron"><span class="aanb-sr">Vergelijk Vandebron Dynamisch</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-vandebron">
+            <span class="aanb-naam">Vandebron Dynamisch<span class="aanb-badges"><span class="aanb-badge badge-groen">groen</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>1,65 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 7,50</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 138</strong></span>
+            <span class="aanb-score score-goed">4,0 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-vandebron" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>App met inzicht in verbruik en herkomst van energie (direct van producenten). Geen geavanceerde smart-laad functies. Focus op duurzaamheid en transparantie.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Huishoudens die waarde hechten aan aantoonbaar groene energie direct van de bron. Relatief hoog vast maandbedrag; compenseer dat met hoog verbruik op goedkope uren.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://vandebron.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="energievanons">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="energievanons"><span class="aanb-sr">Vergelijk Energie VanOns</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-energievanons">
+            <span class="aanb-naam">Energie VanOns<span class="aanb-badges"><span class="aanb-badge badge-groen">groen</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>2,40 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 5,78</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 139</strong></span>
+            <span class="aanb-score score-slecht">2,9 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-energievanons" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Coöperatieve leverancier; stroom van lokale, vaak noordelijke opwekprojecten. Basis-app voor verbruiksinzicht, geen smart-laad- of Home Assistant-functies.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Huishoudens die 100% lokaal opgewekte groene stroom via een coöperatie willen. Hoge opslag van de vergelijking; geen technische meerwaarde voor wie wil automatiseren.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://energie.vanons.org" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="tibber">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="tibber"><span class="aanb-sr">Vergelijk Tibber</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-tibber">
+            <span class="aanb-naam">Tibber<span class="aanb-badges"><span class="aanb-badge badge-smart">slim laden</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>2,05 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 6,99</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 143</strong></span>
+            <span class="aanb-score score-matig">3,9 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-tibber" hidden>
+          <div class="aanb-let-op">⚠️ Per 1 januari 2026 betaalt Tibber geen terugleveringsvergoeding meer voor zonnepanelen. Minder geschikt als je PV hebt.</div>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Beste app van het veld. Officiële Home Assistant-integratie, GraphQL API, Tibber Pulse (slim energiemonitor), Grid Rewards (bonus op goedkope uren) en slim EV-laden ingebouwd. Op Trustpilot scoort Tibber 3,9 — lager dan de app-reputatie doet vermoeden.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Tech-enthousiastelingen, EV-rijders en Home Assistant-gebruikers. Niet de goedkoopste opslag, maar de rijkste app-functies. Minder aantrekkelijk als je zonnepanelen hebt.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: geen minimum, maandelijks opzegbaar &middot; <a href="https://tibber.com/nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
+      <div class="aanb-rij" data-id="om">
+        <div class="aanb-rij-kop">
+          <label class="aanb-vergelijk" title="Zet naast een andere aanbieder"><input type="checkbox" class="vergelijk-check" data-id="om"><span class="aanb-sr">Vergelijk om | nieuwe energie</span></label>
+          <button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-om">
+            <span class="aanb-naam">om | nieuwe energie<span class="aanb-badges"><span class="aanb-badge badge-groen">groen</span></span></span>
+            <span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>2,07 ct</strong></span>
+            <span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>€ 8,57</strong></span>
+            <span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € 163</strong></span>
+            <span class="aanb-score score-goed">4,3 ★</span>
+            <span class="aanb-caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="aanb-details" id="det-om" hidden>
+          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>Eigen app voor verbruiksinzicht en energiebeheer. Geen geavanceerde smart-laad- of Home Assistant-integratie. Focus ligt op coöperatieve samenwerking en lokale opwek in plaats van technische automatisering.</p></div>
+          <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>Huishoudens die 100% lokaal opgewekte, aantoonbaar groene stroom willen van een coöperatief zonder winstoogmerk. Uniek in het veld: om werkt samen met meer dan 80 lokale energiecoöperaties door heel Nederland. Hogere vaste kosten dan de meeste andere aanbieders. Let op: vaste terugleveringskosten zijn van toepassing voor zonnepaneelhouders.</p></div>
+          <p class="aanb-opzeg">⏱ Opzegtermijn: 30 dagen &middot; <a href="https://www.samenom.nl" target="_blank" rel="noopener">naar de website ↗</a></p>
+        </div>
+      </div>
       <!-- BUILD:CARDS:END -->
+      </div>
     </div>
     <p class="aanbieders-empty" id="aanbieder-empty" hidden>Geen aanbieders die aan alle gekozen filters voldoen. Zet een filter uit.</p>
     <noscript>
@@ -840,20 +854,35 @@
     var gridEl  = document.getElementById("aanbieder-grid");
     var emptyEl = document.getElementById("aanbieder-empty");
 
-    // Mobiel: kaart uit-/inklappen via de "Meer info"-knop (event delegation,
-    // blijft werken na elke her-render door sorteren/filteren).
+    // Eén regel tegelijk open (accordeon). Event delegation, dus blijft werken
+    // na elke her-render door sorteren/filteren.
     gridEl.addEventListener("click", function (e) {
-      var btn = e.target.closest ? e.target.closest(".aanbieder-toggle") : null;
+      var btn = e.target.closest ? e.target.closest(".aanb-open") : null;
       if (!btn) return;
-      var card = btn.closest(".aanbieder-card");
-      if (!card) return;
-      var open = card.classList.toggle("open");
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-      var lbl = btn.querySelector(".aanbieder-toggle-label");
-      if (lbl) lbl.textContent = open ? "Minder info" : "Meer info";
+      var rij = btn.closest(".aanb-rij");
+      if (!rij) return;
+      var wordtOpen = !rij.classList.contains("open");
+      sluitAlles();
+      if (wordtOpen) zetOpen(rij, true);
     });
+    function zetOpen(rij, open) {
+      rij.classList.toggle("open", open);
+      var b = rij.querySelector(".aanb-open");
+      var d = rij.querySelector(".aanb-details");
+      if (b) b.setAttribute("aria-expanded", open ? "true" : "false");
+      if (d) d.hidden = !open;
+    }
+    function sluitAlles() {
+      Array.prototype.forEach.call(gridEl.querySelectorAll(".aanb-rij.open"), function (r) {
+        zetOpen(r, false);
+      });
+    }
 
     var countEl = document.getElementById("ctrl-count");
+    var topEl   = document.getElementById("aanb-top");
+    var lijstEl = document.getElementById("aanb-lijst");
+    var restKopEl = document.getElementById("rest-kop");
+    var kopVerbruikEl = document.getElementById("koprij-verbruik");
     var verbruikEl = document.getElementById("verbruik");
     var sortEl  = document.getElementById("sort");
     var filterEls = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
@@ -887,43 +916,89 @@
         .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    function cardHtml(s, verbruik) {
-      var scoreTxt = (s.score == null) ? "n.v.t." : (s.score.toFixed(1).replace(".", ",") + "/5 ★");
+    function badgesHtml(s) {
+      var b = "";
+      if (s.groen) b += '<span class="aanb-badge badge-groen">groen</span>';
+      if (s.smart) b += '<span class="aanb-badge badge-smart">slim laden</span>';
+      if (s.no_feedin_cost) b += '<span class="aanb-badge badge-tlv">geen tlv-kosten</span>';
+      if (s.gas === false) b += '<span class="aanb-badge badge-let">geen gas</span>';
+      return b ? '<span class="aanb-badges">' + b + "</span>" : "";
+    }
+    function scoreTxt(score) {
+      return score == null ? "n.v.t." : score.toFixed(1).replace(".", ",") + " ★";
+    }
+
+    function rowHtml(s, verbruik) {
       var vastPrefix = s.fixed_unconfirmed ? "≈ " : "";
       var jk = jaarkosten(s, verbruik);
       var url = esc(s.website || "#");
+      var id = esc(s.id);
 
-      var html = "";
-      html += '<article class="aanbieder-card" data-id="' + esc(s.id) + '">';
-      html +=   '<div class="aanbieder-card-header">';
-      html +=     '<div class="aanbieder-naam"><a href="' + url + '" target="_blank" rel="noopener">' + esc(s.name) + '</a></div>';
-      html +=     '<span class="aanbieder-score ' + scoreClass(s.score) + '">' + scoreTxt + '</span>';
-      html +=   '</div>';
+      var h = "";
+      h += '<div class="aanb-rij" data-id="' + id + '">';
+      h +=   '<div class="aanb-rij-kop">';
+      h +=     '<label class="aanb-vergelijk" title="Zet naast een andere aanbieder">';
+      h +=       '<input type="checkbox" class="vergelijk-check" data-id="' + id + '"' + (compareSel.indexOf(s.id) !== -1 ? " checked" : "") + ">";
+      h +=       '<span class="aanb-sr">Vergelijk ' + esc(s.name) + "</span></label>";
+      h +=     '<button class="aanb-open" type="button" aria-expanded="false" aria-controls="det-' + id + '">';
+      h +=       '<span class="aanb-naam">' + esc(s.name) + badgesHtml(s) + "</span>";
+      h +=       '<span class="aanb-cel" data-k="opslag"><span class="aanb-cel-label">opslag</span><strong>' + fmtCt(s.markup_per_kwh) + " ct</strong></span>";
+      h +=       '<span class="aanb-cel" data-k="vast"><span class="aanb-cel-label">vast/mnd</span><strong>' + vastPrefix + "€ " + fmtEur2(s.fixed_per_month) + "</strong></span>";
+      h +=       '<span class="aanb-cel aanb-jk"><span class="aanb-cel-label">per jaar</span><strong>± € ' + fmtEur0(jk) + "</strong></span>";
+      h +=       '<span class="aanb-score ' + scoreClass(s.score) + '">' + scoreTxt(s.score) + "</span>";
+      h +=       '<span class="aanb-caret" aria-hidden="true">▾</span>';
+      h +=     "</button>";
+      h +=   "</div>";
+      h +=   '<div class="aanb-details" id="det-' + id + '" hidden>';
+      if (s.let_op) h += '<div class="aanb-let-op">⚠️ ' + esc(s.let_op) + "</div>";
+      h +=     '<div><p class="aanb-sectie-label">App &amp; slim laden</p><p>' + esc(s.app_text) + "</p></div>";
+      h +=     '<div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>' + esc(s.wie_text) + "</p></div>";
+      h +=     '<p class="aanb-opzeg">⏱ Opzegtermijn: ' + esc(s.opzeg || "—") +
+               ' &middot; <a href="' + url + '" target="_blank" rel="noopener">naar de website ↗</a></p>';
+      h +=   "</div>";
+      h += "</div>";
+      return h;
+    }
 
-      html +=   '<div class="aanbieder-tarieven">';
-      html +=     '<div class="tarief-blok"><span class="tarief-label">Opslag</span>';
-      html +=       '<span class="tarief-waarde">' + fmtCt(s.markup_per_kwh) + ' ct<span class="tarief-eenheid">/kWh excl. btw</span></span></div>';
-      html +=     '<div class="tarief-blok"><span class="tarief-label">Vast per maand</span>';
-      html +=       '<span class="tarief-waarde">' + vastPrefix + '€ ' + fmtEur2(s.fixed_per_month) + '<span class="tarief-eenheid">excl. btw</span></span></div>';
-      html +=   '</div>';
-
-      html +=   '<p class="aanbieder-jaarkosten">Geschatte leverancierskosten: <strong>± € ' + fmtEur0(jk) + ' / jaar</strong>';
-      html +=     '<span class="jk-sub">opslag + vastrecht bij ' + fmtEur0(verbruik) + ' kWh — excl. marktprijs, energiebelasting &amp; btw</span></p>';
-
-      html +=   '<label class="aanbieder-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="' + esc(s.id) + '"' + (compareSel.indexOf(s.id) !== -1 ? ' checked' : '') + '> Vergelijk</label>';
-      html +=   '<button class="aanbieder-toggle" type="button" aria-expanded="false"><span class="aanbieder-toggle-label">Meer info</span> <span class="caret" aria-hidden="true">▾</span></button>';
-      html +=   '<div class="aanbieder-details">';
-      if (s.let_op) {
-        html += '<div class="aanbieder-let-op">⚠️ ' + esc(s.let_op) + '</div>';
+    // ── Top 3: goedkoopst / best beoordeeld / slimste app ──
+    // Volgt automatisch uit de gefilterde lijst en het ingevulde verbruik.
+    function kiesTop(list, verbruik) {
+      if (list.length < 6) return [];
+      var uit = [], gebruikt = {};
+      function pak(label, sub, kandidaten, beter) {
+        var k = kandidaten.filter(function (s) { return !gebruikt[s.id]; });
+        if (!k.length) return;
+        var w = k.reduce(function (a, b) { return beter(a, b) ? a : b; });
+        gebruikt[w.id] = true;
+        uit.push({ label: label, sub: sub, s: w });
       }
-      html +=   '<div><p class="aanbieder-sectie-label">App &amp; slim laden</p>';
-      html +=     '<p class="aanbieder-app-tekst">' + esc(s.app_text) + '</p></div>';
-      html +=   '<div><p class="aanbieder-sectie-label">Voor wie geschikt?</p>';
-      html +=     '<p class="aanbieder-wie-tekst">' + esc(s.wie_text) + '</p></div>';
-      html +=   '<p class="aanbieder-opzegtermijn">⏱ Opzegtermijn: ' + esc(s.opzeg || "—") + '</p>';
-      html +=   '</div>';
-      html += '</article>';
-      return html;
+      pak("Laagste kosten", "Goedkoopst bij " + fmtEur0(verbruik) + " kWh", list,
+          function (a, b) { return jaarkosten(a, verbruik) <= jaarkosten(b, verbruik); });
+      pak("Best beoordeeld", "Hoogste klanttevredenheid",
+          list.filter(function (s) { return s.score != null && !s.score_caveat; }),
+          function (a, b) { return a.score >= b.score; });
+      pak("Slimste app", "Slim laden / Home Assistant",
+          list.filter(function (s) { return s.smart === true; }),
+          function (a, b) { return (a.score || 0) >= (b.score || 0); });
+      return uit;
+    }
+    function eersteZin(t) {
+      var m = String(t || "").match(/^[^.]{20,180}\./);
+      return m ? m[0] : String(t || "").slice(0, 150);
+    }
+    function topKaartHtml(item, verbruik) {
+      var s = item.s;
+      var h = '<article class="top-kaart" data-id="' + esc(s.id) + '">';
+      h += '<span class="top-label">' + esc(item.label) + "</span>";
+      h += '<p class="top-naam"><a href="' + esc(s.website || "#") + '" target="_blank" rel="noopener">' + esc(s.name) + "</a></p>";
+      h += '<p class="top-jk">± € ' + fmtEur0(jaarkosten(s, verbruik)) + " <span>/ jaar</span></p>";
+      h += '<p class="top-sub">' + fmtCt(s.markup_per_kwh) + " ct opslag &middot; € " + fmtEur2(s.fixed_per_month) +
+           " vast &middot; " + scoreTxt(s.score) + "</p>";
+      h += '<p class="top-waarom">' + esc(eersteZin(s.wie_text)) + "</p>";
+      h += '<label class="top-vergelijk"><input type="checkbox" class="vergelijk-check" data-id="' + esc(s.id) + '"' +
+           (compareSel.indexOf(s.id) !== -1 ? " checked" : "") + "> Vergelijk</label>";
+      h += "</article>";
+      return h;
     }
 
     function activeFilters() {
@@ -957,12 +1032,26 @@
         }
       });
 
+      if (kopVerbruikEl) kopVerbruikEl.textContent = fmtEur0(verbruik);
+
+      // Top 3 boven de lijst; die drie staan dan niet nóg eens in de lijst.
+      var top = kiesTop(list, verbruik);
+      var uitgelicht = {};
+      top.forEach(function (t) { uitgelicht[t.s.id] = true; });
+      topEl.innerHTML = top.map(function (t) { return topKaartHtml(t, verbruik); }).join("");
+      topEl.hidden = top.length === 0;
+      restKopEl.hidden = top.length === 0;
+
+      var rest = list.filter(function (s) { return !uitgelicht[s.id]; });
+
       if (list.length === 0) {
         gridEl.innerHTML = "";
+        lijstEl.hidden = true;
         emptyEl.hidden = false;
       } else {
         emptyEl.hidden = true;
-        gridEl.innerHTML = list.map(function (s) { return cardHtml(s, verbruik); }).join("");
+        lijstEl.hidden = rest.length === 0;
+        gridEl.innerHTML = rest.map(function (s) { return rowHtml(s, verbruik); }).join("");
       }
 
       countEl.textContent = list.length + " van " + suppliers.length + " aanbieders" +
@@ -1054,7 +1143,7 @@
       paneelEl.hidden = false;
     }
 
-    gridEl.addEventListener("change", function (e) {
+    document.querySelector("main").addEventListener("change", function (e) {
       var cb = e.target;
       if (!cb.classList || !cb.classList.contains("vergelijk-check")) return;
       var id = cb.getAttribute("data-id");
