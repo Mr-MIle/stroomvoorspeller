@@ -10,7 +10,6 @@
   const STORAGE_KEYS = {
     mode:              "sv.viewMode",           // 'inclusive' | 'exclusive'
     supplier:          "sv.supplierId",          // id uit config.suppliers
-    customMarkup:      "sv.customMarkup",        // string (euro per kWh)
     dismissedNegAlert: "sv.dismissedNegAlert",  // ISO-tijd van het event waarvoor de banner gesloten is
     chartRes:          "sv.chartRes",           // 'hourly' | 'quarter'
     profile:           "sv.profile",            // JSON: { ev, solar, battery } — 'Mijn situatie'
@@ -31,7 +30,6 @@
     chartResolution: "hourly",  // 'hourly' | 'quarter'
     mode: "inclusive",
     supplierId: "average",
-    customMarkup: 0.025,
     profile: { ev: false, solar: false, battery: false },  // 'Mijn situatie' — personalisatie
     momentWindow: 2,     // vensterduur (uren) voor de 'goedkoopste vensters'-lijst
     chart: null,
@@ -87,10 +85,6 @@
   }
   function effectiveMarkup() {
     const supplier = getSupplier();
-    if (supplier.id === "custom") {
-      const n = Number(state.customMarkup);
-      return Number.isFinite(n) && n >= 0 ? n : 0;
-    }
     return Number(supplier.markup_per_kwh) || 0;
   }
 
@@ -140,7 +134,7 @@
   function effectiveThresholds() {
     const thr = (state.config && state.config.thresholds_ct_kwh_inclusive) || {};
     const d   = state.dayPrices || [];
-    const key = state.supplierId + "|" + state.customMarkup + "|" + d.length + "|" + (d[0] ? d[0].time : "");
+    const key = state.supplierId + "|" + d.length + "|" + (d[0] ? d[0].time : "");
     if (effThrCache && effThrCache.key === key) return effThrCache;
     const cts = d.map((pp) => priceCents(pp.price, "inclusive"));
     const r = relativeThresholds(cts, thr);
@@ -754,26 +748,17 @@
   function renderSettingsPanel() {
     const select = document.getElementById("supplier-select");
     if (select && !select.dataset.populated) {
-      const suppliers = state.config.suppliers || [];
+      const suppliers = (state.config.suppliers || []).filter((s) => s.id !== "custom");
       select.innerHTML = "";
       suppliers.forEach((s) => {
         const opt = document.createElement("option");
         opt.value = s.id;
-        opt.textContent = s.id === "custom"
-          ? s.name
-          : `${s.name} (€${fmtNum(s.markup_per_kwh, 4)}/kWh opslag, excl. btw)`;
+        opt.textContent = `${s.name} (€${fmtNum(s.markup_per_kwh, 4)}/kWh opslag)`;
         select.appendChild(opt);
       });
       select.dataset.populated = "1";
     }
     if (select) select.value = state.supplierId;
-
-    const customWrap = document.getElementById("custom-markup-wrap");
-    const isCustom = state.supplierId === "custom";
-    if (customWrap) customWrap.hidden = !isCustom;
-
-    const customInput = document.getElementById("custom-markup-input");
-    if (customInput) customInput.value = state.customMarkup;
 
     const t = state.config.taxes;
     const eb_incl = (t.energiebelasting_per_kwh || 0) * (t.btw_factor || 1);
@@ -783,7 +768,7 @@
 
     const m = effectiveMarkup();
     const m_incl = m * (t.btw_factor || 1);
-    setText("current-markup", `€${fmtNum(m, 4)}/kWh excl. btw  (= €${fmtNum(m_incl, 4)} incl. btw)`);
+    setText("current-markup", `Opslag €${fmtNum(m, 4)}/kWh excl. btw · €${fmtNum(m_incl, 4)} incl. btw`);
 
     // 'Mijn situatie' — checkbox-status spiegelen aan state.profile
     const evCb = document.getElementById("profile-ev");
@@ -792,6 +777,12 @@
     if (evCb) evCb.checked = !!state.profile.ev;
     if (solarCb) solarCb.checked = !!state.profile.solar;
     if (batteryCb) batteryCb.checked = !!state.profile.battery;
+    // .is-on spiegelt de checked-status voor browsers zonder :has()-ondersteuning
+    [evCb, solarCb, batteryCb].forEach((cb) => {
+      if (!cb) return;
+      const chip = cb.closest(".situation-chip");
+      if (chip) chip.classList.toggle("is-on", cb.checked);
+    });
   }
 
   function renderSettingsToggle() {
@@ -1819,15 +1810,21 @@
       });
     }
 
-    const customInput = document.getElementById("custom-markup-input");
-    if (customInput) {
-      customInput.addEventListener("input", (e) => {
-        const n = parseFloat(String(e.target.value).replace(",", "."));
-        if (Number.isFinite(n) && n >= 0) {
-          state.customMarkup = n;
-          saveStored(STORAGE_KEYS.customMarkup, n);
-          renderAll();
-        }
+    // Aannames-popup
+    const assumptionsBtn = document.getElementById("assumptions-btn");
+    const assumptionsDlg = document.getElementById("assumptions-dialog");
+    if (assumptionsBtn && assumptionsDlg) {
+      assumptionsBtn.addEventListener("click", () => {
+        if (typeof assumptionsDlg.showModal === "function") assumptionsDlg.showModal();
+        else assumptionsDlg.setAttribute("open", "");
+      });
+      assumptionsDlg.addEventListener("click", (e) => {
+        if (e.target === assumptionsDlg) assumptionsDlg.close();
+      });
+      const closeBtn = assumptionsDlg.querySelector(".info-dialog-close");
+      if (closeBtn) closeBtn.addEventListener("click", () => {
+        if (typeof assumptionsDlg.close === "function") assumptionsDlg.close();
+        else assumptionsDlg.removeAttribute("open");
       });
     }
 
@@ -1882,8 +1879,12 @@
   function loadInitialState() {
     state.mode = loadStored(STORAGE_KEYS.mode, "inclusive") === "exclusive" ? "exclusive" : "inclusive";
     state.supplierId = loadStored(STORAGE_KEYS.supplier, "average");
-    const cm = parseFloat(loadStored(STORAGE_KEYS.customMarkup, "0.025"));
-    state.customMarkup = Number.isFinite(cm) ? cm : 0.025;
+    // Migratie: 'Eigen waarde invullen' bestaat niet meer -> terug naar het gemiddelde
+    if (state.supplierId === "custom") {
+      state.supplierId = "average";
+      saveStored(STORAGE_KEYS.supplier, state.supplierId);
+      try { localStorage.removeItem("sv.customMarkup"); } catch (e) {}
+    }
     const storedRes = loadStored(STORAGE_KEYS.chartRes, "hourly");
     state.chartResolution = storedRes === "quarter" ? "quarter" : "hourly";
     state.profile = loadProfile();

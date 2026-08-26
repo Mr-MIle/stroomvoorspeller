@@ -147,40 +147,45 @@
   </header>
 
   <main>
-    <!-- Settings panel -->
+    <!-- Settings panel — compacte één-rij-uitvoering (aug 2026): leverancier voorop,
+         situatie-vinkjes rechts, aannames achter een info-popup. -->
     <section id="settings-panel" class="settings-panel container" hidden aria-label="Instellingen">
-
-      <div class="settings-grid">
-        <div class="settings-block settings-block--full">
-          <strong>Mijn situatie</strong>
-          <p class="settings-help">Vink aan wat je thuis hebt. Je advies past zich erop aan — met zonnepanelen krijg je andere tips dan zonder.</p>
+      <div class="settings-supplier">
+        <label class="settings-supplier-label" for="supplier-select">
+          Mijn energieleverancier
+          <span class="settings-supplier-sub">bepaalt de opslag op de kale prijs</span>
+        </label>
+        <select id="supplier-select" class="settings-select"></select>
+        <p class="settings-current" data-field="current-markup">—</p>
+      </div>
+      <div class="settings-side">
+        <div class="settings-situation">
+          <span class="settings-cap">Wat heb je thuis?</span>
           <div class="situation-options">
-            <label class="situation-chip"><input type="checkbox" id="profile-ev"> <span>EV / elektrische auto</span></label>
-            <label class="situation-chip"><input type="checkbox" id="profile-solar"> <span>Zonnepanelen</span></label>
-            <label class="situation-chip"><input type="checkbox" id="profile-battery"> <span>Thuisbatterij</span></label>
+            <label class="situation-chip"><input type="checkbox" id="profile-ev"><span class="situation-box" aria-hidden="true"></span><span>EV</span></label>
+            <label class="situation-chip"><input type="checkbox" id="profile-solar"><span class="situation-box" aria-hidden="true"></span><span>Zonnepanelen</span></label>
+            <label class="situation-chip"><input type="checkbox" id="profile-battery"><span class="situation-box" aria-hidden="true"></span><span>Thuisbatterij</span></label>
           </div>
         </div>
-        <div class="settings-block">
-          <label for="supplier-select"><strong>Mijn energieleverancier</strong></label>
-          <p class="settings-help">Bepaalt de opslag (inkoopvergoeding) die bij de kale EPEX-prijs wordt opgeteld. Bedragen zijn <strong>excl. btw</strong>; vergelijk met je leverancier-app waar het soms incl. btw staat. Heb je een ander tarief? Kies <em>Eigen waarde invullen</em>.</p>
-          <select id="supplier-select" class="settings-input"></select>
-          <div id="custom-markup-wrap" class="settings-row" hidden>
-            <label for="custom-markup-input">Eigen opslag (€ per kWh, excl. btw)</label>
-            <input id="custom-markup-input" class="settings-input" type="number" step="0.0001" min="0" inputmode="decimal" />
-          </div>
-          <p class="settings-current">Actuele opslag: <span data-field="current-markup">—</span></p>
-        </div>
-        <div class="settings-block">
-          <strong>Aannames in de berekening</strong>
-          <ul class="settings-meta">
-            <li>Energiebelasting <span data-field="config-year">—</span>: <span data-field="config-energiebelasting">—</span></li>
-            <li>BTW: <span data-field="config-btw">—</span></li>
-            <li>De all-in formule: (EPEX + opslag + energiebelasting) × btw</li>
-          </ul>
-          <p class="settings-help">Tarieven zijn schattingen die jaarlijks worden bijgewerkt. Controleer altijd je eigen jaaroverzicht voor exacte cijfers.</p>
-        </div>
+        <button type="button" class="info-btn" id="assumptions-btn" aria-haspopup="dialog">
+          <span class="info-btn-icon" aria-hidden="true">i</span> Hoe rekenen we?
+        </button>
       </div>
     </section>
+
+    <!-- Aannames-popup: hoort bij de info-knop in het instellingenpaneel -->
+    <dialog id="assumptions-dialog" class="info-dialog" aria-labelledby="assumptions-title">
+      <div class="info-dialog-inner">
+        <h2 class="info-dialog-title" id="assumptions-title">Aannames in de berekening</h2>
+        <ul class="info-dialog-list">
+          <li>Energiebelasting <span data-field="config-year">—</span>: <span data-field="config-energiebelasting">—</span></li>
+          <li>BTW: <span data-field="config-btw">—</span></li>
+          <li>De all-in formule: (EPEX + opslag + energiebelasting) × btw</li>
+        </ul>
+        <p class="info-dialog-note">De opslag (inkoopvergoeding) wordt bij de kale EPEX-prijs opgeteld. Bedragen zijn <strong>excl. btw</strong>; in je leverancier-app staat het soms incl. btw. Tarieven zijn schattingen die jaarlijks worden bijgewerkt — controleer altijd je eigen jaaroverzicht voor exacte cijfers.</p>
+        <button type="button" class="info-dialog-close">Sluiten</button>
+      </div>
+    </dialog>
 
     <!-- Hero-verdict: morgen- of nu-samenvatting bovenaan — vervangt de oude tomorrow-tip banner (#58) -->
     <section id="hero-verdict" class="hero-verdict" hidden aria-live="polite" role="status">
