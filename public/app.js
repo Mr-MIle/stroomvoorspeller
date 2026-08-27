@@ -33,6 +33,7 @@
     profile: { ev: false, solar: false, battery: false },  // 'Mijn situatie' — personalisatie
     momentWindow: 2,     // vensterduur (uren) voor de 'goedkoopste vensters'-lijst
     situationInlineOpen: null,  // null = nog niet bepaald; zie renderSituationInline()
+    suppliersExpanded: false,   // aanbiederstabel op de home: top 8 of alles
     chart: null,
   };
 
@@ -833,8 +834,33 @@
       .map((s) => ({ supplier: s, cents: priceCentsForSupplier(current.price, s) }))
       .sort((a, b) => a.cents - b.cents);
 
+    // De home toont de acht goedkoopste aanbieders van dit uur; de volledige lijst
+    // (25 stuks, ruim 5.000 px op mobiel) staat achter de knop en op /aanbieders.
+    // Je eigen leverancier staat er altijd bij, ook als die buiten de top 8 valt.
+    const LIMIT = 8;
+    let shown = rows;
+    if (!state.suppliersExpanded && rows.length > LIMIT) {
+      shown = rows.slice(0, LIMIT);
+      if (!shown.some((r) => r.supplier.id === state.supplierId)) {
+        const mine = rows.find((r) => r.supplier.id === state.supplierId);
+        if (mine) shown = shown.concat([mine]);
+      }
+    }
+    const moreBtn = document.getElementById("suppliers-more");
+    if (moreBtn) {
+      if (rows.length > LIMIT) {
+        moreBtn.hidden = false;
+        moreBtn.textContent = state.suppliersExpanded
+          ? "Toon alleen de acht goedkoopste"
+          : "Toon alle aanbieders";
+        moreBtn.setAttribute("aria-expanded", state.suppliersExpanded ? "true" : "false");
+      } else {
+        moreBtn.hidden = true;
+      }
+    }
+
     tbody.innerHTML = "";
-    rows.forEach((r) => {
+    shown.forEach((r) => {
       const s = r.supplier;
       const tr = document.createElement("tr");
       if (s.id === state.supplierId) tr.className = "is-mine";
@@ -1857,6 +1883,15 @@
         renderAll();
       });
     });
+
+    // Aanbiederstabel op de home: top 8 ↔ alles
+    const suppliersMoreBtn = document.getElementById("suppliers-more");
+    if (suppliersMoreBtn) {
+      suppliersMoreBtn.addEventListener("click", () => {
+        state.suppliersExpanded = !state.suppliersExpanded;
+        renderSupplierTable();
+      });
+    }
 
     // Nudge boven de week-strip → open instellingen en scroll erheen
     const nudge = document.getElementById("profile-nudge");

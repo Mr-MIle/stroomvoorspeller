@@ -2909,3 +2909,27 @@ details[open] > .faq-q::before { transform: rotate(90deg); }
   .situation-inline-label { font-size: 0.88rem; }
   .is-secondary { padding-top: 22px; padding-bottom: 24px; }
 }
+
+/* Knop onder de aanbiederstabel op de home (top 8 ↔ alle aanbieders) */
+.suppliers-more {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 12px 0 0;
+  padding: 10px 16px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  color: var(--c-brand-deep);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.suppliers-more:hover { border-color: var(--c-accent); }
+.suppliers-more[hidden] { display: none; }
+
+/* Tapdoel-hoogte van de situatie-chips op mobiel (was 32px) */
+@media (max-width: 640px) {
+  .situation-chip { min-height: 44px; }
+}
