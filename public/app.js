@@ -32,6 +32,7 @@
     supplierId: "average",
     profile: { ev: false, solar: false, battery: false },  // 'Mijn situatie' — personalisatie
     momentWindow: 2,     // vensterduur (uren) voor de 'goedkoopste vensters'-lijst
+    situationInlineOpen: null,  // null = nog niet bepaald; zie renderSituationInline()
     chart: null,
   };
 
@@ -60,6 +61,12 @@
     const p = state.profile || {};
     return !p.ev && !p.solar && !p.battery;
   }
+  // Checkbox-id's van 'Mijn situatie': instellingenpaneel + inline-rij onder de nu-kaart.
+  const PROFILE_FIELDS = [
+    ["profile-ev", "ev"], ["profile-solar", "solar"], ["profile-battery", "battery"],
+    ["profile-ev-inline", "ev"], ["profile-solar-inline", "solar"], ["profile-battery-inline", "battery"],
+  ];
+
   // Profiel-zin voor de nu-kaart. kind: 'laad' (goedkoop/gratis) of 'duur'. Leeg = geen toevoeging.
   function profielActie(kind) {
     const p = state.profile || {};
@@ -770,19 +777,31 @@
     const m_incl = m * (t.btw_factor || 1);
     setText("current-markup", `Opslag €${fmtNum(m, 4)}/kWh excl. btw · €${fmtNum(m_incl, 4)} incl. btw`);
 
-    // 'Mijn situatie' — checkbox-status spiegelen aan state.profile
-    const evCb = document.getElementById("profile-ev");
-    const solarCb = document.getElementById("profile-solar");
-    const batteryCb = document.getElementById("profile-battery");
-    if (evCb) evCb.checked = !!state.profile.ev;
-    if (solarCb) solarCb.checked = !!state.profile.solar;
-    if (batteryCb) batteryCb.checked = !!state.profile.battery;
-    // .is-on spiegelt de checked-status voor browsers zonder :has()-ondersteuning
-    [evCb, solarCb, batteryCb].forEach((cb) => {
+    // 'Mijn situatie' — checkbox-status spiegelen aan state.profile.
+    // Twee plekken met dezelfde state: het instellingenpaneel en de inline-chips
+    // onder de nu-kaart (CoPilot-punt 4, aug 2026).
+    PROFILE_FIELDS.forEach(([id, key]) => {
+      const cb = document.getElementById(id);
       if (!cb) return;
+      cb.checked = !!state.profile[key];
+      // .is-on spiegelt de checked-status voor browsers zonder :has()-ondersteuning
       const chip = cb.closest(".situation-chip");
       if (chip) chip.classList.toggle("is-on", cb.checked);
     });
+    renderSituationInline();
+  }
+
+  // Inline situatie-chips onder de nu-kaart (CoPilot-punt 4, aug 2026).
+  // Ze verschijnen alleen als het profiel leeg was bij het laden van de pagina en
+  // blijven daarna de hele sessie staan — anders zou de rij na het eerste vinkje
+  // verdwijnen en kon je het tweede niet meer zetten. Bij een volgend bezoek met
+  // een gevuld profiel blijft de rij weg; wijzigen kan dan via het ⚙-paneel.
+  function renderSituationInline() {
+    const row = document.getElementById("situation-inline");
+    if (!row) return;
+    if (state.situationInlineOpen === null) state.situationInlineOpen = profileEmpty();
+    if (state.situationInlineOpen) row.removeAttribute("hidden");
+    else row.setAttribute("hidden", "");
   }
 
   function renderSettingsToggle() {
@@ -1829,7 +1848,7 @@
     }
 
     // 'Mijn situatie' — kenmerken aan/uit
-    [["profile-ev", "ev"], ["profile-solar", "solar"], ["profile-battery", "battery"]].forEach(([id, key]) => {
+    PROFILE_FIELDS.forEach(([id, key]) => {
       const cb = document.getElementById(id);
       if (!cb) return;
       cb.addEventListener("change", (e) => {

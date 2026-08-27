@@ -230,6 +230,19 @@
           </p>
         </div>
 
+        <!-- Situatie-chips inline (aug 2026, CoPilot-punt 4): zichtbaar zolang 'Mijn situatie'
+             leeg is bij het laden van de pagina. Zodra er iets aan staat, verdwijnt de rij bij
+             het volgende bezoek; wijzigen kan daarna via het ⚙-paneel. Dezelfde state
+             (sv.profile) als de checkboxes in het instellingenpaneel. -->
+        <div id="situation-inline" class="situation-inline" hidden>
+          <span class="situation-inline-label">Wat heb je thuis? Dan pas ik het advies daarop aan.</span>
+          <div class="situation-options">
+            <label class="situation-chip"><input type="checkbox" id="profile-ev-inline"><span class="situation-box" aria-hidden="true"></span><span>EV</span></label>
+            <label class="situation-chip"><input type="checkbox" id="profile-solar-inline"><span class="situation-box" aria-hidden="true"></span><span>Zonnepanelen</span></label>
+            <label class="situation-chip"><input type="checkbox" id="profile-battery-inline"><span class="situation-box" aria-hidden="true"></span><span>Thuisbatterij</span></label>
+          </div>
+        </div>
+
         <!-- Scroll-nudge: subtiele ↓ richting grafiek, alleen mobiel (#61) -->
         <div class="scroll-nudge" aria-hidden="true">
           <a href="#grafiek" class="scroll-nudge-arrow" tabindex="-1">↓</a>
@@ -289,6 +302,7 @@
           </div>
         </div>
       </div>
+      <p class="chart-meta">Bron: EPEX Spot via <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E</a> · bijgewerkt <span data-field="generated-at">—</span> · <a href="/over/voorspelling">waar komen deze cijfers vandaan?</a></p>
     </section>
 
     <!-- Quick-summary: goedkoopste/duurste/gemiddelde vandaag — na grafiek zodat grafiek direct zichtbaar is op mobiel (#56) -->
@@ -307,12 +321,47 @@
       </div>
     </div>
 
+    <!-- Best moments -->
+    <section id="tips" class="moments-section container">
+      <div class="section-head">
+        <h2>Wanneer is stroom vandaag en morgen het goedkoopst?</h2>
+        <p class="section-sub">Kies hoeveel uur je aaneengesloten nodig hebt: 1 uur voor de oven, 2 voor wasmachine of droger, 5 voor warmtepomp of EV. Prijzen weergegeven als <span data-field="mode-label">incl. belasting</span>.</p>
+      </div>
+      <div class="moment-chips" id="moment-chips" role="group" aria-label="Duur van het venster">
+        <button type="button" data-hours="1">1 uur</button>
+        <button type="button" data-hours="2" class="on">2 uur</button>
+        <button type="button" data-hours="3">3 uur</button>
+        <button type="button" data-hours="5">5 uur</button>
+      </div>
+      <ul class="moments-list" data-field="best-moments">
+        <li class="moment-loading">Berekenen…</li>
+      </ul>
+
+      <details class="tips-notes">
+        <summary class="tips-notes-summary">Aandachtspunten bij sturen op goedkope uren</summary>
+        <div class="explain-grid">
+        <article>
+          <h3>Let op de grens van je aansluiting</h3>
+          <p>Een 3-fase aansluiting (3×25A) levert maximaal 17,25 kW tegelijk; een 1-fase aansluiting met 25 ampère blijft op 5,75 kW steken (35 ampère: ongeveer 8 kW). Draai je wasmachine, droger, oven en auto samen op een goedkoop uur, dan vliegt de zekering eruit. Een 11 kW laadpaal past sowieso niet op 1-fase — controleer dit vóór je een laadpaal of thuisbatterij koopt.</p>
+        </article>
+        <article>
+          <h3>Niet alles tegelijk starten</h3>
+          <p>Goedkope uren verleiden je om alles in één klap aan te zetten. Je netaansluiting is een harde grens. Schuif zware apparaten 30–60 minuten uit elkaar om piekbelasting te voorkomen.</p>
+        </article>
+        <article>
+          <h3>Teruglevering bij negatieve prijzen</h3>
+          <p>Bij een negatieve prijs <em>betaal</em> je om stroom terug te leveren. Beperk dan je zonnepanelen, handmatig of automatisch. Sommige omvormers regelen dit zelf; met een thuisbatterij stuur je het hele systeem aan. <a href="/kennisbank/zonnepanelen-uitzetten-negatieve-prijs">Lees hoe het werkt per omvormer-merk en welke diensten er zijn →</a></p>
+        </article>
+        </div>
+      </details>
+    </section>
+
     <!-- Forecast - eigen grafiek (dag 2 t/m 7), los van de vandaag/morgen-grafiek -->
     <section id="voorspelling" class="forecast-section container">
       <div class="section-head">
         <h2>Voorspelling 5–7 dagen vooruit</h2>
-        <p class="section-sub">Eigen model-voorspelling voor de dagen ná morgen: een <strong>gestippelde lijn</strong> met een onzekerheidsband eromheen. Klik of tik op een voorspeld uur: onder de grafiek verschijnt dan de opbouw per factor (zon, wind, temperatuur, gas, dagtype, uurpatroon). Verder vooruit wordt de schatting onzekerder; <a href="/kennisbank/waarom-stroomprijzen-moeilijk-te-voorspellen">waarom stroomprijzen lastig te voorspellen zijn</a>, lees je in de kennisbank.</p>
         <p class="forecast-accuracy" id="forecast-accuracy" hidden></p>
+        <p class="section-sub">Eigen model-voorspelling voor de dagen ná morgen: een <strong>gestippelde lijn</strong> met een onzekerheidsband eromheen. Klik of tik op een voorspeld uur: onder de grafiek verschijnt dan de opbouw per factor (zon, wind, temperatuur, gas, dagtype, uurpatroon). Verder vooruit wordt de schatting onzekerder; <a href="/kennisbank/waarom-stroomprijzen-moeilijk-te-voorspellen">waarom stroomprijzen lastig te voorspellen zijn</a>, lees je in de kennisbank.</p>
       </div>
       <button type="button" id="profile-nudge" class="profile-nudge" hidden>
         <span class="profile-nudge-icon" aria-hidden="true">⚙</span>
@@ -341,7 +390,7 @@
     </section>
 
     <!-- Aanbieders-prijsvergelijking voor het huidige uur -->
-    <section id="aanbieders" class="suppliers-section container">
+    <section id="aanbieders" class="suppliers-section container is-secondary">
       <div class="section-head">
         <h2>Wat betaal je per aanbieder, voor het huidige uur</h2>
         <p class="section-sub">All-in prijs (kale EPEX + opslag + energiebelasting + 21% btw) voor <span data-field="suppliers-now-time">—</span>. Tarieven gevalideerd op <span data-field="suppliers-verified">—</span>; controleer altijd op de site van de aanbieder zelf.</p>
@@ -366,44 +415,8 @@
       <p class="suppliers-note" style="margin-top:8px;"><a href="/aanbieders">Meer over de aanbieders: app-kwaliteit, slim laden en voor wie geschikt →</a></p>
     </section>
 
-    <!-- Best moments -->
-    <section id="tips" class="moments-section container">
-      <div class="section-head">
-        <h2>Wanneer is stroom vandaag en morgen het goedkoopst?</h2>
-        <p class="section-sub">Kies hoeveel uur je aaneengesloten nodig hebt: 1 uur voor de oven, 2 voor wasmachine of droger, 5 voor warmtepomp of EV. Prijzen weergegeven als <span data-field="mode-label">incl. belasting</span>.</p>
-      </div>
-      <div class="moment-chips" id="moment-chips" role="group" aria-label="Duur van het venster">
-        <button type="button" data-hours="1">1 uur</button>
-        <button type="button" data-hours="2" class="on">2 uur</button>
-        <button type="button" data-hours="3">3 uur</button>
-        <button type="button" data-hours="5">5 uur</button>
-      </div>
-      <ul class="moments-list" data-field="best-moments">
-        <li class="moment-loading">Berekenen…</li>
-      </ul>
-
-      <div class="section-head tips-notes-head">
-        <h3>Aandachtspunten</h3>
-        <p class="section-sub">Praktische randvoorwaarden om rekening mee te houden als je op goedkope uren stuurt.</p>
-      </div>
-      <div class="explain-grid">
-        <article>
-          <h3>Let op de grens van je aansluiting</h3>
-          <p>Een 3-fase aansluiting (3×25A) levert maximaal 17,25 kW tegelijk; een 1-fase aansluiting met 25 ampère blijft op 5,75 kW steken (35 ampère: ongeveer 8 kW). Draai je wasmachine, droger, oven en auto samen op een goedkoop uur, dan vliegt de zekering eruit. Een 11 kW laadpaal past sowieso niet op 1-fase — controleer dit vóór je een laadpaal of thuisbatterij koopt.</p>
-        </article>
-        <article>
-          <h3>Niet alles tegelijk starten</h3>
-          <p>Goedkope uren verleiden je om alles in één klap aan te zetten. Je netaansluiting is een harde grens. Schuif zware apparaten 30–60 minuten uit elkaar om piekbelasting te voorkomen.</p>
-        </article>
-        <article>
-          <h3>Teruglevering bij negatieve prijzen</h3>
-          <p>Bij een negatieve prijs <em>betaal</em> je om stroom terug te leveren. Beperk dan je zonnepanelen, handmatig of automatisch. Sommige omvormers regelen dit zelf; met een thuisbatterij stuur je het hele systeem aan. <a href="/kennisbank/zonnepanelen-uitzetten-negatieve-prijs">Lees hoe het werkt per omvormer-merk en welke diensten er zijn →</a></p>
-        </article>
-      </div>
-    </section>
-
     <!-- Thuisbatterij showcase -->
-    <section id="batterij-promo" class="container" style="margin:32px auto;">
+    <section id="batterij-promo" class="container is-secondary">
       <div class="section-head">
         <h2>Wat levert een thuisbatterij op?</h2>
         <p class="section-sub">Ik laad mijn batterij overdag met zonnestroom en gebruik die 's avonds, als stroom duur is. Dit is wat dat per dag oplevert &mdash; mijn eigen batterij, geen rekenvoorbeeld. De batterij draait sinds 15 oktober 2025. Benieuwd wat een batterij jóu zou opleveren? Reken het hieronder uit. Wat zo'n batterij kost en wanneer hij zichzelf terugverdient, lees je in <a href="/kennisbank/thuisbatterij-kosten">thuisbatterij kosten 2026</a>.</p>
@@ -449,19 +462,14 @@
     </script>
 
     <!-- Explanation -->
-    <section id="uitleg" class="explain-section container">
-      <div class="section-head">
-        <h2>Achtergrond</h2>
-      </div>
-      <div class="explain-grid">
-        <article>
-          <h3>Day-ahead prijzen</h3>
-          <p>Elke dag rond 14:00 publiceert de Europese stroombeurs EPEX de prijzen voor elk uur van de volgende dag. Mensen met een dynamisch contract betalen die uurprijs plus een vaste opslag van hun leverancier, energiebelasting en btw. <a href="/over/voorspelling">Lees hoe de voorspelling werkt →</a></p>
-        </article>
-      </div>
+    <section id="uitleg" class="explain-section container is-secondary">
+      <details class="explain-details">
+        <summary class="explain-details-summary">Achtergrond: hoe day-ahead prijzen werken</summary>
+        <p>Elke dag rond 14:00 publiceert de Europese stroombeurs EPEX de prijzen voor elk uur van de volgende dag. Mensen met een dynamisch contract betalen die uurprijs plus een vaste opslag van hun leverancier, energiebelasting en btw. <a href="/over/voorspelling">Lees hoe de voorspelling werkt →</a></p>
+      </details>
     </section>
     <!-- Kennisbank -->
-    <section id="kennisbank-home" class="explain-section container">
+    <section id="kennisbank-home" class="explain-section container is-secondary">
       <div class="section-head">
         <h2>Meer weten? Uit de kennisbank</h2>
         <p class="section-sub">Uitleg over dynamische prijzen, thuisbatterijen, zonnepanelen en slim meten &mdash; in gewone taal en met concrete bedragen.</p>
@@ -500,40 +508,40 @@
       </div>
       <p class="legal-related" style="margin-top:14px;"><a href="/kennisbank">Alle artikelen in de kennisbank &rarr;</a></p>
     </section>
-  </main>
 
     <!-- FAQ -->
-    <section id="faq" class="explain-section container">
+    <section id="faq" class="explain-section container is-secondary">
       <div class="section-head">
         <h2>Veelgestelde vragen</h2>
       </div>
-      <div class="explain-grid">
-        <article>
-          <h3>Wanneer is stroom vandaag en morgen het goedkoopst?</h3>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary class="faq-q"><h3>Wanneer is stroom vandaag en morgen het goedkoopst?</h3></summary>
           <p>De lijst bovenaan de pagina zet de goedkoopste vensters van vandaag en morgen op een rij; kies zelf of je 1, 2, 3 of 5 uur nodig hebt. Meestal is stroom 's middags het goedkoopst en tussen 17:00 en 21:00 het duurst.</p>
-        </article>
-        <article>
-          <h3>Wat betaal ik echt per kWh?</h3>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q"><h3>Wat betaal ik echt per kWh?</h3></summary>
           <p>De kale beursprijs plus de opslag van je leverancier (zo'n 2 cent), energiebelasting (9,16 cent in 2026) en daarover 21% btw. Een kale prijs van 5 cent komt zo all-in op ongeveer 20 cent uit. De aanbieder-tabel hierboven rekent dit per leverancier voor je uit.</p>
-        </article>
-        <article>
-          <h3>Hoe laat zijn de prijzen van morgen bekend?</h3>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q"><h3>Hoe laat zijn de prijzen van morgen bekend?</h3></summary>
           <p>De Europese stroombeurs EPEX publiceert elke dag rond 14:00 de uurprijzen voor de volgende dag. Kort daarna staan ze hier en op de <a href="/morgen">morgen-pagina</a>.</p>
-        </article>
-        <article>
-          <h3>Wanneer is stroom gratis?</h3>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q"><h3>Wanneer is stroom gratis?</h3></summary>
           <p>Bij veel zon en wind zakt de kale beursprijs soms onder nul, vooral op zonnige middagen in het weekend en op feestdagen. Gratis wordt stroom pas als ook de prijs inclusief belasting en opslag onder nul komt; dat zie je hierboven aan het label “gratis”. <a href="/kennisbank/negatieve-stroomprijzen">Lees hoe negatieve prijzen werken →</a></p>
-        </article>
-        <article>
-          <h3>Hoe goed klopt de voorspelling?</h3>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q"><h3>Hoe goed klopt de voorspelling?</h3></summary>
           <p>Dat meet ik elke dag: de voorspelling gaat naast de echte prijzen en de uitkomst staat voor iedereen zichtbaar op de <a href="/over/performance">nauwkeurigheidspagina</a>. Het juiste dagdeel zit er meestal in; de exacte cent vaak niet.</p>
-        </article>
-        <article>
-          <h3>Welke aanbieders hebben een dynamisch contract?</h3>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q"><h3>Welke aanbieders hebben een dynamisch contract?</h3></summary>
           <p>Op de <a href="/aanbieders">aanbiederspagina</a> vergelijk ik er 25, met opslag, vaste kosten en terugleverkosten. Ze volgen allemaal dezelfde beursprijs; het verschil zit in de opslag, de vaste kosten en de app.</p>
-        </article>
+        </details>
       </div>
     </section>
+  </main>
 
   <footer class="site-footer">
     <div class="container footer-grid">

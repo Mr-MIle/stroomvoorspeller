@@ -2791,3 +2791,121 @@ body.heeft-vergelijk-bar { padding-bottom: 4.4rem; }
 @media print {
   .partner-card { display: none; }
 }
+
+/* ===== Homepage-ronde aug 2026 (CoPilot-review, punten 1/2/4/5) ===== */
+
+/* Punt 4 — situatie-chips inline onder de nu-kaart. Zelfde chips als in het
+   instellingenpaneel; alleen zichtbaar zolang 'Mijn situatie' nog leeg is. */
+.situation-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+.situation-inline[hidden] { display: none; }
+.situation-inline-label {
+  font-size: 0.92rem;
+  color: var(--c-text-soft);
+  font-weight: 600;
+}
+
+/* Punt 5 — bron en updatemoment direct onder de grafiek, niet alleen in de footer */
+.chart-meta {
+  margin: 10px 0 0;
+  font-size: 0.86rem;
+  color: var(--c-text-mute);
+}
+.chart-meta a { color: var(--c-text-soft); text-decoration: underline; }
+.chart-meta a:hover { color: var(--c-brand-deep); }
+
+/* Punt 5 — trefzekerheid als badge direct onder de kop van de voorspelling */
+.forecast-accuracy {
+  display: inline-block;
+  margin: 8px 0 10px;
+  padding: 6px 12px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-left: 3px solid var(--c-brand);
+  border-radius: var(--radius-sm);
+  color: var(--c-text-soft);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+.forecast-accuracy[hidden] { display: none; }
+
+/* Punt 1 — inklapbare blokken: aandachtspunten, achtergrond, FAQ */
+.tips-notes,
+.explain-details {
+  margin-top: 22px;
+  border-top: 1px solid var(--c-border);
+  padding-top: 14px;
+}
+.tips-notes-summary,
+.explain-details-summary,
+.faq-q {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  color: var(--c-brand-deep);
+  padding: 10px 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tips-notes-summary::-webkit-details-marker,
+.explain-details-summary::-webkit-details-marker,
+.faq-q::-webkit-details-marker { display: none; }
+.tips-notes-summary::before,
+.explain-details-summary::before,
+.faq-q::before {
+  content: "\25B8";
+  color: var(--c-text-mute);
+  transition: transform 0.15s ease;
+  flex: none;
+}
+details[open] > .tips-notes-summary::before,
+details[open] > .explain-details-summary::before,
+details[open] > .faq-q::before { transform: rotate(90deg); }
+.tips-notes .explain-grid { margin-top: 6px; }
+.explain-details > p { margin: 0 0 4px; color: var(--c-text-soft); }
+
+.faq-list { display: block; }
+.faq-item { border-bottom: 1px solid var(--c-border); }
+.faq-item:first-of-type { border-top: 1px solid var(--c-border); }
+.faq-q h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: inherit;
+}
+.faq-item > p {
+  margin: 0 0 14px;
+  color: var(--c-text-soft);
+  line-height: 1.6;
+}
+
+/* Punt 2 — tweede niveau: aanbieders, batterij, achtergrond, kennisbank en FAQ
+   krijgen minder gewicht dan de kern (nu-kaart, grafiek, vensters, voorspelling). */
+.is-secondary {
+  padding-top: 26px;
+  padding-bottom: 30px;
+  border-top: 1px solid var(--c-border);
+}
+.is-secondary .section-head { margin: 0 0 12px; }
+.is-secondary .section-head h2 {
+  font-size: 1.12rem;
+  color: var(--c-text);
+}
+.is-secondary .section-sub { font-size: 0.92rem; }
+
+@media (max-width: 640px) {
+  .situation-inline { padding: 10px 12px; }
+  .situation-inline-label { font-size: 0.88rem; }
+  .is-secondary { padding-top: 22px; padding-bottom: 24px; }
+}
