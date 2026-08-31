@@ -18,6 +18,7 @@
     { label: "Slim thuis", children: [
       { href: "/batterij", label: "Thuisbatterij" },
       { href: "/batterij-berekenen", label: "Batterij berekenen" },
+      { href: "/ere-vergelijken", label: "ERE-vergelijker" },
       { href: "/integraties", label: "Integraties" },
       { href: "/home-assistant", label: "Home Assistant" }
     ] }
