@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-05T09:29:06.414189+00:00",
+  "generated_at": "2026-09-05T12:10:24.841364+00:00",
   "currency": "EUR",
   "unit": "EUR/MWh",
   "tz": "Europe/Amsterdam",
@@ -9,25 +9,25 @@
   "forecasts": [
     {
       "time": "2026-09-06T00:00:00+02:00",
-      "baseline": 125.73,
-      "predicted": 131.39,
-      "predicted_raw": 131.39,
-      "lower": 81.54,
-      "upper": 181.24,
-      "uncertainty_pct": 0.3794,
+      "baseline": 126.53,
+      "predicted": 132.23,
+      "predicted_raw": 132.23,
+      "lower": 82.17,
+      "upper": 182.29,
+      "uncertainty_pct": 0.3786,
       "total_points": 3,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -60,316 +60,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7052,
+      "event_plausibility_score": 0.8083,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
+      "analog_sample_size": 23
     },
     {
       "time": "2026-09-06T01:00:00+02:00",
-      "baseline": 109.44,
-      "predicted": 116.01,
-      "predicted_raw": 116.01,
-      "lower": 70.01,
-      "upper": 162.01,
-      "uncertainty_pct": 0.3965,
+      "baseline": 110.18,
+      "predicted": 116.79,
+      "predicted_raw": 116.79,
+      "lower": 70.59,
+      "upper": 162.99,
+      "uncertainty_pct": 0.3956,
       "total_points": 4,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": -2,
-          "reason": "zondag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": -1,
-          "reason": "vorige dag iets goedkoper (0.72×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.7052,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
-    },
-    {
-      "time": "2026-09-06T02:00:00+02:00",
-      "baseline": 97.23,
-      "predicted": 103.06,
-      "predicted_raw": 103.06,
-      "lower": 60.29,
-      "upper": 145.83,
-      "uncertainty_pct": 0.4149,
-      "total_points": 4,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": -2,
-          "reason": "zondag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": -1,
-          "reason": "vorige dag iets goedkoper (0.72×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.7052,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
-    },
-    {
-      "time": "2026-09-06T03:00:00+02:00",
-      "baseline": 89.69,
-      "predicted": 93.73,
-      "predicted_raw": 93.73,
-      "lower": 53.3,
-      "upper": 134.16,
-      "uncertainty_pct": 0.4314,
-      "total_points": 3,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": -2,
-          "reason": "zondag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": -2,
-          "reason": "vorige dag goedkoop (0.60× baseline)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.7052,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
-    },
-    {
-      "time": "2026-09-06T04:00:00+02:00",
-      "baseline": 88.23,
-      "predicted": 92.2,
-      "predicted_raw": 92.2,
-      "lower": 52.15,
-      "upper": 132.25,
-      "uncertainty_pct": 0.4344,
-      "total_points": 3,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": -2,
-          "reason": "zondag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": -2,
-          "reason": "vorige dag goedkoop (0.58× baseline)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.7052,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
-    },
-    {
-      "time": "2026-09-06T05:00:00+02:00",
-      "baseline": 91.79,
-      "predicted": 95.92,
-      "predicted_raw": 95.92,
-      "lower": 54.94,
-      "upper": 136.9,
-      "uncertainty_pct": 0.4272,
-      "total_points": 3,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": -2,
-          "reason": "zondag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": -2,
-          "reason": "vorige dag goedkoop (0.58× baseline)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.7052,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
-    },
-    {
-      "time": "2026-09-06T06:00:00+02:00",
-      "baseline": 93.82,
-      "predicted": 99.45,
-      "predicted_raw": 99.45,
-      "lower": 57.59,
-      "upper": 141.31,
-      "uncertainty_pct": 0.4209,
-      "total_points": 4,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -402,31 +117,316 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7052,
+      "event_plausibility_score": 0.8083,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
+      "analog_sample_size": 23
     },
     {
-      "time": "2026-09-06T07:00:00+02:00",
-      "baseline": 95.69,
-      "predicted": 100.0,
-      "predicted_raw": 100.0,
-      "lower": 58.0,
-      "upper": 142.0,
-      "uncertainty_pct": 0.42,
-      "total_points": 3,
+      "time": "2026-09-06T02:00:00+02:00",
+      "baseline": 97.95,
+      "predicted": 103.83,
+      "predicted_raw": 103.83,
+      "lower": 60.87,
+      "upper": 146.79,
+      "uncertainty_pct": 0.4137,
+      "total_points": 4,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 0.0,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": -2,
+          "reason": "zondag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": -1,
+          "reason": "vorige dag iets goedkoper (0.71×)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 0.8083,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 23
+    },
+    {
+      "time": "2026-09-06T03:00:00+02:00",
+      "baseline": 90.43,
+      "predicted": 94.5,
+      "predicted_raw": 94.5,
+      "lower": 53.87,
+      "upper": 135.13,
+      "uncertainty_pct": 0.4299,
+      "total_points": 3,
+      "days_ahead": 1,
+      "regime": "normaal",
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 6,
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": -2,
+          "reason": "zondag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": -2,
+          "reason": "vorige dag goedkoop (0.60× baseline)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 0.8083,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 23
+    },
+    {
+      "time": "2026-09-06T04:00:00+02:00",
+      "baseline": 89.04,
+      "predicted": 93.04,
+      "predicted_raw": 93.04,
+      "lower": 52.78,
+      "upper": 133.3,
+      "uncertainty_pct": 0.4327,
+      "total_points": 3,
+      "days_ahead": 1,
+      "regime": "normaal",
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 6,
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": -2,
+          "reason": "zondag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": -2,
+          "reason": "vorige dag goedkoop (0.58× baseline)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 0.8083,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 23
+    },
+    {
+      "time": "2026-09-06T05:00:00+02:00",
+      "baseline": 92.7,
+      "predicted": 96.87,
+      "predicted_raw": 96.87,
+      "lower": 55.65,
+      "upper": 138.09,
+      "uncertainty_pct": 0.4255,
+      "total_points": 3,
+      "days_ahead": 1,
+      "regime": "normaal",
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 6,
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": -2,
+          "reason": "zondag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": -2,
+          "reason": "vorige dag goedkoop (0.57× baseline)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 0.8083,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 23
+    },
+    {
+      "time": "2026-09-06T06:00:00+02:00",
+      "baseline": 94.83,
+      "predicted": 100.52,
+      "predicted_raw": 100.52,
+      "lower": 58.39,
+      "upper": 142.65,
+      "uncertainty_pct": 0.4191,
+      "total_points": 4,
+      "days_ahead": 1,
+      "regime": "normaal",
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 6,
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": -2,
+          "reason": "zondag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": -1,
+          "reason": "vorige dag iets goedkoper (0.70×)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 0.8083,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 23
+    },
+    {
+      "time": "2026-09-06T07:00:00+02:00",
+      "baseline": 96.79,
+      "predicted": 101.15,
+      "predicted_raw": 101.15,
+      "lower": 58.86,
+      "upper": 143.44,
+      "uncertainty_pct": 0.4181,
+      "total_points": 3,
+      "days_ahead": 1,
+      "regime": "normaal",
+      "sw_ratio_h": 0.0,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 6,
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -465,25 +465,25 @@
     },
     {
       "time": "2026-09-06T08:00:00+02:00",
-      "baseline": 50.01,
-      "predicted": 53.01,
-      "predicted_raw": 53.01,
-      "lower": 22.76,
-      "upper": 83.26,
-      "uncertainty_pct": 0.5707,
+      "baseline": 50.63,
+      "predicted": 53.67,
+      "predicted_raw": 53.67,
+      "lower": 23.25,
+      "upper": 84.09,
+      "uncertainty_pct": 0.5668,
       "total_points": 4,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 0.273,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 0.28,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -498,7 +498,7 @@
         {
           "name": "vorige_dag",
           "points": -1,
-          "reason": "vorige dag iets goedkoper (0.82×)"
+          "reason": "vorige dag iets goedkoper (0.81×)"
         },
         {
           "name": "nonlinear",
@@ -522,25 +522,25 @@
     },
     {
       "time": "2026-09-06T09:00:00+02:00",
-      "baseline": 2.28,
-      "predicted": 2.42,
-      "predicted_raw": 2.42,
-      "lower": -15.18,
-      "upper": 20.02,
-      "uncertainty_pct": 7.2778,
+      "baseline": 2.31,
+      "predicted": 2.45,
+      "predicted_raw": 2.45,
+      "lower": -15.16,
+      "upper": 20.06,
+      "uncertainty_pct": 7.1837,
       "total_points": 4,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 0.715,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 0.719,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -555,7 +555,7 @@
         {
           "name": "vorige_dag",
           "points": -1,
-          "reason": "vorige dag iets goedkoper (0.78×)"
+          "reason": "vorige dag iets goedkoper (0.77×)"
         },
         {
           "name": "nonlinear",
@@ -584,20 +584,20 @@
       "predicted_raw": -0.1,
       "lower": -17.13,
       "upper": 16.93,
-      "uncertainty_pct": 168.7792,
+      "uncertainty_pct": 166.3663,
       "total_points": 3,
       "days_ahead": 1,
       "regime": "normaal",
       "sw_ratio_h": 1.024,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -612,7 +612,7 @@
         {
           "name": "vorige_dag",
           "points": -2,
-          "reason": "vorige dag goedkoop (-12.17× baseline)"
+          "reason": "vorige dag goedkoop (-12.09× baseline)"
         },
         {
           "name": "nonlinear",
@@ -636,25 +636,139 @@
     },
     {
       "time": "2026-09-06T11:00:00+02:00",
-      "baseline": -0.65,
-      "predicted": -0.72,
-      "predicted_raw": -0.72,
-      "lower": -17.9,
-      "upper": 16.46,
-      "uncertainty_pct": 23.75,
+      "baseline": -0.66,
+      "predicted": -0.73,
+      "predicted_raw": -0.73,
+      "lower": -17.91,
+      "upper": 16.45,
+      "uncertainty_pct": 23.3978,
       "total_points": 7,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 1.218,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 1.188,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": -2,
+          "reason": "zondag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 2,
+          "reason": "vorige dag duur (10.48×)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 0.8083,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 23
+    },
+    {
+      "time": "2026-09-06T12:00:00+02:00",
+      "baseline": -1.41,
+      "predicted": -1.56,
+      "predicted_raw": -1.56,
+      "lower": -18.95,
+      "upper": 15.83,
+      "uncertainty_pct": 11.1564,
+      "total_points": 7,
+      "days_ahead": 1,
+      "regime": "normaal",
+      "sw_ratio_h": 1.357,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 6,
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": -2,
+          "reason": "zondag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 2,
+          "reason": "vorige dag duur (8.75×)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 0.7743,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 20
+    },
+    {
+      "time": "2026-09-06T13:00:00+02:00",
+      "baseline": -1.91,
+      "predicted": -2.11,
+      "predicted_raw": -2.11,
+      "lower": -19.64,
+      "upper": 15.42,
+      "uncertainty_pct": 8.3006,
+      "total_points": 7,
+      "days_ahead": 1,
+      "regime": "oversupply",
+      "sw_ratio_h": 1.451,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
+      "P_negative": 0.399,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 6,
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -674,7 +788,7 @@
         {
           "name": "nonlinear",
           "points": 0,
-          "reason": "n.v.t."
+          "reason": "oversupply niet-lineair: zon -0.3p"
         },
         {
           "name": "scarcity",
@@ -687,145 +801,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.8475,
+      "event_plausibility_score": 0.7052,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 27
-    },
-    {
-      "time": "2026-09-06T12:00:00+02:00",
-      "baseline": -1.39,
-      "predicted": -1.53,
-      "predicted_raw": -1.53,
-      "lower": -18.91,
-      "upper": 15.85,
-      "uncertainty_pct": 11.3298,
-      "total_points": 7,
-      "days_ahead": 1,
-      "regime": "normaal",
-      "sw_ratio_h": 1.387,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": -2,
-          "reason": "zondag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (8.81×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.7862,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 21
-    },
-    {
-      "time": "2026-09-06T13:00:00+02:00",
-      "baseline": -1.88,
-      "predicted": -2.05,
-      "predicted_raw": -2.05,
-      "lower": -19.56,
-      "upper": 15.46,
-      "uncertainty_pct": 8.5466,
-      "total_points": 6,
-      "days_ahead": 1,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.553,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
-      "P_negative": 0.443,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": -2,
-          "reason": "zondag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 2,
-          "reason": "vorige dag duur (10.62×)"
-        },
-        {
-          "name": "nonlinear",
-          "points": -1,
-          "reason": "oversupply niet-lineair: zon -0.9p"
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.5588,
-      "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 8
+      "analog_sample_size": 15
     },
     {
       "time": "2026-09-06T14:00:00+02:00",
-      "baseline": -1.31,
-      "predicted": -1.41,
-      "predicted_raw": -1.41,
-      "lower": -18.76,
-      "upper": 15.94,
-      "uncertainty_pct": 12.3165,
+      "baseline": -1.33,
+      "predicted": -1.43,
+      "predicted_raw": -1.43,
+      "lower": -18.79,
+      "upper": 15.93,
+      "uncertainty_pct": 12.112,
       "total_points": 5,
       "days_ahead": 1,
       "regime": "oversupply",
-      "sw_ratio_h": 1.649,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
-      "P_negative": 0.486,
+      "sw_ratio_h": 1.651,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
+      "P_negative": 0.487,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -840,7 +840,7 @@
         {
           "name": "vorige_dag",
           "points": 2,
-          "reason": "vorige dag duur (16.60×)"
+          "reason": "vorige dag duur (16.49×)"
         },
         {
           "name": "nonlinear",
@@ -864,25 +864,25 @@
     },
     {
       "time": "2026-09-06T15:00:00+02:00",
-      "baseline": -0.25,
-      "predicted": -0.27,
-      "predicted_raw": -0.27,
-      "lower": -17.34,
-      "upper": 16.8,
-      "uncertainty_pct": 62.5838,
+      "baseline": -0.26,
+      "predicted": -0.28,
+      "predicted_raw": -0.28,
+      "lower": -17.35,
+      "upper": 16.79,
+      "uncertainty_pct": 61.4861,
       "total_points": 5,
       "days_ahead": 1,
       "regime": "oversupply",
-      "sw_ratio_h": 1.669,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
-      "P_negative": 0.495,
+      "sw_ratio_h": 1.715,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
+      "P_negative": 0.516,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -897,12 +897,69 @@
         {
           "name": "vorige_dag",
           "points": 2,
-          "reason": "vorige dag duur (83.76×)"
+          "reason": "vorige dag duur (83.21×)"
         },
         {
           "name": "nonlinear",
           "points": -2,
-          "reason": "oversupply niet-lineair: zon -1.9p"
+          "reason": "oversupply niet-lineair: zon -2.4p"
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 0.4557,
+      "event_plausibility_label": "NORMAL",
+      "analog_sample_size": 5
+    },
+    {
+      "time": "2026-09-06T16:00:00+02:00",
+      "baseline": 0.48,
+      "predicted": 0.49,
+      "predicted_raw": 0.49,
+      "lower": -16.63,
+      "upper": 17.61,
+      "uncertainty_pct": 35.2147,
+      "total_points": 1,
+      "days_ahead": 1,
+      "regime": "oversupply",
+      "sw_ratio_h": 1.638,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
+      "P_negative": 0.481,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 6,
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": -2,
+          "reason": "zondag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": -2,
+          "reason": "vorige dag goedkoop (-3.38× baseline)"
+        },
+        {
+          "name": "nonlinear",
+          "points": -2,
+          "reason": "oversupply niet-lineair: zon -1.6p"
         },
         {
           "name": "scarcity",
@@ -920,83 +977,26 @@
       "analog_sample_size": 7
     },
     {
-      "time": "2026-09-06T16:00:00+02:00",
-      "baseline": 0.47,
-      "predicted": 0.47,
-      "predicted_raw": 0.47,
-      "lower": -16.65,
-      "upper": 17.59,
-      "uncertainty_pct": 36.3995,
-      "total_points": 0,
-      "days_ahead": 1,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.932,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
-      "P_negative": 0.611,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": -2,
-          "reason": "zondag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": -2,
-          "reason": "vorige dag goedkoop (-3.40× baseline)"
-        },
-        {
-          "name": "nonlinear",
-          "points": -3,
-          "reason": "oversupply niet-lineair: zon -5.6p"
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.0,
-      "event_plausibility_label": "VERY_RARE_EVENT",
-      "analog_sample_size": 0
-    },
-    {
       "time": "2026-09-06T17:00:00+02:00",
-      "baseline": 47.68,
-      "predicted": 49.11,
-      "predicted_raw": 49.11,
-      "lower": 19.83,
-      "upper": 78.39,
-      "uncertainty_pct": 0.5961,
+      "baseline": 48.61,
+      "predicted": 50.07,
+      "predicted_raw": 50.07,
+      "lower": 20.55,
+      "upper": 79.59,
+      "uncertainty_pct": 0.5896,
       "total_points": 2,
       "days_ahead": 1,
       "regime": "oversupply",
-      "sw_ratio_h": 2.069,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 1.754,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -1011,12 +1011,12 @@
         {
           "name": "vorige_dag",
           "points": 0,
-          "reason": "vorige dag normaal (0.93×)"
+          "reason": "vorige dag normaal (0.92×)"
         },
         {
           "name": "nonlinear",
           "points": -3,
-          "reason": "oversupply niet-lineair: zon -8.3p"
+          "reason": "oversupply niet-lineair: zon -2.9p"
         },
         {
           "name": "scarcity",
@@ -1029,31 +1029,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.1763,
-      "event_plausibility_label": "VERY_RARE_EVENT",
-      "analog_sample_size": 1
+      "event_plausibility_score": 0.3526,
+      "event_plausibility_label": "LOW",
+      "analog_sample_size": 3
     },
     {
       "time": "2026-09-06T18:00:00+02:00",
-      "baseline": 148.67,
-      "predicted": 153.13,
-      "predicted_raw": 153.13,
-      "lower": 97.85,
-      "upper": 208.41,
-      "uncertainty_pct": 0.361,
+      "baseline": 151.68,
+      "predicted": 156.23,
+      "predicted_raw": 156.23,
+      "lower": 100.17,
+      "upper": 212.29,
+      "uncertainty_pct": 0.3588,
       "total_points": 2,
       "days_ahead": 1,
       "regime": "oversupply",
-      "sw_ratio_h": 2.189,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 2.332,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -1068,12 +1068,12 @@
         {
           "name": "vorige_dag",
           "points": 0,
-          "reason": "vorige dag normaal (1.04×)"
+          "reason": "vorige dag normaal (1.03×)"
         },
         {
           "name": "nonlinear",
           "points": -3,
-          "reason": "oversupply niet-lineair: zon -11.1p"
+          "reason": "oversupply niet-lineair: zon -14.9p"
         },
         {
           "name": "scarcity",
@@ -1092,25 +1092,25 @@
     },
     {
       "time": "2026-09-06T19:00:00+02:00",
-      "baseline": 182.46,
-      "predicted": 196.15,
-      "predicted_raw": 196.15,
-      "lower": 130.11,
-      "upper": 262.19,
-      "uncertainty_pct": 0.3367,
+      "baseline": 186.15,
+      "predicted": 200.11,
+      "predicted_raw": 200.11,
+      "lower": 133.08,
+      "upper": 267.14,
+      "uncertainty_pct": 0.335,
       "total_points": 5,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 1.324,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 3.411,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -1125,7 +1125,7 @@
         {
           "name": "vorige_dag",
           "points": 0,
-          "reason": "vorige dag normaal (1.08×)"
+          "reason": "vorige dag normaal (1.07×)"
         },
         {
           "name": "nonlinear",
@@ -1143,31 +1143,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.8815,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 31
+      "event_plausibility_score": 0.0,
+      "event_plausibility_label": "VERY_RARE_EVENT",
+      "analog_sample_size": 0
     },
     {
       "time": "2026-09-06T20:00:00+02:00",
-      "baseline": 186.66,
-      "predicted": 203.46,
-      "predicted_raw": 203.46,
-      "lower": 135.59,
-      "upper": 271.33,
-      "uncertainty_pct": 0.3336,
+      "baseline": 190.41,
+      "predicted": 207.55,
+      "predicted_raw": 207.55,
+      "lower": 138.66,
+      "upper": 276.44,
+      "uncertainty_pct": 0.3319,
       "total_points": 6,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -1182,7 +1182,7 @@
         {
           "name": "vorige_dag",
           "points": 1,
-          "reason": "vorige dag duurder (1.19×)"
+          "reason": "vorige dag duurder (1.18×)"
         },
         {
           "name": "nonlinear",
@@ -1200,31 +1200,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7052,
+      "event_plausibility_score": 0.8083,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
+      "analog_sample_size": 23
     },
     {
       "time": "2026-09-06T21:00:00+02:00",
-      "baseline": 184.33,
-      "predicted": 200.92,
-      "predicted_raw": 200.92,
-      "lower": 133.69,
-      "upper": 268.15,
-      "uncertainty_pct": 0.3346,
+      "baseline": 187.99,
+      "predicted": 204.91,
+      "predicted_raw": 204.91,
+      "lower": 136.68,
+      "upper": 273.14,
+      "uncertainty_pct": 0.333,
       "total_points": 6,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -1257,31 +1257,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7052,
+      "event_plausibility_score": 0.8083,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
+      "analog_sample_size": 23
     },
     {
       "time": "2026-09-06T22:00:00+02:00",
-      "baseline": 177.37,
-      "predicted": 193.33,
-      "predicted_raw": 193.33,
-      "lower": 128.0,
-      "upper": 258.66,
-      "uncertainty_pct": 0.3379,
+      "baseline": 180.84,
+      "predicted": 197.12,
+      "predicted_raw": 197.12,
+      "lower": 130.84,
+      "upper": 263.4,
+      "uncertainty_pct": 0.3362,
       "total_points": 6,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -1296,7 +1296,7 @@
         {
           "name": "vorige_dag",
           "points": 1,
-          "reason": "vorige dag duurder (1.26×)"
+          "reason": "vorige dag duurder (1.25×)"
         },
         {
           "name": "nonlinear",
@@ -1314,31 +1314,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7052,
+      "event_plausibility_score": 0.8083,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
+      "analog_sample_size": 23
     },
     {
       "time": "2026-09-06T23:00:00+02:00",
-      "baseline": 166.89,
-      "predicted": 181.91,
-      "predicted_raw": 181.91,
-      "lower": 119.43,
-      "upper": 244.39,
-      "uncertainty_pct": 0.3435,
+      "baseline": 170.11,
+      "predicted": 185.42,
+      "predicted_raw": 185.42,
+      "lower": 122.07,
+      "upper": 248.77,
+      "uncertainty_pct": 0.3417,
       "total_points": 6,
       "days_ahead": 1,
       "regime": "normaal",
-      "sw_ratio_h": 1.44,
-      "sw_ratio_daily": 1.44,
-      "wind_ms": 2.97,
-      "temp_c": 16.7,
+      "sw_ratio_h": 1.418,
+      "sw_ratio_daily": 1.418,
+      "wind_ms": 2.9,
+      "temp_c": 16.5,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 6,
-          "reason": "windstil (3.0 m/s) ×2 (zondag)"
+          "reason": "windstil (2.9 m/s) ×2 (zondag)"
         },
         {
           "name": "gas",
@@ -1353,7 +1353,7 @@
         {
           "name": "vorige_dag",
           "points": 1,
-          "reason": "vorige dag duurder (1.22×)"
+          "reason": "vorige dag duurder (1.21×)"
         },
         {
           "name": "nonlinear",
@@ -1371,31 +1371,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7052,
+      "event_plausibility_score": 0.8083,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
+      "analog_sample_size": 23
     },
     {
       "time": "2026-09-07T00:00:00+02:00",
-      "baseline": 165.5,
-      "predicted": 170.46,
-      "predicted_raw": 170.46,
-      "lower": 110.84,
-      "upper": 230.08,
-      "uncertainty_pct": 0.3497,
-      "total_points": 2,
+      "baseline": 168.27,
+      "predicted": 178.36,
+      "predicted_raw": 178.36,
+      "lower": 116.77,
+      "upper": 239.95,
+      "uncertainty_pct": 0.3453,
+      "total_points": 4,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -1409,8 +1409,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 2,
+          "reason": "vorige dag duur (1.39×)"
         },
         {
           "name": "nonlinear",
@@ -1428,31 +1428,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-07T01:00:00+02:00",
-      "baseline": 155.86,
-      "predicted": 160.54,
-      "predicted_raw": 160.54,
-      "lower": 103.4,
-      "upper": 217.68,
-      "uncertainty_pct": 0.3559,
-      "total_points": 2,
+      "baseline": 158.64,
+      "predicted": 168.15,
+      "predicted_raw": 168.15,
+      "lower": 109.11,
+      "upper": 227.19,
+      "uncertainty_pct": 0.3511,
+      "total_points": 4,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -1466,8 +1466,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 2,
+          "reason": "vorige dag duur (1.66×)"
         },
         {
           "name": "nonlinear",
@@ -1485,31 +1485,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-07T02:00:00+02:00",
-      "baseline": 151.46,
-      "predicted": 156.0,
-      "predicted_raw": 156.0,
-      "lower": 100.0,
-      "upper": 212.0,
-      "uncertainty_pct": 0.359,
-      "total_points": 2,
+      "baseline": 152.72,
+      "predicted": 161.89,
+      "predicted_raw": 161.89,
+      "lower": 104.42,
+      "upper": 219.36,
+      "uncertainty_pct": 0.355,
+      "total_points": 4,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -1523,8 +1523,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 2,
+          "reason": "vorige dag duur (1.88×)"
         },
         {
           "name": "nonlinear",
@@ -1542,31 +1542,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-07T03:00:00+02:00",
-      "baseline": 143.17,
-      "predicted": 147.47,
-      "predicted_raw": 147.47,
-      "lower": 93.6,
-      "upper": 201.34,
-      "uncertainty_pct": 0.3653,
-      "total_points": 2,
+      "baseline": 145.84,
+      "predicted": 154.59,
+      "predicted_raw": 154.59,
+      "lower": 98.94,
+      "upper": 210.24,
+      "uncertainty_pct": 0.36,
+      "total_points": 4,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -1580,8 +1580,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 2,
+          "reason": "vorige dag duur (1.81×)"
         },
         {
           "name": "nonlinear",
@@ -1599,31 +1599,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-07T04:00:00+02:00",
-      "baseline": 142.26,
-      "predicted": 146.52,
-      "predicted_raw": 146.52,
-      "lower": 92.89,
-      "upper": 200.15,
-      "uncertainty_pct": 0.366,
-      "total_points": 2,
+      "baseline": 143.41,
+      "predicted": 152.02,
+      "predicted_raw": 152.02,
+      "lower": 97.02,
+      "upper": 207.02,
+      "uncertainty_pct": 0.3618,
+      "total_points": 4,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -1637,8 +1637,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 2,
+          "reason": "vorige dag duur (1.62×)"
         },
         {
           "name": "nonlinear",
@@ -1656,31 +1656,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-07T05:00:00+02:00",
-      "baseline": 148.68,
-      "predicted": 153.14,
-      "predicted_raw": 153.14,
-      "lower": 97.85,
-      "upper": 208.43,
-      "uncertainty_pct": 0.361,
-      "total_points": 2,
+      "baseline": 150.36,
+      "predicted": 159.38,
+      "predicted_raw": 159.38,
+      "lower": 102.53,
+      "upper": 216.23,
+      "uncertainty_pct": 0.3567,
+      "total_points": 4,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -1694,8 +1694,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 2,
+          "reason": "vorige dag duur (1.56×)"
         },
         {
           "name": "nonlinear",
@@ -1713,31 +1713,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-07T06:00:00+02:00",
-      "baseline": 172.72,
-      "predicted": 177.91,
-      "predicted_raw": 177.91,
-      "lower": 116.43,
-      "upper": 239.39,
-      "uncertainty_pct": 0.3456,
-      "total_points": 2,
+      "baseline": 174.23,
+      "predicted": 184.68,
+      "predicted_raw": 184.68,
+      "lower": 121.51,
+      "upper": 247.85,
+      "uncertainty_pct": 0.342,
+      "total_points": 4,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -1751,8 +1751,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 2,
+          "reason": "vorige dag duur (1.53×)"
         },
         {
           "name": "nonlinear",
@@ -1770,31 +1770,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-07T07:00:00+02:00",
-      "baseline": 186.81,
-      "predicted": 192.41,
-      "predicted_raw": 192.41,
-      "lower": 127.31,
-      "upper": 257.51,
-      "uncertainty_pct": 0.3384,
-      "total_points": 2,
+      "baseline": 187.81,
+      "predicted": 199.08,
+      "predicted_raw": 199.08,
+      "lower": 132.31,
+      "upper": 265.85,
+      "uncertainty_pct": 0.3354,
+      "total_points": 4,
       "days_ahead": 2,
       "regime": "normaal",
       "sw_ratio_h": 0.0,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -1808,65 +1808,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.7489,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 18
-    },
-    {
-      "time": "2026-09-07T08:00:00+02:00",
-      "baseline": 178.32,
-      "predicted": 183.67,
-      "predicted_raw": 183.67,
-      "lower": 120.75,
-      "upper": 246.59,
-      "uncertainty_pct": 0.3426,
-      "total_points": 2,
-      "days_ahead": 2,
-      "regime": "normaal",
-      "sw_ratio_h": 0.062,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 2,
+          "reason": "vorige dag duur (1.39×)"
         },
         {
           "name": "nonlinear",
@@ -1889,26 +1832,26 @@
       "analog_sample_size": 20
     },
     {
-      "time": "2026-09-07T09:00:00+02:00",
-      "baseline": 152.03,
-      "predicted": 156.59,
-      "predicted_raw": 156.59,
-      "lower": 100.44,
-      "upper": 212.74,
-      "uncertainty_pct": 0.3586,
-      "total_points": 2,
+      "time": "2026-09-07T08:00:00+02:00",
+      "baseline": 179.14,
+      "predicted": 189.89,
+      "predicted_raw": 189.89,
+      "lower": 125.42,
+      "upper": 254.36,
+      "uncertainty_pct": 0.3395,
+      "total_points": 4,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 0.198,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 0.055,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -1922,8 +1865,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 2,
+          "reason": "vorige dag duur (2.19×)"
         },
         {
           "name": "nonlinear",
@@ -1941,31 +1884,88 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.5289,
+      "event_plausibility_score": 0.7975,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 22
+    },
+    {
+      "time": "2026-09-07T09:00:00+02:00",
+      "baseline": 152.91,
+      "predicted": 162.08,
+      "predicted_raw": 162.08,
+      "lower": 104.56,
+      "upper": 219.6,
+      "uncertainty_pct": 0.3549,
+      "total_points": 4,
+      "days_ahead": 2,
+      "regime": "normaal",
+      "sw_ratio_h": 0.418,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.2 m/s)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 2,
+          "reason": "vorige dag duur (17.15×)"
+        },
+        {
+          "name": "nonlinear",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 0.6712,
       "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 7
+      "analog_sample_size": 13
     },
     {
       "time": "2026-09-07T10:00:00+02:00",
-      "baseline": 117.37,
-      "predicted": 120.89,
-      "predicted_raw": 120.89,
-      "lower": 73.67,
-      "upper": 168.11,
-      "uncertainty_pct": 0.3906,
-      "total_points": 2,
+      "baseline": 114.9,
+      "predicted": 114.9,
+      "predicted_raw": 114.9,
+      "lower": 69.17,
+      "upper": 160.63,
+      "uncertainty_pct": 0.398,
+      "total_points": 0,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 0.634,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 0.684,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -1979,8 +1979,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": -2,
+          "reason": "vorige dag goedkoop (-5.92× baseline)"
         },
         {
           "name": "nonlinear",
@@ -1998,31 +1998,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7351,
+      "event_plausibility_score": 0.8893,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 17
+      "analog_sample_size": 32
     },
     {
       "time": "2026-09-07T11:00:00+02:00",
-      "baseline": 86.42,
-      "predicted": 89.01,
-      "predicted_raw": 89.01,
-      "lower": 49.76,
-      "upper": 128.26,
-      "uncertainty_pct": 0.441,
-      "total_points": 2,
+      "baseline": 81.82,
+      "predicted": 81.82,
+      "predicted_raw": 81.82,
+      "lower": 44.36,
+      "upper": 119.28,
+      "uncertainty_pct": 0.4578,
+      "total_points": 0,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.125,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 0.832,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2036,127 +2036,13 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": -2,
+          "reason": "vorige dag goedkoop (0.12× baseline)"
         },
         {
           "name": "nonlinear",
           "points": 0,
           "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.9184,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 36
-    },
-    {
-      "time": "2026-09-07T12:00:00+02:00",
-      "baseline": 52.63,
-      "predicted": 54.21,
-      "predicted_raw": 54.21,
-      "lower": 23.66,
-      "upper": 84.76,
-      "uncertainty_pct": 0.5636,
-      "total_points": 2,
-      "days_ahead": 2,
-      "regime": "normaal",
-      "sw_ratio_h": 1.084,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "scarcity",
-          "points": 0,
-          "reason": "n.v.t."
-        },
-        {
-          "name": "zomerschaarste",
-          "points": 0,
-          "reason": "n.v.t."
-        }
-      ],
-      "event_plausibility_score": 0.9382,
-      "event_plausibility_label": "HIGH",
-      "analog_sample_size": 39
-    },
-    {
-      "time": "2026-09-07T13:00:00+02:00",
-      "baseline": 33.09,
-      "predicted": 34.08,
-      "predicted_raw": 34.08,
-      "lower": 8.56,
-      "upper": 59.6,
-      "uncertainty_pct": 0.7488,
-      "total_points": 2,
-      "days_ahead": 2,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.457,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
-      "P_negative": 0.0,
-      "factors": [
-        {
-          "name": "wind",
-          "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
-        },
-        {
-          "name": "gas",
-          "points": 1,
-          "reason": "gas iets duurder (113%)"
-        },
-        {
-          "name": "dagtype",
-          "points": 0,
-          "reason": "werkdag"
-        },
-        {
-          "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
-        },
-        {
-          "name": "nonlinear",
-          "points": 0,
-          "reason": "oversupply niet-lineair: zon -0.3p"
         },
         {
           "name": "scarcity",
@@ -2171,29 +2057,29 @@
       ],
       "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 69
+      "analog_sample_size": 53
     },
     {
-      "time": "2026-09-07T14:00:00+02:00",
-      "baseline": 37.09,
-      "predicted": 37.64,
-      "predicted_raw": 37.64,
-      "lower": 11.23,
-      "upper": 64.05,
-      "uncertainty_pct": 0.7016,
-      "total_points": 1,
+      "time": "2026-09-07T12:00:00+02:00",
+      "baseline": 53.22,
+      "predicted": 56.41,
+      "predicted_raw": 56.41,
+      "lower": 25.31,
+      "upper": 87.51,
+      "uncertainty_pct": 0.5513,
+      "total_points": 4,
       "days_ahead": 2,
-      "regime": "oversupply",
-      "sw_ratio_h": 1.503,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "regime": "normaal",
+      "sw_ratio_h": 1.198,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2207,8 +2093,65 @@
         },
         {
           "name": "vorige_dag",
+          "points": 2,
+          "reason": "vorige dag duur (1.80×)"
+        },
+        {
+          "name": "nonlinear",
           "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "reason": "n.v.t."
+        },
+        {
+          "name": "scarcity",
+          "points": 0,
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 0.995,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 49
+    },
+    {
+      "time": "2026-09-07T13:00:00+02:00",
+      "baseline": 33.57,
+      "predicted": 35.08,
+      "predicted_raw": 35.08,
+      "lower": 9.31,
+      "upper": 60.85,
+      "uncertainty_pct": 0.7346,
+      "total_points": 3,
+      "days_ahead": 2,
+      "regime": "oversupply",
+      "sw_ratio_h": 1.503,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.2 m/s)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 2,
+          "reason": "vorige dag duur (1.95×)"
         },
         {
           "name": "nonlinear",
@@ -2228,29 +2171,29 @@
       ],
       "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 61
+      "analog_sample_size": 66
     },
     {
-      "time": "2026-09-07T15:00:00+02:00",
-      "baseline": 50.77,
-      "predicted": 50.01,
-      "predicted_raw": 50.01,
-      "lower": 20.51,
-      "upper": 79.51,
-      "uncertainty_pct": 0.59,
-      "total_points": -1,
+      "time": "2026-09-07T14:00:00+02:00",
+      "baseline": 36.6,
+      "predicted": 37.15,
+      "predicted_raw": 37.15,
+      "lower": 10.86,
+      "upper": 63.44,
+      "uncertainty_pct": 0.7076,
+      "total_points": 1,
       "days_ahead": 2,
       "regime": "oversupply",
-      "sw_ratio_h": 1.772,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.515,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2265,12 +2208,12 @@
         {
           "name": "vorige_dag",
           "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "reason": "vorige dag normaal (0.98×)"
         },
         {
           "name": "nonlinear",
-          "points": -3,
-          "reason": "oversupply niet-lineair: zon -3.1p"
+          "points": -1,
+          "reason": "oversupply niet-lineair: zon -0.6p"
         },
         {
           "name": "scarcity",
@@ -2283,31 +2226,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.8475,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 27
+      "analog_sample_size": 67
     },
     {
-      "time": "2026-09-07T16:00:00+02:00",
-      "baseline": 92.24,
-      "predicted": 90.85,
-      "predicted_raw": 90.85,
-      "lower": 51.14,
-      "upper": 130.56,
-      "uncertainty_pct": 0.4371,
+      "time": "2026-09-07T15:00:00+02:00",
+      "baseline": 49.84,
+      "predicted": 49.1,
+      "predicted_raw": 49.1,
+      "lower": 19.83,
+      "upper": 78.37,
+      "uncertainty_pct": 0.5963,
       "total_points": -1,
       "days_ahead": 2,
       "regime": "oversupply",
-      "sw_ratio_h": 1.874,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.568,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2321,8 +2264,65 @@
         },
         {
           "name": "vorige_dag",
+          "points": -2,
+          "reason": "vorige dag goedkoop (0.04× baseline)"
+        },
+        {
+          "name": "nonlinear",
+          "points": -1,
+          "reason": "oversupply niet-lineair: zon -1.0p"
+        },
+        {
+          "name": "scarcity",
           "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "reason": "n.v.t."
+        },
+        {
+          "name": "zomerschaarste",
+          "points": 0,
+          "reason": "n.v.t."
+        }
+      ],
+      "event_plausibility_score": 1.0,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 55
+    },
+    {
+      "time": "2026-09-07T16:00:00+02:00",
+      "baseline": 91.49,
+      "predicted": 92.86,
+      "predicted_raw": 92.86,
+      "lower": 52.64,
+      "upper": 133.08,
+      "uncertainty_pct": 0.4331,
+      "total_points": 1,
+      "days_ahead": 2,
+      "regime": "oversupply",
+      "sw_ratio_h": 1.874,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
+      "P_negative": 0.0,
+      "factors": [
+        {
+          "name": "wind",
+          "points": 1,
+          "reason": "zwakke wind (5.2 m/s)"
+        },
+        {
+          "name": "gas",
+          "points": 1,
+          "reason": "gas iets duurder (113%)"
+        },
+        {
+          "name": "dagtype",
+          "points": 0,
+          "reason": "werkdag"
+        },
+        {
+          "name": "vorige_dag",
+          "points": 2,
+          "reason": "vorige dag duur (41.65×)"
         },
         {
           "name": "nonlinear",
@@ -2340,31 +2340,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7489,
+      "event_plausibility_score": 0.7619,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 18
+      "analog_sample_size": 19
     },
     {
       "time": "2026-09-07T17:00:00+02:00",
-      "baseline": 136.47,
-      "predicted": 138.51,
-      "predicted_raw": 138.51,
-      "lower": 86.88,
-      "upper": 190.14,
-      "uncertainty_pct": 0.3727,
-      "total_points": 1,
+      "baseline": 137.36,
+      "predicted": 145.6,
+      "predicted_raw": 145.6,
+      "lower": 92.2,
+      "upper": 199.0,
+      "uncertainty_pct": 0.3668,
+      "total_points": 4,
       "days_ahead": 2,
       "regime": "oversupply",
-      "sw_ratio_h": 1.547,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.426,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2378,13 +2378,13 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 2,
+          "reason": "vorige dag duur (2.52×)"
         },
         {
           "name": "nonlinear",
-          "points": -1,
-          "reason": "oversupply niet-lineair: zon -0.9p"
+          "points": 0,
+          "reason": "oversupply niet-lineair: zon -0.2p"
         },
         {
           "name": "scarcity",
@@ -2399,29 +2399,29 @@
       ],
       "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 52
+      "analog_sample_size": 73
     },
     {
       "time": "2026-09-07T18:00:00+02:00",
-      "baseline": 177.09,
-      "predicted": 174.43,
-      "predicted_raw": 174.43,
-      "lower": 113.82,
-      "upper": 235.04,
-      "uncertainty_pct": 0.3475,
-      "total_points": -1,
+      "baseline": 180.35,
+      "predicted": 180.35,
+      "predicted_raw": 180.35,
+      "lower": 118.26,
+      "upper": 242.44,
+      "uncertainty_pct": 0.3443,
+      "total_points": 0,
       "days_ahead": 2,
       "regime": "oversupply",
-      "sw_ratio_h": 2.023,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 2.188,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2435,13 +2435,13 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 1,
+          "reason": "vorige dag duurder (1.27×)"
         },
         {
           "name": "nonlinear",
           "points": -3,
-          "reason": "oversupply niet-lineair: zon -7.3p"
+          "reason": "oversupply niet-lineair: zon -11.1p"
         },
         {
           "name": "scarcity",
@@ -2454,31 +2454,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.5588,
+      "event_plausibility_score": 0.4949,
       "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 8
+      "analog_sample_size": 6
     },
     {
       "time": "2026-09-07T19:00:00+02:00",
-      "baseline": 208.66,
-      "predicted": 214.92,
-      "predicted_raw": 214.92,
-      "lower": 144.19,
-      "upper": 285.65,
-      "uncertainty_pct": 0.3291,
-      "total_points": 2,
+      "baseline": 213.5,
+      "predicted": 223.11,
+      "predicted_raw": 223.11,
+      "lower": 150.33,
+      "upper": 295.89,
+      "uncertainty_pct": 0.3262,
+      "total_points": 3,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 3.432,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.32,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2492,8 +2492,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 1,
+          "reason": "vorige dag duurder (1.19×)"
         },
         {
           "name": "nonlinear",
@@ -2511,31 +2511,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.2794,
-      "event_plausibility_label": "LOW",
-      "analog_sample_size": 2
+      "event_plausibility_score": 1.0,
+      "event_plausibility_label": "HIGH",
+      "analog_sample_size": 81
     },
     {
       "time": "2026-09-07T20:00:00+02:00",
-      "baseline": 206.28,
-      "predicted": 212.47,
-      "predicted_raw": 212.47,
-      "lower": 142.35,
-      "upper": 282.59,
-      "uncertainty_pct": 0.33,
-      "total_points": 2,
+      "baseline": 209.61,
+      "predicted": 219.04,
+      "predicted_raw": 219.04,
+      "lower": 147.28,
+      "upper": 290.8,
+      "uncertainty_pct": 0.3276,
+      "total_points": 3,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2549,8 +2549,8 @@
         },
         {
           "name": "vorige_dag",
-          "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "points": 1,
+          "reason": "vorige dag duurder (1.20×)"
         },
         {
           "name": "nonlinear",
@@ -2568,31 +2568,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-07T21:00:00+02:00",
-      "baseline": 186.32,
-      "predicted": 191.91,
-      "predicted_raw": 191.91,
-      "lower": 126.93,
-      "upper": 256.89,
-      "uncertainty_pct": 0.3386,
+      "baseline": 188.7,
+      "predicted": 194.36,
+      "predicted_raw": 194.36,
+      "lower": 128.77,
+      "upper": 259.95,
+      "uncertainty_pct": 0.3375,
       "total_points": 2,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2607,7 +2607,7 @@
         {
           "name": "vorige_dag",
           "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "reason": "vorige dag normaal (1.10×)"
         },
         {
           "name": "nonlinear",
@@ -2625,31 +2625,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-07T22:00:00+02:00",
-      "baseline": 171.44,
-      "predicted": 176.59,
-      "predicted_raw": 176.59,
-      "lower": 115.44,
-      "upper": 237.74,
-      "uncertainty_pct": 0.3463,
+      "baseline": 173.19,
+      "predicted": 178.38,
+      "predicted_raw": 178.38,
+      "lower": 116.78,
+      "upper": 239.98,
+      "uncertainty_pct": 0.3453,
       "total_points": 2,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2664,7 +2664,7 @@
         {
           "name": "vorige_dag",
           "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "reason": "vorige dag normaal (1.05×)"
         },
         {
           "name": "nonlinear",
@@ -2682,31 +2682,31 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-07T23:00:00+02:00",
-      "baseline": 155.1,
-      "predicted": 159.76,
-      "predicted_raw": 159.76,
-      "lower": 102.82,
-      "upper": 216.7,
-      "uncertainty_pct": 0.3564,
+      "baseline": 158.04,
+      "predicted": 162.78,
+      "predicted_raw": 162.78,
+      "lower": 105.08,
+      "upper": 220.48,
+      "uncertainty_pct": 0.3544,
       "total_points": 2,
       "days_ahead": 2,
       "regime": "normaal",
-      "sw_ratio_h": 1.287,
-      "sw_ratio_daily": 1.287,
-      "wind_ms": 5.3,
-      "temp_c": 20.5,
+      "sw_ratio_h": 1.234,
+      "sw_ratio_daily": 1.234,
+      "wind_ms": 5.23,
+      "temp_c": 20.9,
       "P_negative": 0.0,
       "factors": [
         {
           "name": "wind",
           "points": 1,
-          "reason": "zwakke wind (5.3 m/s)"
+          "reason": "zwakke wind (5.2 m/s)"
         },
         {
           "name": "gas",
@@ -2721,7 +2721,7 @@
         {
           "name": "vorige_dag",
           "points": 0,
-          "reason": "niet beschikbaar (>1 dag vooruit)"
+          "reason": "vorige dag normaal (1.00×)"
         },
         {
           "name": "nonlinear",
@@ -2739,18 +2739,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.9846,
+      "event_plausibility_score": 1.0,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 47
+      "analog_sample_size": 62
     },
     {
       "time": "2026-09-08T00:00:00+02:00",
-      "baseline": 165.5,
-      "predicted": 170.46,
-      "predicted_raw": 170.46,
-      "lower": 110.84,
-      "upper": 230.08,
-      "uncertainty_pct": 0.3497,
+      "baseline": 168.27,
+      "predicted": 173.31,
+      "predicted_raw": 173.31,
+      "lower": 112.98,
+      "upper": 233.64,
+      "uncertainty_pct": 0.3481,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -2802,12 +2802,12 @@
     },
     {
       "time": "2026-09-08T01:00:00+02:00",
-      "baseline": 155.86,
-      "predicted": 160.54,
-      "predicted_raw": 160.54,
-      "lower": 103.4,
-      "upper": 217.68,
-      "uncertainty_pct": 0.3559,
+      "baseline": 158.64,
+      "predicted": 163.39,
+      "predicted_raw": 163.39,
+      "lower": 105.54,
+      "upper": 221.24,
+      "uncertainty_pct": 0.354,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -2859,12 +2859,12 @@
     },
     {
       "time": "2026-09-08T02:00:00+02:00",
-      "baseline": 151.46,
-      "predicted": 156.0,
-      "predicted_raw": 156.0,
-      "lower": 100.0,
-      "upper": 212.0,
-      "uncertainty_pct": 0.359,
+      "baseline": 152.72,
+      "predicted": 157.31,
+      "predicted_raw": 157.31,
+      "lower": 100.98,
+      "upper": 213.64,
+      "uncertainty_pct": 0.3581,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -2916,12 +2916,12 @@
     },
     {
       "time": "2026-09-08T03:00:00+02:00",
-      "baseline": 143.17,
-      "predicted": 147.47,
-      "predicted_raw": 147.47,
-      "lower": 93.6,
-      "upper": 201.34,
-      "uncertainty_pct": 0.3653,
+      "baseline": 145.84,
+      "predicted": 150.22,
+      "predicted_raw": 150.22,
+      "lower": 95.67,
+      "upper": 204.77,
+      "uncertainty_pct": 0.3632,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -2973,12 +2973,12 @@
     },
     {
       "time": "2026-09-08T04:00:00+02:00",
-      "baseline": 142.26,
-      "predicted": 146.52,
-      "predicted_raw": 146.52,
-      "lower": 92.89,
-      "upper": 200.15,
-      "uncertainty_pct": 0.366,
+      "baseline": 143.41,
+      "predicted": 147.72,
+      "predicted_raw": 147.72,
+      "lower": 93.79,
+      "upper": 201.65,
+      "uncertainty_pct": 0.3651,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3030,12 +3030,12 @@
     },
     {
       "time": "2026-09-08T05:00:00+02:00",
-      "baseline": 148.68,
-      "predicted": 153.14,
-      "predicted_raw": 153.14,
-      "lower": 97.85,
-      "upper": 208.43,
-      "uncertainty_pct": 0.361,
+      "baseline": 150.36,
+      "predicted": 154.87,
+      "predicted_raw": 154.87,
+      "lower": 99.15,
+      "upper": 210.59,
+      "uncertainty_pct": 0.3598,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3087,12 +3087,12 @@
     },
     {
       "time": "2026-09-08T06:00:00+02:00",
-      "baseline": 172.72,
-      "predicted": 177.91,
-      "predicted_raw": 177.91,
-      "lower": 116.43,
-      "upper": 239.39,
-      "uncertainty_pct": 0.3456,
+      "baseline": 174.23,
+      "predicted": 179.46,
+      "predicted_raw": 179.46,
+      "lower": 117.6,
+      "upper": 241.32,
+      "uncertainty_pct": 0.3447,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3144,12 +3144,12 @@
     },
     {
       "time": "2026-09-08T07:00:00+02:00",
-      "baseline": 186.81,
-      "predicted": 192.41,
-      "predicted_raw": 192.41,
-      "lower": 127.31,
-      "upper": 257.51,
-      "uncertainty_pct": 0.3384,
+      "baseline": 187.81,
+      "predicted": 193.44,
+      "predicted_raw": 193.44,
+      "lower": 128.08,
+      "upper": 258.8,
+      "uncertainty_pct": 0.3379,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3201,12 +3201,12 @@
     },
     {
       "time": "2026-09-08T08:00:00+02:00",
-      "baseline": 178.32,
-      "predicted": 183.67,
-      "predicted_raw": 183.67,
-      "lower": 120.75,
-      "upper": 246.59,
-      "uncertainty_pct": 0.3426,
+      "baseline": 179.14,
+      "predicted": 184.51,
+      "predicted_raw": 184.51,
+      "lower": 121.38,
+      "upper": 247.64,
+      "uncertainty_pct": 0.3421,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3258,12 +3258,12 @@
     },
     {
       "time": "2026-09-08T09:00:00+02:00",
-      "baseline": 152.03,
-      "predicted": 156.59,
-      "predicted_raw": 156.59,
-      "lower": 100.44,
-      "upper": 212.74,
-      "uncertainty_pct": 0.3586,
+      "baseline": 152.91,
+      "predicted": 157.5,
+      "predicted_raw": 157.5,
+      "lower": 101.13,
+      "upper": 213.87,
+      "uncertainty_pct": 0.3579,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3315,12 +3315,12 @@
     },
     {
       "time": "2026-09-08T10:00:00+02:00",
-      "baseline": 117.37,
-      "predicted": 120.89,
-      "predicted_raw": 120.89,
-      "lower": 73.67,
-      "upper": 168.11,
-      "uncertainty_pct": 0.3906,
+      "baseline": 114.9,
+      "predicted": 118.35,
+      "predicted_raw": 118.35,
+      "lower": 71.76,
+      "upper": 164.94,
+      "uncertainty_pct": 0.3936,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3372,12 +3372,12 @@
     },
     {
       "time": "2026-09-08T11:00:00+02:00",
-      "baseline": 86.42,
-      "predicted": 89.01,
-      "predicted_raw": 89.01,
-      "lower": 49.76,
-      "upper": 128.26,
-      "uncertainty_pct": 0.441,
+      "baseline": 81.82,
+      "predicted": 84.28,
+      "predicted_raw": 84.28,
+      "lower": 46.21,
+      "upper": 122.35,
+      "uncertainty_pct": 0.4517,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3429,12 +3429,12 @@
     },
     {
       "time": "2026-09-08T12:00:00+02:00",
-      "baseline": 52.63,
-      "predicted": 54.21,
-      "predicted_raw": 54.21,
-      "lower": 23.66,
-      "upper": 84.76,
-      "uncertainty_pct": 0.5636,
+      "baseline": 53.22,
+      "predicted": 54.82,
+      "predicted_raw": 54.82,
+      "lower": 24.12,
+      "upper": 85.52,
+      "uncertainty_pct": 0.5601,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3486,12 +3486,12 @@
     },
     {
       "time": "2026-09-08T13:00:00+02:00",
-      "baseline": 33.09,
-      "predicted": 34.08,
-      "predicted_raw": 34.08,
-      "lower": 8.56,
-      "upper": 59.6,
-      "uncertainty_pct": 0.7488,
+      "baseline": 33.57,
+      "predicted": 34.58,
+      "predicted_raw": 34.58,
+      "lower": 8.94,
+      "upper": 60.22,
+      "uncertainty_pct": 0.7417,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3543,12 +3543,12 @@
     },
     {
       "time": "2026-09-08T14:00:00+02:00",
-      "baseline": 37.09,
-      "predicted": 38.2,
-      "predicted_raw": 38.2,
-      "lower": 11.65,
-      "upper": 64.75,
-      "uncertainty_pct": 0.695,
+      "baseline": 36.6,
+      "predicted": 37.7,
+      "predicted_raw": 37.7,
+      "lower": 11.27,
+      "upper": 64.13,
+      "uncertainty_pct": 0.7009,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3600,12 +3600,12 @@
     },
     {
       "time": "2026-09-08T15:00:00+02:00",
-      "baseline": 50.77,
-      "predicted": 52.29,
-      "predicted_raw": 52.29,
-      "lower": 22.22,
-      "upper": 82.36,
-      "uncertainty_pct": 0.5751,
+      "baseline": 49.84,
+      "predicted": 51.34,
+      "predicted_raw": 51.34,
+      "lower": 21.51,
+      "upper": 81.17,
+      "uncertainty_pct": 0.5811,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3657,12 +3657,12 @@
     },
     {
       "time": "2026-09-08T16:00:00+02:00",
-      "baseline": 92.24,
-      "predicted": 95.0,
-      "predicted_raw": 95.0,
-      "lower": 54.25,
-      "upper": 135.75,
-      "uncertainty_pct": 0.4289,
+      "baseline": 91.49,
+      "predicted": 94.24,
+      "predicted_raw": 94.24,
+      "lower": 53.68,
+      "upper": 134.8,
+      "uncertainty_pct": 0.4304,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3714,12 +3714,12 @@
     },
     {
       "time": "2026-09-08T17:00:00+02:00",
-      "baseline": 136.47,
-      "predicted": 140.56,
-      "predicted_raw": 140.56,
-      "lower": 88.42,
-      "upper": 192.7,
-      "uncertainty_pct": 0.3709,
+      "baseline": 137.36,
+      "predicted": 141.48,
+      "predicted_raw": 141.48,
+      "lower": 89.11,
+      "upper": 193.85,
+      "uncertainty_pct": 0.3702,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3771,12 +3771,12 @@
     },
     {
       "time": "2026-09-08T18:00:00+02:00",
-      "baseline": 177.09,
-      "predicted": 182.4,
-      "predicted_raw": 182.4,
-      "lower": 119.8,
-      "upper": 245.0,
-      "uncertainty_pct": 0.3432,
+      "baseline": 180.35,
+      "predicted": 185.77,
+      "predicted_raw": 185.77,
+      "lower": 122.33,
+      "upper": 249.21,
+      "uncertainty_pct": 0.3415,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3828,12 +3828,12 @@
     },
     {
       "time": "2026-09-08T19:00:00+02:00",
-      "baseline": 208.66,
-      "predicted": 214.92,
-      "predicted_raw": 214.92,
-      "lower": 144.19,
-      "upper": 285.65,
-      "uncertainty_pct": 0.3291,
+      "baseline": 213.5,
+      "predicted": 219.91,
+      "predicted_raw": 219.91,
+      "lower": 147.93,
+      "upper": 291.89,
+      "uncertainty_pct": 0.3273,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3885,12 +3885,12 @@
     },
     {
       "time": "2026-09-08T20:00:00+02:00",
-      "baseline": 206.28,
-      "predicted": 212.47,
-      "predicted_raw": 212.47,
-      "lower": 142.35,
-      "upper": 282.59,
-      "uncertainty_pct": 0.33,
+      "baseline": 209.61,
+      "predicted": 215.9,
+      "predicted_raw": 215.9,
+      "lower": 144.93,
+      "upper": 286.87,
+      "uncertainty_pct": 0.3287,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3942,12 +3942,12 @@
     },
     {
       "time": "2026-09-08T21:00:00+02:00",
-      "baseline": 186.32,
-      "predicted": 191.91,
-      "predicted_raw": 191.91,
-      "lower": 126.93,
-      "upper": 256.89,
-      "uncertainty_pct": 0.3386,
+      "baseline": 188.7,
+      "predicted": 194.36,
+      "predicted_raw": 194.36,
+      "lower": 128.77,
+      "upper": 259.95,
+      "uncertainty_pct": 0.3375,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -3999,12 +3999,12 @@
     },
     {
       "time": "2026-09-08T22:00:00+02:00",
-      "baseline": 171.44,
-      "predicted": 176.59,
-      "predicted_raw": 176.59,
-      "lower": 115.44,
-      "upper": 237.74,
-      "uncertainty_pct": 0.3463,
+      "baseline": 173.19,
+      "predicted": 178.38,
+      "predicted_raw": 178.38,
+      "lower": 116.78,
+      "upper": 239.98,
+      "uncertainty_pct": 0.3453,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -4056,12 +4056,12 @@
     },
     {
       "time": "2026-09-08T23:00:00+02:00",
-      "baseline": 155.1,
-      "predicted": 159.76,
-      "predicted_raw": 159.76,
-      "lower": 102.82,
-      "upper": 216.7,
-      "uncertainty_pct": 0.3564,
+      "baseline": 158.04,
+      "predicted": 162.78,
+      "predicted_raw": 162.78,
+      "lower": 105.08,
+      "upper": 220.48,
+      "uncertainty_pct": 0.3544,
       "total_points": 2,
       "days_ahead": 3,
       "regime": "normaal",
@@ -4113,12 +4113,12 @@
     },
     {
       "time": "2026-09-09T00:00:00+02:00",
-      "baseline": 165.5,
-      "predicted": 170.46,
-      "predicted_raw": 170.46,
-      "lower": 110.84,
-      "upper": 230.08,
-      "uncertainty_pct": 0.3497,
+      "baseline": 168.27,
+      "predicted": 173.31,
+      "predicted_raw": 173.31,
+      "lower": 112.98,
+      "upper": 233.64,
+      "uncertainty_pct": 0.3481,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4170,12 +4170,12 @@
     },
     {
       "time": "2026-09-09T01:00:00+02:00",
-      "baseline": 155.86,
-      "predicted": 160.54,
-      "predicted_raw": 160.54,
-      "lower": 103.4,
-      "upper": 217.68,
-      "uncertainty_pct": 0.3559,
+      "baseline": 158.64,
+      "predicted": 163.39,
+      "predicted_raw": 163.39,
+      "lower": 105.54,
+      "upper": 221.24,
+      "uncertainty_pct": 0.354,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4227,12 +4227,12 @@
     },
     {
       "time": "2026-09-09T02:00:00+02:00",
-      "baseline": 151.46,
-      "predicted": 156.0,
-      "predicted_raw": 156.0,
-      "lower": 100.0,
-      "upper": 212.0,
-      "uncertainty_pct": 0.359,
+      "baseline": 152.72,
+      "predicted": 157.31,
+      "predicted_raw": 157.31,
+      "lower": 100.98,
+      "upper": 213.64,
+      "uncertainty_pct": 0.3581,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4284,12 +4284,12 @@
     },
     {
       "time": "2026-09-09T03:00:00+02:00",
-      "baseline": 143.17,
-      "predicted": 147.47,
-      "predicted_raw": 147.47,
-      "lower": 93.6,
-      "upper": 201.34,
-      "uncertainty_pct": 0.3653,
+      "baseline": 145.84,
+      "predicted": 150.22,
+      "predicted_raw": 150.22,
+      "lower": 95.67,
+      "upper": 204.77,
+      "uncertainty_pct": 0.3632,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4341,12 +4341,12 @@
     },
     {
       "time": "2026-09-09T04:00:00+02:00",
-      "baseline": 142.26,
-      "predicted": 146.52,
-      "predicted_raw": 146.52,
-      "lower": 92.89,
-      "upper": 200.15,
-      "uncertainty_pct": 0.366,
+      "baseline": 143.41,
+      "predicted": 147.72,
+      "predicted_raw": 147.72,
+      "lower": 93.79,
+      "upper": 201.65,
+      "uncertainty_pct": 0.3651,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4398,12 +4398,12 @@
     },
     {
       "time": "2026-09-09T05:00:00+02:00",
-      "baseline": 148.68,
-      "predicted": 153.14,
-      "predicted_raw": 153.14,
-      "lower": 97.85,
-      "upper": 208.43,
-      "uncertainty_pct": 0.361,
+      "baseline": 150.36,
+      "predicted": 154.87,
+      "predicted_raw": 154.87,
+      "lower": 99.15,
+      "upper": 210.59,
+      "uncertainty_pct": 0.3598,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4455,12 +4455,12 @@
     },
     {
       "time": "2026-09-09T06:00:00+02:00",
-      "baseline": 172.72,
-      "predicted": 177.91,
-      "predicted_raw": 177.91,
-      "lower": 116.43,
-      "upper": 239.39,
-      "uncertainty_pct": 0.3456,
+      "baseline": 174.23,
+      "predicted": 179.46,
+      "predicted_raw": 179.46,
+      "lower": 117.6,
+      "upper": 241.32,
+      "uncertainty_pct": 0.3447,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4512,12 +4512,12 @@
     },
     {
       "time": "2026-09-09T07:00:00+02:00",
-      "baseline": 186.81,
-      "predicted": 192.41,
-      "predicted_raw": 192.41,
-      "lower": 127.31,
-      "upper": 257.51,
-      "uncertainty_pct": 0.3384,
+      "baseline": 187.81,
+      "predicted": 193.44,
+      "predicted_raw": 193.44,
+      "lower": 128.08,
+      "upper": 258.8,
+      "uncertainty_pct": 0.3379,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4569,12 +4569,12 @@
     },
     {
       "time": "2026-09-09T08:00:00+02:00",
-      "baseline": 178.32,
-      "predicted": 183.67,
-      "predicted_raw": 183.67,
-      "lower": 120.75,
-      "upper": 246.59,
-      "uncertainty_pct": 0.3426,
+      "baseline": 179.14,
+      "predicted": 184.51,
+      "predicted_raw": 184.51,
+      "lower": 121.38,
+      "upper": 247.64,
+      "uncertainty_pct": 0.3421,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4626,12 +4626,12 @@
     },
     {
       "time": "2026-09-09T09:00:00+02:00",
-      "baseline": 152.03,
-      "predicted": 156.59,
-      "predicted_raw": 156.59,
-      "lower": 100.44,
-      "upper": 212.74,
-      "uncertainty_pct": 0.3586,
+      "baseline": 152.91,
+      "predicted": 157.5,
+      "predicted_raw": 157.5,
+      "lower": 101.13,
+      "upper": 213.87,
+      "uncertainty_pct": 0.3579,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4683,12 +4683,12 @@
     },
     {
       "time": "2026-09-09T10:00:00+02:00",
-      "baseline": 117.37,
-      "predicted": 120.89,
-      "predicted_raw": 120.89,
-      "lower": 73.67,
-      "upper": 168.11,
-      "uncertainty_pct": 0.3906,
+      "baseline": 114.9,
+      "predicted": 118.35,
+      "predicted_raw": 118.35,
+      "lower": 71.76,
+      "upper": 164.94,
+      "uncertainty_pct": 0.3936,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4740,12 +4740,12 @@
     },
     {
       "time": "2026-09-09T11:00:00+02:00",
-      "baseline": 86.42,
-      "predicted": 89.01,
-      "predicted_raw": 89.01,
-      "lower": 49.76,
-      "upper": 128.26,
-      "uncertainty_pct": 0.441,
+      "baseline": 81.82,
+      "predicted": 84.28,
+      "predicted_raw": 84.28,
+      "lower": 46.21,
+      "upper": 122.35,
+      "uncertainty_pct": 0.4517,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4797,12 +4797,12 @@
     },
     {
       "time": "2026-09-09T12:00:00+02:00",
-      "baseline": 52.63,
-      "predicted": 54.21,
-      "predicted_raw": 54.21,
-      "lower": 23.66,
-      "upper": 84.76,
-      "uncertainty_pct": 0.5636,
+      "baseline": 53.22,
+      "predicted": 54.82,
+      "predicted_raw": 54.82,
+      "lower": 24.12,
+      "upper": 85.52,
+      "uncertainty_pct": 0.5601,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4854,12 +4854,12 @@
     },
     {
       "time": "2026-09-09T13:00:00+02:00",
-      "baseline": 33.09,
-      "predicted": 34.08,
-      "predicted_raw": 34.08,
-      "lower": 8.56,
-      "upper": 59.6,
-      "uncertainty_pct": 0.7488,
+      "baseline": 33.57,
+      "predicted": 34.58,
+      "predicted_raw": 34.58,
+      "lower": 8.94,
+      "upper": 60.22,
+      "uncertainty_pct": 0.7417,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4911,12 +4911,12 @@
     },
     {
       "time": "2026-09-09T14:00:00+02:00",
-      "baseline": 37.09,
-      "predicted": 38.2,
-      "predicted_raw": 38.2,
-      "lower": 11.65,
-      "upper": 64.75,
-      "uncertainty_pct": 0.695,
+      "baseline": 36.6,
+      "predicted": 37.7,
+      "predicted_raw": 37.7,
+      "lower": 11.27,
+      "upper": 64.13,
+      "uncertainty_pct": 0.7009,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -4968,12 +4968,12 @@
     },
     {
       "time": "2026-09-09T15:00:00+02:00",
-      "baseline": 50.77,
-      "predicted": 52.29,
-      "predicted_raw": 52.29,
-      "lower": 22.22,
-      "upper": 82.36,
-      "uncertainty_pct": 0.5751,
+      "baseline": 49.84,
+      "predicted": 51.34,
+      "predicted_raw": 51.34,
+      "lower": 21.51,
+      "upper": 81.17,
+      "uncertainty_pct": 0.5811,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -5025,12 +5025,12 @@
     },
     {
       "time": "2026-09-09T16:00:00+02:00",
-      "baseline": 92.24,
-      "predicted": 95.0,
-      "predicted_raw": 95.0,
-      "lower": 54.25,
-      "upper": 135.75,
-      "uncertainty_pct": 0.4289,
+      "baseline": 91.49,
+      "predicted": 94.24,
+      "predicted_raw": 94.24,
+      "lower": 53.68,
+      "upper": 134.8,
+      "uncertainty_pct": 0.4304,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -5082,12 +5082,12 @@
     },
     {
       "time": "2026-09-09T17:00:00+02:00",
-      "baseline": 136.47,
-      "predicted": 140.56,
-      "predicted_raw": 140.56,
-      "lower": 88.42,
-      "upper": 192.7,
-      "uncertainty_pct": 0.3709,
+      "baseline": 137.36,
+      "predicted": 141.48,
+      "predicted_raw": 141.48,
+      "lower": 89.11,
+      "upper": 193.85,
+      "uncertainty_pct": 0.3702,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -5139,12 +5139,12 @@
     },
     {
       "time": "2026-09-09T18:00:00+02:00",
-      "baseline": 177.09,
-      "predicted": 182.4,
-      "predicted_raw": 182.4,
-      "lower": 119.8,
-      "upper": 245.0,
-      "uncertainty_pct": 0.3432,
+      "baseline": 180.35,
+      "predicted": 185.77,
+      "predicted_raw": 185.77,
+      "lower": 122.33,
+      "upper": 249.21,
+      "uncertainty_pct": 0.3415,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "oversupply",
@@ -5196,12 +5196,12 @@
     },
     {
       "time": "2026-09-09T19:00:00+02:00",
-      "baseline": 208.66,
-      "predicted": 214.92,
-      "predicted_raw": 214.92,
-      "lower": 144.19,
-      "upper": 285.65,
-      "uncertainty_pct": 0.3291,
+      "baseline": 213.5,
+      "predicted": 219.91,
+      "predicted_raw": 219.91,
+      "lower": 147.93,
+      "upper": 291.89,
+      "uncertainty_pct": 0.3273,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -5253,12 +5253,12 @@
     },
     {
       "time": "2026-09-09T20:00:00+02:00",
-      "baseline": 206.28,
-      "predicted": 212.47,
-      "predicted_raw": 212.47,
-      "lower": 142.35,
-      "upper": 282.59,
-      "uncertainty_pct": 0.33,
+      "baseline": 209.61,
+      "predicted": 215.9,
+      "predicted_raw": 215.9,
+      "lower": 144.93,
+      "upper": 286.87,
+      "uncertainty_pct": 0.3287,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -5310,12 +5310,12 @@
     },
     {
       "time": "2026-09-09T21:00:00+02:00",
-      "baseline": 186.32,
-      "predicted": 191.91,
-      "predicted_raw": 191.91,
-      "lower": 126.93,
-      "upper": 256.89,
-      "uncertainty_pct": 0.3386,
+      "baseline": 188.7,
+      "predicted": 194.36,
+      "predicted_raw": 194.36,
+      "lower": 128.77,
+      "upper": 259.95,
+      "uncertainty_pct": 0.3375,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -5367,12 +5367,12 @@
     },
     {
       "time": "2026-09-09T22:00:00+02:00",
-      "baseline": 171.44,
-      "predicted": 176.59,
-      "predicted_raw": 176.59,
-      "lower": 115.44,
-      "upper": 237.74,
-      "uncertainty_pct": 0.3463,
+      "baseline": 173.19,
+      "predicted": 178.38,
+      "predicted_raw": 178.38,
+      "lower": 116.78,
+      "upper": 239.98,
+      "uncertainty_pct": 0.3453,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -5424,12 +5424,12 @@
     },
     {
       "time": "2026-09-09T23:00:00+02:00",
-      "baseline": 155.1,
-      "predicted": 159.76,
-      "predicted_raw": 159.76,
-      "lower": 102.82,
-      "upper": 216.7,
-      "uncertainty_pct": 0.3564,
+      "baseline": 158.04,
+      "predicted": 162.78,
+      "predicted_raw": 162.78,
+      "lower": 105.08,
+      "upper": 220.48,
+      "uncertainty_pct": 0.3544,
       "total_points": 2,
       "days_ahead": 4,
       "regime": "normaal",
@@ -5481,12 +5481,12 @@
     },
     {
       "time": "2026-09-10T00:00:00+02:00",
-      "baseline": 165.5,
-      "predicted": 170.46,
-      "predicted_raw": 170.46,
-      "lower": 110.84,
-      "upper": 230.08,
-      "uncertainty_pct": 0.3497,
+      "baseline": 168.27,
+      "predicted": 173.31,
+      "predicted_raw": 173.31,
+      "lower": 112.98,
+      "upper": 233.64,
+      "uncertainty_pct": 0.3481,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -5538,12 +5538,12 @@
     },
     {
       "time": "2026-09-10T01:00:00+02:00",
-      "baseline": 155.86,
-      "predicted": 160.54,
-      "predicted_raw": 160.54,
-      "lower": 103.4,
-      "upper": 217.68,
-      "uncertainty_pct": 0.3559,
+      "baseline": 158.64,
+      "predicted": 163.39,
+      "predicted_raw": 163.39,
+      "lower": 105.54,
+      "upper": 221.24,
+      "uncertainty_pct": 0.354,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -5595,12 +5595,12 @@
     },
     {
       "time": "2026-09-10T02:00:00+02:00",
-      "baseline": 151.46,
-      "predicted": 156.0,
-      "predicted_raw": 156.0,
-      "lower": 100.0,
-      "upper": 212.0,
-      "uncertainty_pct": 0.359,
+      "baseline": 152.72,
+      "predicted": 157.31,
+      "predicted_raw": 157.31,
+      "lower": 100.98,
+      "upper": 213.64,
+      "uncertainty_pct": 0.3581,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -5652,12 +5652,12 @@
     },
     {
       "time": "2026-09-10T03:00:00+02:00",
-      "baseline": 143.17,
-      "predicted": 147.47,
-      "predicted_raw": 147.47,
-      "lower": 93.6,
-      "upper": 201.34,
-      "uncertainty_pct": 0.3653,
+      "baseline": 145.84,
+      "predicted": 150.22,
+      "predicted_raw": 150.22,
+      "lower": 95.67,
+      "upper": 204.77,
+      "uncertainty_pct": 0.3632,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -5709,12 +5709,12 @@
     },
     {
       "time": "2026-09-10T04:00:00+02:00",
-      "baseline": 142.26,
-      "predicted": 146.52,
-      "predicted_raw": 146.52,
-      "lower": 92.89,
-      "upper": 200.15,
-      "uncertainty_pct": 0.366,
+      "baseline": 143.41,
+      "predicted": 147.72,
+      "predicted_raw": 147.72,
+      "lower": 93.79,
+      "upper": 201.65,
+      "uncertainty_pct": 0.3651,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -5766,12 +5766,12 @@
     },
     {
       "time": "2026-09-10T05:00:00+02:00",
-      "baseline": 148.68,
-      "predicted": 153.14,
-      "predicted_raw": 153.14,
-      "lower": 97.85,
-      "upper": 208.43,
-      "uncertainty_pct": 0.361,
+      "baseline": 150.36,
+      "predicted": 154.87,
+      "predicted_raw": 154.87,
+      "lower": 99.15,
+      "upper": 210.59,
+      "uncertainty_pct": 0.3598,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -5823,12 +5823,12 @@
     },
     {
       "time": "2026-09-10T06:00:00+02:00",
-      "baseline": 172.72,
-      "predicted": 177.91,
-      "predicted_raw": 177.91,
-      "lower": 116.43,
-      "upper": 239.39,
-      "uncertainty_pct": 0.3456,
+      "baseline": 174.23,
+      "predicted": 179.46,
+      "predicted_raw": 179.46,
+      "lower": 117.6,
+      "upper": 241.32,
+      "uncertainty_pct": 0.3447,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -5880,12 +5880,12 @@
     },
     {
       "time": "2026-09-10T07:00:00+02:00",
-      "baseline": 186.81,
-      "predicted": 192.41,
-      "predicted_raw": 192.41,
-      "lower": 127.31,
-      "upper": 257.51,
-      "uncertainty_pct": 0.3384,
+      "baseline": 187.81,
+      "predicted": 193.44,
+      "predicted_raw": 193.44,
+      "lower": 128.08,
+      "upper": 258.8,
+      "uncertainty_pct": 0.3379,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -5937,12 +5937,12 @@
     },
     {
       "time": "2026-09-10T08:00:00+02:00",
-      "baseline": 178.32,
-      "predicted": 183.67,
-      "predicted_raw": 183.67,
-      "lower": 120.75,
-      "upper": 246.59,
-      "uncertainty_pct": 0.3426,
+      "baseline": 179.14,
+      "predicted": 184.51,
+      "predicted_raw": 184.51,
+      "lower": 121.38,
+      "upper": 247.64,
+      "uncertainty_pct": 0.3421,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -5994,12 +5994,12 @@
     },
     {
       "time": "2026-09-10T09:00:00+02:00",
-      "baseline": 152.03,
-      "predicted": 156.59,
-      "predicted_raw": 156.59,
-      "lower": 100.44,
-      "upper": 212.74,
-      "uncertainty_pct": 0.3586,
+      "baseline": 152.91,
+      "predicted": 157.5,
+      "predicted_raw": 157.5,
+      "lower": 101.13,
+      "upper": 213.87,
+      "uncertainty_pct": 0.3579,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6051,12 +6051,12 @@
     },
     {
       "time": "2026-09-10T10:00:00+02:00",
-      "baseline": 117.37,
-      "predicted": 120.89,
-      "predicted_raw": 120.89,
-      "lower": 73.67,
-      "upper": 168.11,
-      "uncertainty_pct": 0.3906,
+      "baseline": 114.9,
+      "predicted": 118.35,
+      "predicted_raw": 118.35,
+      "lower": 71.76,
+      "upper": 164.94,
+      "uncertainty_pct": 0.3936,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6108,12 +6108,12 @@
     },
     {
       "time": "2026-09-10T11:00:00+02:00",
-      "baseline": 86.42,
-      "predicted": 89.01,
-      "predicted_raw": 89.01,
-      "lower": 49.76,
-      "upper": 128.26,
-      "uncertainty_pct": 0.441,
+      "baseline": 81.82,
+      "predicted": 84.28,
+      "predicted_raw": 84.28,
+      "lower": 46.21,
+      "upper": 122.35,
+      "uncertainty_pct": 0.4517,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6165,12 +6165,12 @@
     },
     {
       "time": "2026-09-10T12:00:00+02:00",
-      "baseline": 52.63,
-      "predicted": 54.21,
-      "predicted_raw": 54.21,
-      "lower": 23.66,
-      "upper": 84.76,
-      "uncertainty_pct": 0.5636,
+      "baseline": 53.22,
+      "predicted": 54.82,
+      "predicted_raw": 54.82,
+      "lower": 24.12,
+      "upper": 85.52,
+      "uncertainty_pct": 0.5601,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6222,12 +6222,12 @@
     },
     {
       "time": "2026-09-10T13:00:00+02:00",
-      "baseline": 33.09,
-      "predicted": 34.08,
-      "predicted_raw": 34.08,
-      "lower": 8.56,
-      "upper": 59.6,
-      "uncertainty_pct": 0.7488,
+      "baseline": 33.57,
+      "predicted": 34.58,
+      "predicted_raw": 34.58,
+      "lower": 8.94,
+      "upper": 60.22,
+      "uncertainty_pct": 0.7417,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6279,12 +6279,12 @@
     },
     {
       "time": "2026-09-10T14:00:00+02:00",
-      "baseline": 37.09,
-      "predicted": 38.2,
-      "predicted_raw": 38.2,
-      "lower": 11.65,
-      "upper": 64.75,
-      "uncertainty_pct": 0.695,
+      "baseline": 36.6,
+      "predicted": 37.7,
+      "predicted_raw": 37.7,
+      "lower": 11.27,
+      "upper": 64.13,
+      "uncertainty_pct": 0.7009,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6336,12 +6336,12 @@
     },
     {
       "time": "2026-09-10T15:00:00+02:00",
-      "baseline": 50.77,
-      "predicted": 52.29,
-      "predicted_raw": 52.29,
-      "lower": 22.22,
-      "upper": 82.36,
-      "uncertainty_pct": 0.5751,
+      "baseline": 49.84,
+      "predicted": 51.34,
+      "predicted_raw": 51.34,
+      "lower": 21.51,
+      "upper": 81.17,
+      "uncertainty_pct": 0.5811,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6393,12 +6393,12 @@
     },
     {
       "time": "2026-09-10T16:00:00+02:00",
-      "baseline": 92.24,
-      "predicted": 95.0,
-      "predicted_raw": 95.0,
-      "lower": 54.25,
-      "upper": 135.75,
-      "uncertainty_pct": 0.4289,
+      "baseline": 91.49,
+      "predicted": 94.24,
+      "predicted_raw": 94.24,
+      "lower": 53.68,
+      "upper": 134.8,
+      "uncertainty_pct": 0.4304,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "oversupply",
@@ -6450,12 +6450,12 @@
     },
     {
       "time": "2026-09-10T17:00:00+02:00",
-      "baseline": 136.47,
-      "predicted": 140.56,
-      "predicted_raw": 140.56,
-      "lower": 88.42,
-      "upper": 192.7,
-      "uncertainty_pct": 0.3709,
+      "baseline": 137.36,
+      "predicted": 141.48,
+      "predicted_raw": 141.48,
+      "lower": 89.11,
+      "upper": 193.85,
+      "uncertainty_pct": 0.3702,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "oversupply",
@@ -6507,12 +6507,12 @@
     },
     {
       "time": "2026-09-10T18:00:00+02:00",
-      "baseline": 177.09,
-      "predicted": 179.74,
-      "predicted_raw": 179.74,
-      "lower": 117.8,
-      "upper": 241.68,
-      "uncertainty_pct": 0.3446,
+      "baseline": 180.35,
+      "predicted": 183.06,
+      "predicted_raw": 183.06,
+      "lower": 120.29,
+      "upper": 245.83,
+      "uncertainty_pct": 0.3429,
       "total_points": 1,
       "days_ahead": 5,
       "regime": "oversupply",
@@ -6564,12 +6564,12 @@
     },
     {
       "time": "2026-09-10T19:00:00+02:00",
-      "baseline": 208.66,
-      "predicted": 214.92,
-      "predicted_raw": 214.92,
-      "lower": 144.19,
-      "upper": 285.65,
-      "uncertainty_pct": 0.3291,
+      "baseline": 213.5,
+      "predicted": 219.91,
+      "predicted_raw": 219.91,
+      "lower": 147.93,
+      "upper": 291.89,
+      "uncertainty_pct": 0.3273,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6621,12 +6621,12 @@
     },
     {
       "time": "2026-09-10T20:00:00+02:00",
-      "baseline": 206.28,
-      "predicted": 212.47,
-      "predicted_raw": 212.47,
-      "lower": 142.35,
-      "upper": 282.59,
-      "uncertainty_pct": 0.33,
+      "baseline": 209.61,
+      "predicted": 215.9,
+      "predicted_raw": 215.9,
+      "lower": 144.93,
+      "upper": 286.87,
+      "uncertainty_pct": 0.3287,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6678,12 +6678,12 @@
     },
     {
       "time": "2026-09-10T21:00:00+02:00",
-      "baseline": 186.32,
-      "predicted": 191.91,
-      "predicted_raw": 191.91,
-      "lower": 126.93,
-      "upper": 256.89,
-      "uncertainty_pct": 0.3386,
+      "baseline": 188.7,
+      "predicted": 194.36,
+      "predicted_raw": 194.36,
+      "lower": 128.77,
+      "upper": 259.95,
+      "uncertainty_pct": 0.3375,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6735,12 +6735,12 @@
     },
     {
       "time": "2026-09-10T22:00:00+02:00",
-      "baseline": 171.44,
-      "predicted": 176.59,
-      "predicted_raw": 176.59,
-      "lower": 115.44,
-      "upper": 237.74,
-      "uncertainty_pct": 0.3463,
+      "baseline": 173.19,
+      "predicted": 178.38,
+      "predicted_raw": 178.38,
+      "lower": 116.78,
+      "upper": 239.98,
+      "uncertainty_pct": 0.3453,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6792,12 +6792,12 @@
     },
     {
       "time": "2026-09-10T23:00:00+02:00",
-      "baseline": 155.1,
-      "predicted": 159.76,
-      "predicted_raw": 159.76,
-      "lower": 102.82,
-      "upper": 216.7,
-      "uncertainty_pct": 0.3564,
+      "baseline": 158.04,
+      "predicted": 162.78,
+      "predicted_raw": 162.78,
+      "lower": 105.08,
+      "upper": 220.48,
+      "uncertainty_pct": 0.3544,
       "total_points": 2,
       "days_ahead": 5,
       "regime": "normaal",
@@ -6849,12 +6849,12 @@
     },
     {
       "time": "2026-09-11T00:00:00+02:00",
-      "baseline": 165.5,
-      "predicted": 170.46,
-      "predicted_raw": 170.46,
-      "lower": 110.84,
-      "upper": 230.08,
-      "uncertainty_pct": 0.3497,
+      "baseline": 168.27,
+      "predicted": 173.31,
+      "predicted_raw": 173.31,
+      "lower": 112.98,
+      "upper": 233.64,
+      "uncertainty_pct": 0.3481,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -6906,12 +6906,12 @@
     },
     {
       "time": "2026-09-11T01:00:00+02:00",
-      "baseline": 155.86,
-      "predicted": 160.54,
-      "predicted_raw": 160.54,
-      "lower": 103.4,
-      "upper": 217.68,
-      "uncertainty_pct": 0.3559,
+      "baseline": 158.64,
+      "predicted": 163.39,
+      "predicted_raw": 163.39,
+      "lower": 105.54,
+      "upper": 221.24,
+      "uncertainty_pct": 0.354,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -6963,12 +6963,12 @@
     },
     {
       "time": "2026-09-11T02:00:00+02:00",
-      "baseline": 151.46,
-      "predicted": 156.0,
-      "predicted_raw": 156.0,
-      "lower": 100.0,
-      "upper": 212.0,
-      "uncertainty_pct": 0.359,
+      "baseline": 152.72,
+      "predicted": 157.31,
+      "predicted_raw": 157.31,
+      "lower": 100.98,
+      "upper": 213.64,
+      "uncertainty_pct": 0.3581,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7020,12 +7020,12 @@
     },
     {
       "time": "2026-09-11T03:00:00+02:00",
-      "baseline": 143.17,
-      "predicted": 147.47,
-      "predicted_raw": 147.47,
-      "lower": 93.6,
-      "upper": 201.34,
-      "uncertainty_pct": 0.3653,
+      "baseline": 145.84,
+      "predicted": 150.22,
+      "predicted_raw": 150.22,
+      "lower": 95.67,
+      "upper": 204.77,
+      "uncertainty_pct": 0.3632,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7077,12 +7077,12 @@
     },
     {
       "time": "2026-09-11T04:00:00+02:00",
-      "baseline": 142.26,
-      "predicted": 146.52,
-      "predicted_raw": 146.52,
-      "lower": 92.89,
-      "upper": 200.15,
-      "uncertainty_pct": 0.366,
+      "baseline": 143.41,
+      "predicted": 147.72,
+      "predicted_raw": 147.72,
+      "lower": 93.79,
+      "upper": 201.65,
+      "uncertainty_pct": 0.3651,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7134,12 +7134,12 @@
     },
     {
       "time": "2026-09-11T05:00:00+02:00",
-      "baseline": 148.68,
-      "predicted": 153.14,
-      "predicted_raw": 153.14,
-      "lower": 97.85,
-      "upper": 208.43,
-      "uncertainty_pct": 0.361,
+      "baseline": 150.36,
+      "predicted": 154.87,
+      "predicted_raw": 154.87,
+      "lower": 99.15,
+      "upper": 210.59,
+      "uncertainty_pct": 0.3598,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7191,12 +7191,12 @@
     },
     {
       "time": "2026-09-11T06:00:00+02:00",
-      "baseline": 172.72,
-      "predicted": 177.91,
-      "predicted_raw": 177.91,
-      "lower": 116.43,
-      "upper": 239.39,
-      "uncertainty_pct": 0.3456,
+      "baseline": 174.23,
+      "predicted": 179.46,
+      "predicted_raw": 179.46,
+      "lower": 117.6,
+      "upper": 241.32,
+      "uncertainty_pct": 0.3447,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7248,12 +7248,12 @@
     },
     {
       "time": "2026-09-11T07:00:00+02:00",
-      "baseline": 186.81,
-      "predicted": 192.41,
-      "predicted_raw": 192.41,
-      "lower": 127.31,
-      "upper": 257.51,
-      "uncertainty_pct": 0.3384,
+      "baseline": 187.81,
+      "predicted": 193.44,
+      "predicted_raw": 193.44,
+      "lower": 128.08,
+      "upper": 258.8,
+      "uncertainty_pct": 0.3379,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7305,12 +7305,12 @@
     },
     {
       "time": "2026-09-11T08:00:00+02:00",
-      "baseline": 178.32,
-      "predicted": 183.67,
-      "predicted_raw": 183.67,
-      "lower": 120.75,
-      "upper": 246.59,
-      "uncertainty_pct": 0.3426,
+      "baseline": 179.14,
+      "predicted": 184.51,
+      "predicted_raw": 184.51,
+      "lower": 121.38,
+      "upper": 247.64,
+      "uncertainty_pct": 0.3421,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7362,12 +7362,12 @@
     },
     {
       "time": "2026-09-11T09:00:00+02:00",
-      "baseline": 152.03,
-      "predicted": 156.59,
-      "predicted_raw": 156.59,
-      "lower": 100.44,
-      "upper": 212.74,
-      "uncertainty_pct": 0.3586,
+      "baseline": 152.91,
+      "predicted": 157.5,
+      "predicted_raw": 157.5,
+      "lower": 101.13,
+      "upper": 213.87,
+      "uncertainty_pct": 0.3579,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7419,12 +7419,12 @@
     },
     {
       "time": "2026-09-11T10:00:00+02:00",
-      "baseline": 117.37,
-      "predicted": 120.89,
-      "predicted_raw": 120.89,
-      "lower": 73.67,
-      "upper": 168.11,
-      "uncertainty_pct": 0.3906,
+      "baseline": 114.9,
+      "predicted": 118.35,
+      "predicted_raw": 118.35,
+      "lower": 71.76,
+      "upper": 164.94,
+      "uncertainty_pct": 0.3936,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7476,12 +7476,12 @@
     },
     {
       "time": "2026-09-11T11:00:00+02:00",
-      "baseline": 86.42,
-      "predicted": 89.01,
-      "predicted_raw": 89.01,
-      "lower": 49.76,
-      "upper": 128.26,
-      "uncertainty_pct": 0.441,
+      "baseline": 81.82,
+      "predicted": 84.28,
+      "predicted_raw": 84.28,
+      "lower": 46.21,
+      "upper": 122.35,
+      "uncertainty_pct": 0.4517,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7533,12 +7533,12 @@
     },
     {
       "time": "2026-09-11T12:00:00+02:00",
-      "baseline": 52.63,
-      "predicted": 54.21,
-      "predicted_raw": 54.21,
-      "lower": 23.66,
-      "upper": 84.76,
-      "uncertainty_pct": 0.5636,
+      "baseline": 53.22,
+      "predicted": 54.82,
+      "predicted_raw": 54.82,
+      "lower": 24.12,
+      "upper": 85.52,
+      "uncertainty_pct": 0.5601,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7590,12 +7590,12 @@
     },
     {
       "time": "2026-09-11T13:00:00+02:00",
-      "baseline": 33.09,
-      "predicted": 34.08,
-      "predicted_raw": 34.08,
-      "lower": 8.56,
-      "upper": 59.6,
-      "uncertainty_pct": 0.7488,
+      "baseline": 33.57,
+      "predicted": 34.58,
+      "predicted_raw": 34.58,
+      "lower": 8.94,
+      "upper": 60.22,
+      "uncertainty_pct": 0.7417,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7647,12 +7647,12 @@
     },
     {
       "time": "2026-09-11T14:00:00+02:00",
-      "baseline": 37.09,
-      "predicted": 38.2,
-      "predicted_raw": 38.2,
-      "lower": 11.65,
-      "upper": 64.75,
-      "uncertainty_pct": 0.695,
+      "baseline": 36.6,
+      "predicted": 37.7,
+      "predicted_raw": 37.7,
+      "lower": 11.27,
+      "upper": 64.13,
+      "uncertainty_pct": 0.7009,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7704,12 +7704,12 @@
     },
     {
       "time": "2026-09-11T15:00:00+02:00",
-      "baseline": 50.77,
-      "predicted": 52.29,
-      "predicted_raw": 52.29,
-      "lower": 22.22,
-      "upper": 82.36,
-      "uncertainty_pct": 0.5751,
+      "baseline": 49.84,
+      "predicted": 51.34,
+      "predicted_raw": 51.34,
+      "lower": 21.51,
+      "upper": 81.17,
+      "uncertainty_pct": 0.5811,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7761,12 +7761,12 @@
     },
     {
       "time": "2026-09-11T16:00:00+02:00",
-      "baseline": 92.24,
-      "predicted": 95.0,
-      "predicted_raw": 95.0,
-      "lower": 54.25,
-      "upper": 135.75,
-      "uncertainty_pct": 0.4289,
+      "baseline": 91.49,
+      "predicted": 94.24,
+      "predicted_raw": 94.24,
+      "lower": 53.68,
+      "upper": 134.8,
+      "uncertainty_pct": 0.4304,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7818,12 +7818,12 @@
     },
     {
       "time": "2026-09-11T17:00:00+02:00",
-      "baseline": 136.47,
-      "predicted": 140.56,
-      "predicted_raw": 140.56,
-      "lower": 88.42,
-      "upper": 192.7,
-      "uncertainty_pct": 0.3709,
+      "baseline": 137.36,
+      "predicted": 141.48,
+      "predicted_raw": 141.48,
+      "lower": 89.11,
+      "upper": 193.85,
+      "uncertainty_pct": 0.3702,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7875,12 +7875,12 @@
     },
     {
       "time": "2026-09-11T18:00:00+02:00",
-      "baseline": 177.09,
-      "predicted": 182.4,
-      "predicted_raw": 182.4,
-      "lower": 119.8,
-      "upper": 245.0,
-      "uncertainty_pct": 0.3432,
+      "baseline": 180.35,
+      "predicted": 185.77,
+      "predicted_raw": 185.77,
+      "lower": 122.33,
+      "upper": 249.21,
+      "uncertainty_pct": 0.3415,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7932,12 +7932,12 @@
     },
     {
       "time": "2026-09-11T19:00:00+02:00",
-      "baseline": 208.66,
-      "predicted": 214.92,
-      "predicted_raw": 214.92,
-      "lower": 144.19,
-      "upper": 285.65,
-      "uncertainty_pct": 0.3291,
+      "baseline": 213.5,
+      "predicted": 219.91,
+      "predicted_raw": 219.91,
+      "lower": 147.93,
+      "upper": 291.89,
+      "uncertainty_pct": 0.3273,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -7989,12 +7989,12 @@
     },
     {
       "time": "2026-09-11T20:00:00+02:00",
-      "baseline": 206.28,
-      "predicted": 212.47,
-      "predicted_raw": 212.47,
-      "lower": 142.35,
-      "upper": 282.59,
-      "uncertainty_pct": 0.33,
+      "baseline": 209.61,
+      "predicted": 215.9,
+      "predicted_raw": 215.9,
+      "lower": 144.93,
+      "upper": 286.87,
+      "uncertainty_pct": 0.3287,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -8046,12 +8046,12 @@
     },
     {
       "time": "2026-09-11T21:00:00+02:00",
-      "baseline": 186.32,
-      "predicted": 191.91,
-      "predicted_raw": 191.91,
-      "lower": 126.93,
-      "upper": 256.89,
-      "uncertainty_pct": 0.3386,
+      "baseline": 188.7,
+      "predicted": 194.36,
+      "predicted_raw": 194.36,
+      "lower": 128.77,
+      "upper": 259.95,
+      "uncertainty_pct": 0.3375,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -8103,12 +8103,12 @@
     },
     {
       "time": "2026-09-11T22:00:00+02:00",
-      "baseline": 171.44,
-      "predicted": 176.59,
-      "predicted_raw": 176.59,
-      "lower": 115.44,
-      "upper": 237.74,
-      "uncertainty_pct": 0.3463,
+      "baseline": 173.19,
+      "predicted": 178.38,
+      "predicted_raw": 178.38,
+      "lower": 116.78,
+      "upper": 239.98,
+      "uncertainty_pct": 0.3453,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -8160,12 +8160,12 @@
     },
     {
       "time": "2026-09-11T23:00:00+02:00",
-      "baseline": 155.1,
-      "predicted": 159.76,
-      "predicted_raw": 159.76,
-      "lower": 102.82,
-      "upper": 216.7,
-      "uncertainty_pct": 0.3564,
+      "baseline": 158.04,
+      "predicted": 162.78,
+      "predicted_raw": 162.78,
+      "lower": 105.08,
+      "upper": 220.48,
+      "uncertainty_pct": 0.3544,
       "total_points": 2,
       "days_ahead": 6,
       "regime": "normaal",
@@ -8217,12 +8217,12 @@
     },
     {
       "time": "2026-09-12T00:00:00+02:00",
-      "baseline": 125.73,
-      "predicted": 131.39,
-      "predicted_raw": 131.39,
-      "lower": 81.54,
-      "upper": 181.24,
-      "uncertainty_pct": 0.3794,
+      "baseline": 132.38,
+      "predicted": 138.34,
+      "predicted_raw": 138.34,
+      "lower": 86.76,
+      "upper": 189.92,
+      "uncertainty_pct": 0.3729,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8268,18 +8268,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T01:00:00+02:00",
-      "baseline": 109.44,
-      "predicted": 114.37,
-      "predicted_raw": 114.37,
-      "lower": 68.78,
-      "upper": 159.96,
-      "uncertainty_pct": 0.3986,
+      "baseline": 118.42,
+      "predicted": 123.75,
+      "predicted_raw": 123.75,
+      "lower": 75.81,
+      "upper": 171.69,
+      "uncertainty_pct": 0.3874,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8325,18 +8325,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T02:00:00+02:00",
-      "baseline": 97.23,
-      "predicted": 101.61,
-      "predicted_raw": 101.61,
-      "lower": 59.21,
-      "upper": 144.01,
-      "uncertainty_pct": 0.4173,
+      "baseline": 107.78,
+      "predicted": 112.63,
+      "predicted_raw": 112.63,
+      "lower": 67.47,
+      "upper": 157.79,
+      "uncertainty_pct": 0.4009,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8382,18 +8382,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T03:00:00+02:00",
-      "baseline": 89.69,
-      "predicted": 93.73,
-      "predicted_raw": 93.73,
-      "lower": 53.3,
-      "upper": 134.16,
-      "uncertainty_pct": 0.4314,
+      "baseline": 100.99,
+      "predicted": 105.53,
+      "predicted_raw": 105.53,
+      "lower": 62.15,
+      "upper": 148.91,
+      "uncertainty_pct": 0.4111,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8439,18 +8439,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T04:00:00+02:00",
-      "baseline": 88.23,
-      "predicted": 92.2,
-      "predicted_raw": 92.2,
-      "lower": 52.15,
-      "upper": 132.25,
-      "uncertainty_pct": 0.4344,
+      "baseline": 98.88,
+      "predicted": 103.33,
+      "predicted_raw": 103.33,
+      "lower": 60.5,
+      "upper": 146.16,
+      "uncertainty_pct": 0.4145,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8496,18 +8496,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T05:00:00+02:00",
-      "baseline": 91.79,
-      "predicted": 95.92,
-      "predicted_raw": 95.92,
-      "lower": 54.94,
-      "upper": 136.9,
-      "uncertainty_pct": 0.4272,
+      "baseline": 101.91,
+      "predicted": 106.49,
+      "predicted_raw": 106.49,
+      "lower": 62.87,
+      "upper": 150.11,
+      "uncertainty_pct": 0.4096,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8553,18 +8553,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T06:00:00+02:00",
-      "baseline": 93.82,
-      "predicted": 98.04,
-      "predicted_raw": 98.04,
-      "lower": 56.53,
-      "upper": 139.55,
-      "uncertainty_pct": 0.4234,
+      "baseline": 103.24,
+      "predicted": 107.89,
+      "predicted_raw": 107.89,
+      "lower": 63.92,
+      "upper": 151.86,
+      "uncertainty_pct": 0.4076,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8610,18 +8610,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T07:00:00+02:00",
-      "baseline": 95.69,
-      "predicted": 100.0,
-      "predicted_raw": 100.0,
-      "lower": 58.0,
-      "upper": 142.0,
-      "uncertainty_pct": 0.42,
+      "baseline": 97.83,
+      "predicted": 102.23,
+      "predicted_raw": 102.23,
+      "lower": 59.67,
+      "upper": 144.79,
+      "uncertainty_pct": 0.4163,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8667,18 +8667,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.4093,
+      "event_plausibility_score": 0.4557,
       "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 4
+      "analog_sample_size": 5
     },
     {
       "time": "2026-09-12T08:00:00+02:00",
-      "baseline": 50.01,
-      "predicted": 52.26,
-      "predicted_raw": 52.26,
-      "lower": 22.19,
-      "upper": 82.33,
-      "uncertainty_pct": 0.5753,
+      "baseline": 55.7,
+      "predicted": 58.21,
+      "predicted_raw": 58.21,
+      "lower": 26.66,
+      "upper": 89.76,
+      "uncertainty_pct": 0.5421,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8724,18 +8724,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.2794,
+      "event_plausibility_score": 0.3526,
       "event_plausibility_label": "LOW",
-      "analog_sample_size": 2
+      "analog_sample_size": 3
     },
     {
       "time": "2026-09-12T09:00:00+02:00",
-      "baseline": 2.28,
-      "predicted": 2.38,
-      "predicted_raw": 2.38,
-      "lower": -15.22,
-      "upper": 19.98,
-      "uncertainty_pct": 7.3787,
+      "baseline": 3.87,
+      "predicted": 4.04,
+      "predicted_raw": 4.04,
+      "lower": -13.97,
+      "upper": 22.05,
+      "uncertainty_pct": 4.4548,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8781,18 +8781,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.2794,
+      "event_plausibility_score": 0.3526,
       "event_plausibility_label": "LOW",
-      "analog_sample_size": 2
+      "analog_sample_size": 3
     },
     {
       "time": "2026-09-12T10:00:00+02:00",
-      "baseline": -0.1,
-      "predicted": -0.1,
-      "predicted_raw": -0.1,
-      "lower": -17.13,
-      "upper": 16.93,
-      "uncertainty_pct": 168.7792,
+      "baseline": 0.02,
+      "predicted": 0.02,
+      "predicted_raw": 0.02,
+      "lower": -16.99,
+      "upper": 17.03,
+      "uncertainty_pct": 806.5171,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8838,18 +8838,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.2794,
+      "event_plausibility_score": 0.3526,
       "event_plausibility_label": "LOW",
-      "analog_sample_size": 2
+      "analog_sample_size": 3
     },
     {
       "time": "2026-09-12T11:00:00+02:00",
-      "baseline": -0.65,
-      "predicted": -0.68,
-      "predicted_raw": -0.68,
-      "lower": -17.85,
-      "upper": 16.49,
-      "uncertainty_pct": 25.0993,
+      "baseline": -0.37,
+      "predicted": -0.38,
+      "predicted_raw": -0.38,
+      "lower": -17.48,
+      "upper": 16.72,
+      "uncertainty_pct": 44.429,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8895,18 +8895,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7975,
+      "event_plausibility_score": 0.9114,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 22
+      "analog_sample_size": 35
     },
     {
       "time": "2026-09-12T12:00:00+02:00",
-      "baseline": -1.39,
-      "predicted": -1.45,
-      "predicted_raw": -1.45,
-      "lower": -18.81,
-      "upper": 15.91,
-      "uncertainty_pct": 11.9659,
+      "baseline": -1.82,
+      "predicted": -1.9,
+      "predicted_raw": -1.9,
+      "lower": -19.38,
+      "upper": 15.58,
+      "uncertainty_pct": 9.1837,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -8952,18 +8952,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T13:00:00+02:00",
-      "baseline": -1.88,
-      "predicted": -1.96,
-      "predicted_raw": -1.96,
-      "lower": -19.45,
-      "upper": 15.53,
-      "uncertainty_pct": 8.9039,
+      "baseline": -2.68,
+      "predicted": -2.8,
+      "predicted_raw": -2.8,
+      "lower": -20.5,
+      "upper": 14.9,
+      "uncertainty_pct": 6.3122,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "oversupply",
@@ -9009,18 +9009,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7052,
+      "event_plausibility_score": 0.8815,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
+      "analog_sample_size": 31
     },
     {
       "time": "2026-09-12T14:00:00+02:00",
-      "baseline": -1.31,
-      "predicted": -1.35,
-      "predicted_raw": -1.35,
-      "lower": -18.69,
-      "upper": 15.99,
-      "uncertainty_pct": 12.8437,
+      "baseline": -1.17,
+      "predicted": -1.21,
+      "predicted_raw": -1.21,
+      "lower": -18.51,
+      "upper": 16.09,
+      "uncertainty_pct": 14.3536,
       "total_points": 2,
       "days_ahead": 7,
       "regime": "oversupply",
@@ -9066,18 +9066,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7052,
+      "event_plausibility_score": 0.7619,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
+      "analog_sample_size": 19
     },
     {
       "time": "2026-09-12T15:00:00+02:00",
-      "baseline": -0.25,
-      "predicted": -0.26,
-      "predicted_raw": -0.26,
-      "lower": -17.33,
-      "upper": 16.81,
-      "uncertainty_pct": 65.3072,
+      "baseline": -0.08,
+      "predicted": -0.08,
+      "predicted_raw": -0.08,
+      "lower": -17.1,
+      "upper": 16.94,
+      "uncertainty_pct": 214.8097,
       "total_points": 2,
       "days_ahead": 7,
       "regime": "oversupply",
@@ -9123,18 +9123,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.7052,
+      "event_plausibility_score": 0.7619,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 15
+      "analog_sample_size": 19
     },
     {
       "time": "2026-09-12T16:00:00+02:00",
-      "baseline": 0.47,
-      "predicted": 0.48,
-      "predicted_raw": 0.48,
-      "lower": -16.64,
-      "upper": 17.6,
-      "uncertainty_pct": 35.3466,
+      "baseline": 2.96,
+      "predicted": 3.05,
+      "predicted_raw": 3.05,
+      "lower": -14.71,
+      "upper": 20.81,
+      "uncertainty_pct": 5.8289,
       "total_points": 2,
       "days_ahead": 7,
       "regime": "oversupply",
@@ -9180,18 +9180,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.5856,
+      "event_plausibility_score": 0.6888,
       "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 9
+      "analog_sample_size": 14
     },
     {
       "time": "2026-09-12T17:00:00+02:00",
-      "baseline": 47.68,
-      "predicted": 48.4,
-      "predicted_raw": 48.4,
-      "lower": 19.3,
-      "upper": 77.5,
-      "uncertainty_pct": 0.6013,
+      "baseline": 59.23,
+      "predicted": 60.12,
+      "predicted_raw": 60.12,
+      "lower": 28.09,
+      "upper": 92.15,
+      "uncertainty_pct": 0.5328,
       "total_points": 1,
       "days_ahead": 7,
       "regime": "oversupply",
@@ -9237,18 +9237,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.4093,
+      "event_plausibility_score": 0.4949,
       "event_plausibility_label": "NORMAL",
-      "analog_sample_size": 4
+      "analog_sample_size": 6
     },
     {
       "time": "2026-09-12T18:00:00+02:00",
-      "baseline": 148.67,
-      "predicted": 148.67,
-      "predicted_raw": 148.67,
-      "lower": 94.5,
-      "upper": 202.84,
-      "uncertainty_pct": 0.3643,
+      "baseline": 152.9,
+      "predicted": 152.9,
+      "predicted_raw": 152.9,
+      "lower": 97.68,
+      "upper": 208.12,
+      "uncertainty_pct": 0.3612,
       "total_points": 0,
       "days_ahead": 7,
       "regime": "oversupply",
@@ -9294,18 +9294,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.0,
+      "event_plausibility_score": 0.1763,
       "event_plausibility_label": "VERY_RARE_EVENT",
-      "analog_sample_size": 0
+      "analog_sample_size": 1
     },
     {
       "time": "2026-09-12T19:00:00+02:00",
-      "baseline": 182.46,
-      "predicted": 190.68,
-      "predicted_raw": 190.68,
-      "lower": 126.01,
-      "upper": 255.35,
-      "uncertainty_pct": 0.3392,
+      "baseline": 187.69,
+      "predicted": 196.13,
+      "predicted_raw": 196.13,
+      "lower": 130.1,
+      "upper": 262.16,
+      "uncertainty_pct": 0.3367,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -9351,18 +9351,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.0,
+      "event_plausibility_score": 0.1763,
       "event_plausibility_label": "VERY_RARE_EVENT",
-      "analog_sample_size": 0
+      "analog_sample_size": 1
     },
     {
       "time": "2026-09-12T20:00:00+02:00",
-      "baseline": 186.66,
-      "predicted": 195.06,
-      "predicted_raw": 195.06,
-      "lower": 129.29,
-      "upper": 260.83,
-      "uncertainty_pct": 0.3372,
+      "baseline": 195.97,
+      "predicted": 204.79,
+      "predicted_raw": 204.79,
+      "lower": 136.59,
+      "upper": 272.99,
+      "uncertainty_pct": 0.333,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -9408,18 +9408,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T21:00:00+02:00",
-      "baseline": 184.33,
-      "predicted": 192.62,
-      "predicted_raw": 192.62,
-      "lower": 127.46,
-      "upper": 257.78,
-      "uncertainty_pct": 0.3383,
+      "baseline": 193.45,
+      "predicted": 202.15,
+      "predicted_raw": 202.15,
+      "lower": 134.61,
+      "upper": 269.69,
+      "uncertainty_pct": 0.3341,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -9465,18 +9465,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T22:00:00+02:00",
-      "baseline": 177.37,
-      "predicted": 185.35,
-      "predicted_raw": 185.35,
-      "lower": 122.01,
-      "upper": 248.69,
-      "uncertainty_pct": 0.3417,
+      "baseline": 183.08,
+      "predicted": 191.32,
+      "predicted_raw": 191.32,
+      "lower": 126.49,
+      "upper": 256.15,
+      "uncertainty_pct": 0.3389,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -9522,18 +9522,18 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     },
     {
       "time": "2026-09-12T23:00:00+02:00",
-      "baseline": 166.89,
-      "predicted": 174.4,
-      "predicted_raw": 174.4,
-      "lower": 113.8,
-      "upper": 235.0,
-      "uncertainty_pct": 0.3475,
+      "baseline": 170.48,
+      "predicted": 178.15,
+      "predicted_raw": 178.15,
+      "lower": 116.61,
+      "upper": 239.69,
+      "uncertainty_pct": 0.3454,
       "total_points": 3,
       "days_ahead": 7,
       "regime": "normaal",
@@ -9579,9 +9579,9 @@
           "reason": "n.v.t."
         }
       ],
-      "event_plausibility_score": 0.865,
+      "event_plausibility_score": 0.9625,
       "event_plausibility_label": "HIGH",
-      "analog_sample_size": 29
+      "analog_sample_size": 43
     }
   ]
 }
