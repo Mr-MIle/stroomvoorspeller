@@ -5,7 +5,7 @@ en werkelijke ENTSO-E prijzen.
 
 Vereist:
   - public/data/prices.json (bevat 'history' dict met werkelijke EPEX-prijzen)
-  - public/data/forecast_archive/forecast_YYYY-MM-DD.json (dagelijkse snapshots)
+  - data/forecast_archive/forecast_YYYY-MM-DD.json (dagelijkse snapshots)
 
 Gebruik:
   python scripts/generate_performance.py
@@ -26,7 +26,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parent.parent
 PRICES_JSON = ROOT / "public" / "data" / "prices.json"
-ARCHIVE_DIR = ROOT / "public" / "data" / "forecast_archive"
+ARCHIVE_DIR = ROOT / "data" / "forecast_archive"
 OUTPUT_JSON = ROOT / "public" / "data" / "performance.json"
 
 # Modelversie-geschiedenis (handmatig bijhouden)

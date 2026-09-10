@@ -100,9 +100,9 @@ jobs:
         # Overschrijft de snapshot van dezelfde dag als de workflow meerdere keren draait.
         continue-on-error: true
         run: |
-          mkdir -p public/data/forecast_archive
+          mkdir -p data/forecast_archive
           DATE=$(date -u +%Y-%m-%d)
-          cp public/data/forecast.json public/data/forecast_archive/forecast_${DATE}.json
+          cp public/data/forecast.json data/forecast_archive/forecast_${DATE}.json
 
       - name: Genereer RSS-feed
         # Schrijft public/data/feed.xml met de laatste 7 dagen uurprijzen.
@@ -143,7 +143,7 @@ jobs:
           git add public/data/ha.json 2>/dev/null || true
           git add public/data/duiding.json 2>/dev/null || true
           git add public/data/performance.json 2>/dev/null || true
-          git add public/data/forecast_archive/ 2>/dev/null || true
+          git add data/forecast_archive/ 2>/dev/null || true
           git add public/data/archief/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
