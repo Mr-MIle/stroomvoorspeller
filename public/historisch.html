@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Historische stroomprijzen Nederland — per dag terugkijken | Stroomvoorspeller.nl</title>
+  <title>Historische stroomprijzen per uur terugkijken</title>
   <meta name="description" content="Bekijk historische day-ahead stroomprijzen per uur voor elke dag. Filter op aanbieder, zoek negatieve prijsmomenten en vergelijk maanden." />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -310,6 +310,27 @@
       .hist-day-detail { padding: 16px; }
     }
   </style>
+
+  <!-- STATIC:FRESHNESS:START -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://stroomvoorspeller.nl/historisch",
+        "url": "https://stroomvoorspeller.nl/historisch",
+        "name": "Historische stroomprijzen",
+        "inLanguage": "nl-NL",
+        "isPartOf": {
+          "@id": "https://stroomvoorspeller.nl/#website"
+        },
+        "dateModified": "2026-09-11T12:10:22+00:00"
+      }
+    ]
+  }
+  </script>
+  <!-- STATIC:FRESHNESS:END -->
 </head>
 <body>
 
@@ -543,11 +564,6 @@
       // Start op huidige maand
       currentMonth = todayYM();
       await loadMonth(currentMonth);
-
-      // Vangnet: heeft de lopende maand nog geen archief-bestand, val dan terug
-      // op de vorige maand in plaats van een lege kalender te tonen.
-      const vorige = prevMonth(currentMonth);
-      if (!archiveData && vorige >= EARLIEST_MONTH) await loadMonth(vorige);
     }
 
     // ── Dropdown ───────────────────────────────────────────────────────────

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Home Assistant koppeling — Stroomvoorspeller.nl</title>
-  <meta name="description" content="Koppel de day-ahead stroomprijzen van stroomvoorspeller.nl aan Home Assistant. Gratis open JSON-feed, kant-en-klare RESTful sensor en automatiseringen voor goedkoopste uur, EV-laden en negatieve prijzen." />
+  <meta name="description" content="Koppel de day-ahead stroomprijzen aan Home Assistant. Open JSON-feed, kant-en-klare RESTful sensor en drie automatiseringen. Gratis, geen API-key." />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="canonical" href="https://stroomvoorspeller.nl/home-assistant" />
@@ -90,18 +90,45 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Home Assistant koppeling", "item": "https://stroomvoorspeller.nl/home-assistant" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Home Assistant koppeling",
+            "item": "https://stroomvoorspeller.nl/home-assistant"
+          }
         ]
       },
       {
         "@type": "TechArticle",
         "headline": "Home Assistant koppeling",
         "description": "Koppel de day-ahead stroomprijzen van stroomvoorspeller.nl aan Home Assistant via een gratis open JSON-feed en een RESTful sensor.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-06-06",
         "dateModified": "2026-06-06",
         "inLanguage": "nl-NL",
@@ -326,7 +353,8 @@ action:
     <section>
       <h2>Welke waarden kun je ophalen?</h2>
       <p>Dit zijn de meest gebruikte velden. Het pad begint telkens met <code>value_json.</code> (in een RESTful sensor) of je leest het uit de attributen van de drager-sensor.</p>
-      <table class="ha-table">
+      <div class="table-wrap">
+        <table class="ha-table">
         <thead>
           <tr><th>Pad</th><th>Betekenis</th><th>Voorbeeld</th></tr>
         </thead>
@@ -345,6 +373,7 @@ action:
           <tr><td><code>forecast.days[].negative_probability</code></td><td>Ruwe kans op negatieve uren (0–1)</td><td>0.29</td></tr>
         </tbody>
       </table>
+      </div>
       <p>
         De volledige structuur staat beschreven in het
         <a href="/data/ha.schema.json">JSON Schema</a>. Het databestand zelf kun je hier bekijken:

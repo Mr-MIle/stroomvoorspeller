@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Stroomprijzen vandaag, morgen en komende week — voorspelling | Stroomvoorspeller.nl</title>
+  <title>Stroomprijs nu, morgen en komende week | Stroomvoorspeller</title>
   <meta name="description" content="Stroomprijzen per uur voor vandaag en morgen, all-in prijs voor 25 aanbieders en een eigen voorspelling voor de komende week — elke dag gemeten tegen de echte prijzen." />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="nl_NL" />
   <meta property="og:site_name" content="Stroomvoorspeller.nl" />
-  <meta property="og:title" content="Stroomprijzen vandaag, morgen en komende week — voorspelling | Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Stroomprijs nu, morgen en komende week | Stroomvoorspeller" />
   <meta property="og:description" content="Stroomprijzen per uur voor vandaag en morgen, plus een eigen voorspelling voor de komende week. Elke dag publiek gemeten tegen de echte prijzen." />
   <meta property="og:url" content="https://stroomvoorspeller.nl/" />
   <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
@@ -44,7 +44,7 @@
         "name": "Stroomvoorspeller.nl",
         "url": "https://stroomvoorspeller.nl/",
         "logo": "https://stroomvoorspeller.nl/logo.svg",
-        "sameAs": []
+        "sameAs": ["https://x.com/stroomtarief", "https://github.com/mr-mile/stroomvoorspeller"]
       },
       {
         "@type": "WebSite",
@@ -90,6 +90,33 @@
   }
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+
+  <!-- STATIC:FRESHNESS:START -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://stroomvoorspeller.nl/#webpage",
+        "url": "https://stroomvoorspeller.nl/",
+        "name": "Stroomprijzen vandaag, morgen en komende week",
+        "inLanguage": "nl-NL",
+        "isPartOf": {
+          "@id": "https://stroomvoorspeller.nl/#website"
+        },
+        "dateModified": "2026-09-11T12:10:22+00:00"
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://stroomvoorspeller.nl/#dataset-prices",
+        "dateModified": "2026-09-11T12:10:22+00:00",
+        "temporalCoverage": "2026-08-28T00:00:00+02:00/2026-09-12T23:00:00+02:00"
+      }
+    ]
+  }
+  </script>
+  <!-- STATIC:FRESHNESS:END -->
 </head>
 <body>
   <!-- Negatieve-prijzen banner: verschijnt zodra één of meer uren onder de drempel
@@ -305,7 +332,104 @@
       <p class="chart-meta">Bron: EPEX Spot via <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E</a> · bijgewerkt <span data-field="generated-at">—</span> · <a href="/over/voorspelling">waar komen deze cijfers vandaan?</a></p>
     </section>
 
-    <!-- Quick-summary: goedkoopste/duurste/gemiddelde vandaag — na grafiek zodat grafiek direct zichtbaar is op mobiel (#56) -->
+    <!-- Quick-summary: goedkoopste/duurste/gemiddelde vandaag
+    <!-- STATIC:PRICES:START -->
+    <section class="static-prices container is-secondary" id="uurprijzen" aria-labelledby="uurprijzen-h2">
+      <h2 id="uurprijzen-h2">Stroomprijzen per uur, in cijfers</h2>
+      <p>Vandaag (vrijdag 11 september 2026) is de gemiddelde all-in stroomprijs <strong>37,1 ct/kWh</strong>. Het goedkoopste uur is <strong>12:00&ndash;13:00 met 31,1 ct/kWh</strong>, het duurste <strong>19:00&ndash;20:00 met 50,3 ct/kWh</strong>.</p>
+      <p>Morgen (zaterdag 12 september 2026) is de gemiddelde all-in stroomprijs <strong>29,9 ct/kWh</strong>. Het goedkoopste uur is <strong>13:00&ndash;14:00 met 13,2 ct/kWh</strong>, het duurste <strong>20:00&ndash;21:00 met 38,7 ct/kWh</strong>.</p>
+      <p>All-in betekent: kale EPEX-prijs plus de gemiddelde inkoopvergoeding van 1,78 ct/kWh en de energiebelasting van 9,16 ct/kWh, alles maal 1,21 btw.</p>
+      <details class="static-details">
+        <summary>Alle uurprijzen van vandaag in een tabel</summary>
+      <div class="static-table-wrap">
+        <table class="static-price-table">
+          <caption>Stroomprijs per uur op vrijdag 11 september 2026</caption>
+          <thead><tr><th scope="col">Uur</th><th scope="col">All-in (ct/kWh)</th><th scope="col">Kale EPEX (ct/kWh)</th></tr></thead>
+          <tbody>
+          <tr><td>00:00&ndash;01:00</td><td class="num">35,5</td><td class="num">18,4</td></tr>
+          <tr><td>01:00&ndash;02:00</td><td class="num">35,1</td><td class="num">18,1</td></tr>
+          <tr><td>02:00&ndash;03:00</td><td class="num">34,0</td><td class="num">17,1</td></tr>
+          <tr><td>03:00&ndash;04:00</td><td class="num">33,2</td><td class="num">16,5</td></tr>
+          <tr><td>04:00&ndash;05:00</td><td class="num">33,5</td><td class="num">16,7</td></tr>
+          <tr><td>05:00&ndash;06:00</td><td class="num">34,5</td><td class="num">17,6</td></tr>
+          <tr><td>06:00&ndash;07:00</td><td class="num">37,7</td><td class="num">20,2</td></tr>
+          <tr><td>07:00&ndash;08:00</td><td class="num">40,2</td><td class="num">22,3</td></tr>
+          <tr><td>08:00&ndash;09:00</td><td class="num">39,2</td><td class="num">21,5</td></tr>
+          <tr><td>09:00&ndash;10:00</td><td class="num">36,5</td><td class="num">19,3</td></tr>
+          <tr><td>10:00&ndash;11:00</td><td class="num">34,8</td><td class="num">17,9</td></tr>
+          <tr><td>11:00&ndash;12:00</td><td class="num">32,7</td><td class="num">16,1</td></tr>
+          <tr><td>12:00&ndash;13:00</td><td class="num">31,1</td><td class="num">14,8</td></tr>
+          <tr><td>13:00&ndash;14:00</td><td class="num">31,3</td><td class="num">14,9</td></tr>
+          <tr><td>14:00&ndash;15:00</td><td class="num">31,8</td><td class="num">15,3</td></tr>
+          <tr><td>15:00&ndash;16:00</td><td class="num">34,1</td><td class="num">17,2</td></tr>
+          <tr><td>16:00&ndash;17:00</td><td class="num">35,0</td><td class="num">17,9</td></tr>
+          <tr><td>17:00&ndash;18:00</td><td class="num">38,1</td><td class="num">20,6</td></tr>
+          <tr><td>18:00&ndash;19:00</td><td class="num">43,3</td><td class="num">24,9</td></tr>
+          <tr><td>19:00&ndash;20:00</td><td class="num">50,3</td><td class="num">30,6</td></tr>
+          <tr><td>20:00&ndash;21:00</td><td class="num">48,0</td><td class="num">28,7</td></tr>
+          <tr><td>21:00&ndash;22:00</td><td class="num">42,9</td><td class="num">24,5</td></tr>
+          <tr><td>22:00&ndash;23:00</td><td class="num">40,5</td><td class="num">22,5</td></tr>
+          <tr><td>23:00&ndash;00:00</td><td class="num">38,0</td><td class="num">20,5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      </details>
+      <details class="static-details">
+        <summary>Alle uurprijzen van morgen in een tabel</summary>
+      <div class="static-table-wrap">
+        <table class="static-price-table">
+          <caption>Stroomprijs per uur op zaterdag 12 september 2026</caption>
+          <thead><tr><th scope="col">Uur</th><th scope="col">All-in (ct/kWh)</th><th scope="col">Kale EPEX (ct/kWh)</th></tr></thead>
+          <tbody>
+          <tr><td>00:00&ndash;01:00</td><td class="num">38,1</td><td class="num">20,5</td></tr>
+          <tr><td>01:00&ndash;02:00</td><td class="num">37,3</td><td class="num">19,9</td></tr>
+          <tr><td>02:00&ndash;03:00</td><td class="num">37,0</td><td class="num">19,6</td></tr>
+          <tr><td>03:00&ndash;04:00</td><td class="num">36,1</td><td class="num">18,9</td></tr>
+          <tr><td>04:00&ndash;05:00</td><td class="num">35,5</td><td class="num">18,4</td></tr>
+          <tr><td>05:00&ndash;06:00</td><td class="num">35,8</td><td class="num">18,7</td></tr>
+          <tr><td>06:00&ndash;07:00</td><td class="num">36,6</td><td class="num">19,3</td></tr>
+          <tr><td>07:00&ndash;08:00</td><td class="num">36,7</td><td class="num">19,4</td></tr>
+          <tr><td>08:00&ndash;09:00</td><td class="num">34,5</td><td class="num">17,6</td></tr>
+          <tr><td>09:00&ndash;10:00</td><td class="num">31,5</td><td class="num">15,1</td></tr>
+          <tr><td>10:00&ndash;11:00</td><td class="num">23,6</td><td class="num">8,6</td></tr>
+          <tr><td>11:00&ndash;12:00</td><td class="num">16,9</td><td class="num">3,0</td></tr>
+          <tr><td>12:00&ndash;13:00</td><td class="num">13,4</td><td class="num">0,1</td></tr>
+          <tr><td>13:00&ndash;14:00</td><td class="num">13,2</td><td class="num">-0,0</td></tr>
+          <tr><td>14:00&ndash;15:00</td><td class="num">13,2</td><td class="num">0,0</td></tr>
+          <tr><td>15:00&ndash;16:00</td><td class="num">13,4</td><td class="num">0,1</td></tr>
+          <tr><td>16:00&ndash;17:00</td><td class="num">16,9</td><td class="num">3,0</td></tr>
+          <tr><td>17:00&ndash;18:00</td><td class="num">27,3</td><td class="num">11,6</td></tr>
+          <tr><td>18:00&ndash;19:00</td><td class="num">34,9</td><td class="num">17,9</td></tr>
+          <tr><td>19:00&ndash;20:00</td><td class="num">37,9</td><td class="num">20,4</td></tr>
+          <tr><td>20:00&ndash;21:00</td><td class="num">38,7</td><td class="num">21,0</td></tr>
+          <tr><td>21:00&ndash;22:00</td><td class="num">37,5</td><td class="num">20,0</td></tr>
+          <tr><td>22:00&ndash;23:00</td><td class="num">35,5</td><td class="num">18,4</td></tr>
+          <tr><td>23:00&ndash;00:00</td><td class="num">35,0</td><td class="num">18,0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      </details>
+      <h3>Voorspelling voor de komende dagen</h3>
+      <p>Onderstaande cijfers komen uit het eigen voorspellingsmodel (versie 4.0) en zijn all-in ct/kWh. Het zijn schattingen, geen day-ahead prijzen: die staan pas vast zodra EPEX Spot ze publiceert.</p>
+      <div class="static-table-wrap">
+        <table class="static-price-table">
+          <caption>Voorspelde stroomprijs per dag, all-in ct/kWh</caption>
+          <thead><tr><th scope="col">Dag</th><th scope="col">Gemiddeld</th><th scope="col">Laagste</th><th scope="col">Hoogste</th><th scope="col">Goedkoopste uur</th></tr></thead>
+          <tbody>
+          <tr><td>zaterdag 12 september 2026</td><td class="num">24,2</td><td class="num">12,9</td><td class="num">40,7</td><td>13:00&ndash;14:00</td></tr>
+          <tr><td>zondag 13 september 2026</td><td class="num">25,6</td><td class="num">13,0</td><td class="num">41,8</td><td>13:00&ndash;14:00</td></tr>
+          <tr><td>maandag 14 september 2026</td><td class="num">34,2</td><td class="num">22,4</td><td class="num">45,1</td><td>14:00&ndash;15:00</td></tr>
+          <tr><td>dinsdag 15 september 2026</td><td class="num">33,6</td><td class="num">22,2</td><td class="num">44,2</td><td>14:00&ndash;15:00</td></tr>
+          <tr><td>woensdag 16 september 2026</td><td class="num">33,5</td><td class="num">22,2</td><td class="num">44,2</td><td>14:00&ndash;15:00</td></tr>
+          <tr><td>donderdag 17 september 2026</td><td class="num">33,6</td><td class="num">22,2</td><td class="num">44,2</td><td>14:00&ndash;15:00</td></tr>
+          <tr><td>vrijdag 18 september 2026</td><td class="num">33,6</td><td class="num">22,2</td><td class="num">44,2</td><td>14:00&ndash;15:00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="static-prices-meta">Bron: EPEX Spot via ENTSO-E Transparency (NL bidding zone). Cijfers bijgewerkt op 2026-09-11 12:10 UTC.</p>
+    </section>
+    <!-- STATIC:PRICES:END -->
+ — na grafiek zodat grafiek direct zichtbaar is op mobiel (#56) -->
     <div class="quick-summary container">
       <div class="summary-item">
         <span class="summary-label">Goedkoopste uur vandaag</span>

@@ -1,0 +1,99 @@
+# Stroomvoorspeller.nl
+
+> Onafhankelijke Nederlandse day-ahead stroomprijzen (EPEX Spot via ENTSO-E)
+> en een eigen voorspelling 2 tot 7 dagen vooruit, elke dag getoetst aan de
+> werkelijke prijzen. Gemaakt voor huishoudens met een dynamisch energiecontract.
+
+Alle data is gratis en vrij te gebruiken, met bronvermelding naar
+https://stroomvoorspeller.nl. De JSON-endpoints staan open (CORS: *) en hoeven niet
+gescraped te worden.
+
+## Hoe de prijs is opgebouwd
+
+All-in consumentenprijs = (kale EPEX-prijs + inkoopvergoeding van de leverancier
++ energiebelasting) x 1,21 btw. Bedragen op de site staan in ct/kWh inclusief
+belasting, tenzij anders vermeld. Prijzen gelden voor de NL bidding zone en
+worden elke drie uur ververst; de prijzen voor morgen komen rond 14:00
+Nederlandse tijd beschikbaar.
+
+## Data
+
+- [Prijzen per uur en per kwartier (JSON)](https://stroomvoorspeller.nl/data/prices.json): day-ahead prijzen in EUR/MWh, inclusief PT15M-kwartierdata.
+- [Voorspelling 7 dagen vooruit (JSON)](https://stroomvoorspeller.nl/data/forecast.json): voorspelde prijs per uur met onzekerheidsband en de factoren erachter.
+- [Home Assistant-feed (JSON)](https://stroomvoorspeller.nl/data/ha.json): kant-en-klaar per uur, zowel kale marktprijs als all-in prijs in EUR/kWh.
+- [JSON Schema van ha.json](https://stroomvoorspeller.nl/data/ha.schema.json): formele beschrijving van bovenstaande feed.
+- [Gemeten nauwkeurigheid (JSON)](https://stroomvoorspeller.nl/data/performance.json): MAE, trefzekerheid per horizon en de volledige foutverdeling.
+- [Aanbieders en tarieven (JSON)](https://stroomvoorspeller.nl/data/config.json): opslag en vaste kosten per leverancier, plus de belastingtarieven.
+- [RSS-feed](https://stroomvoorspeller.nl/data/feed.xml): de uurprijzen van de afgelopen zeven dagen.
+
+## Prijzen en voorspelling
+
+- [Stroomprijs nu, morgen en komende week](https://stroomvoorspeller.nl/): actuele prijs per uur, de goedkoopste vensters en de voorspelling.
+- [Stroomprijs morgen](https://stroomvoorspeller.nl/morgen): alle 24 uren van morgen, met duiding waarom de prijs is zoals hij is.
+- [Historische stroomprijzen](https://stroomvoorspeller.nl/historisch): terugkijken per dag, met archief vanaf 2015.
+- [Hoe het voorspellingsmodel werkt](https://stroomvoorspeller.nl/over/voorspelling): de factoren, hun gewicht en de grenzen van het model.
+- [Gemeten nauwkeurigheid](https://stroomvoorspeller.nl/over/performance): elke voorspelling achteraf getoetst aan de werkelijke ENTSO-E-prijzen.
+
+## Vergelijken en rekenen
+
+- [Dynamische energieaanbieders vergeleken](https://stroomvoorspeller.nl/aanbieders): jaarkosten, opslag en vaste kosten per leverancier.
+- [Thuisbatterij berekenen](https://stroomvoorspeller.nl/batterij-berekenen): opbrengst en terugverdientijd op echte uurprijzen.
+- [Opbrengst van een echte thuisbatterij](https://stroomvoorspeller.nl/batterij): dag voor dag, uit een eigen installatie.
+- [ERE-certificaten vergelijken](https://stroomvoorspeller.nl/ere-vergelijken): tien inboekers op netto opbrengst bij thuisladen.
+
+## Koppelingen
+
+- [Integraties](https://stroomvoorspeller.nl/integraties): overzicht van widget, Home Assistant en open data.
+- [Home Assistant](https://stroomvoorspeller.nl/home-assistant): RESTful sensor, template-sensoren en automatiseringen.
+
+## Kennisbank
+
+- [Airco koelen met dynamisch tarief: zo betaal je minder](https://stroomvoorspeller.nl/kennisbank/airco-dynamisch-tarief): Koel je huis op de goedkoopste én zonnigste uren.
+- [Balkonzonnepanelen op een dynamisch contract: loont het?](https://stroomvoorspeller.nl/kennisbank/balkonzonnepanelen-dynamisch-contract): Een stekkerzonnepaneel van 300 tot 800 watt op je balkon.
+- [Demand response: betaald worden voor flexibel verbruik](https://stroomvoorspeller.nl/kennisbank/demand-response): Netbeheerders zoeken huishoudens die hun verbruik willen aanpassen in ruil voor een vergoeding.
+- [Dynamisch energiecontract vergelijken 2026: 32 aanbieders](https://stroomvoorspeller.nl/kennisbank/dynamisch-contract-vergelijken): Er zijn nu 32 aanbieders van dynamische contracten in Nederland.
+- [Dynamisch gascontract: zo werkt de TTF-gasprijs](https://stroomvoorspeller.nl/kennisbank/dynamisch-gascontract): Bij een dynamisch contract verandert ook je gasprijs — maar per dag, niet per uur, en gestuurd door de TTF-beurs.
+- [Vast of dynamisch energiecontract? Wanneer welke kiezen](https://stroomvoorspeller.nl/kennisbank/dynamisch-of-vast-contract): Dynamisch is gemiddeld goedkoper, maar niet voor iedereen.
+- [Eigen gebruik zonne-energie verhogen: alle methodes](https://stroomvoorspeller.nl/kennisbank/eigen-verbruik-zonne-energie): Van gedragsverandering tot thuisbatterij: alle methodes om meer zonnestroom zelf te verbruiken, vergeleken op kosten en terugverdientijd.
+- [Wat betaal je écht per kWh? Energiebelasting uitgelegd](https://stroomvoorspeller.nl/kennisbank/energiebelasting-vaste-kosten-uitgelegd): Je ziet 5 cent op het scherm en betaalt 22 cent op de rekening.
+- [ERE-certificaten: geld terug voor thuisladen (2026)](https://stroomvoorspeller.nl/kennisbank/ere-certificaten-laadpaal): Emissiereductie-eenheden leveren in 2026 zo'n 7 tot 14 cent per thuis geladen kWh op.
+- [Hoe wordt de stroomprijs bepaald? Zo ontstaat je tarief](https://stroomvoorspeller.nl/kennisbank/hoe-wordt-de-stroomprijs-bepaald): Je dynamische stroomprijs ontstaat op een dagelijkse veiling.
+- [Hoeveel bespaar je met een dynamisch energiecontract?](https://stroomvoorspeller.nl/kennisbank/hoeveel-bespaar-je-dynamisch-contract): 10 tot 30% besparing klinkt mooi — maar wat houd jíj over?
+- [Hybride of AC-gekoppelde omvormer? Zo kies je in 2026](https://stroomvoorspeller.nl/kennisbank/hybride-omvormer-thuisbatterij): Een batterij op je bestaande omvormer, of een hybride omvormer die alles combineert?
+- [Elektrische auto laden: thuis, publiek of snelladen? (2026)](https://stroomvoorspeller.nl/kennisbank/kosten-elektrische-auto-laden): Thuis rond 16 cent, aan de paal 48 cent, snelladen 69 cent per kWh.
+- [Kwartierprijzen stroom: van uur naar kwartier (2026)](https://stroomvoorspeller.nl/kennisbank/kwartierprijzen-stroom): Sinds oktober 2025 kent de day-ahead-markt 96 kwartierprijzen per dag in plaats van 24 uurprijzen.
+- [Nadelen dynamisch energiecontract: voor wie het niet werkt](https://stroomvoorspeller.nl/kennisbank/nadelen-dynamisch-energiecontract): Een dynamisch contract is gemiddeld goedkoper, maar niet voor iedereen.
+- [Natrium- of zoutwaterbatterij voor thuis: slim in 2026?](https://stroomvoorspeller.nl/kennisbank/natrium-zoutwater-thuisbatterij): Natrium-ion en zoutwater gelden als de veilige, grondstofarme opvolger van lithium.
+- [Negatieve stroomprijzen: wanneer kost terugleveren geld?](https://stroomvoorspeller.nl/kennisbank/negatieve-stroomprijzen): Bij een negatieve stroomprijs betál je om stroom terug te leveren.
+- [Netbeheerkosten 2026: wat is het capaciteitstarief?](https://stroomvoorspeller.nl/kennisbank/netbeheerkosten-capaciteitstarief): Netbeheerkosten staan los van je verbruik en je leverancier.
+- [Netcongestie en je aansluiting: wat verandert er in 2026?](https://stroomvoorspeller.nl/kennisbank/netcongestie-aansluiting-2026): Vanaf 1 juli 2026 komen ook huishoudens op de wachtlijst voor een nieuwe of zwaardere stroomaansluiting.
+- [Overstappen naar dynamisch energiecontract: stappenplan](https://stroomvoorspeller.nl/kennisbank/overstappen-dynamisch-energiecontract): Overstappen naar een dynamisch contract kan meestal boetevrij.
+- [Je P1-meter draait, en dan? Van sluipverbruik tot kWh-prijs](https://stroomvoorspeller.nl/kennisbank/p1-data-gebruiken): De dongle hangt erin en je ziet grafiekjes.
+- [Slimme meter P1 poort uitlezen: verbruik per uur zien](https://stroomvoorspeller.nl/kennisbank/p1-poort-uitlezen): Via de P1-poort lees je elk uur je verbruik en teruglevering uit.
+- [Salderingsregeling stopt in 2027: en je zonnepanelen?](https://stroomvoorspeller.nl/kennisbank/salderingsregeling): Per 1 januari 2027 stopt de salderingsregeling.
+- [Stekker-thuisbatterij vergelijken 2026: prijs per kWh](https://stroomvoorspeller.nl/kennisbank/stekker-thuisbatterij-vergelijken): Plug-and-play thuisbatterij met stekker vergeleken: prijs per kWh, vermogen, app en betrouwbaarheid.
+- [Hoe laat zijn de stroomprijzen van morgen bekend?](https://stroomvoorspeller.nl/kennisbank/stroomprijzen-morgen-bekend): Bieden op de day-ahead-markt sluit om 12:00, rond 13:00 staan de uur- en kwartierprijzen voor morgen vast.
+- [Terugleverbeperking: wat betekent dat voor je zonnepanelen?](https://stroomvoorspeller.nl/kennisbank/terugleverbeperking): In grote delen van Nederland mogen zonnepanelen minder of geen stroom terugleveren.
+- [Teruglevertarief vergelijken 2026: wie betaalt het meeste?](https://stroomvoorspeller.nl/kennisbank/teruglevertarief-vergelijken): NextEnergy, Zonneplan en Frank Energie betalen een bonus bij teruglevering.
+- [Thuisbatterij brandveilig plaatsen: de regels van 2026](https://stroomvoorspeller.nl/kennisbank/thuisbatterij-brandveiligheid): Waar mag een thuisbatterij staan, welke veiligheidsnorm geldt en blijft je verzekering geldig?
+- [Thuisbatterij en energielabel: wat verandert er in 2026?](https://stroomvoorspeller.nl/kennisbank/thuisbatterij-energielabel): Vanaf 29 mei 2026 telt een thuisbatterij mee voor je energielabel.
+- [Thuisbatterij kosten 2026: aanschaf en terugverdientijd](https://stroomvoorspeller.nl/kennisbank/thuisbatterij-kosten): Wat kost een thuisbatterij echt in 2026?
+- [Thuisbatterij bij stroomuitval: werkt noodstroom thuis?](https://stroomvoorspeller.nl/kennisbank/thuisbatterij-noodstroom): Een gewone thuisbatterij valt bij stroomuitval gewoon uit.
+- [Thuisbatterij op de onbalansmarkt: verdien je er geld mee?](https://stroomvoorspeller.nl/kennisbank/thuisbatterij-onbalansmarkt): Aanbieders beloven honderden euro's per jaar met je thuisbatterij op de onbalansmarkt.
+- [Thuisbatterij subsidie 2026: bestaat die eigenlijk?](https://stroomvoorspeller.nl/kennisbank/thuisbatterij-subsidie-2026): Landelijk is er in 2026 geen aanschafsubsidie op een thuisbatterij.
+- [Thuisbatterij zonder zonnepanelen: loont dat in 2026?](https://stroomvoorspeller.nl/kennisbank/thuisbatterij-zonder-zonnepanelen): Een thuisbatterij zonder zonnepanelen laadt goedkoop en levert duur terug.
+- [V2G en bidirectioneel laden: je auto als thuisbatterij](https://stroomvoorspeller.nl/kennisbank/v2g-bidirectioneel-laden): Vehicle-to-grid (V2G) maakt van je elektrische auto een rijdende thuisbatterij.
+- [Waarom stroomprijzen zo moeilijk te voorspellen zijn](https://stroomvoorspeller.nl/kennisbank/waarom-stroomprijzen-moeilijk-te-voorspellen): Stroomprijzen hangen af van wind, zon, weer, gasprijzen én buurlanden.
+- [Warmtepomp op een dynamisch contract: alleen met sturing](https://stroomvoorspeller.nl/kennisbank/warmtepomp-dynamisch-contract): Een warmtepomp piekt in de dure winteruren.
+- [Wateraccu: goedkoper alternatief voor een thuisbatterij?](https://stroomvoorspeller.nl/kennisbank/wateraccu): Een wateraccu kost ~€1.500 en verhoogt je eigen stroomverbruik van 30% naar 70%.
+- [Welke thuisbatterij past bij mij? kWh en kW kiezen (2026)](https://stroomvoorspeller.nl/kennisbank/welke-thuisbatterij-past-bij-mij): Te klein en je mist besparing, te groot en je betaalt voor lege ruimte.
+- [Zonnepanelen uitzetten bij negatieve stroomprijs](https://stroomvoorspeller.nl/kennisbank/zonnepanelen-uitzetten-negatieve-prijs): Bij een negatieve stroomprijs betaal je om terug te leveren.
+
+## Over de bron
+
+Prijzen komen van ENTSO-E Transparency (NL bidding zone), met energy-charts.info
+als achtervang wanneer ENTSO-E achterloopt. De voorspelling is een eigen model;
+de uitkomsten worden dagelijks gemeten en ongefilterd gepubliceerd, inclusief de
+uren waarin het misging. Bij een nieuwe modelversie begint die meting opnieuw.
+
+De site verkoopt geen energie en is niet gelieerd aan een leverancier.

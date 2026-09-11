@@ -2933,3 +2933,85 @@ details[open] > .faq-q::before { transform: rotate(90deg); }
 @media (max-width: 640px) {
   .situation-chip { min-height: 44px; }
 }
+
+/* ──────────────────────────────────────────────────────────────
+   Statische cijferblokken (scripts/render_static.py)
+   Dezelfde cijfers als de grafieken, maar als platte HTML zodat
+   crawlers zonder JavaScript ze ook zien.
+   ────────────────────────────────────────────────────────────── */
+.static-prices { padding-block: 1.5rem 2rem; }
+.static-prices h2 { margin: 0 0 .5rem; }
+.static-prices h3 { margin: 1.75rem 0 .5rem; }
+.static-prices p { color: var(--c-text-soft); line-height: 1.6; margin: 0 0 .75rem; }
+.static-prices strong { color: var(--c-text); }
+.static-prices-meta { font-size: .875rem; color: var(--c-text-mute); }
+
+.static-details {
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+  margin: 0 0 .75rem;
+}
+.static-details > summary {
+  cursor: pointer;
+  padding: .75rem 1rem;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--c-brand-deep);
+}
+.static-details[open] > summary { border-bottom: 1px solid var(--c-border); }
+
+.static-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: .5rem 1rem 1rem;
+}
+.static-price-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9375rem;
+}
+.static-price-table caption {
+  text-align: left;
+  padding: .5rem 0;
+  font-size: .875rem;
+  color: var(--c-text-mute);
+}
+.static-price-table th,
+.static-price-table td {
+  padding: .4rem .6rem;
+  border-bottom: 1px solid var(--c-border);
+  text-align: left;
+  white-space: nowrap;
+}
+.static-price-table th { color: var(--c-text-soft); font-weight: 600; }
+.static-price-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.static-price-table tbody tr:last-child td { border-bottom: 0; }
+
+/* ──────────────────────────────────────────────────────────────
+   Tabellen laten de pagina niet zijwaarts scrollen
+   Elke tabel zit in een wrapper die zelf scrollt. Onderstaande
+   namen zijn historisch gegroeid; ze doen nu allemaal hetzelfde.
+   ────────────────────────────────────────────────────────────── */
+.table-wrap,
+.artikel-table-wrap,
+.ere-tabelwrap,
+.scroll-x {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Vangnet: een tabel zonder wrapper mag nooit de pagina oprekken. */
+.artikel-content table,
+.artikel-body table { max-width: 100%; }
+
+/* Lange URL's, codefragmenten en bedragen met &nbsp; breken in plaats van
+   de pagina op te rekken. Generiek, want de paginatypes gebruiken verschillende
+   containerklassen (artikel-content, legal-page, aanbieder-meta, ...). */
+p a, li a, td a, p code, li code, .aanbieder-meta span {
+  overflow-wrap: anywhere;
+}
