@@ -543,6 +543,11 @@
       // Start op huidige maand
       currentMonth = todayYM();
       await loadMonth(currentMonth);
+
+      // Vangnet: heeft de lopende maand nog geen archief-bestand, val dan terug
+      // op de vorige maand in plaats van een lege kalender te tonen.
+      const vorige = prevMonth(currentMonth);
+      if (!archiveData && vorige >= EARLIEST_MONTH) await loadMonth(vorige);
     }
 
     // ── Dropdown ───────────────────────────────────────────────────────────
