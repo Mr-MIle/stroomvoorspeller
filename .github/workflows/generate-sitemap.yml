@@ -14,6 +14,7 @@ on:
     branches: [main]
     paths-ignore:
       - 'public/sitemap.xml'
+      - 'public/llms.txt'
   workflow_dispatch:
 
 permissions:
@@ -31,15 +32,20 @@ jobs:
       - name: Genereer sitemap.xml
         run: bash scripts/generate-sitemap.sh
 
+      - name: Genereer llms.txt
+        # Wegwijzer voor AI-assistenten. De kennisbank-lijst komt uit de bestanden
+        # zelf, zodat het bestand niet achterloopt zodra er een artikel bijkomt.
+        run: python3 scripts/generate_llms.py
+
       - name: Commit indien gewijzigd
         run: |
-          if git diff --quiet -- public/sitemap.xml; then
-            echo "Sitemap ongewijzigd — niets te committen."
+          if git diff --quiet -- public/sitemap.xml public/llms.txt; then
+            echo "Sitemap en llms.txt ongewijzigd — niets te committen."
           else
             git config user.name  "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add public/sitemap.xml
-            git commit -m "chore: sitemap automatisch bijgewerkt"
+            git add public/sitemap.xml public/llms.txt
+            git commit -m "chore: sitemap en llms.txt automatisch bijgewerkt"
             git push
-            echo "Sitemap bijgewerkt en gepusht."
+            echo "Sitemap en llms.txt bijgewerkt en gepusht."
           fi

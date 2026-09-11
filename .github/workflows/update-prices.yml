@@ -134,6 +134,14 @@ jobs:
         run: |
           python scripts/generate_performance.py
 
+      - name: Schrijf cijfers als statische HTML
+        # Vult de STATIC:*-blokken in index.html, morgen.html en over/performance.html
+        # met de actuele prijzen, voorspelling en nauwkeurigheid. Nodig omdat crawlers
+        # zonder JavaScript anders alleen liggende streepjes zien. Mag falen.
+        continue-on-error: true
+        run: |
+          python scripts/render_static.py
+
       - name: Commit en push als er iets veranderd is
         run: |
           git config user.name "stroomvoorspeller-bot"
@@ -143,6 +151,7 @@ jobs:
           git add public/data/ha.json 2>/dev/null || true
           git add public/data/duiding.json 2>/dev/null || true
           git add public/data/performance.json 2>/dev/null || true
+          git add public/index.html public/morgen.html public/over/performance.html 2>/dev/null || true
           git add data/forecast_archive/ 2>/dev/null || true
           git add public/data/archief/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
