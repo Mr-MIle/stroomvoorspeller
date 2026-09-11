@@ -121,7 +121,9 @@ jobs:
           git add public/data/ha.json 2>/dev/null || true
           git add public/data/duiding.json 2>/dev/null || true
           git add public/data/performance.json 2>/dev/null || true
+          git add public/data/archief/ 2>/dev/null || true
           git add public/index.html public/morgen.html public/over/performance.html 2>/dev/null || true
+          git add public/aanbieders.html public/historisch.html 2>/dev/null || true
           git add data/forecast_archive/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
