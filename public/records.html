@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Records: hoogste en laagste stroomprijs ooit</title>
+  <meta name="description" content="De uitersten van de Nederlandse stroommarkt sinds 2015: laagste en hoogste uurprijs ooit, goedkoopste en duurste dag, en het aantal negatieve uren per jaar." />
+  <meta name="theme-color" content="#0f6cbd" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/records" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Records: de uitersten van de Nederlandse stroommarkt" />
+  <meta property="og:description" content="Laagste en hoogste uurprijs ooit, en het aantal negatieve uren per jaar sinds 2015." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/records" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Stroomvoorspeller.nl — integraties" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Records: de uitersten van de Nederlandse stroommarkt" />
+  <meta name="twitter:description" content="Laagste en hoogste uurprijs ooit, en negatieve uren per jaar sinds 2015." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <style>
+    /* Kaarten — alleen op deze pagina nodig */
+    .int-grid { display: grid; gap: 16px; margin: 20px 0 8px; }
+    @media (min-width: 620px) { .int-grid { grid-template-columns: 1fr 1fr; } }
+    .int-card {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--c-border, #e2e8ef); border-radius: var(--radius-sm, 10px);
+      padding: 18px 20px; background: #fff; text-decoration: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .int-card:hover { border-color: var(--c-brand, #0f6cbd); box-shadow: 0 4px 16px rgba(15,108,189,.08); }
+    .int-card-icon { font-size: 1.6rem; line-height: 1; margin-bottom: 8px; }
+    .int-card-title { font-weight: 700; color: var(--c-brand-deep, #0b4f86); font-size: 1.08rem; margin: 0 0 4px; }
+    .int-card-desc { color: var(--c-text, #2a3340); font-size: 0.95rem; line-height: 1.55; margin: 0 0 12px; }
+    .int-card-cta { margin-top: auto; color: var(--c-brand, #0f6cbd); font-weight: 600; font-size: 0.92rem; }
+    .int-card-full { grid-column: 1 / -1; }
+    .int-data-links { margin: 6px 0 0; font-size: 0.92rem; }
+    .int-data-links code { background: #ecf1f6; padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+  </style>
+
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank">Kennisbank</a>
+        <a href="/historisch">Historisch</a>
+        <a href="/batterij">Batterij</a>
+        <a href="/integraties">Integraties</a>
+      </nav>
+    </div>
+  </header>
+
+    <main class="legal-page container">
+    <p class="legal-back"><a href="/">← terug naar de actuele prijzen</a></p>
+    <h1>Records: de uitersten van de Nederlandse stroommarkt</h1>
+    <p class="legal-intro">
+      Sinds 2015 is elke uurprijs van de Nederlandse day-ahead markt bewaard. Dat levert
+      een reeks op waarin je precies kunt terugzoeken wanneer stroom het duurst was, wanneer
+      hij het goedkoopst was, en hoe vaak de prijs onder nul dook. Hieronder staan de
+      uitersten, elke dag opnieuw uitgerekend uit het volledige archief.
+    </p>
+
+    <!-- STATIC:RECORDS:START -->
+    <section class="static-prices container" aria-labelledby="records-h2">
+      <h2 id="records-h2">De records</h2>
+      <p>Gemeten over <strong>101.473 uurprijzen</strong> tussen maandag 5 januari 2015 en zaterdag 12 september 2026 (4.269 dagen). Alle bedragen zijn kale EPEX-prijzen, zonder energiebelasting, opslag en btw.</p>
+      <div class="static-table-wrap">
+        <table class="static-price-table">
+          <caption>Uiterste waarden in de Nederlandse day-ahead markt</caption>
+          <thead><tr><th scope="col">Record</th><th scope="col">Waarde</th><th scope="col">Wanneer</th></tr></thead>
+          <tbody>
+          <tr><th scope="row">Laagste uurprijs ooit</th><td class="num">-50,00 ct/kWh</td><td>zondag 2 juli 2023, 13:00&ndash;14:00</td></tr>
+          <tr><th scope="row">Hoogste uurprijs ooit</th><td class="num">87,30 ct/kWh</td><td>donderdag 12 december 2024, 17:00&ndash;18:00</td></tr>
+          <tr><th scope="row">Goedkoopste dag (daggemiddelde)</th><td class="num">-0,78 ct/kWh</td><td>zondag 12 mei 2024</td></tr>
+          <tr><th scope="row">Duurste dag (daggemiddelde)</th><td class="num">69,38 ct/kWh</td><td>vrijdag 26 augustus 2022</td></tr>
+          <tr><th scope="row">Goedkoopste maand</th><td class="num">1,78 ct/kWh</td><td>mei 2020</td></tr>
+          <tr><th scope="row">Duurste maand</th><td class="num">44,71 ct/kWh</td><td>augustus 2022</td></tr>
+          <tr><th scope="row">Meeste negatieve uren op één dag</th><td class="num">19 uur</td><td>zaterdag 4 oktober 2025</td></tr>
+          <tr><th scope="row">Langste reeks negatieve uren achter elkaar</th><td class="num">20 uur</td><td>vanaf zaterdag 4 oktober 2025, 21:00&ndash;22:00</td></tr>
+          <tr><th scope="row">Meeste negatieve uren in één maand</th><td class="num">141 uur</td><td>mei 2025</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Negatieve uren per jaar</h3>
+      <p>Bij een negatieve prijs krijg je geld toe om stroom af te nemen, en betaal je om terug te leveren. In totaal gebeurde dat <strong>1.940 keer</strong> in deze reeks.</p>
+      <div class="static-table-wrap">
+        <table class="static-price-table">
+          <caption>Aantal uren met een negatieve day-ahead prijs, per jaar</caption>
+          <thead><tr><th scope="col">Jaar</th><th scope="col">Negatieve uren</th><th scope="col">Aandeel van het jaar</th></tr></thead>
+          <tbody>
+          <tr><td>2015</td><td class="num">0</td><td class="num">0,0%</td></tr>
+          <tr><td>2016</td><td class="num">0</td><td class="num">0,0%</td></tr>
+          <tr><td>2017</td><td class="num">0</td><td class="num">0,0%</td></tr>
+          <tr><td>2018</td><td class="num">0</td><td class="num">0,0%</td></tr>
+          <tr><td>2019</td><td class="num">3</td><td class="num">0,0%</td></tr>
+          <tr><td>2020</td><td class="num">94</td><td class="num">1,1%</td></tr>
+          <tr><td>2021</td><td class="num">70</td><td class="num">0,8%</td></tr>
+          <tr><td>2022</td><td class="num">85</td><td class="num">1,0%</td></tr>
+          <tr><td>2023</td><td class="num">310</td><td class="num">3,6%</td></tr>
+          <tr><td>2024</td><td class="num">448</td><td class="num">5,1%</td></tr>
+          <tr><td>2025</td><td class="num">564</td><td class="num">6,5%</td></tr>
+          <tr><td>2026</td><td class="num">366</td><td class="num">6,0%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="static-prices-meta">Bron: ENTSO-E Transparency, NL bidding zone. Bijgewerkt op 2026-09-12 08:43.</p>
+    </section>
+    <!-- STATIC:RECORDS:END -->
+
+    <section class="legal-sources">
+      <h2>Hoe deze cijfers tot stand komen</h2>
+      <p>
+        De prijzen komen van ENTSO-E Transparency voor de Nederlandse biedzone. Het zijn
+        kale EPEX-prijzen: zonder energiebelasting, zonder opslag van je leverancier en
+        zonder btw. Dat is bewust. De energiebelasting is sinds 2015 meermalen veranderd,
+        dus een all-in vergelijking tussen 2015 en nu zou vooral iets over de belasting
+        zeggen en weinig over de markt.
+      </p>
+      <p>
+        Voor dagrecords tellen alleen dagen met minstens 23 uurprijzen mee, en voor
+        maandrecords alleen maanden met minstens 300 uurprijzen. Zo trekt een half
+        ingelezen periode het gemiddelde niet scheef. De onderliggende cijfers staan open
+        in <a href="/data/records.json">records.json</a>.
+      </p>
+    </section>
+
+    <section class="legal-related">
+      <h2>Verder lezen</h2>
+      <ul>
+        <li><a href="/kennisbank/negatieve-stroomprijzen">Negatieve stroomprijzen: wanneer kost terugleveren geld?</a></li>
+        <li><a href="/kennisbank/hoe-wordt-de-stroomprijs-bepaald">Hoe wordt de stroomprijs bepaald?</a></li>
+        <li><a href="/historisch">Historische prijzen per dag terugkijken</a></li>
+        <li><a href="/over/voorspelling">Hoe het voorspellingsmodel werkt</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a> ·
+          <a href="/integraties">Integraties</a> ·
+          <a href="/aanbieders">Aanbieders</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script src="/nav.js" defer></script>
+</body>
+</html>
