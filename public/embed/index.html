@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Stroomprijs widget embedden op jouw website — Stroomvoorspeller.nl</title>
+  <title>Stroomprijs-widget voor je eigen website</title>
   <meta name="description" content="Zet de actuele stroomprijs op jouw website met één script-tag. Gratis, geen API-key, automatisch bijgewerkt. Ideaal voor energiebloggers en EV-communities." />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -31,18 +31,45 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Widget embedden", "item": "https://stroomvoorspeller.nl/embed" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Widget embedden",
+            "item": "https://stroomvoorspeller.nl/embed"
+          }
         ]
       },
       {
         "@type": "TechArticle",
         "headline": "Stroomprijs widget embedden op jouw website",
         "description": "Documentatie voor de gratis embed widget van stroomvoorspeller.nl: één script-tag, automatisch bijgewerkt, geen API-key.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-05-14",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
@@ -55,17 +82,26 @@
           {
             "@type": "Question",
             "name": "Is de widget gratis?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja, volledig gratis. Geen registratie, geen API-key, geen limieten." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja, volledig gratis. Geen registratie, geen API-key, geen limieten."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoe vaak wordt de widget bijgewerkt?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De widget toont altijd de meest recente ENTSO-E day-ahead prijs. De data wordt elke 3 uur vernieuwd." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De widget toont altijd de meest recente ENTSO-E day-ahead prijs. De data wordt elke 3 uur vernieuwd."
+            }
           },
           {
             "@type": "Question",
             "name": "Werkt de widget op alle websites?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja, de widget werkt op elke HTML-website, WordPress, Wix of vergelijkbaar systeem. Plak gewoon de script-tag in je paginabron." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja, de widget werkt op elke HTML-website, WordPress, Wix of vergelijkbaar systeem. Plak gewoon de script-tag in je paginabron."
+            }
           }
         ]
       }
@@ -88,13 +124,15 @@
 
     .embed-layout {
       display: grid;
-      grid-template-columns: 1fr 320px;
+      grid-template-columns: minmax(0, 1fr) 320px;
       gap: 3rem;
       align-items: start;
     }
 
     @media (max-width: 700px) {
-      .embed-layout { grid-template-columns: 1fr; }
+      /* minmax(0,1fr) i.p.v. 1fr: anders wordt de kolom zo breed als zijn
+         breedste kind en scrollt de pagina zijwaarts op een telefoon. */
+      .embed-layout { grid-template-columns: minmax(0, 1fr); }
       .embed-preview-col { order: -1; }
     }
 
@@ -199,7 +237,7 @@
     /* Voordelen-grid */
     .benefits-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
       gap: 1rem;
       margin: 1rem 0 2rem;
     }
@@ -350,7 +388,8 @@
             Voeg <code style="background:var(--surface-2,#f4f8ff);padding:.1em .4em;border-radius:3px">data-</code>-attributen toe aan de div voor extra opties:
           </p>
 
-          <table class="options-table">
+          <div class="table-wrap">
+            <table class="options-table">
             <thead>
               <tr>
                 <th>Attribuut</th>
@@ -381,6 +420,7 @@
               </tr>
             </tbody>
           </table>
+          </div>
 
           <p style="font-size:0.85rem;color:var(--text-muted,#555);margin-bottom:0.4rem;"><strong>Voorbeeld met aanpassingen:</strong></p>
           <div class="code-block" id="code-advanced">
