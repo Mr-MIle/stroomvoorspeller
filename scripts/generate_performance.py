@@ -215,7 +215,7 @@ def compute_performance():
             band_low = fc_entry.get("band_low")
             band_high = fc_entry.get("band_high")
 
-            # Naïf
+            # Naïef
             naive = naive_forecast(actuals, target_dt, day_type(target_dt))
 
             # Within band
