@@ -152,11 +152,51 @@
     document.body.appendChild(s);
   }
 
+  // Webapp-schil: manifest, iOS-icoon en service worker worden hier ingehangen.
+  // Zo hoeft geen van de 59 pagina's een eigen regel in <head> te krijgen.
+  function initPWA() {
+    var head = document.head;
+    if (!head) return;
+
+    function link(rel, href) {
+      if (head.querySelector('link[rel="' + rel + '"]')) return;
+      var l = document.createElement("link");
+      l.rel = rel;
+      l.href = href;
+      head.appendChild(l);
+    }
+
+    function meta(name, content) {
+      if (head.querySelector('meta[name="' + name + '"]')) return;
+      var m = document.createElement("meta");
+      m.name = name;
+      m.content = content;
+      head.appendChild(m);
+    }
+
+    link("manifest", "/manifest.webmanifest");
+    link("apple-touch-icon", "/apple-touch-icon.png");
+    meta("mobile-web-app-capable", "yes");
+    meta("apple-mobile-web-app-capable", "yes");
+    meta("apple-mobile-web-app-status-bar-style", "default");
+    meta("apple-mobile-web-app-title", "Stroomprijs");
+
+    if (!("serviceWorker" in navigator)) return;
+    if (location.protocol !== "https:" && location.hostname !== "localhost") return;
+
+    function registreer() {
+      navigator.serviceWorker.register("/sw.js").catch(function () {});
+    }
+    if (document.readyState === "complete") registreer();
+    else window.addEventListener("load", registreer);
+  }
+
   function init() {
     document.documentElement.classList.add("has-js");
     build(location.pathname);
     initToTop();
     initPartner();
+    initPWA();
   }
 
   if (document.readyState === "loading") {
