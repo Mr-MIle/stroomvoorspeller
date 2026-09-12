@@ -1,0 +1,72 @@
+name: Voorspelling vastleggen voor de veiling
+
+# Legt elke ochtend de voorspelling voor morgen vast, VOORDAT de day-ahead veiling
+# sluit (gate closure 12:00 CET). Daarmee ontstaat het enige D+1-cijfer dat eerlijk is.
+#
+# Waarom dit bestaat: de gewone dagsnapshot (update-forecast.yml / check-prices.yml)
+# wordt pas na 14:00 genomen, en dan heeft EPEX de prijzen van morgen al gepubliceerd.
+# Een "voorspelling" van D+1 uit die snapshot is dus geen voorspelling maar een kopie
+# van de uitslag. Daarom telt horizon 1 niet mee in het gewone cijfer op /over/performance.
+#
+# generate_performance.py leest deze bestanden via load_archive("preauction") en vult
+# daarmee het blok d1_preauction. Zolang er nog geen snapshots zijn, blijft dat null en
+# toont de pagina er niets over. Dat is de bedoeling: na ongeveer 30 dagen staat er een
+# cijfer dat naast dat van andere partijen gelegd kan worden.
+#
+# 09:30 UTC = 11:30 CEST (zomertijd) / 10:30 CET (wintertijd). In beide gevallen ruim
+# voor de gate closure.
+
+on:
+  schedule:
+    - cron: "30 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: preauction-forecast
+  cancel-in-progress: false
+
+jobs:
+  preauction:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Genereer voorspelling
+        # Leest prices.json voor history, haalt Open-Meteo + TTF op.
+        run: python scripts/run_forecast.py
+
+      - name: Leg de snapshot vast
+        # Bestandsnaam = de datum van het moment van vastleggen. generate_performance.py
+        # rekent horizon = doeldatum - snapshotdatum, dus dit bestand levert de meting
+        # voor morgen.
+        run: |
+          mkdir -p data/forecast_archive
+          DATE=$(date -u +%Y-%m-%d)
+          cp public/data/forecast.json "data/forecast_archive/preauction_${DATE}.json"
+          echo "Vastgelegd: preauction_${DATE}.json"
+
+      - name: Commit en push als er iets veranderd is
+        # Alleen het archiefbestand. public/data/forecast.json blijft met rust: die wordt
+        # door check-prices.yml en update-forecast.yml beheerd, en twee workflows die
+        # hetzelfde bestand committen geven onnodige merge-conflicten.
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          git add data/forecast_archive/ 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Geen nieuwe snapshot - niets te committen."
+          else
+            git commit -m "auto: voorspelling vastgelegd voor de veiling $(date -u +%Y-%m-%d) [skip ci]"
+            git pull --rebase --autostash
+            git push
+          fi
