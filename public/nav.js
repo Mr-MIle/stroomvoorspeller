@@ -11,7 +11,8 @@
     { label: "Prijzen", children: [
       { href: "/", label: "Nu" },
       { href: "/morgen", label: "Morgen" },
-      { href: "/historisch", label: "Historisch" }
+      { href: "/historisch", label: "Historisch" },
+      { href: "/records", label: "Records" }
     ] },
     { href: "/aanbieders", label: "Aanbieders" },
     { href: "/kennisbank/", label: "Kennisbank" },
