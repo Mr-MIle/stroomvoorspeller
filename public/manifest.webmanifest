@@ -1,0 +1,61 @@
+{
+  "id": "/",
+  "name": "Stroomvoorspeller.nl",
+  "short_name": "Stroomprijs",
+  "description": "Stroomprijzen per uur voor vandaag en morgen, all-in per aanbieder, en een eigen voorspelling voor de komende week.",
+  "lang": "nl",
+  "dir": "ltr",
+  "start_url": "/?bron=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "background_color": "#f0f6fc",
+  "theme_color": "#0f6cbd",
+  "categories": ["utilities", "news"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Prijzen van morgen",
+      "short_name": "Morgen",
+      "url": "/morgen?bron=pwa",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Aanbieders vergelijken",
+      "short_name": "Aanbieders",
+      "url": "/aanbieders?bron=pwa",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Thuisbatterij",
+      "short_name": "Batterij",
+      "url": "/batterij?bron=pwa",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}
