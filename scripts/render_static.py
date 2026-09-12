@@ -412,15 +412,15 @@ def blok_accuracy(performance):
         "      <p>Dag 1 telt niet mee in dat cijfer. De prijzen voor morgen worden rond "
         "14:00 door EPEX gepubliceerd en staan bij de dagelijkse meting dus al vast; "
         "meetellen zou de uitslag meten in plaats van de voorspelling. Cijfers van "
-        "anderen die \\u00e9\\u00e9n dag vooruit meten, gaan over een makkelijkere opgave.</p>",
+        "anderen die één dag vooruit meten, gaan over een makkelijkere opgave.</p>",
     ]
 
     d1 = performance.get("d1_preauction")
     if d1 and d1.get("mae_eur_mwh") is not None:
         delen.append(
-            "      <p>Apart gemeten, en w\\u00e9l vergelijkbaar met een cijfer van "
-            "\\u00e9\\u00e9n dag vooruit: een voorspelling die \\u2019s ochtends wordt "
-            "vastgelegd, v\\u00f3\\u00f3rdat de veiling sluit, zit gemiddeld "
+            "      <p>Apart gemeten, en wél vergelijkbaar met een cijfer van "
+            "één dag vooruit: een voorspelling die ’s ochtends wordt "
+            "vastgelegd, vóórdat de veiling sluit, zit gemiddeld "
             f"<strong>{ct(d1['mae_eur_mwh'] / 10.0, 2)} ct/kWh</strong> naast de prijs "
             f"die EPEX later die dag publiceert, over {duizend(d1['n_hours'])} uur "
             f"verdeeld over {d1['n_days']} dagen.</p>"
