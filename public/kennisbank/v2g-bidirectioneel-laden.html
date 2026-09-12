@@ -73,23 +73,55 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "V2G: je auto als thuisbatterij", "item": "https://stroomvoorspeller.nl/kennisbank/v2g-bidirectioneel-laden" }
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
         ]
       },
       {
-        "@type": "TechArticle",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "V2G: je auto als thuisbatterij",
+            "item": "https://stroomvoorspeller.nl/kennisbank/v2g-bidirectioneel-laden"
+          }
+        ]
+      },
+      {
+        "@type": "Article",
         "@id": "https://stroomvoorspeller.nl/kennisbank/v2g-bidirectioneel-laden",
         "headline": "V2G: je auto als thuisbatterij — hoe werkt bidirectioneel laden en wat levert het op?",
         "description": "Vehicle-to-grid (V2G) maakt van je elektrische auto een rijdende thuisbatterij. Uitleg over hoe het werkt, wat het oplevert en welke hobbels er nog zijn.",
         "datePublished": "2026-05-19",
         "dateModified": "2026-05-29",
         "inLanguage": "nl-NL",
-        "author": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" },
-        "publisher": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" }
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        }
       },
       {
         "@type": "FAQPage",
@@ -97,27 +129,42 @@
           {
             "@type": "Question",
             "name": "Wat is V2G (vehicle-to-grid)?",
-            "acceptedAnswer": { "@type": "Answer", "text": "V2G, of bidirectioneel laden, betekent dat je elektrische auto niet alleen stroom opslaat maar ook teruggeeft aan je huis of het net. De auto laadt op als stroom goedkoop is en levert terug als de prijs hoog is, waardoor je je auto als een soort thuisbatterij gebruikt." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "V2G, of bidirectioneel laden, betekent dat je elektrische auto niet alleen stroom opslaat maar ook teruggeeft aan je huis of het net. De auto laadt op als stroom goedkoop is en levert terug als de prijs hoog is, waardoor je je auto als een soort thuisbatterij gebruikt."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is het verschil tussen V2G en V2H?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Bij V2H (vehicle-to-home) levert de auto alleen aan je eigen huis, niet aan het openbare net. Dat is technisch eenvoudiger en wettelijk minder complex. V2G gaat verder: de auto levert ook terug aan het net en kan bijdragen aan netbalancering." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bij V2H (vehicle-to-home) levert de auto alleen aan je eigen huis, niet aan het openbare net. Dat is technisch eenvoudiger en wettelijk minder complex. V2G gaat verder: de auto levert ook terug aan het net en kan bijdragen aan netbalancering."
+            }
           },
           {
             "@type": "Question",
             "name": "Welke auto's ondersteunen V2G in Nederland in 2026?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Sinds 19 mei 2026 is Renault het eerste merk met een werkend commercieel systeem: de Renault 5, Renault 4 en Scenic kunnen via een laadpaal van We Drive Solar als thuisbatterij fungeren. De meeste andere EV's ondersteunen bidirectioneel laden nog niet. Controleer dit dus specifiek bij aanschaf." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sinds 19 mei 2026 is Renault het eerste merk met een werkend commercieel systeem: de Renault 5, Renault 4 en Scenic kunnen via een laadpaal van We Drive Solar als thuisbatterij fungeren. De meeste andere EV's ondersteunen bidirectioneel laden nog niet. Controleer dit dus specifiek bij aanschaf."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat levert V2G op?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De winst komt uit energiehandel op de dagmarkt: laden bij lage of negatieve prijzen en terugleveren als de prijs hoog is. We Drive Solar spreekt over honderden euro's per jaar, afhankelijk van hoeveel de dagprijzen variëren en hoe vaak de auto aangesloten staat. Een vergoeding van de netbeheerder voor congestiebeheer is in voorbereiding." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De winst komt uit energiehandel op de dagmarkt: laden bij lage of negatieve prijzen en terugleveren als de prijs hoog is. We Drive Solar spreekt over honderden euro's per jaar, afhankelijk van hoeveel de dagprijzen variëren en hoe vaak de auto aangesloten staat. Een vergoeding van de netbeheerder voor congestiebeheer is in voorbereiding."
+            }
           },
           {
             "@type": "Question",
             "name": "Slijt mijn autobatterij sneller door V2G?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Beperkt. Renault laadt maximaal 5.000 kWh per jaar terug en ontlaadt alleen tussen 20% en 80% laadniveau, precies de zone die de batterij spaart. Renault geeft hierbij nog acht jaar batterijgarantie en stelt dat snelladen meer impact heeft dan V2G-gebruik." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Beperkt. Renault laadt maximaal 5.000 kWh per jaar terug en ontlaadt alleen tussen 20% en 80% laadniveau, precies de zone die de batterij spaart. Renault geeft hierbij nog acht jaar batterijgarantie en stelt dat snelladen meer impact heeft dan V2G-gebruik."
+            }
           }
         ]
       }
@@ -182,7 +229,8 @@
     <h3>Vergoeding van de netbeheerder</h3>
     <p>Het Nederlandse stroomnet heeft steeds vaker moeite met pieken in vraag en aanbod — zeker in de regio Utrecht, waar al gasgeneratoren worden bijgeplaatst op drukke momenten. Netbeheerders zijn actief op zoek naar flexibele batterijcapaciteit. Als jouw auto op het juiste moment stroom levert of opslaat, kan dat in de toekomst worden beloond. Dit is de zogeheten congestiemarkt, en die staat nog in de kinderschoenen voor particulieren.</p>
 
-    <table class="artikel-table">
+    <div class="table-wrap">
+      <table class="artikel-table">
       <thead>
         <tr>
           <th>Inkomstenbron</th>
@@ -208,6 +256,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
     <h2>4. Wat gebeurt er met de batterij?</h2>
     <p>Een terechte vraag: slijt de batterij van je auto niet sneller als je hem ook als huisbatterij gebruikt? Renault beperkt het gebruik bewust: per jaar mag maximaal 5.000 kWh worden teruggeleverd, en de batterij wordt alleen ontladen tussen 20% en 80% laadniveau. Daarboven en daaronder wordt de batterijcapaciteit juist sneller aangetast — precies de zone die dus wordt vermeden.</p>
@@ -275,6 +324,11 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/kosten-elektrische-auto-laden">
+          <span class="kb-lees-ook-tag">🚗 Elektrisch rijden · Beginner</span>
+          <span class="kb-lees-ook-title">Elektrische auto laden: thuis, publiek of snelladen — de kosten per kWh Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/thuisbatterij-kosten">
           <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
           <span class="kb-lees-ook-title">Thuisbatterij kosten 2026: een eerlijk beeld van aanschaf, installatie en terugverdientijd</span>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Je P1-meter draait, en dan? Van sluipverbruik tot kWh-prijs</title>
-  <meta name="description" content="De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: je basislast opsporen, pieken thuisbrengen, je eigen gewogen kWh-prijs berekenen en verbruik verschuiven." />
+  <meta name="description" content="De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: basislast opsporen, pieken thuisbrengen, kWh-prijs berekenen." />
   <meta name="kb-categorie" content="Slim besparen" />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -14,7 +14,7 @@
   <meta property="og:locale" content="nl_NL" />
   <meta property="og:site_name" content="Stroomvoorspeller.nl" />
   <meta property="og:title" content="Je P1-meter draait, en dan? Van sluipverbruik tot je eigen kWh-prijs" />
-  <meta property="og:description" content="De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: je basislast opsporen, pieken thuisbrengen, je eigen gewogen kWh-prijs berekenen en verbruik verschuiven." />
+  <meta property="og:description" content="De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: basislast opsporen, pieken thuisbrengen, kWh-prijs berekenen." />
   <meta property="og:url" content="https://stroomvoorspeller.nl/kennisbank/p1-data-gebruiken" />
   <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
   <meta property="og:image:width" content="1200" />
@@ -23,7 +23,7 @@
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Je P1-meter draait, en dan? Van sluipverbruik tot je eigen kWh-prijs" />
-  <meta name="twitter:description" content="De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: je basislast opsporen, pieken thuisbrengen, je eigen gewogen kWh-prijs berekenen en verbruik verschuiven." />
+  <meta name="twitter:description" content="De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: basislast opsporen, pieken thuisbrengen, kWh-prijs berekenen." />
   <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
 
   <link rel="stylesheet" href="/styles.css" />
@@ -59,19 +59,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Wat doe je met je P1-data", "item": "https://stroomvoorspeller.nl/kennisbank/p1-data-gebruiken" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Wat doe je met je P1-data",
+            "item": "https://stroomvoorspeller.nl/kennisbank/p1-data-gebruiken"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Je P1-meter draait, en dan? Van sluipverbruik tot je eigen kWh-prijs",
         "description": "De dongle hangt erin en je ziet grafiekjes. In vier stappen haal je er geld uit: je basislast opsporen, pieken thuisbrengen, je eigen gewogen kWh-prijs berekenen en verbruik verschuiven.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-08-07",
         "dateModified": "2026-08-07",
         "inLanguage": "nl-NL",
@@ -84,27 +116,42 @@
           {
             "@type": "Question",
             "name": "Wat is een normaal sluipverbruik voor een huishouden?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Als vuistregel: onder de 80 watt zit je goed, tussen 80 en 150 watt valt er nog wat te halen, en boven de 150 watt draait er waarschijnlijk iets dat uit kan. Een basislast van 50 watt komt neer op ongeveer 440 kilowattuur per jaar. Wie zonnepanelen of een thuisbatterij heeft, telt daar het eigen verbruik van de omvormer bij op; dat kan alleen al 10 tot 30 watt zijn." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Als vuistregel: onder de 80 watt zit je goed, tussen 80 en 150 watt valt er nog wat te halen, en boven de 150 watt draait er waarschijnlijk iets dat uit kan. Een basislast van 50 watt komt neer op ongeveer 440 kilowattuur per jaar. Wie zonnepanelen of een thuisbatterij heeft, telt daar het eigen verbruik van de omvormer bij op; dat kan alleen al 10 tot 30 watt zijn."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoeveel kost 1 watt sluipverbruik per jaar?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Eén watt die het hele jaar doorloopt is 8,76 kilowattuur. Bij een all-in prijs van ongeveer 24 cent per kilowattuur kost dat 2,10 euro per jaar. Een decoder van 15 watt die altijd aan staat, kost je dus zo'n 32 euro per jaar." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Eén watt die het hele jaar doorloopt is 8,76 kilowattuur. Bij een all-in prijs van ongeveer 24 cent per kilowattuur kost dat 2,10 euro per jaar. Een decoder van 15 watt die altijd aan staat, kost je dus zo'n 32 euro per jaar."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik met mijn P1-meter zien welk apparaat stroom verbruikt?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Niet rechtstreeks. De P1-poort geeft het totaal van je hele huis, zonder te vertellen waar het vandaan komt. Je brengt apparaten thuis door te kijken naar de sprong in de grafiek: een waterkoker springt ongeveer 2.200 watt omhoog, een oven 2.000 tot 2.500 watt, een auto op een gewone laadpaal 3.700 of 11.000 watt. Wil je het per apparaat weten, dan heb je een slimme stekker met meting nodig." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Niet rechtstreeks. De P1-poort geeft het totaal van je hele huis, zonder te vertellen waar het vandaan komt. Je brengt apparaten thuis door te kijken naar de sprong in de grafiek: een waterkoker springt ongeveer 2.200 watt omhoog, een oven 2.000 tot 2.500 watt, een auto op een gewone laadpaal 3.700 of 11.000 watt. Wil je het per apparaat weten, dan heb je een slimme stekker met meting nodig."
+            }
           },
           {
             "@type": "Question",
             "name": "Levert een P1-meter zelf geld op?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De meter zelf verdient niets terug; hij laat alleen zien wat er gebeurt. Het geld zit in wat je daarna doet: apparaten uitzetten die onnodig doorlopen, en zwaar verbruik naar goedkopere uren verschuiven. Met een dynamisch contract levert een uur verschuiven van de avondpiek naar de middagdip al gauw 10 cent per kilowattuur op." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De meter zelf verdient niets terug; hij laat alleen zien wat er gebeurt. Het geld zit in wat je daarna doet: apparaten uitzetten die onnodig doorlopen, en zwaar verbruik naar goedkopere uren verschuiven. Met een dynamisch contract levert een uur verschuiven van de avondpiek naar de middagdip al gauw 10 cent per kilowattuur op."
+            }
           },
           {
             "@type": "Question",
             "name": "Zie ik in mijn P1-data ook mijn kwartierverbruik?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De kwartierwaarden waarop je leverancier afrekent staan niet als kant-en-klaar getal in het bericht dat je meter uitstuurt. Wat er wel in staat zijn de meterstanden en het vermogen op dat moment. Je uitlezer rekent daar zelf kwartier- en uurtotalen uit, en die kloppen goed zolang de dongle geen periodes mist." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De kwartierwaarden waarop je leverancier afrekent staan niet als kant-en-klaar getal in het bericht dat je meter uitstuurt. Wat er wel in staat zijn de meterstanden en het vermogen op dat moment. Je uitlezer rekent daar zelf kwartier- en uurtotalen uit, en die kloppen goed zolang de dongle geen periodes mist."
+            }
           }
         ]
       }
@@ -327,6 +374,10 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/home-assistant">
+          <span class="kb-lees-ook-tag">💡 Slim thuis</span>
+          <span class="kb-lees-ook-title">Stroomprijzen koppelen aan Home Assistant</span>
+        </a>
         <a class="kb-lees-ook-card" href="/">
           <span class="kb-lees-ook-tag">⚡ Prijzen</span>
           <span class="kb-lees-ook-title">Bekijk de actuele uurprijzen en kwartierprijzen</span>

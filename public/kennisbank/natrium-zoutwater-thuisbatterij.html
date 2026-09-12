@@ -59,19 +59,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Natrium- of zoutwaterbatterij voor thuis", "item": "https://stroomvoorspeller.nl/kennisbank/natrium-zoutwater-thuisbatterij" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Natrium- of zoutwaterbatterij voor thuis",
+            "item": "https://stroomvoorspeller.nl/kennisbank/natrium-zoutwater-thuisbatterij"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Natrium- of zoutwaterbatterij voor thuis (2026): veiliger dan lithium, maar is het al slim?",
         "description": "Natrium-ion en zoutwater gelden als de veilige, grondstofarme opvolger van lithium. Wat klopt daarvan in 2026 — en wanneer is het voor jouw huis al de moeite?",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-07-08",
         "dateModified": "2026-07-08",
         "inLanguage": "nl-NL",
@@ -84,27 +116,42 @@
           {
             "@type": "Question",
             "name": "Kan ik nu al een natrium-ion thuisbatterij kopen in Nederland?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nauwelijks. In 2026 gaat vrijwel alle natrium-ion-productie naar elektrische auto's. Voor een kant-en-klaar thuissysteem ben je waarschijnlijk nog twee tot drie jaar te vroeg; brede beschikbaarheid wordt rond 2029-2030 verwacht. Er zijn wel doe-het-zelf-bouwpakketten, maar die zijn iets voor gevorderde sleutelaars, niet voor de gemiddelde meterkast." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nauwelijks. In 2026 gaat vrijwel alle natrium-ion-productie naar elektrische auto's. Voor een kant-en-klaar thuissysteem ben je waarschijnlijk nog twee tot drie jaar te vroeg; brede beschikbaarheid wordt rond 2029-2030 verwacht. Er zijn wel doe-het-zelf-bouwpakketten, maar die zijn iets voor gevorderde sleutelaars, niet voor de gemiddelde meterkast."
+            }
           },
           {
             "@type": "Question",
             "name": "Is een zoutwaterbatterij echt onbrandbaar?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja. Een zoutwaterbatterij gebruikt een waterige zoutoplossing in plaats van een brandbaar elektrolyt. Daardoor kan er geen thermal runaway ontstaan: het op hol slaan van een cel dat een lithiumbatterij in brand kan zetten. Dat is het sterkste argument voor zoutwater, en het is een echt argument." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja. Een zoutwaterbatterij gebruikt een waterige zoutoplossing in plaats van een brandbaar elektrolyt. Daardoor kan er geen thermal runaway ontstaan: het op hol slaan van een cel dat een lithiumbatterij in brand kan zetten. Dat is het sterkste argument voor zoutwater, en het is een echt argument."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is het verschil tussen natrium-ion en zoutwater?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Beide gebruiken natrium in plaats van lithium, maar anders. Natrium-ion lijkt technisch op een lithiumbatterij en is compact; zoutwater slaat energie op in een vloeibare zoutoplossing en is groter en zwaarder. Natrium-ion is de kandidaat die op termijn met lithium kan concurreren op prijs; zoutwater is nu al te koop, maar in een dun aanbod." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Beide gebruiken natrium in plaats van lithium, maar anders. Natrium-ion lijkt technisch op een lithiumbatterij en is compact; zoutwater slaat energie op in een vloeibare zoutoplossing en is groter en zwaarder. Natrium-ion is de kandidaat die op termijn met lithium kan concurreren op prijs; zoutwater is nu al te koop, maar in een dun aanbod."
+            }
           },
           {
             "@type": "Question",
             "name": "Zijn natrium of zoutwater goedkoper dan lithium?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nog niet voor thuis. Natrium-ion gebruikt geen schaars kobalt of nikkel en wordt daarom op termijn goedkoper verwacht, maar dat prijsvoordeel zie je in 2026 nog niet in de winkel. Zoutwater kost in 2026 juist meer per kilowattuur dan lithium, ongeveer 800 tot 1.200 euro tegen 500 tot 800 euro voor lithium (LFP)." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nog niet voor thuis. Natrium-ion gebruikt geen schaars kobalt of nikkel en wordt daarom op termijn goedkoper verwacht, maar dat prijsvoordeel zie je in 2026 nog niet in de winkel. Zoutwater kost in 2026 juist meer per kilowattuur dan lithium, ongeveer 800 tot 1.200 euro tegen 500 tot 800 euro voor lithium (LFP)."
+            }
           },
           {
             "@type": "Question",
             "name": "Loont het om te wachten op natrium-ion?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Wil je nú je zonnestroom opslaan, dan is wachten zonde: je loopt jaren opbrengst mis voor een prijsvoordeel dat nog niet vaststaat. Heb je geen haast en telt veiligheid zwaar, dan kan het logisch zijn om over een paar jaar opnieuw te kijken. Zeker weten doet niemand het; de markt beweegt hard." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Wil je nú je zonnestroom opslaan, dan is wachten zonde: je loopt jaren opbrengst mis voor een prijsvoordeel dat nog niet vaststaat. Heb je geen haast en telt veiligheid zwaar, dan kan het logisch zijn om over een paar jaar opnieuw te kijken. Zeker weten doet niemand het; de markt beweegt hard."
+            }
           }
         ]
       }

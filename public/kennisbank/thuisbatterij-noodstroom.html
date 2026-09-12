@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Werkt een thuisbatterij bij stroomuitval?", "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-noodstroom" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Werkt een thuisbatterij bij stroomuitval?",
+            "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-noodstroom"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Werkt een thuisbatterij bij stroomuitval? Noodstroom thuis uitgelegd (2026)",
         "description": "Een gewone thuisbatterij valt bij stroomuitval gewoon uit. Wat je écht nodig hebt voor noodstroom: losse stekker of overschakelkast, en wat het kost.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-08-20",
         "dateModified": "2026-08-20",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Werkt een gewone thuisbatterij bij stroomuitval?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Een standaard thuisbatterij schakelt bij een storing samen met de omvormer af, omdat een omvormer wettelijk van het net moet zodra dat wegvalt (anti-eilandvorming). Je batterij kan vol zitten en toch geen enkel stopcontact voeden. Alleen met een aparte noodstroomvoorziening blijft er stroom." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Een standaard thuisbatterij schakelt bij een storing samen met de omvormer af, omdat een omvormer wettelijk van het net moet zodra dat wegvalt (anti-eilandvorming). Je batterij kan vol zitten en toch geen enkel stopcontact voeden. Alleen met een aparte noodstroomvoorziening blijft er stroom."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is het verschil tussen apparaten in de batterij prikken en een overschakelkast?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Bij de eerste manier prik je losse apparaten rechtstreeks in een stopcontact op de batterij. Alleen wat je daaraan hangt werkt; de rest van de stopcontacten in huis werkt nog niet. Een automatische overschakelkast (ATS) zit tussen meterkast en batterij en voedt bij een storing je hele huis of een aparte noodgroep, zodat je gewone stopcontacten blijven werken. Die tweede manier kost meer en vraagt een installateur." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bij de eerste manier prik je losse apparaten rechtstreeks in een stopcontact op de batterij. Alleen wat je daaraan hangt werkt; de rest van de stopcontacten in huis werkt nog niet. Een automatische overschakelkast (ATS) zit tussen meterkast en batterij en voedt bij een storing je hele huis of een aparte noodgroep, zodat je gewone stopcontacten blijven werken. Die tweede manier kost meer en vraagt een installateur."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoe lang doet een thuisbatterij het bij een storing?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een zuinig gezin houdt het met 10 kWh ruim een dag vol, maar dan wel zonder was- en afwasmachine en droger. Laat je je hele huis meedraaien, dan is dezelfde batterij in enkele uren leeg. Met zonnepanelen en eilandbedrijf laadt de batterij overdag uit de zon en houd je het veel langer vol." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een zuinig gezin houdt het met 10 kWh ruim een dag vol, maar dan wel zonder was- en afwasmachine en droger. Laat je je hele huis meedraaien, dan is dezelfde batterij in enkele uren leeg. Met zonnepanelen en eilandbedrijf laadt de batterij overdag uit de zon en houd je het veel langer vol."
+            }
           },
           {
             "@type": "Question",
             "name": "Blijven mijn zonnepanelen werken tijdens een stroomuitval?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Alleen als je systeem eilandbedrijf ondersteunt. Zonder die functie schakelt ook de zonne-omvormer bij een storing af, precies zoals de batterij, en staan je panelen stil. Met een backup-systeem dat eilandbedrijf aankan, kan de zon de batterij overdag laden." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Alleen als je systeem eilandbedrijf ondersteunt. Zonder die functie schakelt ook de zonne-omvormer bij een storing af, precies zoals de batterij, en staan je panelen stil. Met een backup-systeem dat eilandbedrijf aankan, kan de zon de batterij overdag laden."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat kost noodstroom extra?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een draagbare batterij die je zelf neerzet, kost een paar honderd euro en heeft geen installateur nodig. Een vaste overschakelkast met een noodgroep loopt al snel richting 1.000 euro of meer, plus installatie. Het hele huis noodstroomvast maken kost het meest. Of het loont, hangt af van hoe vaak en hoe lang jij echt zonder stroom zit." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een draagbare batterij die je zelf neerzet, kost een paar honderd euro en heeft geen installateur nodig. Een vaste overschakelkast met een noodgroep loopt al snel richting 1.000 euro of meer, plus installatie. Het hele huis noodstroomvast maken kost het meest. Of het loont, hangt af van hoe vaak en hoe lang jij echt zonder stroom zit."
+            }
           }
         ]
       }

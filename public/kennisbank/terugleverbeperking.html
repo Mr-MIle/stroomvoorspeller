@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Terugleverbeperking door netcongestie", "item": "https://stroomvoorspeller.nl/kennisbank/terugleverbeperking" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Terugleverbeperking door netcongestie",
+            "item": "https://stroomvoorspeller.nl/kennisbank/terugleverbeperking"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Terugleverbeperking door netcongestie: wat betekent dat voor jouw zonnepanelen?",
         "description": "In grote delen van Nederland mogen zonnepanelen minder of geen stroom terugleveren. Wat is netcongestie, ben jij getroffen, en wat kun je doen?",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-05-10",
         "dateModified": "2026-05-29",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Wat is een terugleverbeperking?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een terugleverbeperking (curtailment) betekent dat je netbeheerder het maximale vermogen dat je aan het net mag terugleveren beperkt, omdat het lokale net vol zit. In de praktijk gebeurt dit via een signaal naar je omvormer of een capaciteitsgrens op de aansluiting; je omvormer schroeft de productie dan terug." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een terugleverbeperking (curtailment) betekent dat je netbeheerder het maximale vermogen dat je aan het net mag terugleveren beperkt, omdat het lokale net vol zit. In de praktijk gebeurt dit via een signaal naar je omvormer of een capaciteitsgrens op de aansluiting; je omvormer schroeft de productie dan terug."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoe weet ik of mijn zonnepanelen door netcongestie beperkt worden?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Gebruik de Stroomnetchecker van Netbeheer Nederland en vul je postcode in, of kijk op de site van je netbeheerder (Enexis, Liander of Stedin). Let op: de situatie kan zelfs per straat verschillen binnen een congestiegebied." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Gebruik de Stroomnetchecker van Netbeheer Nederland en vul je postcode in, of kijk op de site van je netbeheerder (Enexis, Liander of Stedin). Let op: de situatie kan zelfs per straat verschillen binnen een congestiegebied."
+            }
           },
           {
             "@type": "Question",
             "name": "Welke gebieden hebben in 2026 een terugleverbeperking?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Grote delen van Friesland, Groningen, Drenthe, Flevoland, de kop van Noord-Holland en delen van Overijssel, Gelderland, Brabant en Limburg hebben actieve beperkingen. In de Randstad en Utrecht is de congestie meer lokaal. Raadpleeg de capaciteitskaart voor de actuele status per postcode." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Grote delen van Friesland, Groningen, Drenthe, Flevoland, de kop van Noord-Holland en delen van Overijssel, Gelderland, Brabant en Limburg hebben actieve beperkingen. In de Randstad en Utrecht is de congestie meer lokaal. Raadpleeg de capaciteitskaart voor de actuele status per postcode."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoeveel kost een terugleverbeperking mij?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Voor de meeste huishoudens is de directe impact beperkt. Een installatie van 10 panelen die 100 uur per jaar voor de helft wordt afgeknepen verliest zo'n 200 kWh, bij €0,08/kWh ongeveer €16 per jaar. Het is vooral verloren energie die je beter zelf had kunnen verbruiken." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Voor de meeste huishoudens is de directe impact beperkt. Een installatie van 10 panelen die 100 uur per jaar voor de helft wordt afgeknepen verliest zo'n 200 kWh, bij €0,08/kWh ongeveer €16 per jaar. Het is vooral verloren energie die je beter zelf had kunnen verbruiken."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat kan ik doen tegen een terugleverbeperking?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Verhoog je eigen verbruik op zonnige uren: plan apparaten overdag, gebruik een wateraccu of thuisbatterij, en neem een dynamisch contract zodat je juist verbruikt wanneer de prijs laag of negatief is. Zo lever je minder terug en gaat er minder opgewekte energie verloren." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Verhoog je eigen verbruik op zonnige uren: plan apparaten overdag, gebruik een wateraccu of thuisbatterij, en neem een dynamisch contract zodat je juist verbruikt wanneer de prijs laag of negatief is. Zo lever je minder terug en gaat er minder opgewekte energie verloren."
+            }
           }
         ]
       }
@@ -154,7 +201,8 @@
       <h2>Welke gebieden zijn getroffen?</h2>
       <p>De terugleverbeperking speelt in 2026 in een groot deel van Nederland. Hieronder een indicatief overzicht per provincie/regio, gebaseerd op de congestierapporten van de netbeheerders.<sup><a href="#bron-1">[1]</a><a href="#bron-2">[2]</a></sup></p>
 
-      <table>
+      <div class="table-wrap">
+        <table>
         <thead>
           <tr>
             <th>Regio / Provincie</th>
@@ -171,6 +219,7 @@
           <tr><td>Randstad, Utrecht (delen)</td><td>Stedin / Liander</td><td>Lokale congestie – veel delen nog ruimte</td></tr>
         </tbody>
       </table>
+      </div>
       <p><small>Bron capaciteitskaart: <a href="https://data.partnersinenergie.nl/capaciteitskaart/totaal/invoeding" rel="noopener noreferrer" target="_blank">data.partnersinenergie.nl</a> — raadpleeg voor actuele status per postcode.</small></p>
 
       <h3>Hoe check je of jij getroffen bent?</h3>

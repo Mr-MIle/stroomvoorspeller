@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Thuisbatterij subsidie 2026", "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-subsidie-2026" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Thuisbatterij subsidie 2026",
+            "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-subsidie-2026"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Thuisbatterij subsidie 2026: bestaat die, en waar loop je op stuk?",
         "description": "Landelijk is er in 2026 geen aanschafsubsidie op een thuisbatterij. Wat er wél is — btw-teruggave en één provincie — en de voorwaarden waar je op stuk kunt lopen.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-08-03",
         "dateModified": "2026-08-03",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Is er in 2026 een landelijke subsidie op een thuisbatterij?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. De landelijke ISDE-regeling betaalt in 2026 mee aan een warmtepomp, zonneboiler, isolatie, elektrisch koken, ventilatie en een warmtenet-aansluiting, maar niet aan een thuisbatterij. Een losse aanschafsubsidie van het Rijk is er dus niet. Wat er wel is: btw-teruggave onder voorwaarden, en in de provincie Flevoland een directe aanschafsubsidie zolang het budget strekt." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. De landelijke ISDE-regeling betaalt in 2026 mee aan een warmtepomp, zonneboiler, isolatie, elektrisch koken, ventilatie en een warmtenet-aansluiting, maar niet aan een thuisbatterij. Een losse aanschafsubsidie van het Rijk is er dus niet. Wat er wel is: btw-teruggave onder voorwaarden, en in de provincie Flevoland een directe aanschafsubsidie zolang het budget strekt."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik de 21% btw op mijn thuisbatterij terugvragen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Alleen als de Belastingdienst je voor de batterij als btw-ondernemer ziet. Dat is meestal pas zo als je de batterij actief gebruikt om stroom te verhandelen: laden als het goedkoop is, terugleveren tegen vergoeding als het duur is. Gebruik je de batterij puur voor jezelf, dan krijg je de btw normaal gesproken niet terug. Aan de teruggave hangen bovendien voorwaarden: een dynamisch contract dat kort na de aankoop ingaat, slimme sturing, een terugleververgoeding en een correcte aanmelding bij de Belastingdienst." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Alleen als de Belastingdienst je voor de batterij als btw-ondernemer ziet. Dat is meestal pas zo als je de batterij actief gebruikt om stroom te verhandelen: laden als het goedkoop is, terugleveren tegen vergoeding als het duur is. Gebruik je de batterij puur voor jezelf, dan krijg je de btw normaal gesproken niet terug. Aan de teruggave hangen bovendien voorwaarden: een dynamisch contract dat kort na de aankoop ingaat, slimme sturing, een terugleververgoeding en een correcte aanmelding bij de Belastingdienst."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoeveel btw krijg ik terug op een thuisbatterij?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Op een batterij van 6.000 euro inclusief btw zit ongeveer 1.040 euro btw. Terugkrijgen doe je alleen het deel dat bij het zakelijke gebruik hoort, en over de stroom die je verkoopt draag je zelf weer btw af. Je moet er ook btw-aangifte voor doen. Het bedrag dat je overhoudt is dus lager dan die 1.040 euro, en het kost je administratie." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Op een batterij van 6.000 euro inclusief btw zit ongeveer 1.040 euro btw. Terugkrijgen doe je alleen het deel dat bij het zakelijke gebruik hoort, en over de stroom die je verkoopt draag je zelf weer btw af. Je moet er ook btw-aangifte voor doen. Het bedrag dat je overhoudt is dus lager dan die 1.040 euro, en het kost je administratie."
+            }
           },
           {
             "@type": "Question",
             "name": "Krijg ik 0% btw als ik de batterij samen met zonnepanelen koop?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Niet automatisch. Het 0%-btw-tarief geldt voor de zonnepanelen zelf, niet voor een thuisbatterij die je ernaast koopt. Op een losse batterij betaal je gewoon 21% btw. Laat je een installateur alles in één keer plaatsen, vraag dan vooraf op de offerte precies uit welk tarief over welk onderdeel gaat, zodat je niet voor verrassingen komt te staan." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Niet automatisch. Het 0%-btw-tarief geldt voor de zonnepanelen zelf, niet voor een thuisbatterij die je ernaast koopt. Op een losse batterij betaal je gewoon 21% btw. Laat je een installateur alles in één keer plaatsen, vraag dan vooraf op de offerte precies uit welk tarief over welk onderdeel gaat, zodat je niet voor verrassingen komt te staan."
+            }
           },
           {
             "@type": "Question",
             "name": "Is er subsidie op een thuisbatterij in mijn provincie?",
-            "acceptedAnswer": { "@type": "Answer", "text": "In de meeste provincies niet. Flevoland is in 2026 de enige met een directe aanschafsubsidie: 25% van de kosten exclusief btw, minimaal 750 en maximaal 1.250 euro. Het potje voor woningeigenaren was halverwege 2026 vrijwel op; voor huurders was er nog budget, en voor woningeigenaren komt er per 1 oktober 2026 opnieuw geld vrij zolang de regeling loopt. Check je eigen provincie en gemeente, want lokale potjes wisselen per jaar." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "In de meeste provincies niet. Flevoland is in 2026 de enige met een directe aanschafsubsidie: 25% van de kosten exclusief btw, minimaal 750 en maximaal 1.250 euro. Het potje voor woningeigenaren was halverwege 2026 vrijwel op; voor huurders was er nog budget, en voor woningeigenaren komt er per 1 oktober 2026 opnieuw geld vrij zolang de regeling loopt. Check je eigen provincie en gemeente, want lokale potjes wisselen per jaar."
+            }
           }
         ]
       }

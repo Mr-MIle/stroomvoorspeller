@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Airco koelen met dynamisch tarief", "item": "https://stroomvoorspeller.nl/kennisbank/airco-dynamisch-tarief" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Airco koelen met dynamisch tarief",
+            "item": "https://stroomvoorspeller.nl/kennisbank/airco-dynamisch-tarief"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Airco koelen met dynamisch tarief: zo betaal je de helft minder deze zomer",
         "description": "Koel je huis op de goedkoopste én zonnigste uren. Met een dynamisch stroomtarief en slim timen halveer je de stroomkosten van je airco in 2026.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-06-07",
         "dateModified": "2026-06-07",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Hoeveel stroom verbruikt een airco per uur?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een moderne split-airco met A+++-label verbruikt in de koelstand gemiddeld ongeveer 0,75 kWh per uur. Bij een tarief van €0,25 per kWh komt dat neer op ongeveer 19 cent per draaiuur." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een moderne split-airco met A+++-label verbruikt in de koelstand gemiddeld ongeveer 0,75 kWh per uur. Bij een tarief van €0,25 per kWh komt dat neer op ongeveer 19 cent per draaiuur."
+            }
           },
           {
             "@type": "Question",
             "name": "Wanneer is stroom voor mijn airco het goedkoopst?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Op zonnige dagen zijn de stroomprijzen meestal het laagst tussen 11:00 en 16:00 uur, precies wanneer zonnepanelen veel opwekken. Dat valt vaak samen met de uren waarop je wilt koelen, dus koel bij voorkeur rond het middaguur." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Op zonnige dagen zijn de stroomprijzen meestal het laagst tussen 11:00 en 16:00 uur, precies wanneer zonnepanelen veel opwekken. Dat valt vaak samen met de uren waarop je wilt koelen, dus koel bij voorkeur rond het middaguur."
+            }
           },
           {
             "@type": "Question",
             "name": "Is koelen met een dynamisch tarief echt goedkoper?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja, als je je koeling naar de goedkope middaguren verschuift. In een rekenvoorbeeld kost 4 uur koelen op de middagdip ongeveer €0,21, tegenover €0,75 bij een vast tarief — ruwweg een derde van de kosten." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja, als je je koeling naar de goedkope middaguren verschuift. In een rekenvoorbeeld kost 4 uur koelen op de middagdip ongeveer €0,21, tegenover €0,75 bij een vast tarief — ruwweg een derde van de kosten."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik mijn airco gratis laten draaien met zonnepanelen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Op zonnige middagen kun je je airco vrijwel gratis laten koelen met je eigen zonnestroom, omdat de zon het hardst schijnt op het moment dat de airco het hardst moet werken. Een thuisbatterij maakt dit nog flexibeler." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Op zonnige middagen kun je je airco vrijwel gratis laten koelen met je eigen zonnestroom, omdat de zon het hardst schijnt op het moment dat de airco het hardst moet werken. Een thuisbatterij maakt dit nog flexibeler."
+            }
           },
           {
             "@type": "Question",
             "name": "Op welke temperatuur zet ik de airco het best?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een setpoint van 22 tot 24 °C is comfortabel én zuinig. Elke graad lager kost ongeveer 5 tot 7% extra energie, dus koel niet kouder dan nodig en gebruik zonwering om warmte buiten te houden." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een setpoint van 22 tot 24 °C is comfortabel én zuinig. Elke graad lager kost ongeveer 5 tot 7% extra energie, dus koel niet kouder dan nodig en gebruik zonwering om warmte buiten te houden."
+            }
           }
         ]
       }
@@ -145,7 +192,8 @@
     <section>
       <h2>Wat je airco écht kost per uur — rekenvoorbeeld</h2>
       <p>Stel: je airco verbruikt 0,75 kWh per uur en draait 4 uur op een warme dag. Het verschil tussen blind koelen en slim koelen op de goedkope uren:</p>
-      <table>
+      <div class="table-wrap">
+        <table>
         <thead>
           <tr>
             <th>Scenario</th>
@@ -160,6 +208,7 @@
           <tr><td>Dynamisch, negatief uur</td><td>-€0,02</td><td>Je wordt betaald</td></tr>
         </tbody>
       </table>
+      </div>
       <p><strong>Conclusie:</strong> door je vier koeluren naar de middagdip te verschuiven betaal je in dit voorbeeld €0,21 in plaats van €0,75 — ongeveer een derde van de kosten, en een fractie van de avondpiek. Over een hele zomer scheelt dat tientallen euro's, zonder dat je minder comfortabel zit.</p>
     </section>
 

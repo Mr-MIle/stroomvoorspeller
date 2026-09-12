@@ -33,23 +33,55 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Salderingsregeling stopt in 2027", "item": "https://stroomvoorspeller.nl/kennisbank/salderingsregeling" }
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
         ]
       },
       {
-        "@type": "TechArticle",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Salderingsregeling stopt in 2027",
+            "item": "https://stroomvoorspeller.nl/kennisbank/salderingsregeling"
+          }
+        ]
+      },
+      {
+        "@type": "Article",
         "@id": "https://stroomvoorspeller.nl/kennisbank/salderingsregeling",
         "headline": "Salderingsregeling stopt in 2027: wat nu met je zonnepanelen?",
         "description": "Per 1 januari 2027 stopt de salderingsregeling. Wat verandert er voor jou als zonnepaneeleigenaar, hoeveel kost het je, en wat kun je nu al doen?",
         "datePublished": "2026-05-01",
         "dateModified": "2026-05-29",
         "inLanguage": "nl-NL",
-        "author": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" },
-        "publisher": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" }
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        }
       },
       {
         "@type": "FAQPage",
@@ -57,27 +89,42 @@
           {
             "@type": "Question",
             "name": "Wanneer stopt de salderingsregeling precies?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De salderingsregeling stopt volledig per 1 januari 2027. Tot en met 31 december 2026 kun je teruggeleverde zonnestroom nog volledig wegstrepen tegen je eigen verbruik." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De salderingsregeling stopt volledig per 1 januari 2027. Tot en met 31 december 2026 kun je teruggeleverde zonnestroom nog volledig wegstrepen tegen je eigen verbruik."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoeveel krijg ik na 2027 nog voor teruggeleverde stroom?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Je krijgt een terugleververgoeding van wettelijk minimaal 50% van de kale leveringsprijs (exclusief belastingen). In de praktijk komt dat neer op ongeveer €0,05 tot €0,09 per kWh, terwijl je voor afgenomen stroom al snel €0,25 tot €0,35 per kWh betaalt." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Je krijgt een terugleververgoeding van wettelijk minimaal 50% van de kale leveringsprijs (exclusief belastingen). In de praktijk komt dat neer op ongeveer €0,05 tot €0,09 per kWh, terwijl je voor afgenomen stroom al snel €0,25 tot €0,35 per kWh betaalt."
+            }
           },
           {
             "@type": "Question",
             "name": "Blijven zonnepanelen rendabel zonder salderingsregeling?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja, maar de terugverdientijd stijgt van gemiddeld 5 tot 6 jaar naar 8 tot 10 jaar voor huishoudens die niets aanpassen. Wie investeert in eigen verbruik via een wateraccu, thuisbatterij of dynamisch contract blijft ruim binnen de levensduur van de panelen van ongeveer 25 jaar." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja, maar de terugverdientijd stijgt van gemiddeld 5 tot 6 jaar naar 8 tot 10 jaar voor huishoudens die niets aanpassen. Wie investeert in eigen verbruik via een wateraccu, thuisbatterij of dynamisch contract blijft ruim binnen de levensduur van de panelen van ongeveer 25 jaar."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is het beste alternatief voor saldering?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Zoveel mogelijk zonnestroom zelf verbruiken op het moment dat je panelen produceren. Dat kan gratis door apparaten overdag te plannen, of via een wateraccu, een thuisbatterij en een dynamisch energiecontract waarmee je inspeelt op lage uurprijzen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Zoveel mogelijk zonnestroom zelf verbruiken op het moment dat je panelen produceren. Dat kan gratis door apparaten overdag te plannen, of via een wateraccu, een thuisbatterij en een dynamisch energiecontract waarmee je inspeelt op lage uurprijzen."
+            }
           },
           {
             "@type": "Question",
             "name": "Moet ik nu nog snel zonnepanelen kopen vóór 2027?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Haast is niet nodig. Zonnepanelen blijven ook na 2027 rendabel, alleen met een langere terugverdientijd. Belangrijker dan de aanschafdatum is dat je je eigen verbruik verhoogt en eventueel een dynamisch contract neemt." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Haast is niet nodig. Zonnepanelen blijven ook na 2027 rendabel, alleen met een langere terugverdientijd. Belangrijker dan de aanschafdatum is dat je je eigen verbruik verhoogt en eventueel een dynamisch contract neemt."
+            }
           }
         ]
       }
@@ -172,6 +219,11 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/balkonzonnepanelen-dynamisch-contract">
+          <span class="kb-lees-ook-tag">☀️ Zonnepanelen · Beginner</span>
+          <span class="kb-lees-ook-title">Balkonzonnepanelen op een dynamisch contract: mag het en wat levert het op? Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 6 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/batterij-berekenen">
           <span class="kb-lees-ook-tag">🔋 Rekentool</span>
           <span class="kb-lees-ook-title">Bereken wat een thuisbatterij jóu oplevert</span>

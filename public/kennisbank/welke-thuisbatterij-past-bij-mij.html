@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Welke thuisbatterij past bij mij", "item": "https://stroomvoorspeller.nl/kennisbank/welke-thuisbatterij-past-bij-mij" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Welke thuisbatterij past bij mij",
+            "item": "https://stroomvoorspeller.nl/kennisbank/welke-thuisbatterij-past-bij-mij"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Welke thuisbatterij past bij mij? Het aantal kWh en kW kiezen (2026)",
         "description": "Te klein en je mist besparing, te groot en je betaalt voor lege ruimte. Zo kies je de juiste kWh-capaciteit én het kW-vermogen voor jouw verbruik.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-08-16",
         "dateModified": "2026-08-16",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Hoeveel kWh thuisbatterij heb ik nodig?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ga uit van het stuk verbruik dat je verschuift, niet van je hele dag. De meeste huishoudens verplaatsen alleen de avond- en ochtenduren, en dat is grofweg een derde van het dagverbruik. Voor een klein huishouden zonder veel avondverbruik is 5 kWh vaak genoeg, een gezin met zonnepanelen en een duidelijke avondpiek zit meestal goed rond 10 kWh, en pas bij een warmtepomp of een verbruik boven de 8.000 kWh per jaar wordt 15 kWh of meer interessant." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ga uit van het stuk verbruik dat je verschuift, niet van je hele dag. De meeste huishoudens verplaatsen alleen de avond- en ochtenduren, en dat is grofweg een derde van het dagverbruik. Voor een klein huishouden zonder veel avondverbruik is 5 kWh vaak genoeg, een gezin met zonnepanelen en een duidelijke avondpiek zit meestal goed rond 10 kWh, en pas bij een warmtepomp of een verbruik boven de 8.000 kWh per jaar wordt 15 kWh of meer interessant."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat betekent het vermogen (kW) van een thuisbatterij?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Het vermogen in kilowatt zegt hoe snel de batterij kan laden en leveren. De capaciteit in kilowattuur zegt hoeveel hij bewaart. Een batterij van 10 kWh met 2,5 kW vermogen bewaart veel, maar levert maar langzaam: als je 's avonds kookt en meer dan 2,5 kW tegelijk vraagt, haalt hij de rest alsnog duur van het net. Voor de avondpiek telt het vermogen daarom net zo zwaar als de capaciteit." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Het vermogen in kilowatt zegt hoe snel de batterij kan laden en leveren. De capaciteit in kilowattuur zegt hoeveel hij bewaart. Een batterij van 10 kWh met 2,5 kW vermogen bewaart veel, maar levert maar langzaam: als je 's avonds kookt en meer dan 2,5 kW tegelijk vraagt, haalt hij de rest alsnog duur van het net. Voor de avondpiek telt het vermogen daarom net zo zwaar als de capaciteit."
+            }
           },
           {
             "@type": "Question",
             "name": "Is een grotere thuisbatterij altijd beter?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Je vult en leegt een batterij binnen de goedkope en dure uren van één dag, en er zijn maar een paar goedkope uren per dag. Capaciteit die je op een gemiddelde dag niet vol krijgt, staat leeg en bespaart niets, terwijl je de aanschaf wel betaalt. Boven een maat die bij je verbruik past, verdient elke extra kilowattuur zich juist trager terug." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Je vult en leegt een batterij binnen de goedkope en dure uren van één dag, en er zijn maar een paar goedkope uren per dag. Capaciteit die je op een gemiddelde dag niet vol krijgt, staat leeg en bespaart niets, terwijl je de aanschaf wel betaalt. Boven een maat die bij je verbruik past, verdient elke extra kilowattuur zich juist trager terug."
+            }
           },
           {
             "@type": "Question",
             "name": "Welke thuisbatterij past bij een 1-fase aansluiting?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Op een gewone 1-fase aansluiting ligt de praktische grens rond 3,7 kW laad- en leververmogen. De meeste thuisbatterijen voor een 1-fase huis leveren 2,5 tot 3,7 kW, en dat dekt de avond van een doorsnee huishouden prima. Wil je meer vermogen, een warmtepomp én snel laden combineren, dan kom je bij een 3-fase aansluiting uit." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Op een gewone 1-fase aansluiting ligt de praktische grens rond 3,7 kW laad- en leververmogen. De meeste thuisbatterijen voor een 1-fase huis leveren 2,5 tot 3,7 kW, en dat dekt de avond van een doorsnee huishouden prima. Wil je meer vermogen, een warmtepomp én snel laden combineren, dan kom je bij een 3-fase aansluiting uit."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoeveel kW heb ik nodig voor de avondpiek?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een doorsnee huishouden trekt in de avond zelden meer dan 2 tot 3 kW tegelijk, met korte uitschieters als de oven, waterkoker en vaatwasser samen aanstaan. Een batterij van 2,5 tot 3,7 kW vangt het grootste deel daarvan op. Heb je een warmtepomp of laad je een auto in de avond, dan loopt de piek hoger op en heb je meer vermogen (en vaak 3-fase) nodig." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een doorsnee huishouden trekt in de avond zelden meer dan 2 tot 3 kW tegelijk, met korte uitschieters als de oven, waterkoker en vaatwasser samen aanstaan. Een batterij van 2,5 tot 3,7 kW vangt het grootste deel daarvan op. Heb je een warmtepomp of laad je een auto in de avond, dan loopt de piek hoger op en heb je meer vermogen (en vaak 3-fase) nodig."
+            }
           }
         ]
       }
@@ -189,6 +236,21 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/thuisbatterij-subsidie-2026">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Thuisbatterij subsidie 2026: bestaat die, en waar loop je op stuk? Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/thuisbatterij-noodstroom">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Werkt een thuisbatterij bij stroomuitval? Noodstroom thuis uitgelegd Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/natrium-zoutwater-thuisbatterij">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Natrium- of zoutwaterbatterij voor thuis: veiliger dan lithium, maar is het al slim?</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/thuisbatterij-kosten">
           <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
           <span class="kb-lees-ook-title">Thuisbatterij kosten 2026: een eerlijk beeld</span>

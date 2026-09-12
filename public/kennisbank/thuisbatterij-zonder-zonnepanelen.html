@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Thuisbatterij zonder zonnepanelen", "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-zonder-zonnepanelen" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Thuisbatterij zonder zonnepanelen",
+            "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-zonder-zonnepanelen"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Thuisbatterij zonder zonnepanelen: loont het in 2026 op een dynamisch contract?",
         "description": "Een thuisbatterij zonder zonnepanelen laadt goedkoop en levert duur terug. Wat dat op de dagprijs echt oplevert, en waarom de terugverdientijd tegenvalt.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-08-13",
         "dateModified": "2026-08-13",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Heeft een thuisbatterij zonder zonnepanelen zin?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Technisch kan het prima: je laadt de batterij in de goedkope uren en gebruikt die stroom als de prijs hoog staat. Financieel is de winst dun. Zonder gratis zonnestroom moet je elke kilowattuur eerst inkopen, en het prijsverschil tussen een goedkoop en een duur uur op de dagprijs is meestal maar 10 tot 20 cent. Voor de meeste huishoudens zonder panelen is het advies daarom: wachten." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Technisch kan het prima: je laadt de batterij in de goedkope uren en gebruikt die stroom als de prijs hoog staat. Financieel is de winst dun. Zonder gratis zonnestroom moet je elke kilowattuur eerst inkopen, en het prijsverschil tussen een goedkoop en een duur uur op de dagprijs is meestal maar 10 tot 20 cent. Voor de meeste huishoudens zonder panelen is het advies daarom: wachten."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoeveel levert laden op goedkope uren per jaar op?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Reken op grofweg 100 tot 250 euro per jaar met een batterij van 10 kWh die je één keer per dag vult en leegt. Het exacte bedrag hangt af van hoe groot het dag-nachtverschil is, hoeveel dagen dat verschil groot genoeg is om de moeite te lonen, en het verlies bij het opslaan (ongeveer 10 tot 15 procent gaat er onderweg vanaf)." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Reken op grofweg 100 tot 250 euro per jaar met een batterij van 10 kWh die je één keer per dag vult en leegt. Het exacte bedrag hangt af van hoe groot het dag-nachtverschil is, hoeveel dagen dat verschil groot genoeg is om de moeite te lonen, en het verlies bij het opslaan (ongeveer 10 tot 15 procent gaat er onderweg vanaf)."
+            }
           },
           {
             "@type": "Question",
             "name": "Na hoeveel jaar verdien je een thuisbatterij zonder panelen terug?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een batterij van 10 kWh kost inclusief installatie zo'n 5.500 tot 8.500 euro. Bij een besparing van 100 tot 250 euro per jaar kom je op een terugverdientijd van ruim boven de 20 jaar. Dat is langer dan een batterij meegaat (grofweg 15 jaar of 6.000 laadbeurten). Puur op de dagprijs handelen, zonder zonnepanelen, verdient zichzelf dus meestal niet terug." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een batterij van 10 kWh kost inclusief installatie zo'n 5.500 tot 8.500 euro. Bij een besparing van 100 tot 250 euro per jaar kom je op een terugverdientijd van ruim boven de 20 jaar. Dat is langer dan een batterij meegaat (grofweg 15 jaar of 6.000 laadbeurten). Puur op de dagprijs handelen, zonder zonnepanelen, verdient zichzelf dus meestal niet terug."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is het verschil met verdienen op de onbalansmarkt?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Bij handelen op de dagprijs stuur je zelf op de bekende uurprijzen van de volgende dag. Op de onbalansmarkt laat je een aggregator je batterij automatisch mee laten draaien op korte prijsschommelingen binnen het uur. Die markt kan meer opleveren, maar je geeft de sturing uit handen en de opbrengst is onzeker. In het artikel over de onbalansmarkt lees je wat daar echt van klopt." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bij handelen op de dagprijs stuur je zelf op de bekende uurprijzen van de volgende dag. Op de onbalansmarkt laat je een aggregator je batterij automatisch mee laten draaien op korte prijsschommelingen binnen het uur. Die markt kan meer opleveren, maar je geeft de sturing uit handen en de opbrengst is onzeker. In het artikel over de onbalansmarkt lees je wat daar echt van klopt."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik later zonnepanelen aan de batterij toevoegen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja. Een batterij die je nu voor de dagprijs koopt, kun je later koppelen aan zonnepanelen. Let dan wel op de aansluiting: een batterij met een eigen omvormer werkt los van je panelen, terwijl een hybride opstelling wat efficiënter is maar dezelfde merk-eisen stelt. Met panelen erbij wordt het rendement een stuk beter, omdat je dan gratis opgewekte stroom opslaat in plaats van ingekochte." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja. Een batterij die je nu voor de dagprijs koopt, kun je later koppelen aan zonnepanelen. Let dan wel op de aansluiting: een batterij met een eigen omvormer werkt los van je panelen, terwijl een hybride opstelling wat efficiënter is maar dezelfde merk-eisen stelt. Met panelen erbij wordt het rendement een stuk beter, omdat je dan gratis opgewekte stroom opslaat in plaats van ingekochte."
+            }
           }
         ]
       }
@@ -181,6 +228,11 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/hybride-omvormer-thuisbatterij">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gevorderd</span>
+          <span class="kb-lees-ook-title">Hybride of AC-gekoppelde omvormer voor je thuisbatterij? Zo kies je in 2026 Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 8 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/thuisbatterij-kosten">
           <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
           <span class="kb-lees-ook-title">Thuisbatterij kosten 2026: een eerlijk beeld</span>

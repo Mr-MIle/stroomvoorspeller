@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Hoe laat komen de stroomprijzen voor morgen bekend? Day-ahead uitgelegd</title>
+  <title>Hoe laat zijn de stroomprijzen van morgen bekend?</title>
   <meta name="description" content="Bieden op de day-ahead-markt sluit om 12:00, rond 13:00 staan de uur- en kwartierprijzen voor morgen vast. Zo werkt de veiling, ook in het weekend." />
   <meta name="kb-categorie" content="Dynamisch contract" />
   <meta name="theme-color" content="#0f6cbd" />
@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Hoe laat komen de stroomprijzen voor morgen bekend?", "item": "https://stroomvoorspeller.nl/kennisbank/stroomprijzen-morgen-bekend" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Hoe laat komen de stroomprijzen voor morgen bekend?",
+            "item": "https://stroomvoorspeller.nl/kennisbank/stroomprijzen-morgen-bekend"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Hoe laat komen de stroomprijzen voor morgen bekend?",
         "description": "Bieden op de day-ahead-markt sluit om 12:00, rond 13:00 staan de uur- en kwartierprijzen voor morgen vast. Zo werkt de veiling, ook in het weekend.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-09-10",
         "dateModified": "2026-09-10",
         "inLanguage": "nl-NL",
@@ -58,22 +90,34 @@
           {
             "@type": "Question",
             "name": "Hoe laat komen de stroomprijzen voor morgen bekend?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Bieden op de day-ahead-markt sluit om 12:00. De uitslag volgt kort daarna, meestal rond 13:00 Nederlandse tijd, soms een paar minuten eerder of later. Vanaf dat moment staan alle uur- en kwartierprijzen voor morgen vast." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bieden op de day-ahead-markt sluit om 12:00. De uitslag volgt kort daarna, meestal rond 13:00 Nederlandse tijd, soms een paar minuten eerder of later. Vanaf dat moment staan alle uur- en kwartierprijzen voor morgen vast."
+            }
           },
           {
             "@type": "Question",
             "name": "Worden de stroomprijzen ook in het weekend bekendgemaakt?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja. De veiling draait elke dag van het jaar. In de praktijk staan de prijzen voor zaterdag en zondag op vrijdag rond 13:00 al klaar, zodat je je weekend kunt plannen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja. De veiling draait elke dag van het jaar. In de praktijk staan de prijzen voor zaterdag en zondag op vrijdag rond 13:00 al klaar, zodat je je weekend kunt plannen."
+            }
           },
           {
             "@type": "Question",
             "name": "Verandert de stroomprijs voor morgen nog nadat hij bekend is?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Voor je dynamische contract niet. De day-ahead-prijs ligt vast zodra de veiling klaar is. Er is daarnaast een intraday-markt waarop handelaren tot vlak voor het uur bijsturen, maar die prijs betaal jij niet." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Voor je dynamische contract niet. De day-ahead-prijs ligt vast zodra de veiling klaar is. Er is daarnaast een intraday-markt waarop handelaren tot vlak voor het uur bijsturen, maar die prijs betaal jij niet."
+            }
           },
           {
             "@type": "Question",
             "name": "Waarom lijkt de Nederlandse stroomprijs zo op die van Duitsland?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Omdat de veiling heel Europa in één keer doorrekent. Landen met genoeg kabelcapaciteit ertussen krijgen dezelfde prijs. Zit de grens vol, dan lopen de prijzen uiteen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Omdat de veiling heel Europa in één keer doorrekent. Landen met genoeg kabelcapaciteit ertussen krijgen dezelfde prijs. Zit de grens vol, dan lopen de prijzen uiteen."
+            }
           }
         ]
       }

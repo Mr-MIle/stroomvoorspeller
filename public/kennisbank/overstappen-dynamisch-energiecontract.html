@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Overstappen naar een dynamisch energiecontract", "item": "https://stroomvoorspeller.nl/kennisbank/overstappen-dynamisch-energiecontract" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Overstappen naar een dynamisch energiecontract",
+            "item": "https://stroomvoorspeller.nl/kennisbank/overstappen-dynamisch-energiecontract"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Overstappen naar een dynamisch energiecontract: stappenplan, opzegvergoeding en het juiste moment",
         "description": "Overstappen naar een dynamisch contract kan meestal boetevrij. Zo werkt het stappenplan, wanneer je wél een opzegvergoeding betaalt en wat het beste moment is.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-08-06",
         "dateModified": "2026-08-06",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Hoe lang duurt het om over te stappen naar een dynamisch contract?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Meestal een paar werkdagen tot enkele weken. Een dynamisch contract kent geen wettelijke bedenktermijn die je moet uitzitten, dus het kan vaak snel ingaan. Loopt je huidige vaste contract nog, dan gaat de overstap pas in op de einddatum, tenzij je een opzegvergoeding betaalt om eerder weg te gaan." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Meestal een paar werkdagen tot enkele weken. Een dynamisch contract kent geen wettelijke bedenktermijn die je moet uitzitten, dus het kan vaak snel ingaan. Loopt je huidige vaste contract nog, dan gaat de overstap pas in op de einddatum, tenzij je een opzegvergoeding betaalt om eerder weg te gaan."
+            }
           },
           {
             "@type": "Question",
             "name": "Betaal ik een opzegvergoeding als ik nu een dynamisch of variabel contract heb?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Een dynamisch of variabel contract is maandelijks opzegbaar, meestal met een opzegtermijn van 30 dagen. Je betaalt geen boete om weg te gaan. Een dynamisch contract kun je vaak zelfs per dag stopzetten." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Een dynamisch of variabel contract is maandelijks opzegbaar, meestal met een opzegtermijn van 30 dagen. Je betaalt geen boete om weg te gaan. Een dynamisch contract kun je vaak zelfs per dag stopzetten."
+            }
           },
           {
             "@type": "Question",
             "name": "Moet ik mijn oude energiecontract zelf opzeggen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Je nieuwe leverancier regelt de opzegging bij je oude leverancier. Je meldt je aan bij de nieuwe partij, die de rest afhandelt. Je krijgt een bevestiging waarin staat wat er gebeurt en per wanneer." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Je nieuwe leverancier regelt de opzegging bij je oude leverancier. Je meldt je aan bij de nieuwe partij, die de rest afhandelt. Je krijgt een bevestiging waarin staat wat er gebeurt en per wanneer."
+            }
           },
           {
             "@type": "Question",
             "name": "Behoud ik mijn slimme meter als ik overstap?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja. Je meter, je aansluiting en je netbeheerder blijven hetzelfde. Alleen je leverancier verandert. Voor een dynamisch contract heb je wel een slimme meter nodig, omdat je per uur of kwartier wordt afgerekend." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja. Je meter, je aansluiting en je netbeheerder blijven hetzelfde. Alleen je leverancier verandert. Voor een dynamisch contract heb je wel een slimme meter nodig, omdat je per uur of kwartier wordt afgerekend."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik later weer terug naar een vast contract?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja. Een dynamisch contract is maandelijks opzegbaar, dus je kunt op elk moment terug naar een vast of variabel contract. Je zit nergens aan vast, en er is geen opzegvergoeding." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja. Een dynamisch contract is maandelijks opzegbaar, dus je kunt op elk moment terug naar een vast of variabel contract. Je zit nergens aan vast, en er is geen opzegvergoeding."
+            }
           }
         ]
       }
@@ -192,6 +239,16 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/dynamisch-of-vast-contract">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
+          <span class="kb-lees-ook-title">Wanneer een vast en wanneer een dynamisch contract? Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/dynamisch-gascontract">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Dynamisch gascontract: zo werkt de dagelijkse gasprijs (TTF)</span>
+          <span class="kb-lees-ook-meta">⏱ 6 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/dynamisch-contract-vergelijken">
           <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
           <span class="kb-lees-ook-title">Dynamisch energiecontract vergelijken 2026: Tibber, Frank, ANWB of Zonneplan?</span>

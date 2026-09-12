@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Wateraccu voor zonnepanelen", "item": "https://stroomvoorspeller.nl/kennisbank/wateraccu" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Wateraccu voor zonnepanelen",
+            "item": "https://stroomvoorspeller.nl/kennisbank/wateraccu"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Wateraccu voor zonnepanelen: goedkoper dan een thuisbatterij en toch effectief?",
         "description": "Een wateraccu kost ~€1.500 en verhoogt je eigen stroomverbruik van 30% naar 70%. Is dit slimmer dan een dure thuisbatterij? Eerlijk vergeleken.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-04-30",
         "dateModified": "2026-05-29",
         "inLanguage": "nl-NL",
@@ -58,32 +90,50 @@
           {
             "@type": "Question",
             "name": "Wat kost een wateraccu?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een compleet wateraccu-systeem kost ongeveer €1.000 tot €1.700, inclusief de regelunit (€400 tot €600), een elektrische boiler (€400 tot €700) en installatie (€200 tot €400). Heb je al een geschikte elektrische boiler, dan betaal je alleen de regelunit en installatie. Dat is drie tot zes keer goedkoper dan een instap-thuisbatterij." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een compleet wateraccu-systeem kost ongeveer €1.000 tot €1.700, inclusief de regelunit (€400 tot €600), een elektrische boiler (€400 tot €700) en installatie (€200 tot €400). Heb je al een geschikte elektrische boiler, dan betaal je alleen de regelunit en installatie. Dat is drie tot zes keer goedkoper dan een instap-thuisbatterij."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoeveel bespaar je met een wateraccu?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een wateraccu verhoogt je eigen stroomverbruik van ongeveer 30% naar 60 à 70% en bespaart op de gasrekening. In een rekenvoorbeeld komt dat neer op zo'n €105 per jaar; leveranciers noemen tot €350 per jaar. Met slimme sturing op een dynamisch contract kan het voordeel oplopen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een wateraccu verhoogt je eigen stroomverbruik van ongeveer 30% naar 60 à 70% en bespaart op de gasrekening. In een rekenvoorbeeld komt dat neer op zo'n €105 per jaar; leveranciers noemen tot €350 per jaar. Met slimme sturing op een dynamisch contract kan het voordeel oplopen."
+            }
           },
           {
             "@type": "Question",
             "name": "Is een wateraccu goedkoper dan een thuisbatterij?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja, fors. Een wateraccu kost ongeveer €1.500 tegenover €4.000 tot €10.000 voor een thuisbatterij. De terugverdientijd is korter, maar een wateraccu slaat energie alleen op als warm water, niet als stroom voor andere apparaten." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja, fors. Een wateraccu kost ongeveer €1.500 tegenover €4.000 tot €10.000 voor een thuisbatterij. De terugverdientijd is korter, maar een wateraccu slaat energie alleen op als warm water, niet als stroom voor andere apparaten."
+            }
           },
           {
             "@type": "Question",
             "name": "Heb ik een speciale boiler nodig voor een wateraccu?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een gewone elektrische boiler volstaat, mits het een 'domme' boiler is zonder wifi of smart functies. De regelunit koppelt via de P1-poort van je slimme meter en stuurt het overschot van je zonnepanelen naar de boiler." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een gewone elektrische boiler volstaat, mits het een 'domme' boiler is zonder wifi of smart functies. De regelunit koppelt via de P1-poort van je slimme meter en stuurt het overschot van je zonnepanelen naar de boiler."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is een alternatief voor de NYMO wateraccu?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De NYMO moduleert het vermogen traploos tussen 100 en 3.000 watt. Eenvoudigere en goedkopere alternatieven schakelen de boiler alleen aan of uit — met een slimme stekker, een tijdschakelaar of via Home Assistant of Homey. Dat kost minder, maar benut een deel van het zonoverschot niet: bij weinig overschot krijgt de boiler dan niets in plaats van een beetje." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De NYMO moduleert het vermogen traploos tussen 100 en 3.000 watt. Eenvoudigere en goedkopere alternatieven schakelen de boiler alleen aan of uit — met een slimme stekker, een tijdschakelaar of via Home Assistant of Homey. Dat kost minder, maar benut een deel van het zonoverschot niet: bij weinig overschot krijgt de boiler dan niets in plaats van een beetje."
+            }
           },
           {
             "@type": "Question",
             "name": "Is er in 2026 subsidie voor een wateraccu?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee, anders dan bij thuisbatterijen is er in 2026 geen specifieke ISDE-subsidie voor wateraccu's. Controleer altijd de actuele regelingen via de RVO-subsidiewijzer." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee, anders dan bij thuisbatterijen is er in 2026 geen specifieke ISDE-subsidie voor wateraccu's. Controleer altijd de actuele regelingen via de RVO-subsidiewijzer."
+            }
           }
         ]
       }
@@ -133,7 +183,8 @@
       <h2>Wat kost een wateraccu?</h2>
       <p>De aanschaf- en installatiekosten van een wateraccu-systeem liggen doorgaans <strong>rond de €1.500</strong>, inclusief de regelunit en eventueel een nieuwe elektrische boiler als je die nog niet hebt. Dat is drie tot zes keer goedkoper dan een instap-thuisbatterij.</p>
 
-      <table>
+      <div class="table-wrap">
+        <table>
         <thead>
           <tr>
             <th>Onderdeel</th>
@@ -147,6 +198,7 @@
           <tr><td><strong>Totaal</strong></td><td><strong>~€1.000–€1.700</strong></td></tr>
         </tbody>
       </table>
+      </div>
 
       <p>Let op: heb je al een elektrische boiler, dan betaal je alleen voor de regelunit en installatie. Deze boiler moet dan wel 'dom' zijn — dus geen wifi of smart functies. Zijn er subsidies? Op dit moment is er geen specifieke ISDE-subsidie voor wateraccu's (in tegenstelling tot thuisbatterijen). Controleer altijd de actuele regelingen via de <a href="https://www.rvo.nl/" rel="noopener noreferrer" target="_blank">RVO-subsidiewijzer</a>.</p>
     </section>
@@ -170,7 +222,8 @@
     <section>
       <h2>Wateraccu vs. thuisbatterij: eerlijk vergeleken</h2>
 
-      <table>
+      <div class="table-wrap">
+        <table>
         <thead>
           <tr>
             <th></th>
@@ -190,6 +243,7 @@
           <tr><td>Koppeling dynamisch tarief</td><td>✅ Ja, met Homey</td><td>✅ Volledig</td></tr>
         </tbody>
       </table>
+      </div>
 
       <p>De wateraccu "wint" op prijs en terugverdientijd, maar kan de opgeslagen energie alleen als warm water teruggeven — niet als stroom voor andere apparaten. Voor wie primair wil besparen op gas en teruglevering wil beperken, is dat geen probleem.</p>
     </section>

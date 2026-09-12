@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Netcongestie en je stroomaansluiting vanaf 1 juli 2026", "item": "https://stroomvoorspeller.nl/kennisbank/netcongestie-aansluiting-2026" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Netcongestie en je stroomaansluiting vanaf 1 juli 2026",
+            "item": "https://stroomvoorspeller.nl/kennisbank/netcongestie-aansluiting-2026"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Netcongestie en je stroomaansluiting: wat verandert er voor huishoudens vanaf 1 juli 2026?",
         "description": "Vanaf 1 juli 2026 komen ook huishoudens op de wachtlijst voor een nieuwe of zwaardere stroomaansluiting. Wat verandert er, voor wie, en wat doe je nu?",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-06-19",
         "dateModified": "2026-06-19",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Wat verandert er op 1 juli 2026 voor huishoudens?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Vanaf 1 juli 2026 komen huishoudens voor een nieuwe of zwaardere stroomaansluiting op dezelfde wachtlijst als bedrijven. Netbeheerders mogen geen netcapaciteit meer apart houden voor kleinverbruikers; iedereen staat in één integrale wachtrij op volgorde van aanvraag." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Vanaf 1 juli 2026 komen huishoudens voor een nieuwe of zwaardere stroomaansluiting op dezelfde wachtlijst als bedrijven. Netbeheerders mogen geen netcapaciteit meer apart houden voor kleinverbruikers; iedereen staat in één integrale wachtrij op volgorde van aanvraag."
+            }
           },
           {
             "@type": "Question",
             "name": "Moet ik mijn aansluiting verzwaren vóór 1 juli 2026?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Alleen als je dit jaar verzwaringsplannen hebt, bijvoorbeeld voor een warmtepomp, laadpaal of thuisbatterij. Aanvragen die vóór 1 juli 2026 binnen zijn, worden nog volgens de huidige procedure beoordeeld. Daarna kun je in de nieuwe, langere wachtrij belanden." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Alleen als je dit jaar verzwaringsplannen hebt, bijvoorbeeld voor een warmtepomp, laadpaal of thuisbatterij. Aanvragen die vóór 1 juli 2026 binnen zijn, worden nog volgens de huidige procedure beoordeeld. Daarna kun je in de nieuwe, langere wachtrij belanden."
+            }
           },
           {
             "@type": "Question",
             "name": "Krijgen woningen voorrang op de wachtlijst?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja. Een woningaansluiting tot en met 3 × 35 ampère geldt als basisbehoefte en krijgt voorrang zodra er capaciteit vrijkomt. Voorrang betekent niet dat je direct wordt aangesloten: zit het lokale net helemaal vol, dan wacht ook een prioriteitsaanvraag." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja. Een woningaansluiting tot en met 3 × 35 ampère geldt als basisbehoefte en krijgt voorrang zodra er capaciteit vrijkomt. Voorrang betekent niet dat je direct wordt aangesloten: zit het lokale net helemaal vol, dan wacht ook een prioriteitsaanvraag."
+            }
           },
           {
             "@type": "Question",
             "name": "Verandert er iets aan mijn huidige stroomaansluiting?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. De regel gaat over nieuwe en zwaardere aansluitingen. Je bestaande aansluiting blijft werken en komt niet op een wachtlijst. Wel kan in drukke gebieden je teruglevering tijdelijk beperkt worden; dat staat los van deze wijziging." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. De regel gaat over nieuwe en zwaardere aansluitingen. Je bestaande aansluiting blijft werken en komt niet op een wachtlijst. Wel kan in drukke gebieden je teruglevering tijdelijk beperkt worden; dat staat los van deze wijziging."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoe weet ik of ik in een congestiegebied zit?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Gebruik de Stroomnetchecker van Netbeheer Nederland en vul je postcode in, of kijk op de site van je netbeheerder (Liander, Stedin of Enexis). De situatie kan zelfs per straat verschillen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Gebruik de Stroomnetchecker van Netbeheer Nederland en vul je postcode in, of kijk op de site van je netbeheerder (Liander, Stedin of Enexis). De situatie kan zelfs per straat verschillen."
+            }
           }
         ]
       }
@@ -140,7 +187,8 @@
       <h3>Voorrang is niet hetzelfde als direct aangesloten</h3>
       <p>Belangrijke nuance: voorrang betekent dat je vóór de niet-prioritaire aanvragen komt zodra er ruimte vrijkomt. Het betekent niet dat je meteen wordt aangesloten. Zit het lokale net helemaal vol, dan wacht ook een prioriteitsaanvraag tot er capaciteit bijkomt.</p>
 
-      <table>
+      <div class="table-wrap">
+        <table>
         <thead>
           <tr>
             <th>Voorrang (basisbehoefte)</th>
@@ -153,6 +201,7 @@
           <tr><td>Gas-, warmte- en telecomnetten</td><td>Datacenters, bioscopen, casino&rsquo;s</td></tr>
         </tbody>
       </table>
+      </div>
     </section>
 
     <section>
@@ -215,6 +264,11 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/netbeheerkosten-capaciteitstarief">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
+          <span class="kb-lees-ook-title">Netbeheerkosten 2026: wat is het capaciteitstarief en waarom betaalt iedereen hetzelfde?</span>
+          <span class="kb-lees-ook-meta">⏱ 6 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/terugleverbeperking">
           <span class="kb-lees-ook-tag">☀️ Zonnepanelen · Gemiddeld</span>
           <span class="kb-lees-ook-title">Terugleverbeperking door netcongestie: wat betekent dat voor jouw zonnepanelen?</span>

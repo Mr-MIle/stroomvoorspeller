@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Negatieve stroomprijzen", "item": "https://stroomvoorspeller.nl/kennisbank/negatieve-stroomprijzen" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Negatieve stroomprijzen",
+            "item": "https://stroomvoorspeller.nl/kennisbank/negatieve-stroomprijzen"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Negatieve stroomprijzen uitgelegd: wanneer kost terugleveren jou geld (en hoe voorkom je dat)?",
         "description": "Bij een negatieve stroomprijs betál je om stroom terug te leveren. In 2024 waren er al 458 negatieve uren. Hoe werkt het, en hoe bescherm jij je energierekening?",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-05-07",
         "dateModified": "2026-07-08",
         "inLanguage": "nl-NL",
@@ -58,32 +90,50 @@
           {
             "@type": "Question",
             "name": "Kan een negatieve prijs ook gelden voor mijn gasaansluiting?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. De negatieve-prijsverschijnselen spelen zich af op de stroommarkt. Gasprijzen werken anders en worden op een andere markt bepaald." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. De negatieve-prijsverschijnselen spelen zich af op de stroommarkt. Gasprijzen werken anders en worden op een andere markt bepaald."
+            }
           },
           {
             "@type": "Question",
             "name": "Betaal ik altijd bij negatieve prijzen als ik saldering heb?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Tot eind 2026 niet. De salderingsregeling beschermt je daartegen. Vanaf 2027 ben je volledig blootgesteld aan de uurprijs." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Tot eind 2026 niet. De salderingsregeling beschermt je daartegen. Vanaf 2027 ben je volledig blootgesteld aan de uurprijs."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoe negatief kan de stroomprijs worden?",
-            "acceptedAnswer": { "@type": "Answer", "text": "In extreme gevallen zakte de prijs in 2026 tot onder de −€0,50/kWh. Dit was bijvoorbeeld het geval op 1 mei 2026. Dat is zeldzaam, maar het toont aan dat het effect significant kan zijn." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "In extreme gevallen zakte de prijs in 2026 tot onder de −€0,50/kWh. Dit was bijvoorbeeld het geval op 1 mei 2026. Dat is zeldzaam, maar het toont aan dat het effect significant kan zijn."
+            }
           },
           {
             "@type": "Question",
             "name": "Moet ik mijn zonnepanelen uitzetten als de prijs negatief is?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Dat is verstandig als je een dynamisch contract hebt en geen batterij hebt. Bij saldering maakt het voor je jaarrekening geen verschil." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Dat is verstandig als je een dynamisch contract hebt en geen batterij hebt. Bij saldering maakt het voor je jaarrekening geen verschil."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoe vaak komen negatieve stroomprijzen voor in Nederland?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Het aantal negatieve uren stijgt snel: 315 uur in 2023, 458 uur in 2024 (bijna 5% van alle uren) en 584 uur in 2025. De trend zet door naarmate er meer zonne- en windcapaciteit wordt aangesloten." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Het aantal negatieve uren stijgt snel: 315 uur in 2023, 458 uur in 2024 (bijna 5% van alle uren) en 584 uur in 2025. De trend zet door naarmate er meer zonne- en windcapaciteit wordt aangesloten."
+            }
           },
           {
             "@type": "Question",
             "name": "Krijg ik geld toe als ik stroom verbruik bij een negatieve prijs?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Niet altijd. De marktprijs is dan negatief, maar over je verbruik betaal je nog energiebelasting en btw. Daardoor is afnemen vaak gratis of heel goedkoop, maar krijg je er meestal niet daadwerkelijk geld bij." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Niet altijd. De marktprijs is dan negatief, maar over je verbruik betaal je nog energiebelasting en btw. Daardoor is afnemen vaak gratis of heel goedkoop, maar krijg je er meestal niet daadwerkelijk geld bij."
+            }
           }
         ]
       }
@@ -227,6 +277,10 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/records">
+          <span class="kb-lees-ook-tag">⚡ Live prijzen</span>
+          <span class="kb-lees-ook-title">Records: hoogste en laagste stroomprijs ooit</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/energiebelasting-vaste-kosten-uitgelegd">
           <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
           <span class="kb-lees-ook-title">Wat betaal je écht per kWh? Energiebelasting en vaste kosten uitgelegd</span>

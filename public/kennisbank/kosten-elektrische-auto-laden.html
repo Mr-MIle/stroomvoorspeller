@@ -75,89 +75,99 @@
 
   <script type="application/ld+json">
   {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://stroomvoorspeller.nl/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Kennisbank",
-          "item": "https://stroomvoorspeller.nl/kennisbank/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Kosten elektrische auto laden",
-          "item": "https://stroomvoorspeller.nl/kennisbank/kosten-elektrische-auto-laden"
-        }
-      ]
-    },
-    {
-      "@type": "Article",
-      "headline": "Elektrische auto laden in 2026: thuis, publiek of snelladen — de kosten per kWh",
-      "description": "Thuis rond 16 cent, aan de paal 48 cent, snelladen 69 cent per kWh. Het verschil tussen de drie manieren, en waarom thuis op een dynamisch tarief wint.",
-      "author": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
         "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
         "name": "Stroomvoorspeller.nl",
-        "url": "https://stroomvoorspeller.nl/"
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
       },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Stroomvoorspeller.nl"
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Kosten elektrische auto laden",
+            "item": "https://stroomvoorspeller.nl/kennisbank/kosten-elektrische-auto-laden"
+          }
+        ]
       },
-      "datePublished": "2026-09-02",
-      "dateModified": "2026-09-02",
-      "inLanguage": "nl-NL",
-      "image": "https://stroomvoorspeller.nl/og-image.png",
-      "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/kosten-elektrische-auto-laden"
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Wat is de goedkoopste manier om je elektrische auto te laden?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Thuis laden op een dynamisch contract, en dan op de goedkope uren. Als je de auto in de nacht of rond het middaguur laadt, betaal je vaak zo'n 15 tot 18 cent per kWh, belasting inbegrepen. Aan een publieke paal betaal je gemiddeld 48 cent en bij een snellader ongeveer 69 cent. De prijs hangt dus vooral af van waar en wanneer je de stekker erin steekt."
-          }
+      {
+        "@type": "Article",
+        "headline": "Elektrische auto laden in 2026: thuis, publiek of snelladen — de kosten per kWh",
+        "description": "Thuis rond 16 cent, aan de paal 48 cent, snelladen 69 cent per kWh. Het verschil tussen de drie manieren, en waarom thuis op een dynamisch tarief wint.",
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
         },
-        {
-          "@type": "Question",
-          "name": "Hoeveel duurder is snelladen dan thuis laden?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Ongeveer vier keer zo duur. Thuis op een dynamisch tarief zit je rond 16 cent per kWh, een snellader rekent gemiddeld 69 cent. Voor een lading van 50 kWh is dat 8 euro thuis tegen 35 euro aan de snellader. Wie altijd snellaadt, betaalt over een jaar makkelijk 1.000 euro meer dan wie thuis laadt."
-          }
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
         },
-        {
-          "@type": "Question",
-          "name": "Kun je aan een publieke paal ook op een dynamisch tarief laden?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Nee. Bij een publieke paal betaal je het tarief dat de eigenaar van de paal heeft ingesteld, vaak met een laadpas of app. Dat tarief staat los van jouw energiecontract thuis. Sturen op de day-ahead-prijs kan alleen aan je eigen laadpaal of stopcontact, achter je eigen meter."
+        "datePublished": "2026-09-02",
+        "dateModified": "2026-09-02",
+        "inLanguage": "nl-NL",
+        "image": "https://stroomvoorspeller.nl/og-image.png",
+        "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/kosten-elektrische-auto-laden"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Wat is de goedkoopste manier om je elektrische auto te laden?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Thuis laden op een dynamisch contract, en dan op de goedkope uren. Als je de auto in de nacht of rond het middaguur laadt, betaal je vaak zo'n 15 tot 18 cent per kWh, belasting inbegrepen. Aan een publieke paal betaal je gemiddeld 48 cent en bij een snellader ongeveer 69 cent. De prijs hangt dus vooral af van waar en wanneer je de stekker erin steekt."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Hoeveel duurder is snelladen dan thuis laden?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ongeveer vier keer zo duur. Thuis op een dynamisch tarief zit je rond 16 cent per kWh, een snellader rekent gemiddeld 69 cent. Voor een lading van 50 kWh is dat 8 euro thuis tegen 35 euro aan de snellader. Wie altijd snellaadt, betaalt over een jaar makkelijk 1.000 euro meer dan wie thuis laadt."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Kun je aan een publieke paal ook op een dynamisch tarief laden?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Bij een publieke paal betaal je het tarief dat de eigenaar van de paal heeft ingesteld, vaak met een laadpas of app. Dat tarief staat los van jouw energiecontract thuis. Sturen op de day-ahead-prijs kan alleen aan je eigen laadpaal of stopcontact, achter je eigen meter."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Loont een eigen laadpaal als je maar weinig thuis kunt laden?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Dat hangt af van hoeveel kilometer je rijdt. Een simpele laadpaal kost rond 1.000 tot 1.500 euro inclusief installatie. Rijd je 15.000 kilometer en kun je het meeste thuis laden op een dynamisch tarief, dan bespaar je tegenover publiek laden zo'n 800 euro per jaar en is de paal binnen twee jaar terugverdiend. Laad je vooral onderweg, dan duurt dat een stuk langer."
+            }
           }
-        },
-        {
-          "@type": "Question",
-          "name": "Loont een eigen laadpaal als je maar weinig thuis kunt laden?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Dat hangt af van hoeveel kilometer je rijdt. Een simpele laadpaal kost rond 1.000 tot 1.500 euro inclusief installatie. Rijd je 15.000 kilometer en kun je het meeste thuis laden op een dynamisch tarief, dan bespaar je tegenover publiek laden zo'n 800 euro per jaar en is de paal binnen twee jaar terugverdiend. Laad je vooral onderweg, dan duurt dat een stuk langer."
-          }
-        }
-      ]
-    }
-  ]
-}
+        ]
+      }
+    ]
+  }
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>

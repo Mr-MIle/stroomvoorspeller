@@ -48,23 +48,55 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Thuisbatterij en energielabel", "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-energielabel" }
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
         ]
       },
       {
-        "@type": "TechArticle",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Thuisbatterij en energielabel",
+            "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-energielabel"
+          }
+        ]
+      },
+      {
+        "@type": "Article",
         "@id": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-energielabel",
         "headline": "Thuisbatterij en energielabel: wat verandert er vanaf 29 mei 2026?",
         "description": "Vanaf 29 mei 2026 telt een thuisbatterij mee voor je energielabel. Welke batterijen kwalificeren, hoeveel label-stappen win je en wat betekent dit voor je woningwaarde?",
         "datePublished": "2026-05-31",
         "dateModified": "2026-05-31",
         "inLanguage": "nl-NL",
-        "author": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" },
-        "publisher": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" }
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        }
       },
       {
         "@type": "FAQPage",
@@ -72,27 +104,42 @@
           {
             "@type": "Question",
             "name": "Telt mijn bestaande thuisbatterij automatisch mee voor mijn energielabel?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Alleen energielabels opgemaakt na 29 mei 2026 gebruiken de nieuwe NTA 8800-berekeningsmethode met batterij. Je bestaande label blijft geldig maar is berekend zonder de batterij. Wil je de batterij zichtbaar in je label, dan moet je een nieuwe EPA-opname laten uitvoeren." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Alleen energielabels opgemaakt na 29 mei 2026 gebruiken de nieuwe NTA 8800-berekeningsmethode met batterij. Je bestaande label blijft geldig maar is berekend zonder de batterij. Wil je de batterij zichtbaar in je label, dan moet je een nieuwe EPA-opname laten uitvoeren."
+            }
           },
           {
             "@type": "Question",
             "name": "Welke minimale capaciteit heeft mijn thuisbatterij nodig om mee te tellen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Minimaal 5 kWh bruikbare opslagcapaciteit. Batterijen met een kleinere capaciteit vallen buiten de NTA 8800-norm en hebben geen invloed op de labelberekening." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Minimaal 5 kWh bruikbare opslagcapaciteit. Batterijen met een kleinere capaciteit vallen buiten de NTA 8800-norm en hebben geen invloed op de labelberekening."
+            }
           },
           {
             "@type": "Question",
             "name": "Telt een plug-in thuisbatterij (stekkerbatterij) ook mee?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Plug-and-play batterijen die via een stopcontact werken, vallen buiten de NTA 8800-eisen. Alleen systemen met een vaste aansluiting op de elektrische installatie kwalificeren." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Plug-and-play batterijen die via een stopcontact werken, vallen buiten de NTA 8800-eisen. Alleen systemen met een vaste aansluiting op de elektrische installatie kwalificeren."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoeveel kost een nieuwe EPA-opname?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Gemiddeld tussen de 175 en 300 euro, afhankelijk van de adviseur en de grootte van je woning. Via ep-online.nl vind je gecertificeerde adviseurs bij jou in de buurt." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Gemiddeld tussen de 175 en 300 euro, afhankelijk van de adviseur en de grootte van je woning. Via ep-online.nl vind je gecertificeerde adviseurs bij jou in de buurt."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan een thuisbatterij mijn woning van label C naar label B tillen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Dat is mogelijk als je woning al dicht bij de klassengrens zit. De invloed is bescheiden (5-15% verbetering op de primaire fossiele energievraag). Laat een EPA-adviseur vooraf inschatten of een stap omhoog haalbaar is voor jouw situatie." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Dat is mogelijk als je woning al dicht bij de klassengrens zit. De invloed is bescheiden (5-15% verbetering op de primaire fossiele energievraag). Laat een EPA-adviseur vooraf inschatten of een stap omhoog haalbaar is voor jouw situatie."
+            }
           }
         ]
       }
@@ -238,6 +285,11 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/thuisbatterij-subsidie-2026">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Thuisbatterij subsidie 2026: bestaat die, en waar loop je op stuk? Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/batterij-berekenen">
           <span class="kb-lees-ook-tag">🔋 Rekentool</span>
           <span class="kb-lees-ook-title">Bereken wat een thuisbatterij jóu oplevert</span>

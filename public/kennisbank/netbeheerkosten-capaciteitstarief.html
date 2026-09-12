@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Netbeheerkosten 2026: wat is het capaciteitstarief?</title>
-  <meta name="description" content="Netbeheerkosten staan los van je verbruik en van je leverancier. Wat is het capaciteitstarief, waarom betaalt iedereen met een standaardaansluiting hetzelfde, en wat verandert er?" />
+  <meta name="description" content="Netbeheerkosten staan los van je verbruik en je leverancier. Wat het capaciteitstarief is, waarom iedereen hetzelfde betaalt, en wat er verandert." />
   <meta name="kb-categorie" content="Dynamisch contract" />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Netbeheerkosten en capaciteitstarief uitgelegd", "item": "https://stroomvoorspeller.nl/kennisbank/netbeheerkosten-capaciteitstarief" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Netbeheerkosten en capaciteitstarief uitgelegd",
+            "item": "https://stroomvoorspeller.nl/kennisbank/netbeheerkosten-capaciteitstarief"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Netbeheerkosten 2026 uitgelegd: wat is het capaciteitstarief en waarom betaalt iedereen hetzelfde?",
         "description": "Netbeheerkosten staan los van je verbruik en van je leverancier. Wat is het capaciteitstarief, waarom betaalt iedereen met een standaardaansluiting hetzelfde, en wat verandert er?",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-07-19",
         "dateModified": "2026-07-19",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Waarom staan netbeheerkosten los van mijn verbruik?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Omdat het tarief bij je aansluiting hoort: de zwaarte van je kabel en de meter. Dat heet het capaciteitstarief. Je verbruik telt niet mee. Of je nu 1.000 of 5.000 kWh per jaar gebruikt, het bedrag is hetzelfde — in 2026 zo'n 476 euro voor een standaardaansluiting bij Liander, Enexis of Stedin." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Omdat het tarief bij je aansluiting hoort: de zwaarte van je kabel en de meter. Dat heet het capaciteitstarief. Je verbruik telt niet mee. Of je nu 1.000 of 5.000 kWh per jaar gebruikt, het bedrag is hetzelfde — in 2026 zo'n 476 euro voor een standaardaansluiting bij Liander, Enexis of Stedin."
+            }
           },
           {
             "@type": "Question",
             "name": "Betaal ik minder netbeheerkosten met een 1x25A-aansluiting dan met 3x25A?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Het capaciteitstarief geldt als één tarief voor alle aansluitingen van 1x10A tot en met 3x25A. Een lichte 1x25A-aansluiting en een zware 3x25A-aansluiting kosten precies evenveel. Pas boven 3x25A (een dikkere aansluiting) ga je meer betalen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Het capaciteitstarief geldt als één tarief voor alle aansluitingen van 1x10A tot en met 3x25A. Een lichte 1x25A-aansluiting en een zware 3x25A-aansluiting kosten precies evenveel. Pas boven 3x25A (een dikkere aansluiting) ga je meer betalen."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik van netbeheerder wisselen om goedkoper uit te zijn?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Je netbeheerder hoort bij je regio en ligt vast: Liander in Noord-Holland, Gelderland, Flevoland en Friesland, Enexis in het zuiden en oosten, Stedin in de zuidelijke Randstad. Je kunt wel je leverancier kiezen (Tibber, Frank en de rest), maar niet je netbeheerder. De tarieven liggen trouwens dicht bij elkaar: in 2026 tussen 476 en 478 euro voor de drie grote." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Je netbeheerder hoort bij je regio en ligt vast: Liander in Noord-Holland, Gelderland, Flevoland en Friesland, Enexis in het zuiden en oosten, Stedin in de zuidelijke Randstad. Je kunt wel je leverancier kiezen (Tibber, Frank en de rest), maar niet je netbeheerder. De tarieven liggen trouwens dicht bij elkaar: in 2026 tussen 476 en 478 euro voor de drie grote."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik netbeheerkosten omlaag krijgen met een dynamisch contract?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nu niet. Een dynamisch contract laat je besparen op de leveringskant: de beursprijs per uur. De netbeheerkosten staan vast en bewegen niet mee met het tijdstip waarop je stroom gebruikt. Dat kan veranderen als er een tijdsafhankelijk nettarief komt; dan zou verbruik buiten de avondpiek ook je netkosten kunnen drukken." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nu niet. Een dynamisch contract laat je besparen op de leveringskant: de beursprijs per uur. De netbeheerkosten staan vast en bewegen niet mee met het tijdstip waarop je stroom gebruikt. Dat kan veranderen als er een tijdsafhankelijk nettarief komt; dan zou verbruik buiten de avondpiek ook je netkosten kunnen drukken."
+            }
           },
           {
             "@type": "Question",
             "name": "Gaat het capaciteitstarief verdwijnen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Misschien, op termijn. Toezichthouder ACM onderzoekt of het vaste capaciteitstarief plaats moet maken voor een tarief dat meekijkt naar je piekverbruik per kwartier. De consultatie start naar verwachting eind 2026, een besluit valt vermoedelijk rond 2027 of 2028. Zeker is het niet, en snel gaat het ook niet." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Misschien, op termijn. Toezichthouder ACM onderzoekt of het vaste capaciteitstarief plaats moet maken voor een tarief dat meekijkt naar je piekverbruik per kwartier. De consultatie start naar verwachting eind 2026, een besluit valt vermoedelijk rond 2027 of 2028. Zeker is het niet, en snel gaat het ook niet."
+            }
           }
         ]
       }
@@ -128,7 +175,8 @@
       <p>Het grootste deel van de netbeheerkosten is het <strong>capaciteitstarief</strong>. Dat hangt aan de zwaarte van je aansluiting: de dikte van je kabel en de zekering. Hoeveel stroom je er doorheen stuurt, telt niet mee. Vergelijk het met een waterleiding: je betaalt voor de dikte van de pijp die naar je huis loopt. Hoeveel liter je opdraait, staat daar los van.</p>
       <p>De meeste woningen hebben een aansluiting tussen 1×25A (één fase) en 3×25A (drie fasen, samen 17 kW). Voor die hele reeks geldt één en hetzelfde capaciteitstarief. Hieronder de bedragen voor 2026, inclusief btw, voor de drie grote netbeheerders.</p>
 
-      <table style="width:100%;border-collapse:collapse;font-size:0.95em;margin:1em 0;">
+      <div class="table-wrap">
+        <table style="width:100%;border-collapse:collapse;font-size:0.95em;margin:1em 0;">
         <thead>
           <tr style="background:var(--color-bg-alt,#f4f8ff);">
             <th style="text-align:left;padding:0.5em 0.8em;border-bottom:2px solid #dde3ea;">Netbeheerder</th>
@@ -154,6 +202,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <p>Het capaciteitstarief is de grootste brok. De rest van het totaal bestaat uit de aansluitdienst (een vast bedrag voor het in stand houden van je aansluiting) en het meettarief (voor je slimme meter). Samen komen ze voor een standaardaansluiting op zo'n 476 euro per jaar.</p>
 

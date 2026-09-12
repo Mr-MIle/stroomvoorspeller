@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Wat betaal je écht per kWh? Energiebelasting uitgelegd</title>
-  <meta name="description" content="Je ziet 5 cent op het scherm maar betaalt 22 cent op de rekening. Hoe? Dit artikel legt de energiebelasting, opslag, netwerkkosten en belastingvermindering helder uit — met rekenvoorbeelden." />
+  <meta name="description" content="Je ziet 5 cent op het scherm en betaalt 22 cent op de rekening. Energiebelasting, opslag, netwerkkosten en vermindering, met rekenvoorbeelden." />
   <meta name="kb-categorie" content="Dynamisch contract" />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Energiebelasting en vaste kosten uitgelegd", "item": "https://stroomvoorspeller.nl/kennisbank/energiebelasting-vaste-kosten-uitgelegd" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Energiebelasting en vaste kosten uitgelegd",
+            "item": "https://stroomvoorspeller.nl/kennisbank/energiebelasting-vaste-kosten-uitgelegd"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Wat betaal je écht per kWh? Energiebelasting en vaste kosten uitgelegd",
         "description": "Je ziet 5 cent op het scherm maar betaalt 22 cent op de rekening. Dit artikel legt de energiebelasting, opslag, netwerkkosten en belastingvermindering helder uit — met rekenvoorbeelden.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-05-17",
         "dateModified": "2026-05-17",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Waarom betaal ik 22 cent per kWh als de beursprijs maar 5 cent is?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Omdat er bovenop de beursprijs een vaste energiebelasting van ~11 ct/kWh zit, plus de opslag van je leverancier (~2 ct/kWh), en over alles 21% btw. De beursprijs is slechts één van de drie onderdelen — en bij lage beursprijzen het kleinste." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Omdat er bovenop de beursprijs een vaste energiebelasting van ~11 ct/kWh zit, plus de opslag van je leverancier (~2 ct/kWh), en over alles 21% btw. De beursprijs is slechts één van de drie onderdelen — en bij lage beursprijzen het kleinste."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is de vermindering energiebelasting en krijg ik die automatisch?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja, je krijgt die automatisch. Het is een vaste belastingkorting van €628,96 per jaar (2026) die je leverancier als aftrekpost op je maandfactuur verwerkt. Je hoeft er niets voor te doen of aan te vragen. Het geldt per elektriciteitsaansluiting met verblijfsfunctie — één keer per huishouden." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja, je krijgt die automatisch. Het is een vaste belastingkorting van €628,96 per jaar (2026) die je leverancier als aftrekpost op je maandfactuur verwerkt. Je hoeft er niets voor te doen of aan te vragen. Het geldt per elektriciteitsaansluiting met verblijfsfunctie — één keer per huishouden."
+            }
           },
           {
             "@type": "Question",
             "name": "Zijn netwerkkosten hetzelfde als leveringskosten?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee, dat zijn twee aparte dingen. Leveringskosten betaal je aan je energieleverancier (beursprijs + opslag). Netwerkkosten betaal je aan de netbeheerder van jouw regio (Enexis, Liander of Stedin). Ze staan vaak op aparte facturen en zijn niet afhankelijk van je verbruik — het is een vast bedrag per jaar." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee, dat zijn twee aparte dingen. Leveringskosten betaal je aan je energieleverancier (beursprijs + opslag). Netwerkkosten betaal je aan de netbeheerder van jouw regio (Enexis, Liander of Stedin). Ze staan vaak op aparte facturen en zijn niet afhankelijk van je verbruik — het is een vast bedrag per jaar."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan de consumentenprijs echt negatief worden?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Pas als de beursprijs (EPEX) zakt onder circa -10,9 cent per kWh valt de all-in leveringsprijs precies op nul euro. Dat komt doordat de energiebelasting van ~9,16 ct/kWh (excl. btw) altijd meegeteld wordt. In de praktijk bereiken beursprijzen zelden dat niveau." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Pas als de beursprijs (EPEX) zakt onder circa -10,9 cent per kWh valt de all-in leveringsprijs precies op nul euro. Dat komt doordat de energiebelasting van ~9,16 ct/kWh (excl. btw) altijd meegeteld wordt. In de praktijk bereiken beursprijzen zelden dat niveau."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is ODE en staat dat apart op mijn rekening?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De ODE (Opslag Duurzame Energie) is sinds 2023 samengevoegd met de energiebelasting. Je ziet hem niet meer als aparte post — hij zit verwerkt in het energiebelastingtarief van 11 ct/kWh." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De ODE (Opslag Duurzame Energie) is sinds 2023 samengevoegd met de energiebelasting. Je ziet hem niet meer als aparte post — hij zit verwerkt in het energiebelastingtarief van 11 ct/kWh."
+            }
           }
         ]
       }
@@ -162,7 +209,8 @@
       <p>Naast de leveringskosten betaal je ook voor het gebruik van het stroomnet zelf. Die <strong>netwerkkosten</strong> (ook: netbeheerkosten) gaan naar de netbeheerder van jouw regio — Enexis, Liander of Stedin — en staan <em>los</em> van je energieleverancier. Ze verschijnen soms op een aparte factuur.</p>
       <p>Het opvallende aan netwerkkosten voor huishoudens: <strong>ze zijn niet afhankelijk van je verbruik</strong>. Je betaalt een vast capaciteitstarief op basis van de zekeringcapaciteit van je aansluiting. Een standaard woning heeft een 3×25A-aansluiting (17 kW). De totale jaarkosten daarvoor in 2026, inclusief alle onderdelen:</p>
 
-      <table style="width:100%;border-collapse:collapse;font-size:0.95em;margin:1em 0;">
+      <div class="table-wrap">
+        <table style="width:100%;border-collapse:collapse;font-size:0.95em;margin:1em 0;">
         <thead>
           <tr style="background:var(--color-bg-alt,#f4f8ff);">
             <th style="text-align:left;padding:0.5em 0.8em;border-bottom:2px solid #dde3ea;">Netbeheerder</th>
@@ -184,6 +232,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <p>Het tarief bestaat uit een aantal onderdelen: de aansluitvergoeding, het transportonafhankelijke tarief (ook wel het vastrecht genoemd), het capaciteitstarief en het meettarief.</p>
       <p><strong>Praktisch gevolg:</strong> hoeveel je ook bespaart op de variabele leveringskosten, de netwerkkosten lopen altijd door. Ze zijn niet weg te optimaliseren via een slim contract of tijdstip van verbruik.</p>
@@ -196,7 +245,8 @@
       <h3>Per uur: wat kost een kWh bij verschillende beursprijzen?</h3>
       <p>De onderstaande tabel gebruikt de gemiddelde leverancieropslag van dynamische contracten (~1,78 ct/kWh excl. btw). Alle bedragen zijn <strong>inclusief btw</strong>, exclusief netwerkkosten.</p>
 
-      <table style="width:100%;border-collapse:collapse;font-size:0.95em;margin:1em 0;">
+      <div class="table-wrap">
+        <table style="width:100%;border-collapse:collapse;font-size:0.95em;margin:1em 0;">
         <thead>
           <tr style="background:var(--color-bg-alt,#f4f8ff);">
             <th style="text-align:left;padding:0.5em 0.8em;border-bottom:2px solid #dde3ea;">Situatie</th>
@@ -238,6 +288,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <p>Het aandeel belasting + opslag is bij <em>goedkope uren</em> het grootst. Dat is logisch: die vaste ~13 ct/kWh verdwijnt niet als de beursprijs laag is — hij vormt dan een groter deel van de uiteindelijke prijs. Dit is ook waarom de consumentenprijs bij een <em>negatieve</em> beursprijs van −0,06 €/kWh nog altijd positief is (5,98 ct/kWh).</p>
       <p>De beursprijs moet zelfs zakken tot onder circa <strong>−10,9 cent per kWh</strong> voordat de all-in leveringsprijs voor de consument negatief wordt. Zoiets komt uiterst zelden voor.</p>
@@ -246,7 +297,8 @@
       <h3>Per jaar: de complete rekening voor een gemiddeld huishouden</h3>
       <p><strong>Aannames:</strong> verbruik 2.400 kWh/jaar · aanbieder Frank Energie (opslag 1,50 ct/kWh excl. btw, vast €7,00/mnd incl. btw) · gemiddelde beursprijs 100 €/MWh (= 10 cent/kWh excl.) · netbeheerder Liander (3×25A)</p>
 
-      <table style="width:100%;border-collapse:collapse;font-size:0.95em;margin:1em 0;">
+      <div class="table-wrap">
+        <table style="width:100%;border-collapse:collapse;font-size:0.95em;margin:1em 0;">
         <thead>
           <tr style="background:var(--color-bg-alt,#f4f8ff);">
             <th style="text-align:left;padding:0.5em 0.8em;border-bottom:2px solid #dde3ea;" colspan="2">Post</th>
@@ -307,6 +359,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <p>Wat opvalt: de energiebelasting (€266/jaar) is de grootste variabele post, maar de vermindering van €629 absorbeert die volledig én slokt ook het grootste deel van de leverancieropslag en beursprijs op. Het leeuwendeel van de rekening bestaat daardoor uit netwerkkosten.</p>
     </section>
@@ -358,6 +411,11 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/netbeheerkosten-capaciteitstarief">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
+          <span class="kb-lees-ook-title">Netbeheerkosten 2026: wat is het capaciteitstarief en waarom betaalt iedereen hetzelfde?</span>
+          <span class="kb-lees-ook-meta">⏱ 6 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/negatieve-stroomprijzen">
           <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
           <span class="kb-lees-ook-title">Negatieve stroomprijzen uitgelegd: wanneer kost terugleveren jou geld?</span>

@@ -67,11 +67,37 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Hoeveel bespaar je met een dynamisch energiecontract?", "item": "https://stroomvoorspeller.nl/kennisbank/hoeveel-bespaar-je-dynamisch-contract" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Hoeveel bespaar je met een dynamisch energiecontract?",
+            "item": "https://stroomvoorspeller.nl/kennisbank/hoeveel-bespaar-je-dynamisch-contract"
+          }
         ]
       },
       {
@@ -82,8 +108,14 @@
         "datePublished": "2026-06-14",
         "dateModified": "2026-06-14",
         "inLanguage": "nl-NL",
-        "author": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" },
-        "publisher": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" }
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        }
       },
       {
         "@type": "FAQPage",
@@ -91,22 +123,34 @@
           {
             "@type": "Question",
             "name": "Bespaar ik gegarandeerd met een dynamisch contract?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Gemiddeld is dynamisch de afgelopen jaren goedkoper geweest, maar dat is geen garantie. Verander je niets aan je verbruik, dan is het verschil klein. Het voordeel zit in het verschuiven naar goedkope uren." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Gemiddeld is dynamisch de afgelopen jaren goedkoper geweest, maar dat is geen garantie. Verander je niets aan je verbruik, dan is het verschil klein. Het voordeel zit in het verschuiven naar goedkope uren."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoeveel verbruik kan ik realistisch verschuiven?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Voor een gemiddeld huishouden is grofweg 20 tot 40 procent van het verbruik flexibel: wasmachine, droger, vaatwasser, het laden van een auto en warm water. Vaste basislast zoals de koelkast, verlichting en apparaten op standby kun je niet verplaatsen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Voor een gemiddeld huishouden is grofweg 20 tot 40 procent van het verbruik flexibel: wasmachine, droger, vaatwasser, het laden van een auto en warm water. Vaste basislast zoals de koelkast, verlichting en apparaten op standby kun je niet verplaatsen."
+            }
           },
           {
             "@type": "Question",
             "name": "Tellen mijn zonnepanelen mee?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja. Met zonnepanelen verbruik je een deel van je stroom zelf en lever je de rest terug tegen het uurtarief. Op zonnige momenten kan dat tarief laag of zelfs negatief zijn. Slim eigen verbruik verhoogt je voordeel." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja. Met zonnepanelen verbruik je een deel van je stroom zelf en lever je de rest terug tegen het uurtarief. Op zonnige momenten kan dat tarief laag of zelfs negatief zijn. Slim eigen verbruik verhoogt je voordeel."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat als de beursprijzen stijgen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Dan stijgt ook je dynamische tarief mee — dat is het marktrisico. In een dure, koude en windstille periode kan dynamisch tijdelijk juist duurder uitvallen dan vast. Het rekenvoorbeeld in dit artikel gaat uit van normale prijsjaren." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Dan stijgt ook je dynamische tarief mee — dat is het marktrisico. In een dure, koude en windstille periode kan dynamisch tijdelijk juist duurder uitvallen dan vast. Het rekenvoorbeeld in dit artikel gaat uit van normale prijsjaren."
+            }
           }
         ]
       }
@@ -150,7 +194,8 @@
     <h2>Het rekenvoorbeeld: een huishouden met 2.500 kWh</h2>
     <p>Neem een huishouden dat 2.500 kWh stroom per jaar gebruikt — ongeveer het Nederlandse gemiddelde. De tabel hieronder vergelijkt de jaarlijkse leveringskosten bij een vast contract met drie dynamische scenario's. De netbeheerkosten en de belastingvermindering laten we weg, want die zijn in alle gevallen gelijk; het gaat puur om het deel waar je iets aan kunt veranderen.</p>
 
-    <table class="besparing-table">
+    <div class="table-wrap">
+      <table class="besparing-table">
       <thead>
         <tr>
           <th>Situatie</th>
@@ -186,6 +231,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
     <p class="table-note">Illustratief voorbeeld op basis van prijsniveaus 2026. Je werkelijke besparing hangt af van de beursprijzen (die per jaar verschillen) en van hoeveel van je verbruik je echt kunt verschuiven.</p>
 
     <h3>Scenario A — je verandert niets</h3>
@@ -230,6 +276,21 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/p1-data-gebruiken">
+          <span class="kb-lees-ook-tag">💡 Slim besparen · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Je P1-meter draait, en dan? Van sluipverbruik tot je eigen kWh-prijs Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 9 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/netbeheerkosten-capaciteitstarief">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
+          <span class="kb-lees-ook-title">Netbeheerkosten 2026: wat is het capaciteitstarief en waarom betaalt iedereen hetzelfde?</span>
+          <span class="kb-lees-ook-meta">⏱ 6 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/dynamisch-of-vast-contract">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
+          <span class="kb-lees-ook-title">Wanneer een vast en wanneer een dynamisch contract? Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/batterij-berekenen">
           <span class="kb-lees-ook-tag">🔋 Rekentool</span>
           <span class="kb-lees-ook-title">Bereken wat een thuisbatterij jóu oplevert</span>

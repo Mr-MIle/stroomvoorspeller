@@ -59,19 +59,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Kwartierprijzen stroom", "item": "https://stroomvoorspeller.nl/kennisbank/kwartierprijzen-stroom" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Kwartierprijzen stroom",
+            "item": "https://stroomvoorspeller.nl/kennisbank/kwartierprijzen-stroom"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Kwartierprijzen stroom: van uur naar kwartier op de day-ahead-markt (2026)",
         "description": "Sinds oktober 2025 kent de day-ahead-markt 96 kwartierprijzen per dag in plaats van 24 uurprijzen. Wat verandert er voor je dynamische contract en je batterij?",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-07-12",
         "dateModified": "2026-07-12",
         "inLanguage": "nl-NL",
@@ -84,27 +116,42 @@
           {
             "@type": "Question",
             "name": "Sinds wanneer zijn er kwartierprijzen voor stroom?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Sinds oktober 2025 zet de day-ahead-markt de prijs per kwartier vast: 96 prijzen per dag in plaats van 24 uurprijzen. De verandering sluit de day-ahead-markt aan op de intraday- en balansmarkt, die al langer per kwartier rekenen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sinds oktober 2025 zet de day-ahead-markt de prijs per kwartier vast: 96 prijzen per dag in plaats van 24 uurprijzen. De verandering sluit de day-ahead-markt aan op de intraday- en balansmarkt, die al langer per kwartier rekenen."
+            }
           },
           {
             "@type": "Question",
             "name": "Betaal ik nu automatisch per kwartier?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Niet per se. Sommige leveranciers rekenen elk kwartier apart af, andere nemen nog het uurgemiddelde en rekenen een prijs per uur. In je voorwaarden of in de app zie je meestal welke van de twee je hebt. Het staat er niet altijd even duidelijk, dus vraag het na als je twijfelt." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Niet per se. Sommige leveranciers rekenen elk kwartier apart af, andere nemen nog het uurgemiddelde en rekenen een prijs per uur. In je voorwaarden of in de app zie je meestal welke van de twee je hebt. Het staat er niet altijd even duidelijk, dus vraag het na als je twijfelt."
+            }
           },
           {
             "@type": "Question",
             "name": "Merk ik het verschil op mijn energierekening?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Voor de meeste huishoudens is het verschil klein: een paar cent per kilowattuur op losse kwartieren. Het grootste voordeel is voor wie automatisch stuurt met een thuisbatterij, een slimme laadpaal of een warmtepomp. Die kunnen wel precies op het goedkoopste kwartier mikken." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Voor de meeste huishoudens is het verschil klein: een paar cent per kilowattuur op losse kwartieren. Het grootste voordeel is voor wie automatisch stuurt met een thuisbatterij, een slimme laadpaal of een warmtepomp. Die kunnen wel precies op het goedkoopste kwartier mikken."
+            }
           },
           {
             "@type": "Question",
             "name": "Zijn kwartierprijzen goed of slecht nieuws?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Allebei een beetje. De dalen en de pieken worden scherper. Kun je je verbruik naar een goedkoop kwartier verschuiven, dan win je iets meer dan vroeger. Draai je een zware verbruiker precies in het duurste kwartier, dan betaal je ook meer." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Allebei een beetje. De dalen en de pieken worden scherper. Kun je je verbruik naar een goedkoop kwartier verschuiven, dan win je iets meer dan vroeger. Draai je een zware verbruiker precies in het duurste kwartier, dan betaal je ook meer."
+            }
           },
           {
             "@type": "Question",
             "name": "Voorspelt stroomvoorspeller.nl ook per kwartier?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De day-ahead-prijzen toont de site per uur en per kwartier, met een knop om te wisselen. De voorspelling van 5 tot 7 dagen vooruit houdt de site op uurniveau. Zo ver vooruit is een kwartiervoorspelling schijnnauwkeurig: de onzekerheid is groter dan het verschil tussen twee kwartieren." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De day-ahead-prijzen toont de site per uur en per kwartier, met een knop om te wisselen. De voorspelling van 5 tot 7 dagen vooruit houdt de site op uurniveau. Zo ver vooruit is een kwartiervoorspelling schijnnauwkeurig: de onzekerheid is groter dan het verschil tussen twee kwartieren."
+            }
           }
         ]
       }
@@ -233,6 +280,11 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/stroomprijzen-morgen-bekend">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
+          <span class="kb-lees-ook-title">Hoe laat komen de stroomprijzen voor morgen bekend? Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 6 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/">
           <span class="kb-lees-ook-tag">⚡ Prijzen</span>
           <span class="kb-lees-ook-title">Bekijk de actuele uurprijzen en kwartierprijzen</span>

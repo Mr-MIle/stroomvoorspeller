@@ -33,23 +33,55 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Teruglevertarief vergelijken 2026", "item": "https://stroomvoorspeller.nl/kennisbank/teruglevertarief-vergelijken" }
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
         ]
       },
       {
-        "@type": "TechArticle",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Teruglevertarief vergelijken 2026",
+            "item": "https://stroomvoorspeller.nl/kennisbank/teruglevertarief-vergelijken"
+          }
+        ]
+      },
+      {
+        "@type": "Article",
         "@id": "https://stroomvoorspeller.nl/kennisbank/teruglevertarief-vergelijken",
         "headline": "Teruglevertarief vergelijken 2026: welke aanbieder betaalt het meeste voor jouw zonnestroom?",
         "description": "NextEnergy, Zonneplan en Frank Energie betalen een bonus bij teruglevering. Tibber rekent juist kosten. Vergelijk alle 11 aanbieders en bereken wat het jaarlijks scheelt.",
         "datePublished": "2026-05-30",
         "dateModified": "2026-05-30",
         "inLanguage": "nl-NL",
-        "author": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" },
-        "publisher": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" }
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        }
       },
       {
         "@type": "FAQPage",
@@ -57,27 +89,42 @@
           {
             "@type": "Question",
             "name": "Wat is een terugleververgoeding?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een terugleververgoeding is het bedrag dat je energieleverancier betaalt voor elke kilowattuur zonnestroom die je teruglevert aan het net. Hoeveel je krijgt verschilt sterk per aanbieder: sommigen betalen de kale spotprijs plus een bonus, anderen rekenen juist een kostenopslag." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een terugleververgoeding is het bedrag dat je energieleverancier betaalt voor elke kilowattuur zonnestroom die je teruglevert aan het net. Hoeveel je krijgt verschilt sterk per aanbieder: sommigen betalen de kale spotprijs plus een bonus, anderen rekenen juist een kostenopslag."
+            }
           },
           {
             "@type": "Question",
             "name": "Welke aanbieder geeft de hoogste terugleververgoeding in 2026?",
-            "acceptedAnswer": { "@type": "Answer", "text": "In 2026 zijn NextEnergy en Zonneplan de gunstigste keuze voor wie veel teruglevert. NextEnergy betaalt 50% bonus op de beursprijs; Zonneplan betaalt (spotprijs + €0,02) × 1,10. Tibber is per 1 januari 2026 juist omgeslagen: die rekent een kostenopslag van circa €0,025 per kWh op teruggeleverde stroom." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "In 2026 zijn NextEnergy en Zonneplan de gunstigste keuze voor wie veel teruglevert. NextEnergy betaalt 50% bonus op de beursprijs; Zonneplan betaalt (spotprijs + €0,02) × 1,10. Tibber is per 1 januari 2026 juist omgeslagen: die rekent een kostenopslag van circa €0,025 per kWh op teruggeleverde stroom."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat doet Tibber met teruglevering van zonnepanelen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Vanaf 1 januari 2026 rekent Tibber een opslag van circa €0,025 per kWh op alle stroom die je teruglevert. Je ontvangt nog wel de kale spotprijs per kWh, maar na aftrek van de kostenopslag hou je minder over dan bij concurrenten die een bonus betalen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Vanaf 1 januari 2026 rekent Tibber een opslag van circa €0,025 per kWh op alle stroom die je teruglevert. Je ontvangt nog wel de kale spotprijs per kWh, maar na aftrek van de kostenopslag hou je minder over dan bij concurrenten die een bonus betalen."
+            }
           },
           {
             "@type": "Question",
             "name": "Maakt het veel uit welke leverancier ik kies als ik veel zonnepanelen heb?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja, het verschil kan oplopen tot bijna €200 per jaar bij 3.500 kWh jaarlijkse teruglevering. Dat is het gevolg van het grote tariefverschil tussen aanbieders die een bonus betalen en Tibber dat een kostenopslag hanteert." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja, het verschil kan oplopen tot bijna €200 per jaar bij 3.500 kWh jaarlijkse teruglevering. Dat is het gevolg van het grote tariefverschil tussen aanbieders die een bonus betalen en Tibber dat een kostenopslag hanteert."
+            }
           },
           {
             "@type": "Question",
             "name": "Wanneer maakt het teruglevertarief weinig uit?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Als je weinig terugelevert — bijvoorbeeld omdat je een wateraccu, thuisbatterij of slimme verbruiksplanning hebt — dan is het tariefverschil klein. Bij minder dan 1.000 kWh teruglevering per jaar scheelt het doorgaans minder dan €50 per jaar." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Als je weinig terugelevert — bijvoorbeeld omdat je een wateraccu, thuisbatterij of slimme verbruiksplanning hebt — dan is het tariefverschil klein. Bij minder dan 1.000 kWh teruglevering per jaar scheelt het doorgaans minder dan €50 per jaar."
+            }
           }
         ]
       }
@@ -125,7 +172,8 @@
     <h2>Vergelijking alle aanbieders (mei 2026)</h2>
     <p>Hieronder staan alle dynamische energieleveranciers die op <a href="/aanbieders">stroomvoorspeller.nl</a> worden vermeld, gesorteerd van gunstigste naar minst gunstige teruglevertarief.</p>
 
-    <table>
+    <div class="table-wrap">
+      <table>
       <thead>
         <tr>
           <th>Aanbieder</th>
@@ -215,13 +263,15 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
     <p style="font-size:0.85em; color:#666; margin-top:6px;">Tarieven gebaseerd op gepubliceerde voorwaarden mei 2026. Spotprijs-voorbeeld van €0,07/kWh is een realistisch gemiddelde op zonne-uren (middaguren). Controleer altijd de actuele voorwaarden op de website van de aanbieder zelf — formules kunnen wijzigen.</p>
 
     <h2>Rekenvoorbeeld: wat scheelt het per jaar?</h2>
     <p>Stel: je hebt 10 zonnepanelen en levert jaarlijks <strong>3.500 kWh</strong> terug aan het net. De gemiddelde spotprijs op het moment dat je teruglevert is €0,07/kWh — een realistische schatting voor zonne-uren in Nederland.</p>
 
-    <table>
+    <div class="table-wrap">
+      <table>
       <thead>
         <tr>
           <th>Aanbieder</th>
@@ -257,6 +307,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
     <p>Het verschil tussen NextEnergy en Tibber: <strong>€194 per jaar</strong> — alleen door de keuze van aanbieder, zonder één paneel extra of één kWh minder verbruik.</p>
 

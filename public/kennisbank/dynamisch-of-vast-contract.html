@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Wanneer een vast en wanneer een dynamisch contract?", "item": "https://stroomvoorspeller.nl/kennisbank/dynamisch-of-vast-contract" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Wanneer een vast en wanneer een dynamisch contract?",
+            "item": "https://stroomvoorspeller.nl/kennisbank/dynamisch-of-vast-contract"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Wanneer een vast en wanneer een dynamisch contract?",
         "description": "Dynamisch is gemiddeld goedkoper, maar niet voor iedereen. Een eerlijke afweging tussen vast en dynamisch, met een rekensom en een korte keuzehulp.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-09-06",
         "dateModified": "2026-09-06",
         "inLanguage": "nl-NL",
@@ -58,22 +90,34 @@
           {
             "@type": "Question",
             "name": "Is een dynamisch contract altijd goedkoper dan een vast contract?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Gemiddeld over de afgelopen jaren wel, maar niet in elke maand en niet voor elk huishouden. Verbruik je vooral in de dure avonduren en kun je niets verschuiven, dan kan een vast tarief voor jou goedkoper uitvallen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Gemiddeld over de afgelopen jaren wel, maar niet in elke maand en niet voor elk huishouden. Verbruik je vooral in de dure avonduren en kun je niets verschuiven, dan kan een vast tarief voor jou goedkoper uitvallen."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik zomaar overstappen van vast naar dynamisch?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Meestal wel, en vaak boetevrij. Zit je nog in een vast contract met een resterende looptijd, dan kan er een opzegvergoeding gelden." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Meestal wel, en vaak boetevrij. Zit je nog in een vast contract met een resterende looptijd, dan kan er een opzegvergoeding gelden."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat gebeurt er met mijn contract als de prijzen weer stijgen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Bij dynamisch merk je dat meteen, bij vast pas als je nieuwe contract ingaat. Een vast contract dat je nu afsluit, beschermt je tegen stijging, maar ook tegen daling. Je zit eraan vast." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bij dynamisch merk je dat meteen, bij vast pas als je nieuwe contract ingaat. Een vast contract dat je nu afsluit, beschermt je tegen stijging, maar ook tegen daling. Je zit eraan vast."
+            }
           },
           {
             "@type": "Question",
             "name": "Bestaat er een mengvorm tussen vast en dynamisch?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Sommige leveranciers bieden een vast tarief voor een deel van je verbruik en variabel voor de rest, of een maandgemiddelde in plaats van uurprijzen. Kijk goed wat je dan koopt; een gemiddeld maandtarief is iets anders dan de echte uurprijs." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sommige leveranciers bieden een vast tarief voor een deel van je verbruik en variabel voor de rest, of een maandgemiddelde in plaats van uurprijzen. Kijk goed wat je dan koopt; een gemiddeld maandtarief is iets anders dan de echte uurprijs."
+            }
           }
         ]
       }
@@ -187,6 +231,11 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/thuisbatterij-zonder-zonnepanelen">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Thuisbatterij zonder zonnepanelen: loont het in 2026 op een dynamisch contract? Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/nadelen-dynamisch-energiecontract">
           <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
           <span class="kb-lees-ook-title">Dynamisch energiecontract: de nadelen op een rij — en voor wie het juist niet werkt</span>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Zonnepanelen uitzetten bij negatieve stroomprijs</title>
-  <meta name="description" content="Bij negatieve stroomprijs betaal je om terug te leveren. Moet je zonnepanelen dan automatisch uitzetten? Wat werkt per omvormer-merk, welke diensten zijn er, en wat als je ook een batterij hebt?" />
+  <meta name="description" content="Bij een negatieve stroomprijs betaal je om terug te leveren. Wanneer loont uitzetten, wat kan per omvormer-merk, en wat als je een batterij hebt?" />
   <meta name="kb-categorie" content="Zonnepanelen" />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Zonnepanelen uitzetten bij negatieve stroomprijs", "item": "https://stroomvoorspeller.nl/kennisbank/zonnepanelen-uitzetten-negatieve-prijs" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Zonnepanelen uitzetten bij negatieve stroomprijs",
+            "item": "https://stroomvoorspeller.nl/kennisbank/zonnepanelen-uitzetten-negatieve-prijs"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Zonnepanelen uitzetten bij negatieve stroomprijs: hoe werkt het en is het slim?",
         "description": "Bij negatieve stroomprijs betaal je om terug te leveren. Moet je zonnepanelen dan automatisch uitzetten? Wat werkt per omvormer-merk, welke diensten zijn er, en wat als je ook een batterij hebt?",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-05-02",
         "dateModified": "2026-07-08",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Moet ik mijn zonnepanelen uitzetten bij een negatieve stroomprijs?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Het loont als je een dynamisch contract hebt en geen batterij, omdat je dan betaalt om terug te leveren. Heb je een thuisbatterij, stuur dan het hele systeem aan in plaats van alleen de panelen. Bij saldering (tot eind 2026) maakt het voor je jaarrekening geen verschil." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Het loont als je een dynamisch contract hebt en geen batterij, omdat je dan betaalt om terug te leveren. Heb je een thuisbatterij, stuur dan het hele systeem aan in plaats van alleen de panelen. Bij saldering (tot eind 2026) maakt het voor je jaarrekening geen verschil."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is het verschil tussen uitzetten en dimmen van zonnepanelen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Bij volledig uitzetten (Zero Export) produceert de omvormer tijdelijk niets. Bij dimmen beperkt de omvormer zijn vermogen tot wat je zelf verbruikt, zodat er netto niets naar het net gaat. Dimmen is technisch netter en spaart je omvormer, omdat frequente aan/uit-cycli de hardware sneller laten slijten." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bij volledig uitzetten (Zero Export) produceert de omvormer tijdelijk niets. Bij dimmen beperkt de omvormer zijn vermogen tot wat je zelf verbruikt, zodat er netto niets naar het net gaat. Dimmen is technisch netter en spaart je omvormer, omdat frequente aan/uit-cycli de hardware sneller laten slijten."
+            }
           },
           {
             "@type": "Question",
             "name": "Welke omvormers kunnen automatisch uitschakelen bij negatieve prijzen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Merken als SolarEdge, Hoymiles, Huawei, Goodwe, Sungrow en Solis ondersteunen dit via hun eigen app of cloud. Fronius en Enphase hebben geen native prijskoppeling en vereisen een externe tool zoals Home Assistant of EVCC. Functionaliteit verschilt per firmware en regio-instelling." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Merken als SolarEdge, Hoymiles, Huawei, Goodwe, Sungrow en Solis ondersteunen dit via hun eigen app of cloud. Fronius en Enphase hebben geen native prijskoppeling en vereisen een externe tool zoals Home Assistant of EVCC. Functionaliteit verschilt per firmware en regio-instelling."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat moet ik doen als ik naast zonnepanelen ook een thuisbatterij heb?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Stuur het hele systeem aan, niet alleen de panelen. Bij een hybride omvormer gaat dat automatisch goed: het systeem laadt de batterij met het zonneoverschot. Bij een AC-gekoppeld of standalone systeem heb je een slimme automatisering nodig (zoals Home Assistant of EVCC) die panelen én batterij tegelijk aanstuurt, anders kan het averechts werken." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Stuur het hele systeem aan, niet alleen de panelen. Bij een hybride omvormer gaat dat automatisch goed: het systeem laadt de batterij met het zonneoverschot. Bij een AC-gekoppeld of standalone systeem heb je een slimme automatisering nodig (zoals Home Assistant of EVCC) die panelen én batterij tegelijk aanstuurt, anders kan het averechts werken."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik zelf instellen vanaf welke prijs de panelen uitgaan?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Niet bij elke oplossing. Diensten als Zonneplan Powerplay en Zonnedimmer.nl hanteren een vaste grens. Wil je de drempel zelf bepalen, dan zijn Home Assistant, EVCC of Homey de flexibele keuzes, maar die vereisen wat technische kennis." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Niet bij elke oplossing. Diensten als Zonneplan Powerplay en Zonnedimmer.nl hanteren een vaste grens. Wil je de drempel zelf bepalen, dan zijn Home Assistant, EVCC of Homey de flexibele keuzes, maar die vereisen wat technische kennis."
+            }
           }
         ]
       }
@@ -128,7 +175,8 @@
       <h2>Welke omvormers ondersteunen dit van zichzelf?</h2>
       <p>Of automatisch dimmen of uitzetten bij negatieve prijzen werkt, hangt sterk af van je omvormer-merk. Hieronder een overzicht van de meest voorkomende merken in Nederland.</p>
 
-      <table>
+      <div class="table-wrap">
+        <table>
         <thead>
           <tr>
             <th>Merk</th>
@@ -184,6 +232,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <p>Belangrijk voorbehoud: de functionaliteit verschilt vaak per firmware-versie en regio-instelling. Controleer de mogelijkheden altijd in de app of handleiding van jouw specifieke model.</p>
     </section>
@@ -230,7 +279,8 @@
       <h2>Zelf de drempel bepalen: niet bij elke dienst mogelijk</h2>
       <p>Een vraag die regelmatig opkomt: moet je echt wachten tot de prijs exact €0 is, of wil je al eerder bijsturen? Dat hangt van jouw situatie af. Iemand met een grote batterij profiteert er misschien van om al bij €0,02/kWh te stoppen met terugleveren en de batterij alvast vol te laden. Een ander wil de panelen pas uitzetten als de prijs echt negatief is.</p>
 
-      <table>
+      <div class="table-wrap">
+        <table>
         <thead>
           <tr>
             <th>Oplossing</th>
@@ -246,6 +296,7 @@
           <tr><td>Omvormer-app (SolarEdge, Huawei, etc.)</td><td>⚠️ Beperkt — indirect via tariefinstellingen</td></tr>
         </tbody>
       </table>
+      </div>
 
       <p>Wil je volledige controle over wanneer je bijstuurt, dan is Home Assistant of EVCC de meest flexibele keuze — maar dat vereist wat technische kennis om in te stellen.</p>
     </section>
@@ -298,6 +349,11 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/balkonzonnepanelen-dynamisch-contract">
+          <span class="kb-lees-ook-tag">☀️ Zonnepanelen · Beginner</span>
+          <span class="kb-lees-ook-title">Balkonzonnepanelen op een dynamisch contract: mag het en wat levert het op? Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 6 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/negatieve-stroomprijzen">
           <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
           <span class="kb-lees-ook-title">Negatieve stroomprijzen uitgelegd: wanneer kost terugleveren jou geld?</span>

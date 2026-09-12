@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Demand response voor particulieren", "item": "https://stroomvoorspeller.nl/kennisbank/demand-response" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Demand response voor particulieren",
+            "item": "https://stroomvoorspeller.nl/kennisbank/demand-response"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Betaald worden voor flexibel stroomverbruik: zo werkt demand response voor huishoudens",
         "description": "Netbeheerders zoeken huishoudens die hun verbruik willen aanpassen in ruil voor een vergoeding. Zo werkt demand response voor particulieren in Nederland.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-06-03",
         "dateModified": "2026-06-03",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Wat is demand response voor particulieren?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Demand response betekent dat je je stroomverbruik aanpast op momenten dat het net dat nodig heeft — en daar een vergoeding voor krijgt. Dat kan via je eigen dynamische stroomtarief (je bespaart door slim te timen), via een programma van je energieleverancier, of via een aggregator die jouw flexibiliteit verkoopt op de groothandelsmarkt." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Demand response betekent dat je je stroomverbruik aanpast op momenten dat het net dat nodig heeft — en daar een vergoeding voor krijgt. Dat kan via je eigen dynamische stroomtarief (je bespaart door slim te timen), via een programma van je energieleverancier, of via een aggregator die jouw flexibiliteit verkoopt op de groothandelsmarkt."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoeveel kun je verdienen met demand response als particulier?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Dat hangt sterk af van welke apparaten je hebt. Met alleen een wasmachine en vaatwasser is de besparing beperkt — reken op tientallen euro's per jaar. Met een thuisbatterij of elektrische auto zijn vergoedingen van honderden euro's per jaar realistischer. TenneT schat dat actieve deelnemers in 2030 gemiddeld €150–€400 per jaar kunnen verdienen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Dat hangt sterk af van welke apparaten je hebt. Met alleen een wasmachine en vaatwasser is de besparing beperkt — reken op tientallen euro's per jaar. Met een thuisbatterij of elektrische auto zijn vergoedingen van honderden euro's per jaar realistischer. TenneT schat dat actieve deelnemers in 2030 gemiddeld €150–€400 per jaar kunnen verdienen."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is een aggregator en hoe werkt het?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een aggregator is een bedrijf dat de flexibiliteit van veel kleine afnemers bundelt en als één pakket verkoopt op de energiemarkt. Jij sluit een contract met de aggregator, geeft toestemming om bepaalde apparaten te sturen, en krijgt daarvoor een vergoeding. De aggregator verdient aan het doorverkopen van jouw flexibiliteit aan TenneT of regionale netbeheerders." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een aggregator is een bedrijf dat de flexibiliteit van veel kleine afnemers bundelt en als één pakket verkoopt op de energiemarkt. Jij sluit een contract met de aggregator, geeft toestemming om bepaalde apparaten te sturen, en krijgt daarvoor een vergoeding. De aggregator verdient aan het doorverkopen van jouw flexibiliteit aan TenneT of regionale netbeheerders."
+            }
           },
           {
             "@type": "Question",
             "name": "Welke apparaten zijn het meest waardevol voor demand response?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een thuisbatterij is het meest waardevol omdat hij snel en volledig automatisch kan reageren. Daarna volgt een elektrische auto met slim laden of V2G. Warmtepompen en elektrische boilers zijn ook geschikt omdat ze thermische opslag bieden. Wasmachines en vaatwassers dragen minder bij omdat ze eenmalig verplaatst worden, niet continu regelbaar zijn." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een thuisbatterij is het meest waardevol omdat hij snel en volledig automatisch kan reageren. Daarna volgt een elektrische auto met slim laden of V2G. Warmtepompen en elektrische boilers zijn ook geschikt omdat ze thermische opslag bieden. Wasmachines en vaatwassers dragen minder bij omdat ze eenmalig verplaatst worden, niet continu regelbaar zijn."
+            }
           },
           {
             "@type": "Question",
             "name": "Verlies ik de controle over mijn apparaten bij demand response?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Bij een dynamisch contract stuur jij alles zelf: je reageert op prijzen, maar niemand heeft toegang tot je apparaten. Bij een aggregatorcontract geef je toestemming om specifieke apparaten te sturen. Goede aggregatoren stellen vooraf grenzen in — zo blijft de woonkamer altijd warm en laadt de auto minimaal tot een door jou ingesteld percentage. Lees het contract goed door voordat je tekent." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bij een dynamisch contract stuur jij alles zelf: je reageert op prijzen, maar niemand heeft toegang tot je apparaten. Bij een aggregatorcontract geef je toestemming om specifieke apparaten te sturen. Goede aggregatoren stellen vooraf grenzen in — zo blijft de woonkamer altijd warm en laadt de auto minimaal tot een door jou ingesteld percentage. Lees het contract goed door voordat je tekent."
+            }
           }
         ]
       }
@@ -244,6 +291,20 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/home-assistant">
+          <span class="kb-lees-ook-tag">💡 Slim thuis</span>
+          <span class="kb-lees-ook-title">Stroomprijzen koppelen aan Home Assistant</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/p1-data-gebruiken">
+          <span class="kb-lees-ook-tag">💡 Slim besparen · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Je P1-meter draait, en dan? Van sluipverbruik tot je eigen kWh-prijs Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 9 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/kosten-elektrische-auto-laden">
+          <span class="kb-lees-ook-tag">🚗 Elektrisch rijden · Beginner</span>
+          <span class="kb-lees-ook-title">Elektrische auto laden: thuis, publiek of snelladen — de kosten per kWh Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/thuisbatterij-kosten">
           <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
           <span class="kb-lees-ook-title">Thuisbatterij kopen in 2026: kosten, terugverdientijd en wanneer het loont</span>

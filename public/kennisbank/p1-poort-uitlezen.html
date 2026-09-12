@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Slimme meter P1 poort uitlezen: verbruik per uur zien</title>
-  <meta name="description" content="Via de P1-poort van je slimme meter lees je elk uur je verbruik en teruglevering uit. Met een HomeWizard of Powerbaas doe je dit voor slechts €35–€50 — geen abonnement nodig. Zo werkt het." />
+  <meta name="description" content="Via de P1-poort lees je elk uur je verbruik en teruglevering uit. Met een HomeWizard of Powerbaas kost dat 35 tot 50 euro, zonder abonnement." />
   <meta name="kb-categorie" content="Slim besparen" />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Slimme meter P1 poort uitlezen", "item": "https://stroomvoorspeller.nl/kennisbank/p1-poort-uitlezen" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Slimme meter P1 poort uitlezen",
+            "item": "https://stroomvoorspeller.nl/kennisbank/p1-poort-uitlezen"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Slimme meter P1 poort uitlezen: zo zie je je verbruik per uur (en bespaar je meer)",
         "description": "Via de P1-poort van je slimme meter lees je elk uur je verbruik en teruglevering uit. Met een HomeWizard of Powerbaas doe je dit voor slechts €35–€50 — geen abonnement nodig.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-05-13",
         "dateModified": "2026-08-07",
         "inLanguage": "nl-NL",
@@ -58,32 +90,50 @@
           {
             "@type": "Question",
             "name": "Wat is de P1-poort van een slimme meter?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De P1-poort is een kleine aansluiting aan de zij- of voorkant van je slimme meter. Via die poort stuurt de meter elke seconde gegevens over je verbruik en teruglevering, plus je gasverbruik elke 5 minuten. Het protocol heet DSMR; meters van na 2019 gebruiken DSMR 5.0." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De P1-poort is een kleine aansluiting aan de zij- of voorkant van je slimme meter. Via die poort stuurt de meter elke seconde gegevens over je verbruik en teruglevering, plus je gasverbruik elke 5 minuten. Het protocol heet DSMR; meters van na 2019 gebruiken DSMR 5.0."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik mijn P1-data real-time uitlezen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja. Een wifi-dongle als de HomeWizard of Powerbaas leest de P1-poort elke seconde uit en toont je verbruik en teruglevering direct in een app. Die real-time data blijft lokaal op je eigen netwerk en je hebt er geen abonnement voor nodig." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja. Een wifi-dongle als de HomeWizard of Powerbaas leest de P1-poort elke seconde uit en toont je verbruik en teruglevering direct in een app. Die real-time data blijft lokaal op je eigen netwerk en je hebt er geen abonnement voor nodig."
+            }
           },
           {
             "@type": "Question",
             "name": "Heb ik een abonnement nodig om de P1-poort uit te lezen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Je hebt wettelijk recht op toegang tot de P1-poort en betaalt er niets extra voor aan je netbeheerder. Een eenmalige wifi-dongle van €35 tot €50 (zoals HomeWizard of Powerbaas) is genoeg. Sommige apps bieden optionele betaalde extra's, maar uitlezen zelf kan gratis en lokaal." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Je hebt wettelijk recht op toegang tot de P1-poort en betaalt er niets extra voor aan je netbeheerder. Een eenmalige wifi-dongle van €35 tot €50 (zoals HomeWizard of Powerbaas) is genoeg. Sommige apps bieden optionele betaalde extra's, maar uitlezen zelf kan gratis en lokaal."
+            }
           },
           {
             "@type": "Question",
             "name": "Welke P1-dongle kan ik het beste kopen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Voor een makkelijke start zonder smarthome is de HomeWizard P1 Meter (~€35) de beste keuze. Wil je direct apparaten aansturen zonder extra hub, dan biedt de Powerbaas (~€49) een ingebouwde 433 MHz-zender. Gebruik je al Homey, dan past de Homey Energy Dongle (~€49) naadloos. Zonder hardware kun je via SlimmemeterPortal.nl gratis vertraagde data inzien." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Voor een makkelijke start zonder smarthome is de HomeWizard P1 Meter (~€35) de beste keuze. Wil je direct apparaten aansturen zonder extra hub, dan biedt de Powerbaas (~€49) een ingebouwde 433 MHz-zender. Gebruik je al Homey, dan past de Homey Energy Dongle (~€49) naadloos. Zonder hardware kun je via SlimmemeterPortal.nl gratis vertraagde data inzien."
+            }
           },
           {
             "@type": "Question",
             "name": "Hoe sluit ik een P1-dongle aan?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Open het klepje van de poort op je slimme meter, steek de dongle in de RJ11-aansluiting (lijkt op een brede telefoonplug), download de bijbehorende app en volg de wizard om hem met je wifi te verbinden. Bij DSMR 5.0 krijgt de dongle meestal stroom via de poort. De hele installatie duurt minder dan 5 minuten." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Open het klepje van de poort op je slimme meter, steek de dongle in de RJ11-aansluiting (lijkt op een brede telefoonplug), download de bijbehorende app en volg de wizard om hem met je wifi te verbinden. Bij DSMR 5.0 krijgt de dongle meestal stroom via de poort. De hele installatie duurt minder dan 5 minuten."
+            }
           },
           {
             "@type": "Question",
             "name": "Wie kan mijn P1-data zien?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Bij een lokale dongle blijft de verbinding tussen meter, dongle en je wifi-netwerk. Je netbeheerder of leverancier heeft geen toegang. Let wel: de HomeWizard- en Powerbaas-apps uploaden data naar hun cloud als je de app gebruikt. Voor maximale controle kies je een lokale dongle." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bij een lokale dongle blijft de verbinding tussen meter, dongle en je wifi-netwerk. Je netbeheerder of leverancier heeft geen toegang. Let wel: de HomeWizard- en Powerbaas-apps uploaden data naar hun cloud als je de app gebruikt. Voor maximale controle kies je een lokale dongle."
+            }
           }
         ]
       }
@@ -168,7 +218,8 @@
       <p><strong>Geschikt voor:</strong> Mensen die zonder hardware snel inzicht willen, of die een tweede laag willen bovenop hun bestaande P1-lezer.</p>
 
       <h3>Snel vergelijken</h3>
-      <table>
+      <div class="table-wrap">
+        <table>
         <thead>
           <tr>
             <th></th>
@@ -187,6 +238,7 @@
           <tr><td>Geschikt voor</td><td>Beginners</td><td>Doe-het-zelvers</td><td>Homey-gebruikers</td><td>Geen hardware gewenst</td></tr>
         </tbody>
       </table>
+      </div>
     </section>
 
     <section>
@@ -251,6 +303,10 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/home-assistant">
+          <span class="kb-lees-ook-tag">💡 Slim thuis</span>
+          <span class="kb-lees-ook-title">Stroomprijzen koppelen aan Home Assistant</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/energiebelasting-vaste-kosten-uitgelegd">
           <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
           <span class="kb-lees-ook-title">Wat betaal je écht per kWh? Energiebelasting en vaste kosten uitgelegd</span>

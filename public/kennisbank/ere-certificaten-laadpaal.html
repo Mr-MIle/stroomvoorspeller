@@ -75,89 +75,99 @@
 
   <script type="application/ld+json">
   {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://stroomvoorspeller.nl/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Kennisbank",
-          "item": "https://stroomvoorspeller.nl/kennisbank/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "ERE-certificaten voor je laadpaal",
-          "item": "https://stroomvoorspeller.nl/kennisbank/ere-certificaten-laadpaal"
-        }
-      ]
-    },
-    {
-      "@type": "Article",
-      "headline": "ERE-certificaten: geld terug voor thuisladen van je elektrische auto (2026)",
-      "description": "Emissiereductie-eenheden leveren in 2026 zo'n 7 tot 14 cent per thuis geladen kWh op. Welke laadpalen meedoen, waar je je aanmeldt en wat het echt oplevert.",
-      "author": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
         "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
         "name": "Stroomvoorspeller.nl",
-        "url": "https://stroomvoorspeller.nl/"
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
       },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Stroomvoorspeller.nl"
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "ERE-certificaten voor je laadpaal",
+            "item": "https://stroomvoorspeller.nl/kennisbank/ere-certificaten-laadpaal"
+          }
+        ]
       },
-      "datePublished": "2026-08-22",
-      "dateModified": "2026-08-22",
-      "inLanguage": "nl-NL",
-      "image": "https://stroomvoorspeller.nl/og-image.png",
-      "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/ere-certificaten-laadpaal"
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Hoeveel levert een ERE-certificaat per kWh op?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "De prijs schommelt met vraag en aanbod. In de zomer van 2026 kwamen de uitbetalingen uit tussen ongeveer 7 en 14 cent per kWh, na aftrek van de servicekosten van je aanbieder. Bij 2.000 kWh thuisladen per jaar praat je dus over ruwweg 140 tot 280 euro. Er is geen vast tarief en niemand kan je garanderen wat het volgend jaar doet."
-          }
+      {
+        "@type": "Article",
+        "headline": "ERE-certificaten: geld terug voor thuisladen van je elektrische auto (2026)",
+        "description": "Emissiereductie-eenheden leveren in 2026 zo'n 7 tot 14 cent per thuis geladen kWh op. Welke laadpalen meedoen, waar je je aanmeldt en wat het echt oplevert.",
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
         },
-        {
-          "@type": "Question",
-          "name": "Welke laadpalen zijn geschikt voor ERE?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Alleen laadpalen met een MID-gekeurde kWh-meter in de paal zelf. Dat zijn onder andere de Zaptec Go 2 en Pro, Easee Charge Max en Charge Pro, Alfen Eve Single Pro-line, EVBox Elvi MID, Wallbox Em4 en de Tesla Wall Connector 3 MID. Palen zonder zo'n meter, zoals de oude Easee Charge, de Wallbox Pulsar Plus en de go-e Gemini, doen niet mee. Een losse meter in je meterkast telt niet."
-          }
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
         },
-        {
-          "@type": "Question",
-          "name": "Kan ik me nog aanmelden voor 2026?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Ja. De regeling geldt vanaf 1 januari 2026 en de meeste aanbieders boeken je laadsessies met terugwerkende kracht in tot die datum, zolang je laadpaal die gegevens nog heeft. Meld je je in de zomer aan, dan tellen de kilowatturen van het voorjaar dus meestal gewoon mee."
+        "datePublished": "2026-08-22",
+        "dateModified": "2026-08-22",
+        "inLanguage": "nl-NL",
+        "image": "https://stroomvoorspeller.nl/og-image.png",
+        "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/ere-certificaten-laadpaal"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Hoeveel levert een ERE-certificaat per kWh op?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De prijs schommelt met vraag en aanbod. In de zomer van 2026 kwamen de uitbetalingen uit tussen ongeveer 7 en 14 cent per kWh, na aftrek van de servicekosten van je aanbieder. Bij 2.000 kWh thuisladen per jaar praat je dus over ruwweg 140 tot 280 euro. Er is geen vast tarief en niemand kan je garanderen wat het volgend jaar doet."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Welke laadpalen zijn geschikt voor ERE?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Alleen laadpalen met een MID-gekeurde kWh-meter in de paal zelf. Dat zijn onder andere de Zaptec Go 2 en Pro, Easee Charge Max en Charge Pro, Alfen Eve Single Pro-line, EVBox Elvi MID, Wallbox Em4 en de Tesla Wall Connector 3 MID. Palen zonder zo'n meter, zoals de oude Easee Charge, de Wallbox Pulsar Plus en de go-e Gemini, doen niet mee. Een losse meter in je meterkast telt niet."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Kan ik me nog aanmelden voor 2026?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja. De regeling geldt vanaf 1 januari 2026 en de meeste aanbieders boeken je laadsessies met terugwerkende kracht in tot die datum, zolang je laadpaal die gegevens nog heeft. Meld je je in de zomer aan, dan tellen de kilowatturen van het voorjaar dus meestal gewoon mee."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Moet ik belasting betalen over de ERE-vergoeding?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De Belastingdienst heeft in augustus 2026 vastgesteld dat de vergoeding voor het thuisladen van een auto van de zaak geen loon is, en dus onbelast blijft voor de werknemer. Over de vergoeding bij een eigen privéauto is nog geen apart standpunt gepubliceerd. Vraag het bij twijfel na bij je belastingadviseur."
+            }
           }
-        },
-        {
-          "@type": "Question",
-          "name": "Moet ik belasting betalen over de ERE-vergoeding?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "De Belastingdienst heeft in augustus 2026 vastgesteld dat de vergoeding voor het thuisladen van een auto van de zaak geen loon is, en dus onbelast blijft voor de werknemer. Over de vergoeding bij een eigen privéauto is nog geen apart standpunt gepubliceerd. Vraag het bij twijfel na bij je belastingadviseur."
-          }
-        }
-      ]
-    }
-  ]
-}
+        ]
+      }
+    ]
+  }
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -291,6 +301,11 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/kosten-elektrische-auto-laden">
+          <span class="kb-lees-ook-tag">🚗 Elektrisch rijden · Beginner</span>
+          <span class="kb-lees-ook-title">Elektrische auto laden: thuis, publiek of snelladen — de kosten per kWh Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/v2g-bidirectioneel-laden">
           <span class="kb-lees-ook-tag">🚗 Elektrisch rijden · Gemiddeld</span>
           <span class="kb-lees-ook-title">V2G en bidirectioneel laden: je elektrische auto als thuisbatterij</span>

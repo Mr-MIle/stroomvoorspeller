@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Hoe wordt de stroomprijs bepaald?", "item": "https://stroomvoorspeller.nl/kennisbank/hoe-wordt-de-stroomprijs-bepaald" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Hoe wordt de stroomprijs bepaald?",
+            "item": "https://stroomvoorspeller.nl/kennisbank/hoe-wordt-de-stroomprijs-bepaald"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Waarom schiet de stroomprijs soms omhoog? Zo wordt je dynamische tarief bepaald",
         "description": "Je dynamische stroomprijs ontstaat op een dagelijkse veiling. Zo werkt de merit order, en welke factoren — gas, CO₂, wind en het buitenland — de prijs omhoog jagen.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-06-28",
         "dateModified": "2026-06-28",
         "inLanguage": "nl-NL",
@@ -58,17 +90,26 @@
           {
             "@type": "Question",
             "name": "Bepaalt mijn leverancier de stroomprijs?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. De prijs ontstaat op de markt. Je leverancier rekent de uurprijs door en verdient aan een vaste opslag per kWh, niet aan de hoogte van de piek." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. De prijs ontstaat op de markt. Je leverancier rekent de uurprijs door en verdient aan een vaste opslag per kWh, niet aan de hoogte van de piek."
+            }
           },
           {
             "@type": "Question",
             "name": "Is een hoge piek woekerwinst?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Door de merit order betaalt iedereen op dat uur dezelfde prijs: die van de duurste centrale die nog nodig is. Niemand verdient extra aan de piek zelf." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Door de merit order betaalt iedereen op dat uur dezelfde prijs: die van de duurste centrale die nog nodig is. Niemand verdient extra aan de piek zelf."
+            }
           },
           {
             "@type": "Question",
             "name": "Gebeuren extreme prijspieken nu steeds vaker?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Extreme uitschieters blijven uitzondering en vragen een stapeling van oorzaken. Wel zorgt meer zon en wind voor grotere schommelingen: vaker heel goedkoop, maar op luwe momenten ook scherpere pieken. Juist daarom loont het om je verbruik te kunnen verschuiven." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Extreme uitschieters blijven uitzondering en vragen een stapeling van oorzaken. Wel zorgt meer zon en wind voor grotere schommelingen: vaker heel goedkoop, maar op luwe momenten ook scherpere pieken. Juist daarom loont het om je verbruik te kunnen verschuiven."
+            }
           }
         ]
       }
@@ -194,6 +235,20 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/records">
+          <span class="kb-lees-ook-tag">⚡ Live prijzen</span>
+          <span class="kb-lees-ook-title">Records: hoogste en laagste stroomprijs ooit</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/stroomprijzen-morgen-bekend">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Beginner</span>
+          <span class="kb-lees-ook-title">Hoe laat komen de stroomprijzen voor morgen bekend? Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 6 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/dynamisch-gascontract">
+          <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Dynamisch gascontract: zo werkt de dagelijkse gasprijs (TTF)</span>
+          <span class="kb-lees-ook-meta">⏱ 6 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/kennisbank/waarom-stroomprijzen-moeilijk-te-voorspellen">
           <span class="kb-lees-ook-tag">⚡ Dynamisch contract · Gemiddeld</span>
           <span class="kb-lees-ook-title">Waarom stroomprijzen zo moeilijk te voorspellen zijn (en hoe het toch werkt)</span>

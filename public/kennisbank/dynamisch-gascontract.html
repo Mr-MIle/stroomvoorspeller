@@ -59,19 +59,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Dynamisch gascontract", "item": "https://stroomvoorspeller.nl/kennisbank/dynamisch-gascontract" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Dynamisch gascontract",
+            "item": "https://stroomvoorspeller.nl/kennisbank/dynamisch-gascontract"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Dynamisch gascontract: zo werkt de dagelijkse gasprijs (TTF) op je rekening",
         "description": "Bij een dynamisch contract verandert ook je gasprijs, maar per dag in plaats van per uur en gestuurd door de TTF-beurs. Zo is de kuubprijs opgebouwd en zo houd je grip.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-07-15",
         "dateModified": "2026-07-15",
         "inLanguage": "nl-NL",
@@ -84,27 +116,42 @@
           {
             "@type": "Question",
             "name": "Verandert mijn gasprijs elk uur bij een dynamisch contract?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee. Stroom heeft een prijs per uur, en sinds oktober 2025 zelfs per kwartier. Gas heeft één prijs per dag. Die dagprijs volgt de TTF-gasbeurs en geldt van middernacht tot middernacht. Binnen de dag verandert er niks meer." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee. Stroom heeft een prijs per uur, en sinds oktober 2025 zelfs per kwartier. Gas heeft één prijs per dag. Die dagprijs volgt de TTF-gasbeurs en geldt van middernacht tot middernacht. Binnen de dag verandert er niks meer."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is TTF?",
-            "acceptedAnswer": { "@type": "Answer", "text": "TTF staat voor Title Transfer Facility, de Nederlandse gasbeurs. Het is voor gas wat de EPEX-beurs voor stroom is: de plek waar de groothandelsprijs tot stand komt. Jouw leverancier koopt daar in en rekent de dagprijs aan je door, met belasting en een opslag eroverheen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "TTF staat voor Title Transfer Facility, de Nederlandse gasbeurs. Het is voor gas wat de EPEX-beurs voor stroom is: de plek waar de groothandelsprijs tot stand komt. Jouw leverancier koopt daar in en rekent de dagprijs aan je door, met belasting en een opslag eroverheen."
+            }
           },
           {
             "@type": "Question",
             "name": "Waarom kan de gasprijs niet negatief worden zoals de stroomprijs?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Zon en wind duwen de stroomprijs op zonnige, winderige uren soms onder nul. Gas kent die overvloed niet. Je kunt gas opslaan in bergingen, en de vraag komt vooral van kou, niet van het weer op dat moment. De prijs schommelt dus wel per dag, maar zakt niet onder nul." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Zon en wind duwen de stroomprijs op zonnige, winderige uren soms onder nul. Gas kent die overvloed niet. Je kunt gas opslaan in bergingen, en de vraag komt vooral van kou, niet van het weer op dat moment. De prijs schommelt dus wel per dag, maar zakt niet onder nul."
+            }
           },
           {
             "@type": "Question",
             "name": "Kan ik geld besparen door mijn gasverbruik te timen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nauwelijks. Bij stroom verschuif je de wasmachine naar een goedkoop uur. Bij gas is er maar één prijs per dag, dus valt er niks te verschuiven binnen de dag. De winst bij gas zit in minder verstoken: beter isoleren, de thermostaat een graad lager, of op termijn van gas af met een warmtepomp." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nauwelijks. Bij stroom verschuif je de wasmachine naar een goedkoop uur. Bij gas is er maar één prijs per dag, dus valt er niks te verschuiven binnen de dag. De winst bij gas zit in minder verstoken: beter isoleren, de thermostaat een graad lager, of op termijn van gas af met een warmtepomp."
+            }
           },
           {
             "@type": "Question",
             "name": "Is een dynamische gasprijs goedkoper dan een vaste?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Soms wel, soms niet. Een dynamische gasprijs volgt de markt: in een rustige zomer betaal je weinig, in een koude winter of bij onrust op de gasmarkt loopt hij op. Een vaste prijs is duurder in rustige tijden, maar beschermt je tegen een dure winter. Wie de schommeling niet aankan, zit met vast rustiger." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Soms wel, soms niet. Een dynamische gasprijs volgt de markt: in een rustige zomer betaal je weinig, in een koude winter of bij onrust op de gasmarkt loopt hij op. Een vaste prijs is duurder in rustige tijden, maar beschermt je tegen een dure winter. Wie de schommeling niet aankan, zit met vast rustiger."
+            }
           }
         ]
       }

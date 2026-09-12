@@ -69,23 +69,55 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Thuisbatterij kosten 2026", "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-kosten" }
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
         ]
       },
       {
-        "@type": "TechArticle",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Thuisbatterij kosten 2026",
+            "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-kosten"
+          }
+        ]
+      },
+      {
+        "@type": "Article",
         "@id": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-kosten",
         "headline": "Thuisbatterij kosten 2026: een eerlijk beeld van aanschaf, installatie en terugverdientijd",
         "description": "Wat kost een thuisbatterij echt in 2026? Inclusief de bijkomende installatiekosten die aanbieders verzwijgen, btw-voordeel en een eerlijk beeld van de terugverdientijd.",
         "datePublished": "2026-05-03",
         "dateModified": "2026-07-08",
         "inLanguage": "nl-NL",
-        "author": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" },
-        "publisher": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" }
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        }
       },
       {
         "@type": "FAQPage",
@@ -93,32 +125,50 @@
           {
             "@type": "Question",
             "name": "Wat kost een thuisbatterij van 10 kWh in 2026?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De hardware van een 10 kWh-systeem kost in 2026 ongeveer €6.000 tot €7.000 inclusief btw. Na teruggaaf van de btw via de kleine ondernemersregeling komt de netto investering uit op circa €5.000. Bijkomende installatiekosten kunnen daar nog bovenop komen." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De hardware van een 10 kWh-systeem kost in 2026 ongeveer €6.000 tot €7.000 inclusief btw. Na teruggaaf van de btw via de kleine ondernemersregeling komt de netto investering uit op circa €5.000. Bijkomende installatiekosten kunnen daar nog bovenop komen."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat kost een thuisbatterij van 50 kWh?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een systeem van 50 kWh kost ongeveer €30.000 tot €35.000. Dat valt buiten het huishoudsegment: zulke installaties bestaan uit meerdere kasten, vereisen een driefasige aansluiting en zie je vooral bij boerderijen en kleinzakelijke gebruikers. Voor een gewoon huishouden is 5 tot 15 kWh gangbaar." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een systeem van 50 kWh kost ongeveer €30.000 tot €35.000. Dat valt buiten het huishoudsegment: zulke installaties bestaan uit meerdere kasten, vereisen een driefasige aansluiting en zie je vooral bij boerderijen en kleinzakelijke gebruikers. Voor een gewoon huishouden is 5 tot 15 kWh gangbaar."
+            }
           },
           {
             "@type": "Question",
             "name": "Is er in 2026 subsidie voor een thuisbatterij?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Nee, er is geen rijkssubsidie voor thuisbatterijen. Wel geldt 0% btw op de aanschaf, die je via de kleine ondernemersregeling kunt terugvragen. Op een systeem van €7.000 scheelt dat bijna €1.470, al moet je eenmalig btw afdragen over de verhandelde energie." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nee, er is geen rijkssubsidie voor thuisbatterijen. Wel geldt 0% btw op de aanschaf, die je via de kleine ondernemersregeling kunt terugvragen. Op een systeem van €7.000 scheelt dat bijna €1.470, al moet je eenmalig btw afdragen over de verhandelde energie."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat is de terugverdientijd van een thuisbatterij?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Realistisch ligt de terugverdientijd tussen de 3 en 8 jaar. Alleen zelfconsumptie zonder dynamisch contract geeft 6 tot 8 jaar; met een dynamisch contract en slimme sturing op uurprijzen kan het dalen tot 3 à 4 jaar. Verkopers noemen vaak optimistische scenario's die niet altijd realistisch zijn." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Realistisch ligt de terugverdientijd tussen de 3 en 8 jaar. Alleen zelfconsumptie zonder dynamisch contract geeft 6 tot 8 jaar; met een dynamisch contract en slimme sturing op uurprijzen kan het dalen tot 3 à 4 jaar. Verkopers noemen vaak optimistische scenario's die niet altijd realistisch zijn."
+            }
           },
           {
             "@type": "Question",
             "name": "Welke verborgen installatiekosten zijn er bij een thuisbatterij?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De standaard installatieprijs dekt vaak geen lange bekabeling of graafwerk (circa €45 per meter), geen meterkastvervanging (€500 tot €1.000) en geen verzwaring van 1-fase naar 3-fase (€500 tot €1.500). Vraag altijd een offerte op locatie en vraag expliciet wat er NIET in zit." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De standaard installatieprijs dekt vaak geen lange bekabeling of graafwerk (circa €45 per meter), geen meterkastvervanging (€500 tot €1.000) en geen verzwaring van 1-fase naar 3-fase (€500 tot €1.500). Vraag altijd een offerte op locatie en vraag expliciet wat er NIET in zit."
+            }
           },
           {
             "@type": "Question",
             "name": "Is een thuisbatterij rendabel zonder dynamisch contract?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Beperkt. Zonder dynamisch contract bespaar je alleen via zelfconsumptie (ongeveer €600 tot €900 per jaar) en is de terugverdientijd 6 tot 8 jaar. Het grootste rendement haal je door de batterij te laden op goedkope uren en te ontladen als de prijs hoog is, en dat kan alleen met een dynamisch contract." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Beperkt. Zonder dynamisch contract bespaar je alleen via zelfconsumptie (ongeveer €600 tot €900 per jaar) en is de terugverdientijd 6 tot 8 jaar. Het grootste rendement haal je door de batterij te laden op goedkope uren en te ontladen als de prijs hoog is, en dat kan alleen met een dynamisch contract."
+            }
           }
         ]
       }
@@ -158,7 +208,8 @@
     <h2>1. Wat kost de batterij zelf?</h2>
     <p>De prijs van een thuisbatterij hangt sterk af van de capaciteit (kWh) en het merk. In 2026 rekent de markt gemiddeld €600 tot €700 per kWh bruikbare opslagcapaciteit, inclusief installatie en btw. Voor een gangbaar systeem van 10 kWh kom je daarmee op een prijs van €6.000 tot €7.000.</p>
 
-    <table class="artikel-table">
+    <div class="table-wrap">
+      <table class="artikel-table">
       <thead>
         <tr>
           <th>Capaciteit</th>
@@ -184,6 +235,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
     <p>Let op: geo-politieke ontwikkelingen helpen niet in het drukken van de prijs. Integendeel. Grondstofprijzen en logistieke druk houden de prijzen voorlopig stabiel of iets hoger.</p>
 
@@ -236,7 +288,8 @@
 
     <p>Een realistischer beeld per scenario voor een 10 kWh-systeem (netto investering ca. €5.000 na teruggaaf btw):</p>
 
-    <table class="artikel-table">
+    <div class="table-wrap">
+      <table class="artikel-table">
       <thead>
         <tr>
           <th>Scenario</th>
@@ -262,6 +315,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
     <p>Let op: dit gaat uit van een gemiddelde jaarlijkse besparing. Als je al energiezuinig leeft of simpelweg niet zoveel verbruikt, zal dit de terugverdientijd negatief beïnvloeden.</p>
 
@@ -315,6 +369,16 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/welke-thuisbatterij-past-bij-mij">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Welke thuisbatterij past bij mij? Het aantal kWh en kW kiezen Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/thuisbatterij-subsidie-2026">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Thuisbatterij subsidie 2026: bestaat die, en waar loop je op stuk? Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/batterij-berekenen">
           <span class="kb-lees-ook-tag">🔋 Rekentool</span>
           <span class="kb-lees-ook-title">Bereken wat een thuisbatterij jóu oplevert</span>

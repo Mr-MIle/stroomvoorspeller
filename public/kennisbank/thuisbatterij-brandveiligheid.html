@@ -33,19 +33,51 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Kennisbank", "item": "https://stroomvoorspeller.nl/kennisbank/" },
-          { "@type": "ListItem", "position": 3, "name": "Thuisbatterij brandveilig plaatsen en verzekeren", "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-brandveiligheid" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Thuisbatterij brandveilig plaatsen en verzekeren",
+            "item": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-brandveiligheid"
+          }
         ]
       },
       {
         "@type": "Article",
         "headline": "Thuisbatterij brandveilig plaatsen en verzekeren: de regels van 2026",
         "description": "Waar mag een thuisbatterij staan, welke veiligheidsnorm geldt en blijft je verzekering geldig? De regels van 2026 helder uitgelegd.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-06-21",
         "dateModified": "2026-06-21",
         "inLanguage": "nl-NL",
@@ -58,27 +90,42 @@
           {
             "@type": "Question",
             "name": "Mag ik een thuisbatterij zelf installeren?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Een vaste batterij op de meterkast: nee, dat hoort een erkende installateur te doen volgens NEN 1010, met eigen groep en keuringsrapport. Doet u het zelf, dan riskeert u uw verzekeringsdekking en de garantie. Een kleine plug-and-play-batterij is een ander verhaal, maar ook die moet u melden bij de netbeheerder." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Een vaste batterij op de meterkast: nee, dat hoort een erkende installateur te doen volgens NEN 1010, met eigen groep en keuringsrapport. Doet u het zelf, dan riskeert u uw verzekeringsdekking en de garantie. Een kleine plug-and-play-batterij is een ander verhaal, maar ook die moet u melden bij de netbeheerder."
+            }
           },
           {
             "@type": "Question",
             "name": "Mag een thuisbatterij binnen staan?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja, mits op een onbrandbare ondergrond, met voldoende vrije ruimte en afstand tot brandbare materialen. Een garage, bijkeuken of technische ruimte op de begane grond heeft de voorkeur boven een woonruimte of zolder." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja, mits op een onbrandbare ondergrond, met voldoende vrije ruimte en afstand tot brandbare materialen. Een garage, bijkeuken of technische ruimte op de begane grond heeft de voorkeur boven een woonruimte of zolder."
+            }
           },
           {
             "@type": "Question",
             "name": "Moet ik mijn verzekeraar inlichten?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja. Een thuisbatterij is een risicowijziging die u hoort te melden. Niet melden kan bij schade leiden tot weigering of korting van de uitkering, ook als de batterij niet de oorzaak was." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja. Een thuisbatterij is een risicowijziging die u hoort te melden. Niet melden kan bij schade leiden tot weigering of korting van de uitkering, ook als de batterij niet de oorzaak was."
+            }
           },
           {
             "@type": "Question",
             "name": "Is aanmelden bij de netbeheerder echt verplicht?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Ja, vanaf ongeveer 0,8 kWh of 0,8 kW — dat dekt vrijwel alle systemen. Het regelt u gratis via energieleveren.nl en het geeft u vanaf 1 juli 2026 voorrang bij netuitbreidingen boven ongemelde installaties." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ja, vanaf ongeveer 0,8 kWh of 0,8 kW — dat dekt vrijwel alle systemen. Het regelt u gratis via energieleveren.nl en het geeft u vanaf 1 juli 2026 voorrang bij netuitbreidingen boven ongemelde installaties."
+            }
           },
           {
             "@type": "Question",
             "name": "Wat kost de keuring?",
-            "acceptedAnswer": { "@type": "Answer", "text": "De keuring zit meestal bij de installatieprijs in; vraag dit vooraf na en zorg dat u het keuringsrapport krijgt. Dat rapport is uw bewijs richting de verzekeraar." }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De keuring zit meestal bij de installatieprijs in; vraag dit vooraf na en zorg dat u het keuringsrapport krijgt. Dat rapport is uw bewijs richting de verzekeraar."
+            }
           }
         ]
       }
@@ -210,6 +257,16 @@
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
       <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/thuisbatterij-noodstroom">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Werkt een thuisbatterij bij stroomuitval? Noodstroom thuis uitgelegd Nieuw</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/natrium-zoutwater-thuisbatterij">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Natrium- of zoutwaterbatterij voor thuis: veiliger dan lithium, maar is het al slim?</span>
+          <span class="kb-lees-ook-meta">⏱ 7 min leestijd</span>
+        </a>
         <a class="kb-lees-ook-card" href="/batterij-berekenen">
           <span class="kb-lees-ook-tag">🔋 Rekentool</span>
           <span class="kb-lees-ook-title">Bereken wat een thuisbatterij jóu oplevert</span>
