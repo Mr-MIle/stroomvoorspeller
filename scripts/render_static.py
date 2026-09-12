@@ -132,6 +132,51 @@ def dag_statistiek(uren, rek):
     }
 
 
+# Een dag is pas bruikbaar als er vrijwel een volledige set uurprijzen in staat.
+# 20 in plaats van 24, zodat de twee dagen per jaar met een zomertijdsprong
+# (23 of 25 uur) niet onterecht als incompleet gelden.
+MIN_UREN_PER_DAG = 20
+
+# Boven deze leeftijd krijgt het blok een waarschuwende regel. Het blankt de cijfers
+# NIET: day-ahead prijzen liggen vast zodra ze gepubliceerd zijn, dus een bestand van
+# gisteravond met alle uren van vandaag erin klopt gewoon. De prijsupdate draait
+# 's nachts niet, dus een leeftijd van 12 tot 16 uur is doodnormaal.
+WAARSCHUW_VANAF_UREN = 30
+
+
+def leeftijd_uren(generated_at):
+    """Hoeveel uur geleden is deze data weggeschreven? None als de stempel onleesbaar is."""
+    if not generated_at:
+        return None
+    try:
+        stempel = datetime.fromisoformat(str(generated_at).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if stempel.tzinfo is None:
+        stempel = stempel.replace(tzinfo=timezone.utc)
+    return (datetime.now(timezone.utc) - stempel).total_seconds() / 3600.0
+
+
+def blok_verouderd(prices, wat):
+    """Vervangt het cijferblok als de prijzen voor de gevraagde dag ontbreken.
+
+    Zonder dit vangnet blijft bij een vastgelopen pipeline het oude blok staan, en dan
+    beweert de pagina in platte tekst dat de prijs van eergisteren die van vandaag is.
+    Een streepje was verkeerd; een verkeerd cijfer met stelligheid is erger.
+    """
+    stempel = str(prices.get("generated_at", ""))[:16].replace("T", " ")
+    return "\n".join([
+        '    <section class="static-prices container is-secondary">',
+        f'      <h2>{wat}</h2>',
+        "      <p>De prijsdata op deze pagina is op dit moment niet compleet genoeg om hier "
+        f"als cijfer neer te zetten. De laatste geslaagde update was op {esc(stempel)} UTC. "
+        "De grafieken hierboven tonen wat er wél binnen is; de actuele day-ahead prijzen "
+        'staan altijd bij <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E '
+        "Transparency</a>.</p>",
+        "    </section>",
+    ])
+
+
 def uur_tot_venster(hhmm):
     uur = int(hhmm[:2])
     return f"{uur:02d}:00&ndash;{(uur + 1) % 24:02d}:00"
@@ -182,8 +227,13 @@ def blok_prices(prices, forecast, config):
 
     stat_vandaag = dag_statistiek(uren_op_datum(alle, vandaag), rek)
     stat_morgen = dag_statistiek(uren_op_datum(alle, morgen), rek)
-    if not stat_vandaag:
-        return None
+
+    leeftijd = leeftijd_uren(prices.get("generated_at"))
+    if not stat_vandaag or len(stat_vandaag["uren"]) < MIN_UREN_PER_DAG:
+        n = len(stat_vandaag["uren"]) if stat_vandaag else 0
+        print(f"[render_static] STATIC:PRICES -> vangnet ({n} uurprijzen voor vandaag)",
+              file=sys.stderr)
+        return blok_verouderd(prices, "Stroomprijzen per uur, in cijfers")
 
     delen = [
         '    <section class="static-prices container is-secondary" id="uurprijzen" aria-labelledby="uurprijzen-h2">',
@@ -219,10 +269,13 @@ def blok_prices(prices, forecast, config):
         delen.append(voorspel)
 
     bron = prices.get("generated_at", "")
-    delen.append(
-        '      <p class="static-prices-meta">Bron: EPEX Spot via ENTSO-E Transparency '
-        f"(NL bidding zone). Cijfers bijgewerkt op {esc(bron[:16].replace('T', ' '))} UTC.</p>"
-    )
+    meta = ('      <p class="static-prices-meta">Bron: EPEX Spot via ENTSO-E Transparency '
+            f"(NL bidding zone). Cijfers bijgewerkt op {esc(bron[:16].replace('T', ' '))} UTC.")
+    if leeftijd is not None and leeftijd > WAARSCHUW_VANAF_UREN:
+        meta += (f" Let op: dat is {leeftijd:.0f} uur geleden, langer dan gebruikelijk. "
+                 "De prijzen hieronder kloppen wel, maar de voorspelling verderop kan "
+                 "achterlopen.")
+    delen.append(meta + "</p>")
     delen.append("    </section>")
     return "\n".join(delen)
 
@@ -339,18 +392,39 @@ def blok_accuracy(performance):
             "dezelfde dag vorige week."
         )
 
+    h_min = performance.get("horizon_min_days", 2)
+    h_max = performance.get("horizon_max_days", 7)
+    dagen = performance.get("window_days_actual")
+    venster = f", een venster van {dagen} dagen" if dagen else ""
+
     delen = [
         '    <section class="perf-section static-prices" aria-labelledby="cijfers-h2">',
         '      <h2 id="cijfers-h2">De cijfers, in tekst</h2>',
         f"      <p>Het voorspellingsmodel (versie {versie}) zit gemiddeld "
-        f"<strong>{ct(mae_ct, 2)} ct/kWh</strong> naast de werkelijke prijs, gemeten over "
+        f"<strong>{ct(mae_ct, 2)} ct/kWh</strong> naast de werkelijke prijs op een horizon "
+        f"van <strong>{h_min} tot {h_max} dagen vooruit</strong>, gemeten over "
         f"<strong>{duizend(uren)} uur</strong> tussen {esc(nl_datum(eerste, met_dag=False))} "
-        f"en {esc(nl_datum(laatste, met_dag=False))}.{beter} "
+        f"en {esc(nl_datum(laatste, met_dag=False))}{venster}.{beter} "
         f"De richting - duurder of goedkoper dan normaal - klopt in "
         f"<strong>{ct(richting)}%</strong> van de uren, en "
         f"<strong>{ct(band)}%</strong> van de voorspellingen valt binnen de getoonde "
         "onzekerheidsband.</p>",
+        "      <p>Dag 1 telt niet mee in dat cijfer. De prijzen voor morgen worden rond "
+        "14:00 door EPEX gepubliceerd en staan bij de dagelijkse meting dus al vast; "
+        "meetellen zou de uitslag meten in plaats van de voorspelling. Cijfers van "
+        "anderen die \\u00e9\\u00e9n dag vooruit meten, gaan over een makkelijkere opgave.</p>",
     ]
+
+    d1 = performance.get("d1_preauction")
+    if d1 and d1.get("mae_eur_mwh") is not None:
+        delen.append(
+            "      <p>Apart gemeten, en w\\u00e9l vergelijkbaar met een cijfer van "
+            "\\u00e9\\u00e9n dag vooruit: een voorspelling die \\u2019s ochtends wordt "
+            "vastgelegd, v\\u00f3\\u00f3rdat de veiling sluit, zit gemiddeld "
+            f"<strong>{ct(d1['mae_eur_mwh'] / 10.0, 2)} ct/kWh</strong> naast de prijs "
+            f"die EPEX later die dag publiceert, over {duizend(d1['n_hours'])} uur "
+            f"verdeeld over {d1['n_days']} dagen.</p>"
+        )
     if horizon_rijen:
         delen += [
             '      <div class="static-table-wrap">',
