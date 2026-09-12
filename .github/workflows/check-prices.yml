@@ -110,6 +110,16 @@ jobs:
         continue-on-error: true
         run: python scripts/render_static.py
 
+      - name: Genereer records
+        # Uiterste waarden uit het volledige prijsarchief (2015-nu) naar
+        # public/data/records.json en het STATIC:RECORDS-blok op /records. Draait na
+        # fetch_prices.py, zodat de dekkingsregel - "gemeten over N uurprijzen tot en
+        # met vandaag" - klopt met de prijzen die deze run heeft opgehaald. Kost ~1
+        # seconde over het volledige archief. Mag falen.
+        if: steps.check.outcome == 'success'
+        continue-on-error: true
+        run: python scripts/generate_records.py
+
       - name: Commit en push als er iets veranderd is
         id: commit
         if: steps.check.outcome == 'success'
@@ -121,9 +131,11 @@ jobs:
           git add public/data/ha.json 2>/dev/null || true
           git add public/data/duiding.json 2>/dev/null || true
           git add public/data/performance.json 2>/dev/null || true
+          git add public/data/records.json 2>/dev/null || true
           git add public/data/archief/ 2>/dev/null || true
           git add public/index.html public/morgen.html public/over/performance.html 2>/dev/null || true
           git add public/aanbieders.html public/historisch.html 2>/dev/null || true
+          git add public/records.html 2>/dev/null || true
           git add data/forecast_archive/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
