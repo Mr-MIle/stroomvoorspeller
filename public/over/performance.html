@@ -32,18 +32,45 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
-          { "@type": "ListItem", "position": 2, "name": "Hoe nauwkeurig is de voorspelling?", "item": "https://stroomvoorspeller.nl/over/performance" }
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Hoe nauwkeurig is de voorspelling?",
+            "item": "https://stroomvoorspeller.nl/over/performance"
+          }
         ]
       },
       {
         "@type": "TechArticle",
         "headline": "Hoe nauwkeurig is de stroomprijs-voorspelling van stroomvoorspeller.nl?",
         "description": "Live performance-dashboard van het voorspellingsmodel: foutmarge per dag, nauwkeurigheid per horizon en modelversies.",
-        "author": { "@type": "Organization", "name": "Stroomvoorspeller.nl", "url": "https://stroomvoorspeller.nl/" },
-        "publisher": { "@type": "Organization", "name": "Stroomvoorspeller.nl" },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
         "datePublished": "2026-05-14",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
@@ -371,10 +398,44 @@
           <div class="score-label" id="sc-band-label">9 van de 10 uur<br>binnen deze marge</div>
         </div>
       </div>
-      <p class="window-note" id="window-note">Berekend over de afgelopen 30 dagen · <span id="hours-count">–</span> uren geëvalueerd</p>
+      <p class="window-note" id="window-note">Meetvenster en aantal geëvalueerde uren staan hieronder in de tekst.</p>
     </section>
 
     <!-- ── Uitlegblok scores ── -->
+    <!-- STATIC:ACCURACY:START -->
+    <section class="perf-section static-prices" aria-labelledby="cijfers-h2">
+      <h2 id="cijfers-h2">De cijfers, in tekst</h2>
+      <p>Het voorspellingsmodel (versie 4.0) zit gemiddeld <strong>3,01 ct/kWh</strong> naast de werkelijke prijs op een horizon van <strong>2 tot 7 dagen vooruit</strong>, gemeten over <strong>2.304 uur</strong> tussen 28 augustus 2026 en 12 september 2026, een venster van 16 dagen. Dat is 24,1% beter dan de simpele benchmark: dezelfde dag vorige week. De richting - duurder of goedkoper dan normaal - klopt in <strong>73,3%</strong> van de uren, en <strong>77,8%</strong> van de voorspellingen valt binnen de getoonde onzekerheidsband.</p>
+      <p>Dag 1 telt niet mee in dat cijfer. De prijzen voor morgen worden rond 14:00 door EPEX gepubliceerd en staan bij de dagelijkse meting dus al vast; meetellen zou de uitslag meten in plaats van de voorspelling. Cijfers van anderen die één dag vooruit meten, gaan over een makkelijkere opgave.</p>
+      <div class="static-table-wrap">
+        <table class="static-price-table">
+          <caption>Nauwkeurigheid per voorspelhorizon</caption>
+          <thead><tr><th scope="col">Horizon</th><th scope="col">Gemiddeld ernaast (ct/kWh)</th><th scope="col">Richting goed</th><th scope="col">Uren gemeten</th></tr></thead>
+          <tbody>
+          <tr><td>2 dagen vooruit</td><td class="num">2,85</td><td class="num">76,1%</td><td class="num">384</td></tr>
+          <tr><td>3 dagen vooruit</td><td class="num">3,05</td><td class="num">73,1%</td><td class="num">384</td></tr>
+          <tr><td>4 dagen vooruit</td><td class="num">2,97</td><td class="num">72,8%</td><td class="num">384</td></tr>
+          <tr><td>5 dagen vooruit</td><td class="num">3,01</td><td class="num">73,9%</td><td class="num">384</td></tr>
+          <tr><td>6 dagen vooruit</td><td class="num">3,08</td><td class="num">73,1%</td><td class="num">384</td></tr>
+          <tr><td>7 dagen vooruit</td><td class="num">3,08</td><td class="num">71,1%</td><td class="num">384</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="static-prices-meta">Elke voorspelling wordt achteraf getoetst aan de werkelijke ENTSO-E-prijzen. Bij een nieuwe modelversie begint de meting opnieuw, dus het venster kan korter zijn dan 30 dagen.</p>
+    </section>
+    <!-- STATIC:ACCURACY:END -->
+
+    <!-- ── Waarom de horizon bij dag 2 begint ── -->
+    <div class="info-box">
+      <strong>Waarom begint de horizon bij dag 2?</strong><br>
+      De prijzen voor morgen worden rond 14:00 door EPEX gepubliceerd. Op het moment dat
+      ik de dagelijkse meting wegschrijf, staan ze dus al vast. Zou ik dag 1 meetellen,
+      dan meet ik niet mijn model maar de uitslag die er al is — en dat maakt het cijfer
+      kunstmatig mooi. Daarom telt hier alleen wat écht vooruit ligt: dag 2 tot en met
+      dag 7. Publiceert iemand anders een cijfer voor “één dag vooruit”, dan gaat dat
+      over een makkelijkere opgave; leg die twee niet zomaar naast elkaar.
+    </div>
+
     <div class="info-box">
       <strong>Wat betekenen deze cijfers?</strong><br>
       "Gemiddeld ernaast" is de gemiddelde absolute afwijking: hoeveel ct/kWh de voorspelling er doorgaans naast zit.
@@ -403,7 +464,7 @@
 
     <!-- ── Dagelijkse foutgrafiek ── -->
     <section class="perf-section" id="daily-section">
-      <h2>Foutmarge per dag (afgelopen 30 dagen)</h2>
+      <h2>Foutmarge per dag</h2>
       <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.6rem;">
         Gemiddelde afwijking per dag. Lager is beter. Op rustige dagen zit de voorspelling er vaak maar
         1 à 2 ct/kWh naast; de pieken vallen samen met extreme weersomstandigheden — precies de momenten
@@ -422,7 +483,8 @@
         ook professionele weersmodellen worden minder betrouwbaar naarmate ze verder kijken.
         Dag 2 en 3 zijn het meest betrouwbaar.
       </p>
-      <table class="horizon-table" id="horizon-table">
+      <div class="table-wrap">
+        <table class="horizon-table" id="horizon-table">
         <thead>
           <tr>
             <th>Dag vooruit</th>
@@ -435,6 +497,7 @@
           <tr><td colspan="4" class="loading-state">Laden…</td></tr>
         </tbody>
       </table>
+      </div>
     </section>
 
     <!-- ── Foutmarge per uur van de dag ── -->
@@ -611,11 +674,20 @@
         bandLabel.innerHTML = 'Werkelijk binnen<br>de onzekerheidsband';
       }
 
-      document.getElementById('hours-count').textContent = (o.n_hours || 0).toLocaleString('nl-NL') + ' uren';
-
+      // Venstertekst uit de data zelf, niet hardgecodeerd: na elke modelwissel
+      // begint de meting opnieuw en is het venster korter dan 30 dagen.
       if (d.first_date && d.last_date) {
+        const nlDatum = (s) => new Date(s + 'T12:00:00Z')
+          .toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+        const dagen = d.window_days_actual
+          ? ` (${d.window_days_actual} ${d.window_days_actual === 1 ? 'dag' : 'dagen'})`
+          : '';
+        const horizon = (d.horizon_min_days && d.horizon_max_days)
+          ? ` · horizon ${d.horizon_min_days} tot ${d.horizon_max_days} dagen vooruit`
+          : '';
         document.getElementById('window-note').textContent =
-          `${d.first_date} t/m ${d.last_date} · ${(o.n_hours || 0).toLocaleString('nl-NL')} uren geëvalueerd`;
+          `${nlDatum(d.first_date)} t/m ${nlDatum(d.last_date)}${dagen} · ` +
+          `${(o.n_hours || 0).toLocaleString('nl-NL')} uren geëvalueerd${horizon}`;
       }
 
       renderHero(d);
