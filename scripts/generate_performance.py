@@ -74,16 +74,21 @@ def load_prices():
     return actuals
 
 
-def load_archive():
-    """Laad alle forecast-archiefbestanden. Retourneer lijst van (date, forecasts_dict)."""
+def load_archive(prefix="forecast"):
+    """Laad forecast-archiefbestanden met een gegeven prefix.
+
+    prefix="forecast"   -> de dagelijkse snapshot (na publicatie van de day-ahead)
+    prefix="preauction" -> de snapshot van voor de veiling; alleen die kan een
+                           eerlijke D+1-meting opleveren, zie de toelichting in main().
+    """
     if not ARCHIVE_DIR.exists():
         print(f"[WARN] Archief-map niet gevonden: {ARCHIVE_DIR}")
         return []
 
     archives = []
-    for path in sorted(ARCHIVE_DIR.glob("forecast_*.json")):
-        # Bestandsnaam = forecast_YYYY-MM-DD.json
-        stem = path.stem  # "forecast_2026-04-14"
+    for path in sorted(ARCHIVE_DIR.glob(f"{prefix}_*.json")):
+        # Bestandsnaam = <prefix>_YYYY-MM-DD.json
+        stem = path.stem
         parts = stem.split("_", 1)
         if len(parts) != 2:
             continue
@@ -210,7 +215,7 @@ def compute_performance():
             band_low = fc_entry.get("band_low")
             band_high = fc_entry.get("band_high")
 
-            # Naïef
+            # Naïf
             naive = naive_forecast(actuals, target_dt, day_type(target_dt))
 
             # Within band
@@ -397,13 +402,83 @@ def compute_performance():
         })
 
     # ---------------------------------------------------------------------------
+    # D+1, gemeten voor de veiling
+    # ---------------------------------------------------------------------------
+    # De dagelijkse snapshot wordt pas na 14:00 genomen, en dan staan de prijzen voor
+    # morgen al vast bij EPEX. Een "voorspelling" van D+1 uit die snapshot is dus geen
+    # voorspelling maar een kopie van de uitslag; daarom telt horizon 1 hierboven niet mee.
+    # preauction_YYYY-MM-DD.json wordt 's ochtends weggeschreven, voordat de veiling
+    # sluit. Alleen die snapshot levert een cijfer op dat vergelijkbaar is met wat andere
+    # partijen "een dag vooruit" noemen.
+    d1_pairs = []
+    for snap_date, fc_dict in load_archive("preauction"):
+        if snap_date < window_start:
+            continue
+        for hour_str, fc_entry in fc_dict.items():
+            try:
+                target_dt = datetime.fromisoformat(hour_str.replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if (target_dt.date() - snap_date).days != 1:
+                continue
+            if hour_str not in actuals:
+                continue
+            actual = actuals[hour_str]
+            forecast = fc_entry["forecast"]
+            band_low, band_high = fc_entry.get("band_low"), fc_entry.get("band_high")
+            d1_pairs.append({
+                "actual": actual,
+                "forecast": forecast,
+                "naive": naive_forecast(actuals, target_dt, day_type(target_dt)),
+                "date": str(target_dt.date()),
+                "within_band": (band_low is not None and band_high is not None
+                                and band_low <= actual <= band_high),
+                "error": abs(forecast - actual),
+            })
+
+    if d1_pairs:
+        d1_dates = sorted({p["date"] for p in d1_pairs})
+        met_naive = [p for p in d1_pairs if p["naive"] is not None]
+        mae_d1 = sum(p["error"] for p in d1_pairs) / len(d1_pairs)
+        mae_naive = (sum(abs(p["naive"] - p["actual"]) for p in met_naive) / len(met_naive)
+                     if met_naive else None)
+        d1_preauction = {
+            "n_hours": len(d1_pairs),
+            "n_days": len(d1_dates),
+            "first_date": d1_dates[0],
+            "last_date": d1_dates[-1],
+            "mae_eur_mwh": round(mae_d1, 2),
+            "mae_vs_naive_pct": (round((mae_d1 - mae_naive) / mae_naive * 100, 1)
+                                 if mae_naive else None),
+            "within_band_pct": round(sum(1 for p in d1_pairs if p["within_band"]) / len(d1_pairs), 3),
+        }
+    else:
+        d1_preauction = None
+        print("[INFO] Nog geen preauction-snapshots; D+1 blijft leeg tot die er zijn.")
+
+    # ---------------------------------------------------------------------------
     # Samenvoegen en schrijven
     # ---------------------------------------------------------------------------
     dates = sorted(daily_map.keys()) if daily_map else []
+    # Het werkelijke venster is korter dan EVAL_WINDOW_DAYS zodra het archief korter is -
+    # en dat is na elke modelwissel het geval, omdat de meting dan opnieuw begint.
+    window_days_actual = (
+        (date.fromisoformat(dates[-1]) - date.fromisoformat(dates[0])).days + 1
+        if dates else 0
+    )
     result = {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "model_version": CURRENT_MODEL_VERSION,
         "evaluation_window_days": EVAL_WINDOW_DAYS,
+        "window_days_actual": window_days_actual,
+        "horizon_min_days": 2,
+        "horizon_max_days": 7,
+        "horizon_note": (
+            "Horizon 2 tot 7 dagen. Dag 1 telt hier niet mee: op het moment van de "
+            "dagelijkse meting staan de prijzen van morgen al vast bij EPEX, dus dat "
+            "zou geen voorspelling zijn. Zie d1_preauction voor de losse D+1-meting."
+        ),
+        "d1_preauction": d1_preauction,
         "first_date": dates[0] if dates else None,
         "last_date": dates[-1] if dates else None,
         "overall": overall,
@@ -420,7 +495,8 @@ def compute_performance():
 
     n_pairs = len(pairs)
     n_dates = len(dates)
-    print(f"[OK] performance.json geschreven ({n_pairs} matched pairs, {n_dates} dagen).")
+    print(f"[OK] performance.json geschreven ({n_pairs} matched pairs, {n_dates} dagen, "
+          f"venster {window_days_actual}d, D+1 {'ja' if d1_preauction else 'nog niet'}).")
 
 
 
