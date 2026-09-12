@@ -325,7 +325,7 @@
         "isPartOf": {
           "@id": "https://stroomvoorspeller.nl/#website"
         },
-        "dateModified": "2026-09-12T12:10:15+00:00"
+        "dateModified": "2026-09-11T21:13:44+00:00"
       }
     ]
   }
@@ -356,7 +356,7 @@
     <!-- ── Hero ── -->
     <section class="hist-hero">
       <div class="container">
-        <p class="hist-breadcrumb"><a href="/">← Terug naar vandaag</a></p>
+        <p class="hist-breadcrumb"><a href="/">← Terug naar vandaag</a> · <a href="/records">Records</a></p>
         <h1>Historische stroomprijzen</h1>
         <p>Bekijk de day-ahead EPEX-prijzen per uur voor elke dag. Filter op aanbieder of zoek negatieve prijsmomenten.</p>
       </div>
@@ -564,6 +564,11 @@
       // Start op huidige maand
       currentMonth = todayYM();
       await loadMonth(currentMonth);
+
+      // Vangnet: heeft de lopende maand nog geen archief-bestand, val dan terug
+      // op de vorige maand in plaats van een lege kalender te tonen.
+      const vorige = prevMonth(currentMonth);
+      if (!archiveData && vorige >= EARLIEST_MONTH) await loadMonth(vorige);
     }
 
     // ── Dropdown ───────────────────────────────────────────────────────────
