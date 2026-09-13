@@ -125,7 +125,8 @@
     }
   }
 
-  /* ── Beginscherm-strip (#84) ──────────────────────────────────────────────────────────────────────\n   * Mobiele bezoeker wijzen op de webapp. Android kan het in één tik via
+  /* Beginscherm-strip (#84)
+   * Mobiele bezoeker wijzen op de webapp. Android kan het in één tik via
    * beforeinstallprompt; iOS heeft daar geen API voor, dus daar tonen we de
    * ene handeling die wél werkt: het deelmenu.
    * Onafhankelijk van ha.json — deze strip hangt niet aan de prijzen.
