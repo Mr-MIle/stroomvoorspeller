@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Is een dynamisch contract voordelig voor jou?</title>
+<meta name="description" content="Vijf vragen en een berekening op echte uurprijzen: wat een dynamisch energiecontract jou per jaar kost of oplevert, nu en vanaf 2027 zonder saldering." />
+<meta name="theme-color" content="#0f6cbd" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="canonical" href="https://stroomvoorspeller.nl/dynamisch-berekenen" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="nl_NL" />
+<meta property="og:site_name" content="Stroomvoorspeller.nl" />
+<meta property="og:title" content="Is een dynamisch energiecontract voordelig voor jou?" />
+<meta property="og:description" content="Vijf vragen en een berekening op echte uurprijzen: wat een dynamisch energiecontract jou per jaar kost of oplevert, nu en vanaf 2027 zonder saldering." />
+<meta property="og:url" content="https://stroomvoorspeller.nl/dynamisch-berekenen" />
+<meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Is een dynamisch energiecontract voordelig voor jou?" />
+<meta name="twitter:description" content="Vijf vragen en een berekening op echte uurprijzen: wat een dynamisch energiecontract jou per jaar kost of oplevert, nu en vanaf 2027 zonder saldering." />
+<meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@graph":[
+ {"@type":"WebApplication","name":"Is een dynamisch energiecontract voordelig voor jou?","url":"https://stroomvoorspeller.nl/dynamisch-berekenen","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"inLanguage":"nl-NL","isPartOf":{"@id":"https://stroomvoorspeller.nl/#website"}},
+ {"@type":"BreadcrumbList","itemListElement":[
+   {"@type":"ListItem","position":1,"name":"Home","item":"https://stroomvoorspeller.nl/"},
+   {"@type":"ListItem","position":2,"name":"Dynamisch berekenen","item":"https://stroomvoorspeller.nl/dynamisch-berekenen"}]},
+ {"@type":"FAQPage","mainEntity":[
+   {"@type":"Question","name":"Voor wie is een dynamisch energiecontract voordelig?","acceptedAnswer":{"@type":"Answer","text":"Voor huishoudens die hun verbruik kunnen verplaatsen naar goedkope uren. Een elektrische auto die 's nachts laadt, een thuisbatterij of een warmtepomp tellen het hardst mee. Verbruik je vooral in de avondpiek en kun je niets verschuiven, dan blijft het verschil met een vast contract klein."}},
+   {"@type":"Question","name":"Heb ik een slimme meter nodig voor een dynamisch contract?","acceptedAnswer":{"@type":"Answer","text":"Ja. Je leverancier moet per uur weten wat je verbruikt, en dat kan alleen met een slimme meter. Aanvragen bij je netbeheerder is gratis; reken op enkele weken wachttijd."}},
+   {"@type":"Question","name":"Wat verandert er in 2027 als de salderingsregeling stopt?","acceptedAnswer":{"@type":"Answer","text":"Vanaf 1 januari 2027 mag je de stroom die je teruglevert niet meer wegstrepen tegen de stroom die je afneemt. Je krijgt dan een vergoeding voor teruglevering die veel lager ligt dan het tarief dat je zelf betaalt. Zonnestroom die je zelf gebruikt wordt daardoor meer waard dan zonnestroom die je teruglevert."}},
+   {"@type":"Question","name":"Heb ik een thuisbatterij nodig bij zonnepanelen en een dynamisch contract?","acceptedAnswer":{"@type":"Answer","text":"Vanaf 2027 wordt die combinatie een stuk aantrekkelijker. Zonder saldering verlies je op elke teruggeleverde kWh het verschil tussen je afnametarief en de terugleververgoeding. Een batterij bewaart die stroom tot je hem zelf nodig hebt, en bij een dynamisch contract kan hij ook laden in goedkope uren en leveren in dure uren."}},
+   {"@type":"Question","name":"Wat kost het om over te stappen naar een dynamisch contract?","acceptedAnswer":{"@type":"Answer","text":"Loopt je huidige contract nog, dan kan je leverancier een opzegvergoeding rekenen: 50 euro voor stroom bij een resterende looptijd tot anderhalf jaar, 100 euro daarboven. Bij een variabel contract of een modelcontract kun je maandelijks opzeggen zonder vergoeding."}},
+   {"@type":"Question","name":"Hoe betrouwbaar is deze berekening?","acceptedAnswer":{"@type":"Answer","text":"De prijzen zijn echt: alle uurprijzen van de afgelopen twaalf maanden komen uit ons eigen archief. Je verbruik en je zonopwek zijn een schatting op basis van gemiddelde patronen, dus jouw werkelijke bedrag wijkt af. Wat de prijzen de komende jaren doen, weet niemand."}}
+ ]}
+]}
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<style>
+*{box-sizing:border-box}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 18px 60px}
+h1{font-size:1.6rem;margin:.2em 0 .1em}
+.lead{color:var(--c-text-soft);margin:.2em 0 1em;max-width:62ch}
+.card{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);box-shadow:var(--shadow-md);padding:20px;margin-bottom:22px}
+.card h2{font-size:1.05rem;margin:0 0 4px}
+.card .sublabel{color:var(--c-text-mute);font-size:.82rem;margin:0 0 14px}
+.grid{display:grid;grid-template-columns:330px 1fr;gap:22px;align-items:start}
+.grid>*{min-width:0}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.field{margin-bottom:15px}
+.field label{display:block;font-weight:600;font-size:.88rem;margin-bottom:5px}
+.field .hint{font-weight:400;color:var(--c-text-mute);font-size:.78rem}
+input[type=number],select{width:100%;padding:9px 11px;border:1px solid var(--c-border);border-radius:var(--radius-sm);font-family:inherit;font-size:.95rem;background:#fff;color:var(--c-text)}
+.seg{display:flex;border:1px solid var(--c-border);border-radius:var(--radius-sm);overflow:hidden;flex-wrap:wrap}
+.seg button{flex:1 1 33%;border:0;background:#fff;padding:9px 6px;font-family:inherit;font-size:.82rem;cursor:pointer;color:var(--c-text-soft);border-right:1px solid var(--c-border)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--c-accent,#0f6cbd);color:#fff;font-weight:600}
+.vraag{margin-bottom:16px}
+.vraag p.q{font-weight:600;font-size:.92rem;margin:0 0 6px}
+.checkrij{display:flex;flex-wrap:wrap;gap:8px}
+.checkrij label{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--c-border);border-radius:var(--radius-sm);padding:8px 12px;font-size:.88rem;cursor:pointer;background:#fff}
+.checkrij input{width:17px;height:17px}
+.oordeel{border-radius:var(--radius-sm);padding:14px 16px;margin-top:6px;font-size:.95rem;line-height:1.5}
+.oordeel.ja{background:#eaf6ee;border:1px solid #bcdfc7}
+.oordeel.mits{background:#fdf6e3;border:1px solid #ecd9a6}
+.oordeel.nee{background:#f4f4f6;border:1px solid var(--c-border)}
+.oordeel b{display:block;margin-bottom:4px}
+.headline{font-size:1.12rem;line-height:1.5;margin:0 0 14px}
+table.res{width:100%;border-collapse:collapse;font-size:.92rem}
+table.res th,table.res td{padding:9px 8px;border-bottom:1px solid var(--c-border);text-align:left}
+table.res th.num,table.res td.num{text-align:right;white-space:nowrap}
+table.res thead th{font-size:.8rem;color:var(--c-text-mute);font-weight:600}
+table.res tr.win td{background:#f2f9f4}
+table.res td.best{font-weight:700}
+.table-wrap{overflow-x:auto}
+.muted{color:var(--c-text-mute)}
+.kleine{font-size:.82rem}
+.stap{display:flex;gap:12px;margin-bottom:14px}
+.stap .nr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--c-accent,#0f6cbd);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700}
+.stap p{margin:0;font-size:.93rem;line-height:1.55}
+.knop{display:inline-block;border:1px solid var(--c-border);background:#fff;border-radius:var(--radius-sm);padding:9px 14px;font-family:inherit;font-size:.88rem;cursor:pointer;color:var(--c-text)}
+details.aannames summary{cursor:pointer;font-weight:600;font-size:.92rem}
+details.aannames p,details.aannames li{font-size:.86rem;line-height:1.55;color:var(--c-text-soft)}
+.faq h3{font-size:.98rem;margin:16px 0 4px}
+.faq p{margin:0;font-size:.92rem;line-height:1.6}
+.laadnote{background:var(--c-free-bg,#f3eefc);border:1px solid #d9ccf7;color:#4b3a85;border-radius:var(--radius-sm);padding:10px 14px;font-size:.85rem;margin-bottom:20px}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
+        <a href="/dynamisch-berekenen" aria-current="page">Overstappen</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank">Kennisbank</a>
+        <a href="/batterij-berekenen">Batterij berekenen</a>
+        <a href="/integraties">Integraties</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+<div class="wrap">
+  <h1>Is een dynamisch contract voordelig voor jou?</h1>
+  <p class="lead">8 procent van de Nederlandse huishoudens heeft een dynamisch energiecontract, en in juni 2026 kwamen er 33.000 bij (<a href="https://www.acm.nl/nl/publicaties/energiemonitor-acm-toename-aantal-dynamische-contracten-zet-door" rel="noopener noreferrer">ACM Energiemonitor</a>, peildatum juli 2026). Of het voor jou uitpakt hangt af van wat je in huis hebt en wanneer je stroom gebruikt. Deze pagina rekent het door op de echte uurprijzen van de afgelopen twaalf maanden.</p>
+
+  <div class="laadnote" id="laadnote"><b>Prijzen laden...</b> De tool haalt de uurprijzen van de laatste twaalf maanden op.</div>
+
+  <section class="card">
+    <h2>Stap 1 &#183; Vijf vragen</h2>
+    <p class="sublabel">Je antwoorden vullen de berekening hieronder vast in.</p>
+
+    <div class="vraag">
+      <p class="q">1. Heb je een slimme meter?</p>
+      <div class="seg" id="qMeter">
+        <button type="button" data-v="ja" class="on">Ja</button>
+        <button type="button" data-v="nee">Nee</button>
+        <button type="button" data-v="weet">Weet ik niet</button>
+      </div>
+    </div>
+
+    <div class="vraag">
+      <p class="q">2. Wat voor contract heb je nu?</p>
+      <div class="seg" id="qContract">
+        <button type="button" data-v="vast_lang" class="on">Vast, loopt nog lang</button>
+        <button type="button" data-v="vast_kort">Vast, bijna afgelopen</button>
+        <button type="button" data-v="variabel">Variabel of model</button>
+      </div>
+    </div>
+
+    <div class="vraag">
+      <p class="q">3. Wat heb je in huis?</p>
+      <div class="checkrij">
+        <label><input type="checkbox" id="qZon"> Zonnepanelen</label>
+        <label><input type="checkbox" id="qBat"> Thuisbatterij</label>
+        <label><input type="checkbox" id="qEv"> Elektrische auto</label>
+        <label><input type="checkbox" id="qWp"> Warmtepomp</label>
+      </div>
+    </div>
+
+    <div class="vraag">
+      <p class="q">4. Wanneer gebruik je de meeste stroom?</p>
+      <div class="seg" id="qProfiel">
+        <button type="button" data-v="avond" class="on">Vooral 's avonds</button>
+        <button type="button" data-v="dag">Overdag, ik ben thuis</button>
+        <button type="button" data-v="schuiven">Ik kan het verschuiven</button>
+      </div>
+    </div>
+
+    <div class="vraag">
+      <p class="q">5. Een winterweek waarin stroom twee keer zo duur is:</p>
+      <div class="seg" id="qRisico">
+        <button type="button" data-v="ok" class="on">Kan ik hebben</button>
+        <button type="button" data-v="liever_niet">Wil ik liever niet</button>
+      </div>
+    </div>
+
+    <div class="oordeel ja" id="oordeel"><b>Vul de vragen in</b>Het oordeel verschijnt hier, met het bedrag uit de berekening erbij.</div>
+  </section>
+
+  <h2 style="font-size:1.15rem;margin:26px 0 10px">Stap 2 &#183; Wat het je had gekost</h2>
+  <div class="grid">
+    <form class="card" id="form" onsubmit="return false">
+      <h2>Jouw situatie</h2>
+      <p class="sublabel">Alles is aan te passen.</p>
+
+      <div class="field">
+        <label for="verbruik">Stroomverbruik per jaar <span class="hint">huishouden, zonder auto en warmtepomp</span></label>
+        <input type="number" id="verbruik" min="0" max="25000" step="50" value="2900" />
+      </div>
+
+      <div class="field">
+        <label for="panelen">Zonnepanelen <span class="hint">aantal, we rekenen met 350 kWh per paneel per jaar</span></label>
+        <input type="number" id="panelen" min="0" max="60" step="1" value="0" />
+      </div>
+
+      <div class="field">
+        <label for="evKwh">Elektrische auto <span class="hint">kWh per jaar thuis geladen, 0 = geen auto</span></label>
+        <input type="number" id="evKwh" min="0" max="15000" step="100" value="0" />
+      </div>
+
+      <div class="field" id="evModeBox" style="display:none">
+        <label>Wanneer laad je?</label>
+        <div class="seg" id="evMode">
+          <button type="button" data-v="slim" class="on">Op de goedkoopste uren</button>
+          <button type="button" data-v="avond">Meteen bij thuiskomst</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="hpKwh">Warmtepomp <span class="hint">kWh per jaar, 0 = geen warmtepomp</span></label>
+        <input type="number" id="hpKwh" min="0" max="12000" step="100" value="0" />
+      </div>
+
+      <div class="field">
+        <label for="vastPrijs">Je vaste tarief <span class="hint">ct/kWh, alles inbegrepen</span></label>
+        <input type="number" id="vastPrijs" min="5" max="100" step="0.5" value="30" />
+      </div>
+
+      <details style="margin-top:4px">
+        <summary style="cursor:pointer;font-size:.88rem;font-weight:600">Meer instellingen</summary>
+        <div class="field" style="margin-top:12px">
+          <label for="batKwh">Thuisbatterij <span class="hint">kWh, voor de onderste regel van de tabel</span></label>
+          <input type="number" id="batKwh" min="0" max="50" step="1" value="10" />
+        </div>
+        <div class="field">
+          <label for="opslag">Opslag van je dynamische aanbieder <span class="hint">ct/kWh, gemiddelde van de markt</span></label>
+          <input type="number" id="opslag" min="0" max="10" step="0.01" value="1.78" />
+        </div>
+        <div class="field">
+          <label for="tlv">Terugleverkosten <span class="hint">ct per teruggeleverde kWh</span></label>
+          <input type="number" id="tlv" min="-10" max="20" step="0.1" value="2" />
+        </div>
+        <div class="field">
+          <label for="vastTerug">Terugleververgoeding vast contract <span class="hint">ct/kWh vanaf 2027</span></label>
+          <input type="number" id="vastTerug" min="0" max="30" step="0.5" value="5" />
+        </div>
+        <p class="muted kleine">Per aanbieder verschillen opslag en terugleverkosten flink. Die staan op de <a href="/aanbieders">aanbiederspagina</a>.</p>
+      </details>
+    </form>
+
+    <div>
+      <div class="card">
+        <p class="headline" id="headline"><!-- BUILD:KOP:START -->Met een dynamisch contract was je het afgelopen jaar <b>&euro;134 per jaar goedkoper</b> uit. Je gemiddelde inkoopprijs komt dan op 25,4 ct per kWh, tegen 30,0 ct vast.<!-- BUILD:KOP:END --></p>
+        <div class="table-wrap">
+          <!-- BUILD:TABEL:START --><table class="res" id="tabel"><thead><tr><th>Stroomkosten per jaar</th><th class="num">Vast contract</th><th class="num">Dynamisch</th></tr></thead><tbody><tr class="win"><td>Zoals je nu stookt</td><td class="num">&euro;870</td><td class="num best">&euro;736</td></tr><tr class="win"><td>Met een thuisbatterij van 10 kWh</td><td class="num">&euro;870</td><td class="num best">&euro;565</td></tr></tbody></table><!-- BUILD:TABEL:END -->
+        </div>
+        <p class="muted kleine" id="tabelNote" style="margin-top:10px"></p>
+      </div>
+
+      <div class="card">
+        <h2>En als de prijzen ontsporen?</h2>
+        <p class="sublabel">De gascrisis van oktober 2021 tot september 2022 is de zwaarste test die we hebben.</p>
+        <p style="font-size:.93rem;line-height:1.6;margin:0 0 12px">In dat jaar lag de gemiddelde marktprijs op <!-- BUILD:CRISIS:START -->241<!-- BUILD:CRISIS:END --> euro per MWh, tegen <!-- BUILD:MARKT:START -->97<!-- BUILD:MARKT:END --> euro nu. Een vast contract houdt zijn prijs vast zolang het loopt; een dynamisch contract volgt de markt naar boven.</p>
+        <button type="button" class="knop" id="crisisBtn">Reken dat jaar door</button>
+        <p id="crisisUit" style="font-size:.93rem;line-height:1.6;margin:12px 0 0"></p>
+      </div>
+    </div>
+  </div>
+
+  <section class="card" style="margin-top:26px">
+    <h2>Stap 3 &#183; Zo stap je over</h2>
+    <p class="sublabel">Van aanvraag tot eerste jaarnota.</p>
+    <div class="stap"><div class="nr">1</div><p>Check of je een slimme meter hebt. Zonder slimme meter kan een leverancier je uurverbruik niet meten. Aanvragen doe je gratis bij je netbeheerder, en het duurt meestal een paar weken.</p></div>
+    <div class="stap"><div class="nr">2</div><p>Zoek op wanneer je huidige contract afloopt en wat opzeggen kost. Bij een vast contract mag de leverancier 50 euro rekenen als er minder dan anderhalf jaar over is, en 100 euro daarboven. Bij een variabel contract of modelcontract betaal je niets. Het <a href="/kennisbank/overstappen-dynamisch-energiecontract">stappenplan met opzegvergoedingen</a> staat in de kennisbank.</p></div>
+    <div class="stap"><div class="nr">3</div><p>Vergelijk de aanbieders op opslag, vastrecht en terugleverkosten. Dat zijn de enige drie punten waarop ze van elkaar verschillen, want de marktprijs is bij iedereen dezelfde. De <a href="/aanbieders">vergelijking van dynamische aanbieders</a> zet ze op een rij.</p></div>
+    <div class="stap"><div class="nr">4</div><p>Zet na de overstap je grote verbruikers op de goedkope uren. De prijzen voor morgen staan elke dag rond 14:00 uur op <a href="/morgen">de morgenpagina</a>, en via <a href="/integraties">de koppelingen</a> kun je je auto of batterij er automatisch op laten reageren.</p></div>
+  </section>
+
+  <section class="card faq">
+    <h2>Veelgestelde vragen</h2>
+    <h3>Voor wie is een dynamisch energiecontract voordelig?</h3>
+    <p>Voor huishoudens die hun verbruik kunnen verplaatsen naar goedkope uren. Een elektrische auto die 's nachts laadt, een thuisbatterij of een warmtepomp tellen het hardst mee. Verbruik je vooral in de avondpiek en kun je niets verschuiven, dan blijft het verschil met een vast contract klein.</p>
+    <h3>Heb ik een slimme meter nodig voor een dynamisch contract?</h3>
+    <p>Ja. Je leverancier moet per uur weten wat je verbruikt, en dat kan alleen met een slimme meter. Aanvragen bij je netbeheerder is gratis; reken op enkele weken wachttijd.</p>
+    <h3>Wat verandert er in 2027 als de salderingsregeling stopt?</h3>
+    <p>Vanaf 1 januari 2027 mag je de stroom die je teruglevert niet meer wegstrepen tegen de stroom die je afneemt. Je krijgt dan een vergoeding voor teruglevering die veel lager ligt dan het tarief dat je zelf betaalt. Zonnestroom die je zelf gebruikt wordt daardoor meer waard dan zonnestroom die je teruglevert.</p>
+    <h3>Heb ik een thuisbatterij nodig bij zonnepanelen en een dynamisch contract?</h3>
+    <p>Vanaf 2027 wordt die combinatie een stuk aantrekkelijker. Zonder saldering verlies je op elke teruggeleverde kWh het verschil tussen je afnametarief en de terugleververgoeding. Een batterij bewaart die stroom tot je hem zelf nodig hebt, en bij een dynamisch contract kan hij ook laden in goedkope uren en leveren in dure uren.</p>
+    <h3>Wat kost het om over te stappen naar een dynamisch contract?</h3>
+    <p>Loopt je huidige contract nog, dan kan je leverancier een opzegvergoeding rekenen: 50 euro voor stroom bij een resterende looptijd tot anderhalf jaar, 100 euro daarboven. Bij een variabel contract of een modelcontract kun je maandelijks opzeggen zonder vergoeding.</p>
+    <h3>Hoe betrouwbaar is deze berekening?</h3>
+    <p>De prijzen zijn echt: alle uurprijzen van de afgelopen twaalf maanden komen uit ons eigen archief. Je verbruik en je zonopwek zijn een schatting op basis van gemiddelde patronen, dus jouw werkelijke bedrag wijkt af. Wat de prijzen de komende jaren doen, weet niemand.</p>
+  </section>
+
+  <details class="aannames card">
+    <summary>Waar deze bedragen op gebaseerd zijn</summary>
+    <p>De uurprijzen komen uit ons eigen ENTSO-E-archief, over <span id="periode"><!-- BUILD:PERIODE:START -->september 2025 tot en met augustus 2026<!-- BUILD:PERIODE:END --></span>. Dat zijn <!-- BUILD:UREN:START -->8.760<!-- BUILD:UREN:END --> uurprijzen, waarvan er <!-- BUILD:NEG:START -->463<!-- BUILD:NEG:END --> onder nul lagen.</p>
+    <p>De prijs die je bij een dynamisch contract betaalt is de marktprijs van dat uur, plus de opslag van je aanbieder, plus 9,16 cent energiebelasting, en over dat alles 21 procent btw. Teruglevering levert de kale marktprijs op, min de terugleverkosten van je aanbieder.</p>
+    <p>Vastrecht en netbeheerkosten staan buiten de berekening. Die betaal je bij elk contract en ze schelen tussen vast en dynamisch nauwelijks.</p>
+    <p>Je verbruik wordt over de uren verdeeld met een gemiddeld huishoudprofiel, met een ochtend- en avondpiek. Een warmtepomp krijgt een winterzwaar profiel dat vlak over de dag loopt. Een auto die slim laadt, laadt in de goedkoopste uren tussen 16:00 en 08:00 met maximaal 3,7 kW. Zonopwek volgt een dagboog per maand, goed voor 350 kWh per paneel per jaar.</p>
+    <p>Salderen rekenen we op jaarbasis: de teruggeleverde kWh gaan van je afname af tegen je eigen gemiddelde inkoopprijs, en wat je meer teruglevert dan je afneemt krijgt de terugleververgoeding. Vanaf 2027 vervalt dat wegstrepen.</p>
+    <p>De batterij laadt en ontlaadt met 95 procent rendement, gebruikt 90 procent van zijn opgegeven capaciteit en doet maximaal ongeveer 1,2 laadbeurten per dag. Hij optimaliseert op de dagprijzen die om 14:00 uur bekend worden, dus zonder vooruit te kijken naar morgen. Meer detail staat op <a href="/batterij-berekenen">de batterijpagina</a>.</p>
+    <p>Aan de uitkomsten kun je geen rechten ontlenen. Zie ook de <a href="/disclaimer">disclaimer</a>.</p>
+  </details>
+
+  <p class="muted kleine">Verder lezen: <a href="/kennisbank/dynamisch-of-vast-contract">dynamisch of vast contract</a> &#183; <a href="/kennisbank/nadelen-dynamisch-energiecontract">de nadelen op een rij</a> &#183; <a href="/kennisbank/hoeveel-bespaar-je-dynamisch-contract">hoeveel je bespaart</a> &#183; <a href="/kennisbank/salderingsregeling">de salderingsregeling</a></p>
+</div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+        <p class="footer-meta">Dagelijkse updates: <a href="https://x.com/stroomtarief" rel="noopener noreferrer">@stroomtarief op X &#8599;</a></p>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> &#183;
+          <a href="/cookies">Cookies</a> &#183;
+          <a href="/disclaimer">Disclaimer</a> &#183;
+          <a href="/over/voorspelling">Over de voorspelling</a> &#183;
+          <a href="/aanbieders">Aanbieders</a>
+        </p>
+      </div>
+      <div>
+        <p class="footer-meta-small">Onafhankelijk. Project van &#233;&#233;n persoon met een zwak voor tech, smart home en AI.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script src="/nav.js" defer></script>
+  <script src="/dyn-model.js"></script>
+  <script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id);};
+  var MNAMES=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+  var EURO=String.fromCharCode(8364);
+  function eur(x){ var n=Math.round(Math.abs(x)).toLocaleString('nl-NL'); return (x<0?'-':'')+EURO+n; }
+  function ct(x){ return x.toLocaleString('nl-NL',{minimumFractionDigits:1,maximumFractionDigits:1})+' ct'; }
+
+  // ---------- prijzen ----------
+  var REAL={}, loaded={};
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function ingest(j){
+    var list=j.prices||[];
+    for(var i=0;i<list.length;i++){
+      var t=list[i].time, dk=t.slice(0,10).split('-');
+      var key=(+dk[0])+'-'+((+dk[1])-1)+'-'+(+dk[2]);
+      var h=parseInt(t.slice(11,13),10);
+      if(!REAL[key]) REAL[key]=new Array(24).fill(null);
+      REAL[key][h]=list[i].price;
+    }
+  }
+  function loadMonth(y,m){
+    var key=y+'-'+m;
+    if(loaded[key]) return Promise.resolve(true);
+    return fetch('/data/archief/'+y+'-'+pad2(m+1)+'.json',{cache:'force-cache'})
+      .then(function(r){ if(!r.ok) throw new Error('nee'); return r.json(); })
+      .then(function(j){ ingest(j); loaded[key]=true; return true; })
+      .catch(function(){ loaded[key]=false; return false; });
+  }
+  function epexFor(y,m,d){
+    var a=REAL[y+'-'+m+'-'+d];
+    if(!a) return new Array(24).fill(90);
+    for(var h=0;h<24;h++){ if(a[h]==null) a[h]= h>0? a[h-1] : (a[h+1]==null?0:a[h+1]); }
+    return a;
+  }
+
+  var MONTHS=DynModel.lastTwelveMonths(new Date());
+  var CRISIS=[]; (function(){ var y=2021,m=9; for(var i=0;i<12;i++){ CRISIS.push({y:y,m:m}); m++; if(m>11){m=0;y++;} } })();
+
+  // ---------- invoer ----------
+  var keuze={meter:'ja',contract:'vast_lang',profiel:'avond',risico:'ok',evMode:'slim'};
+  function segs(id,key,after){
+    var box=$(id); if(!box) return;
+    var btns=box.querySelectorAll('button');
+    Array.prototype.forEach.call(btns,function(b){
+      b.onclick=function(){
+        Array.prototype.forEach.call(btns,function(x){x.classList.remove('on');});
+        b.classList.add('on'); keuze[key]=b.getAttribute('data-v');
+        if(after) after();
+        render();
+      };
+    });
+  }
+  function num(id){ var x=parseFloat($(id).value); return isNaN(x)?0:x; }
+
+  function params(){
+    return {
+      months:MONTHS, epexFor:epexFor,
+      verbruik:Math.max(0,num('verbruik')),
+      panelen:Math.max(0,num('panelen')),
+      evKwh:Math.max(0,num('evKwh')),
+      hpKwh:Math.max(0,num('hpKwh')),
+      evMode:keuze.evMode,
+      profiel:keuze.profiel,
+      batKwh:Math.max(0,num('batKwh')),
+      vastPrijs:num('vastPrijs')/100,
+      vastTerug:num('vastTerug')/100,
+      markup:num('opslag')/100,
+      tlv:num('tlv')/100
+    };
+  }
+
+  // stap 1 vult stap 2
+  function toepassenKeuze(){
+    if($('qZon').checked && num('panelen')===0) $('panelen').value=10;
+    if(!$('qZon').checked) $('panelen').value=0;
+    if($('qEv').checked && num('evKwh')===0) $('evKwh').value=2500;
+    if(!$('qEv').checked) $('evKwh').value=0;
+    if($('qWp').checked && num('hpKwh')===0) $('hpKwh').value=3000;
+    if(!$('qWp').checked) $('hpKwh').value=0;
+    $('evModeBox').style.display = num('evKwh')>0 ? 'block' : 'none';
+  }
+
+  // ---------- resultaat ----------
+  var laatste=null, crisisGeladen=false;
+  function render(){
+    var p=params();
+    $('evModeBox').style.display = p.evKwh>0 ? 'block' : 'none';
+    var heeftZon=p.panelen>0;
+    var heeftBat=$('qBat').checked;
+    var r={
+      nu_vast:  DynModel.runYear(Object.assign({},p,{contract:'vast',saldering:true, batKwh:0})),
+      nu_dyn:   DynModel.runYear(Object.assign({},p,{contract:'dyn', saldering:true, batKwh:0})),
+      la_vast:  DynModel.runYear(Object.assign({},p,{contract:'vast',saldering:false,batKwh:0})),
+      la_dyn:   DynModel.runYear(Object.assign({},p,{contract:'dyn', saldering:false,batKwh:0})),
+      bat_vast: DynModel.runYear(Object.assign({},p,{contract:'vast',saldering:false,batKwh:p.batKwh})),
+      bat_dyn:  DynModel.runYear(Object.assign({},p,{contract:'dyn', saldering:false,batKwh:p.batKwh}))
+    };
+    laatste={p:p,r:r};
+
+    var verschil=r.la_vast.jaarkosten-r.la_dyn.jaarkosten;
+    var gem=r.la_dyn.avgImp*100;
+    var kop;
+    if(verschil>=0){
+      kop='Met een dynamisch contract was je het afgelopen jaar <b>'+eur(verschil)+' per jaar goedkoper</b> uit. Je gemiddelde inkoopprijs komt dan op '+ct(gem)+' per kWh, tegen '+ct(num('vastPrijs'))+' vast.';
+    } else {
+      kop='Met een dynamisch contract was je het afgelopen jaar <b>'+eur(-verschil)+' per jaar duurder</b> uit. Je gemiddelde inkoopprijs komt dan op '+ct(gem)+' per kWh, tegen '+ct(num('vastPrijs'))+' vast.';
+    }
+    $('headline').innerHTML=kop;
+
+    var rows=[];
+    if(heeftZon){
+      rows.push(['Nu, met saldering', r.nu_vast, r.nu_dyn]);
+      rows.push(['Vanaf 2027, zonder saldering', r.la_vast, r.la_dyn]);
+    } else {
+      rows.push(['Zoals je nu stookt', r.la_vast, r.la_dyn]);
+    }
+    if(p.batKwh>0){
+      rows.push([(heeftBat?'Met je thuisbatterij':'Met een thuisbatterij van '+p.batKwh+' kWh')+(heeftZon?', vanaf 2027':''), r.bat_vast, r.bat_dyn]);
+    }
+    var html='<thead><tr><th>Stroomkosten per jaar</th><th class="num">Vast contract</th><th class="num">Dynamisch</th></tr></thead><tbody>';
+    for(var i=0;i<rows.length;i++){
+      var a=rows[i][1].jaarkosten, b=rows[i][2].jaarkosten;
+      var dynWint=b<a;
+      html+='<tr'+(dynWint?' class="win"':'')+'><td>'+rows[i][0]+'</td>'+
+            '<td class="num'+(dynWint?'':' best')+'">'+eur(a)+'</td>'+
+            '<td class="num'+(dynWint?' best':'')+'">'+eur(b)+'</td></tr>';
+    }
+    html+='</tbody>';
+    $('tabel').innerHTML=html;
+
+    var note=[];
+    if(heeftZon){ note.push('De onderste regels rekenen met de terugleververgoeding die je invult, want salderen kan vanaf 2027 niet meer.'); }
+    if(p.batKwh>0){
+      note.push('De batterijregel telt alleen in die regel mee; de andere regels rekenen zonder batterij.');
+      if(!heeftZon){ note.push('Een batterij van '+p.batKwh+' kWh kost ook zo\'n '+eur(p.batKwh*600)+' om aan te schaffen; wat dat oplevert staat op <a href="/batterij-berekenen">de batterijpagina</a>.'); }
+    }
+    note.push('Bedragen zijn stroomkosten per jaar, zonder vastrecht en netbeheerkosten. Een min-bedrag betekent dat je meer terugkrijgt dan je betaalt.');
+    $('tabelNote').innerHTML=note.join(' ');
+
+    oordeel(verschil, p, heeftZon);
+    if(crisisGeladen) toonCrisis();
+  }
+
+  function oordeel(verschil, p, heeftZon){
+    var el=$('oordeel'), kl='ja', kop='', tekst='';
+    var flex=(p.evKwh>0?1:0)+(p.hpKwh>0?1:0)+($('qBat').checked?1:0)+(keuze.profiel==='schuiven'?1:0);
+    if(keuze.meter==='nee'){
+      kl='mits'; kop='Regel eerst een slimme meter.';
+      tekst='Zonder slimme meter kan geen enkele leverancier je uurverbruik meten, dus een dynamisch contract kan niet. Aanvragen bij je netbeheerder is gratis en duurt een paar weken. Daarna is deze uitkomst voor jou van toepassing: '+(verschil>=0?eur(verschil)+' per jaar goedkoper':eur(-verschil)+' per jaar duurder')+' dan je vaste tarief.';
+    } else if(keuze.meter==='weet'){
+      kl='mits'; kop='Check eerst je meter.';
+      tekst='Staat er een digitaal scherm op je meter met een P1-poort aan de onderkant, dan heb je een slimme meter. Weet je het niet zeker, dan ziet je netbeheerder het aan je aansluiting. De berekening hieronder komt uit op '+(verschil>=0?eur(verschil)+' voordeel per jaar':eur(-verschil)+' nadeel per jaar')+'.';
+    } else if(verschil<25 && flex===0){
+      kl='nee'; kop='Voor jou levert dynamisch weinig op.';
+      tekst='Je verbruikt vooral op momenten dat stroom duur is en je hebt niets om mee te schuiven. Het verschil blijft steken op '+eur(Math.abs(verschil))+' per jaar'+(verschil<0?' in je nadeel':'')+'. Een vast contract geeft je dezelfde uitkomst zonder dat je ergens op hoeft te letten. Kom terug zodra er een auto, een warmtepomp of een batterij bij komt.';
+    } else if(keuze.risico==='liever_niet' && flex<2){
+      kl='mits'; kop='Het kan uit, maar je zult het merken.';
+      tekst='Op papier scheelt het '+eur(verschil)+' per jaar. Je gaf aan een dure winterweek liever te vermijden, en met '+(flex===0?'niets':'weinig')+' om mee te schuiven zit je die weken gewoon uit. Bekijk eerst de stresstest hiernaast voor je overstapt.';
+    } else {
+      kl='ja'; kop='Dit past bij wat je in huis hebt.';
+      tekst='Het scheelt ongeveer '+eur(verschil)+' per jaar ten opzichte van '+ct(num('vastPrijs'))+' vast. '+
+        (p.evKwh>0?'Je auto op de goedkoopste uren laden doet daarvan het meeste werk. ':'')+
+        (p.hpKwh>0?'Je warmtepomp draait veel uren en profiteert van de goedkope nachten. ':'')+
+        (heeftZon&&p.batKwh>0?'Met zonnepanelen en een batterij loopt het verschil na 2027 verder op. ':'')+
+        (keuze.contract==='vast_lang'?'Je huidige contract loopt nog wel even, dus reken op een opzegvergoeding van 50 of 100 euro.':'Je kunt zonder opzegvergoeding weg bij je huidige leverancier.');
+    }
+    el.className='oordeel '+kl;
+    el.innerHTML='<b>'+kop+'</b>'+tekst;
+  }
+
+  // ---------- stresstest ----------
+  function toonCrisis(){
+    if(!laatste) return;
+    var p=Object.assign({},laatste.p,{months:CRISIS});
+    var v=DynModel.runYear(Object.assign({},p,{contract:'vast',saldering:false,batKwh:0}));
+    var d=DynModel.runYear(Object.assign({},p,{contract:'dyn', saldering:false,batKwh:0}));
+    var vs=d.jaarkosten-v.jaarkosten;
+    $('crisisUit').innerHTML='Met jouw situatie en de regels van 2027 had je in dat jaar '+eur(d.jaarkosten)+
+      ' aan stroom betaald met een dynamisch contract, tegen '+eur(v.jaarkosten)+' met een vast tarief van '+ct(num('vastPrijs'))+'. '+
+      (vs>0? 'Dat is <b>'+eur(vs)+' meer</b>, oftewel '+eur(vs/12)+' per maand extra in het duurste jaar dat we gemeten hebben. '
+            : 'Dat is '+eur(-vs)+' minder. ')+
+      'Een vast contract dat je in die periode had moeten afsluiten was zelf overigens ook veel duurder dan '+ct(num('vastPrijs'))+'.';
+  }
+  $('crisisBtn').onclick=function(){
+    var btn=this; btn.disabled=true; btn.textContent='Prijzen van 2021-2022 laden...';
+    Promise.all(CRISIS.map(function(o){ return loadMonth(o.y,o.m); })).then(function(res){
+      btn.style.display='none';
+      if(res.filter(Boolean).length<12){ $('crisisUit').textContent='Die maanden lukten niet te laden.'; return; }
+      crisisGeladen=true; toonCrisis();
+    });
+  };
+
+  // ---------- opstarten ----------
+  ['verbruik','panelen','evKwh','hpKwh','vastPrijs','batKwh','opslag','tlv','vastTerug'].forEach(function(id){
+    $(id).addEventListener('input',render);
+  });
+  ['qZon','qBat','qEv','qWp'].forEach(function(id){
+    $(id).addEventListener('change',function(){ toepassenKeuze(); render(); });
+  });
+  segs('qMeter','meter'); segs('qContract','contract');
+  segs('qProfiel','profiel'); segs('qRisico','risico'); segs('evMode','evMode');
+
+  var startGedaan=false;
+  function start(){
+    if(startGedaan) return; startGedaan=true;
+    Promise.all(MONTHS.map(function(o){ return loadMonth(o.y,o.m); })).then(function(res){
+      var ok=res.filter(Boolean).length;
+      var eerste=MONTHS[0], laatst=MONTHS[MONTHS.length-1];
+      if(ok===12){
+        $('laadnote').innerHTML='<b>Echte prijzen.</b> Gerekend met de uurprijzen van '+MNAMES[eerste.m]+' '+eerste.y+' tot en met '+MNAMES[laatst.m]+' '+laatst.y+'. Je verbruik en zonopwek zijn een schatting.';
+        $('periode').textContent=MNAMES[eerste.m]+' '+eerste.y+' tot en met '+MNAMES[laatst.m]+' '+laatst.y;
+      } else {
+        $('laadnote').innerHTML='<b>Niet alle maanden geladen.</b> '+ok+' van de 12 maanden kwamen binnen; de rest vullen we met een gemiddelde prijs. Herlaad de pagina voor een scherpere uitkomst.';
+      }
+      render();
+    });
+  }
+  document.addEventListener('input',start,{once:true});
+  document.addEventListener('click',start,{once:true});
+  if(window.requestIdleCallback) requestIdleCallback(start,{timeout:2500}); else setTimeout(start,900);
+})();
+  </script>
+</body>
+</html>
