@@ -14,10 +14,7 @@
       { href: "/historisch", label: "Historisch" },
       { href: "/records", label: "Records" }
     ] },
-    { label: "Overstappen", children: [
-      { href: "/dynamisch-berekenen", label: "Is dynamisch iets voor jou?" },
-      { href: "/aanbieders", label: "Aanbieders vergelijken" }
-    ] },
+    { href: "/aanbieders", label: "Aanbieders" },
     { href: "/kennisbank/", label: "Kennisbank" },
     { label: "Slim thuis", children: [
       { href: "/batterij", label: "Thuisbatterij" },
