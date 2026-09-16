@@ -86,6 +86,16 @@
     .show-all-btn { margin-top: 14px; background: transparent; color: var(--c-brand); border: 1px solid var(--c-border); border-radius: 8px; padding: 9px 16px; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
     .show-all-btn:hover { background: var(--c-bg); }
 
+    .notice { background: var(--c-surface); border: 1px solid var(--c-border); border-left: 4px solid var(--c-pricey); border-radius: 12px; padding: 14px 18px; margin: 18px 0; }
+    .notice p { margin: 0 0 8px; font-size: 0.92rem; color: var(--c-text-soft); line-height: 1.6; max-width: 72ch; }
+    .notice p:last-child { margin-bottom: 0; }
+    .notice strong { color: var(--c-text); }
+
+    table.days tr.offline td { color: var(--c-text-mute); }
+    table.days tr.offline td:first-child { font-style: italic; }
+    .tag-off { font-size: 0.72rem; color: var(--c-text-mute); font-style: normal; }
+    .legend-off { font-size: 0.82rem; color: var(--c-text-mute); margin: 10px 0 0; }
+
     .note { font-size: 0.9rem; color: var(--c-text-soft); line-height: 1.6; max-width: 72ch; }
     .note strong { color: var(--c-text); }
     .muted { color: var(--c-text-mute); }
@@ -125,6 +135,11 @@
 
     <div class="intro">
       <p>De cijfers komen uit mijn eigen omvormer en lopen elke ochtend bij. De batterij draait sinds 15 oktober 2025. Ik heb een contract met uurprijzen, dus de prijs verschilt per uur. Kijk naar het totaal bovenaan, niet naar één dag: de batterij eindigt de ene dag voller dan de andere, dus losse dagen schommelen.</p>
+    </div>
+
+    <div class="notice">
+      <p><strong>Van 3 augustus tot en met 10 september 2026 lag de batterij stil door een storing.</strong> Hij laadde en ontlaadde in die vijf weken niets. Wat je over die dagen ziet, is dus gewoon stroom van het net &mdash; geen beeld van wat een batterij oplevert.</p>
+      <p>Die dagen tellen wel mee in de totalen hierboven, want ze horen bij een jaar met een batterij. In de tabel staan ze grijs. Sinds 11 september draait hij weer.</p>
     </div>
 
     <p class="solarline" id="solarline" hidden></p>
@@ -183,6 +198,7 @@
           <tbody id="rows"></tbody>
         </table>
       </div>
+      <p class="legend-off">Grijze rijen: batterij lag stil door een storing (3 augustus t/m 10 september 2026).</p>
       <button id="toggle-rows" class="show-all-btn" hidden></button>
     </section>
 
@@ -229,6 +245,10 @@
       return parseInt(d,10) + " " + mn[parseInt(m,10)-1] + " " + y;
     };
     const cls = (x) => (x >= 0 ? "pos" : "neg");
+
+    // Batterij lag stil door een storing: deze dagen apart markeren.
+    const OFFLINE_FROM = "2026-08-03", OFFLINE_TO = "2026-09-10";
+    const isOffline = (d) => d >= OFFLINE_FROM && d <= OFFLINE_TO;
 
     async function load() {
       let doc;
@@ -289,9 +309,11 @@
       // Tabel (nieuwste boven, standaard laatste 30 dagen; rest achter een knop)
       const rev = days.slice().reverse();
       const VISIBLE = 30;
-      const rowHtml = (d, hidden) =>
-        "<tr" + (hidden ? ' class="extra-row" hidden' : "") + ">"
-        + "<td>" + dfmt(d.date) + "</td>"
+      const rowHtml = (d, hidden) => {
+        const off = isOffline(d.date);
+        const klass = [hidden ? "extra-row" : "", off ? "offline" : ""].filter(Boolean).join(" ");
+        return "<tr" + (klass ? ' class="' + klass + '"' : "") + (hidden ? " hidden" : "") + ">"
+        + "<td>" + dfmt(d.date) + (off ? ' <span class="tag-off">stil</span>' : "") + "</td>"
         + "<td>" + kwh(d.consumption_kwh) + "</td>"
         + "<td>" + euro(d.cost_actual_eur) + "</td>"
         + "<td>" + euro(d.cost_without_eur) + "</td>"
@@ -300,6 +322,7 @@
         + "<td>" + kwh(d.arbitrage_kwh) + "</td>"
         + "<td>" + kwh(d.solar_charged_kwh) + "</td>"
         + "</tr>";
+      };
       document.getElementById("rows").innerHTML =
         rev.map((d, i) => rowHtml(d, i >= VISIBLE)).join("");
       document.getElementById("table-panel").hidden = false;
