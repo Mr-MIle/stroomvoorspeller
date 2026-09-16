@@ -227,6 +227,20 @@
       <div class="container">
         <h1 class="hero-heading">Actuele en voorspelde stroomprijzen voor Nederland</h1>
         <p class="hero-tagline">De Buienradar voor stroomprijzen.</p>
+        <style>
+        .hero-lint{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+        .hero-lint a{display:inline-block;padding:9px 14px;border-radius:20px;border:1px solid var(--c-border);background:var(--c-surface);color:var(--c-text);font-size:.85rem;font-weight:500;text-decoration:none;line-height:1.2}
+        .hero-lint a:hover{border-color:var(--c-brand);color:var(--c-brand)}
+        .hero-lint a.is-eerst{background:var(--c-brand);border-color:var(--c-brand);color:#fff;font-weight:600}
+        .hero-lint a.is-eerst:hover{color:#fff;opacity:.92}
+        @media(max-width:480px){.hero-lint a{font-size:.82rem;padding:9px 12px}}
+        </style>
+        <nav class="hero-lint" aria-label="Snel naar">
+          <a class="is-eerst" href="/dynamisch-berekenen">Is dynamisch iets voor jou?</a>
+          <a href="/morgen">Prijzen van morgen</a>
+          <a href="/aanbieders">Aanbieders vergelijken</a>
+          <a href="/batterij-berekenen">Batterij berekenen</a>
+        </nav>
         <div class="mode-toggle" role="group" aria-label="Prijsweergave kiezen">
           <span class="mode-toggle-label">Toon prijzen</span>
           <div class="mode-toggle-buttons">
