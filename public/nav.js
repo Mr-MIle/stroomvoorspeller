@@ -1,6 +1,6 @@
 /*
  * Gedeeld hoofdmenu voor stroomvoorspeller.nl.
- * Eén bron voor het menu: pas hieronder NAV aan en het werkt op alle pagina's.
+ * Een bron voor het menu: pas hieronder NAV aan en het werkt op alle pagina's.
  * Vervangt de (no-JS fallback) inhoud van <nav class="primary-nav"> door een
  * gegroepeerd menu met uitklapmenu's. Markeert de huidige pagina automatisch.
  */
@@ -14,7 +14,10 @@
       { href: "/historisch", label: "Historisch" },
       { href: "/records", label: "Records" }
     ] },
-    { href: "/aanbieders", label: "Aanbieders" },
+    { label: "Overstappen", children: [
+      { href: "/dynamisch-berekenen", label: "Is dynamisch iets voor jou?" },
+      { href: "/aanbieders", label: "Aanbieders vergelijken" }
+    ] },
     { href: "/kennisbank/", label: "Kennisbank" },
     { label: "Slim thuis", children: [
       { href: "/batterij", label: "Thuisbatterij" },
@@ -66,7 +69,7 @@
       btn.setAttribute("aria-haspopup", "true");
       var menuId = "nav-menu-" + idx;
       btn.setAttribute("aria-controls", menuId);
-      btn.innerHTML = item.label + ' <span class="nav-caret" aria-hidden="true">▾</span>';
+      btn.innerHTML = item.label + ' <span class="nav-caret" aria-hidden="true">&#9662;</span>';
       if (anyActive) btn.setAttribute("aria-current", "page");
 
       var menu = document.createElement("div");
@@ -118,7 +121,7 @@
     btn.type = "button";
     btn.className = "to-top";
     btn.setAttribute("aria-label", "Terug naar boven");
-    btn.innerHTML = '<span aria-hidden="true">↑</span>';
+    btn.innerHTML = '<span aria-hidden="true">&#8593;</span>';
     btn.addEventListener("click", function () {
       var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
@@ -150,6 +153,24 @@
     s.src = "/partner.js";
     s.defer = true;
     document.body.appendChild(s);
+  }
+
+  // Kennisbank-artikelen over dynamische contracten krijgen automatisch een
+  // verwijzing naar de rekentool, boven het "Lees ook"-blok. Zelfde idee als
+  // initPartner(): het artikel meldt zijn categorie, hier komt het blok erbij.
+  function initToolKaart() {
+    var meta = document.querySelector('meta[name="kb-categorie"]');
+    if (!meta || meta.content !== "Dynamisch contract") return;
+    var anker = document.querySelector("section.kb-lees-ook");
+    if (!anker || document.querySelector(".tool-kaart")) return;
+    var box = document.createElement("section");
+    box.className = "tool-kaart";
+    box.style.cssText = "border:1px solid var(--c-border);border-radius:var(--radius-sm);padding:16px 18px;margin:26px 0;background:var(--c-surface)";
+    box.innerHTML =
+      '<p style="margin:0 0 6px;font-weight:700">Reken het door voor je eigen huis</p>' +
+      '<p style="margin:0 0 10px;font-size:.93rem;line-height:1.55">Vijf vragen over je woning en verbruik, en een berekening op de echte uurprijzen van de afgelopen twaalf maanden: wat een dynamisch contract jou per jaar kost of oplevert.</p>' +
+      '<a href="/dynamisch-berekenen">Naar de rekentool &#8594;</a>';
+    anker.parentNode.insertBefore(box, anker);
   }
 
   // Webapp-schil: manifest, iOS-icoon en service worker worden hier ingehangen.
@@ -196,6 +217,7 @@
     build(location.pathname);
     initToTop();
     initPartner();
+    initToolKaart();
     initPWA();
   }
 
