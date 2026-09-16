@@ -131,7 +131,7 @@ details.aannames p,details.aannames li{font-size:.86rem;line-height:1.55;color:v
       <div class="seg" id="qContract">
         <button type="button" data-v="vast_lang" class="on">Vast, loopt nog lang</button>
         <button type="button" data-v="vast_kort">Vast, bijna afgelopen</button>
-        <button type="button" data-v="variabel">Variabel of model</button>
+        <button type="button" data-v="variabel">Variabel of modelcontract</button>
       </div>
     </div>
 
@@ -150,7 +150,7 @@ details.aannames p,details.aannames li{font-size:.86rem;line-height:1.55;color:v
       <div class="seg" id="qProfiel">
         <button type="button" data-v="avond" class="on">Vooral 's avonds</button>
         <button type="button" data-v="dag">Overdag, ik ben thuis</button>
-        <button type="button" data-v="schuiven">Ik kan het verschuiven</button>
+        <button type="button" data-v="schuiven">Ik ben flexibel</button>
       </div>
     </div>
 
@@ -230,7 +230,7 @@ details.aannames p,details.aannames li{font-size:.86rem;line-height:1.55;color:v
       <div class="card">
         <p class="headline" id="headline"><!-- BUILD:KOP:START -->Met een dynamisch contract was je het afgelopen jaar <b>&euro;134 per jaar goedkoper</b> uit. Je gemiddelde inkoopprijs komt dan op 25,4 ct per kWh, tegen 30,0 ct vast.<!-- BUILD:KOP:END --></p>
         <div class="table-wrap">
-          <!-- BUILD:TABEL:START --><table class="res" id="tabel"><thead><tr><th>Stroomkosten per jaar</th><th class="num">Vast contract</th><th class="num">Dynamisch</th></tr></thead><tbody><tr class="win"><td>Zoals je nu stookt</td><td class="num">&euro;870</td><td class="num best">&euro;736</td></tr><tr class="win"><td>Met een thuisbatterij van 10 kWh</td><td class="num">&euro;870</td><td class="num best">&euro;565</td></tr></tbody></table><!-- BUILD:TABEL:END -->
+          <!-- BUILD:TABEL:START --><table class="res" id="tabel"><thead><tr><th>Stroomkosten per jaar</th><th class="num">Vast contract</th><th class="num">Dynamisch</th></tr></thead><tbody><tr class="win"><td>Jouw situatie nu</td><td class="num">&euro;870</td><td class="num best">&euro;736</td></tr><tr class="win"><td>Met een thuisbatterij van 10 kWh</td><td class="num">&euro;870</td><td class="num best">&euro;565</td></tr></tbody></table><!-- BUILD:TABEL:END -->
         </div>
         <p class="muted kleine" id="tabelNote" style="margin-top:10px"></p>
       </div>
@@ -424,7 +424,7 @@ details.aannames p,details.aannames li{font-size:.86rem;line-height:1.55;color:v
       rows.push(['Nu, met saldering', r.nu_vast, r.nu_dyn]);
       rows.push(['Vanaf 2027, zonder saldering', r.la_vast, r.la_dyn]);
     } else {
-      rows.push(['Zoals je nu stookt', r.la_vast, r.la_dyn]);
+      rows.push(['Jouw situatie nu', r.la_vast, r.la_dyn]);
     }
     if(p.batKwh>0){
       rows.push([(heeftBat?'Met je thuisbatterij':'Met een thuisbatterij van '+p.batKwh+' kWh')+(heeftZon?', vanaf 2027':''), r.bat_vast, r.bat_dyn]);

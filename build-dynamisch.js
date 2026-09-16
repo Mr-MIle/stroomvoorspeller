@@ -91,7 +91,7 @@ const kop = verschil >= 0
   : "Met een dynamisch contract was je het afgelopen jaar <b>" + eur(-verschil) + " per jaar duurder</b> uit. Je gemiddelde inkoopprijs komt dan op " + ct(la_dyn.avgImp * 100) + " per kWh, tegen " + ct(base.vastPrijs * 100) + " vast.";
 
 const rows = [
-  ["Zoals je nu stookt", la_vast, la_dyn],
+  ["Jouw situatie nu", la_vast, la_dyn],
   ["Met een thuisbatterij van " + base.batKwh + " kWh", bat_vast, bat_dyn]
 ];
 let tbody = "";
