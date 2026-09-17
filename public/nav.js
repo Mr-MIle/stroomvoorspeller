@@ -158,6 +158,10 @@
   function initToolKaart() {
     var meta = document.querySelector('meta[name="kb-categorie"]');
     if (!meta || meta.content !== "Dynamisch contract") return;
+    // Staat de verwijzing al statisch in het artikel (kaart in "Lees ook"), dan
+    // hoeft er niets bij. Zo krijgt alleen een nieuw artikel zonder die kaart
+    // het blok er alsnog automatisch bij.
+    if (document.querySelector('a[href="/dynamisch-berekenen"]')) return;
     var anker = document.querySelector("section.kb-lees-ook");
     if (!anker || document.querySelector(".tool-kaart")) return;
     var box = document.createElement("section");
