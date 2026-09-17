@@ -28,6 +28,7 @@ Gebruik:
 import hashlib
 import hmac
 import base64
+import http.client
 import json
 import os
 import sys
@@ -45,6 +46,9 @@ BASE = os.environ.get("SOLIS_BASE", "https://www.soliscloud.com:13333").rstrip("
 
 SUPPLIER_ID = os.environ.get("SOLIS_SUPPLIER_ID", "frank")     # opslag uit config.json
 FEEDIN_COST = float(os.environ.get("SOLIS_FEEDIN_COST", "0"))  # terugleverkosten EUR/kWh
+TIMEOUT = float(os.environ.get("SOLIS_TIMEOUT", "60"))         # seconden per HTTP-poging
+RETRIES = int(os.environ.get("SOLIS_RETRIES", "4"))            # pogingen per API-aanroep
+CATCHUP_DAYS = int(os.environ.get("SOLIS_CATCHUP_DAYS", "5"))  # dagen terugkijken op gaten
 
 ROOT = Path(__file__).resolve().parents[1]          # .../02-code
 PRICES_FILE = ROOT / "public" / "data" / "prices.json"
@@ -57,24 +61,49 @@ def _md5_b64(body: bytes) -> str:
     return base64.b64encode(hashlib.md5(body).digest()).decode()
 
 
+RETRY_CODES = {408, 425, 429, 500, 502, 503, 504}
+
+
 def call(path: str, payload: dict) -> dict:
+    """POST naar de Solis-API met herhaalpogingen.
+
+    De Solis-cloud is regelmatig traag of laat de verbinding vallen; een enkele
+    time-out mag de hele run niet slopen. Elke poging krijgt een verse Date-header
+    en handtekening (die zijn tijdgebonden, dus hergebruiken mag niet).
+    """
     body = json.dumps(payload).encode()
     content_md5 = _md5_b64(body)
     content_type = "application/json"
-    date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
-    string_to_sign = f"POST\n{content_md5}\n{content_type}\n{date}\n{path}"
-    sign = base64.b64encode(
-        hmac.new(KEY_SECRET, string_to_sign.encode(), hashlib.sha1).digest()
-    ).decode()
-    headers = {
-        "Content-MD5": content_md5,
-        "Content-Type": content_type,
-        "Date": date,
-        "Authorization": f"API {KEY_ID}:{sign}",
-    }
-    req = urllib.request.Request(BASE + path, data=body, method="POST", headers=headers)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.loads(r.read().decode())
+
+    for attempt in range(1, RETRIES + 1):
+        date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
+        string_to_sign = f"POST\n{content_md5}\n{content_type}\n{date}\n{path}"
+        sign = base64.b64encode(
+            hmac.new(KEY_SECRET, string_to_sign.encode(), hashlib.sha1).digest()
+        ).decode()
+        headers = {
+            "Content-MD5": content_md5,
+            "Content-Type": content_type,
+            "Date": date,
+            "Authorization": f"API {KEY_ID}:{sign}",
+        }
+        req = urllib.request.Request(BASE + path, data=body, method="POST", headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+                return json.loads(r.read().decode())
+        except urllib.error.HTTPError as exc:
+            if exc.code not in RETRY_CODES or attempt == RETRIES:
+                raise
+            reason = f"HTTP {exc.code}"
+        except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError) as exc:
+            if attempt == RETRIES:
+                raise
+            reason = f"{type(exc).__name__}: {exc}"
+        wait = 5 * 2 ** (attempt - 1)          # 5, 10, 20 seconden
+        print(f"[poging {attempt}/{RETRIES}] {path} mislukt ({reason}) - opnieuw over {wait}s.",
+              file=sys.stderr)
+        time.sleep(wait)
+    raise RuntimeError(f"{path}: geen antwoord na {RETRIES} pogingen.")
 
 
 # ------------------------------------------------------------------ tijdhulpen
@@ -339,6 +368,33 @@ def process_day(inv_id, sn, day, prices, tar, tz_hours):
     return record
 
 
+def existing_days() -> set:
+    """Dagen die al in arbitrage.json staan."""
+    if not OUT_FILE.exists():
+        return set()
+    try:
+        doc = json.loads(OUT_FILE.read_text())
+    except (ValueError, OSError):
+        return set()
+    return {x.get("date") for x in doc.get("days", [])}
+
+
+def days_to_process(yesterday, window: int) -> list:
+    """Gisteren + eerdere dagen uit het venster die nog ontbreken.
+
+    Een mislukte run (time-out bij Solis) liet vroeger een permanent gat achter:
+    de dag werd nooit meer opgehaald. De dagelijkse run haalt nu zelf achterstand in,
+    zolang de dag binnen het bereik van prices.json valt.
+    """
+    have = existing_days()
+    out = []
+    for back in range(window, 0, -1):
+        day = (yesterday - timedelta(days=back - 1)).isoformat()
+        if back == 1 or day not in have:
+            out.append(day)
+    return out
+
+
 def main():
     now_utc = datetime.now(timezone.utc)
     tz_hours = int(amsterdam_offset(now_utc).total_seconds() // 3600)
@@ -370,13 +426,22 @@ def main():
             cur += timedelta(days=1)
             time.sleep(2)  # rustig aan met de API
         print(f"Backfill klaar: {done} dagen weggeschreven ({start} t/m {end}).")
+    elif args:
+        if not process_day(inv_id, sn, args[0], prices, tar, tz_hours):
+            sys.exit(0)
     else:
-        if args:
-            day = args[0]
-        else:
-            ams = now_utc + amsterdam_offset(now_utc)
-            day = (ams - timedelta(days=1)).strftime("%Y-%m-%d")
-        if not process_day(inv_id, sn, day, prices, tar, tz_hours):
+        ams = now_utc + amsterdam_offset(now_utc)
+        yesterday = (ams - timedelta(days=1)).date()
+        todo = days_to_process(yesterday, CATCHUP_DAYS)
+        if len(todo) > 1:
+            print(f"Inhalen: {len(todo)} dagen ({todo[0]} t/m {todo[-1]}).", file=sys.stderr)
+        written = 0
+        for i, day in enumerate(todo):
+            if i:
+                time.sleep(2)
+            if process_day(inv_id, sn, day, prices, tar, tz_hours):
+                written += 1
+        if not written:
             sys.exit(0)
 
 
