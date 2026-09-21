@@ -64,6 +64,29 @@ function eersteZin(t) {
   return m ? m[0] : String(t || "").slice(0, 150);
 }
 
+// Teruglevering: kale beursprijs + opslag van de aanbieder, zonder energiebelasting
+// en zonder btw. De zonnebonussen staan er los bij, want die gelden alleen voor
+// zonnestroom en niet voor stroom uit een thuisbatterij. Bron: config.json.
+function terugleverTekst(s) {
+  var t = s.teruglevering;
+  if (!t) return "";
+  var o = t.opslag_per_kwh || 0;
+  var ct = Math.abs(o * 100).toFixed(2).replace(".", ",");
+  var r;
+  if (!o) r = "Je krijgt de kale beursprijs, zonder opslag en zonder inhouding.";
+  else if (o > 0) r = "Je krijgt de kale beursprijs plus " + ct + " ct per kWh.";
+  else r = "Je krijgt de kale beursprijs min " + ct + " ct per kWh.";
+  if (t.methode === "jaaroverschot") r += " Die inhouding geldt nu alleen over je jaaroverschot; vanaf 2027 over alles, want dan is er geen saldering meer.";
+  if (t.bonus) {
+    var pct = Math.round(t.bonus.pct * 100);
+    r += " Daarbovenop " + pct + "% " + t.bonus.naam + ", maar alleen over zonnestroom (" + t.bonus.venster +
+         (t.bonus.max_kwh ? ", tot " + String(t.bonus.max_kwh).replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " kWh per jaar" : "") +
+         ") — niet over stroom die een thuisbatterij teruglevert.";
+  }
+  if (t.voorlopig) r += " Dit bedrag is nog een aanname; de aanbieder maakt het niet openbaar.";
+  return r;
+}
+
 function rowHtml(s, verbruik) {
   const vastPrefix = s.fixed_unconfirmed ? "≈ " : "";
   const jk = jaarkosten(s, verbruik);
@@ -86,6 +109,7 @@ function rowHtml(s, verbruik) {
         <div class="aanb-details" id="det-${id}" hidden>
 ${letOp}          <div><p class="aanb-sectie-label">App &amp; slim laden</p><p>${esc(s.app_text)}</p></div>
           <div><p class="aanb-sectie-label">Voor wie geschikt?</p><p>${esc(s.wie_text)}</p></div>
+          <div class="aanb-teruglever"><p class="aanb-sectie-label">Teruglevering (zonnepanelen of batterij)</p><p>${esc(terugleverTekst(s))}</p></div>
           <p class="aanb-opzeg">⏱ Opzegtermijn: ${esc(s.opzeg || "—")} &middot; <a href="${url}" target="_blank" rel="noopener">naar de website ↗</a></p>
         </div>
       </div>`;

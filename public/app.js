@@ -13,6 +13,7 @@
     dismissedNegAlert: "sv.dismissedNegAlert",  // ISO-tijd van het event waarvoor de banner gesloten is
     chartRes:          "sv.chartRes",           // 'hourly' | 'quarter'
     profile:           "sv.profile",            // JSON: { ev, solar, battery } — 'Mijn situatie'
+    feedin:            "sv.feedinLine",         // '1' | '0' — teruglever-lijn in de grafiek
   };
 
   const state = {
@@ -28,6 +29,7 @@
     nowIdx15m: -1,       // index in dayPrices15m (kwartierresolutie)
     hasPt15m: false,     // True als prices_15m echte PT15M-data bevat
     chartResolution: "hourly",  // 'hourly' | 'quarter'
+    showFeedin: false,   // tweede lijn: wat je per kWh krijgt voor teruglevering
     mode: "inclusive",
     supplierId: "average",
     profile: { ev: false, solar: false, battery: false },  // 'Mijn situatie' — personalisatie
@@ -115,6 +117,28 @@
     const t = state.config.taxes;
     const subtotal = epex_per_kwh + markup + (t.energiebelasting_per_kwh || 0);
     return subtotal * (t.btw_factor || 1) * 100;
+  }
+
+  // ---- Teruglevering ----
+  // Wat je per teruggeleverde kWh krijgt = kale uurprijs + opslag van je aanbieder.
+  // Positieve opslag = de aanbieder betaalt erbovenop, negatief = hij houdt het in.
+  // Geen energiebelasting en geen btw: die gelden alleen over stroom die je afneemt.
+  // BEWUST zonder zonnebonus: Frank, NextEnergy en Zonneplan betalen die alleen over
+  // zonnestroom, niet over stroom uit een thuisbatterij.
+  const FEEDIN_COLOR = "#a11b6b";
+  function feedinInfo() {
+    const s = getSupplier();
+    return (s && s.teruglevering) || null;
+  }
+  function feedinOffset() {
+    const t = feedinInfo();
+    return t && typeof t.opslag_per_kwh === "number" ? t.opslag_per_kwh : 0;
+  }
+  function feedinAvailable() {
+    return !!feedinInfo();
+  }
+  function feedinCents(eurMwh) {
+    return (eurMwh / 1000 + feedinOffset()) * 100;
   }
 
   // ---- #13: relatieve drempels (hybride, begrensd) ----
@@ -568,6 +592,7 @@
     renderMoments();
     renderFooterMeta();
     renderResolutionToggle();
+    renderFeedinToggle();
     renderChart();
     renderForecastHighlights();
     renderForecastChart();
@@ -923,6 +948,56 @@
       tr.appendChild(tdAction);
       tbody.appendChild(tr);
     });
+  }
+
+  // ---- Teruglever-toggle ----
+  // Staat standaard uit: de meeste bezoekers leveren niets terug. Wie hem aanzet,
+  // houdt die keuze (localStorage), net als de uur/kwartier-toggle.
+  function renderFeedinToggle() {
+    const wrap = document.getElementById("chart-feedin-toggle");
+    const btn  = document.getElementById("feedin-btn");
+    const note = document.getElementById("feedin-note");
+    if (!wrap || !btn) return;
+
+    const beschikbaar = feedinAvailable();
+    wrap.hidden = !beschikbaar;
+    if (!beschikbaar) {
+      if (note) note.hidden = true;
+      return;
+    }
+
+    btn.classList.toggle("is-active", state.showFeedin);
+    btn.setAttribute("aria-pressed", state.showFeedin ? "true" : "false");
+
+    if (!note) return;
+    note.hidden = !state.showFeedin;
+    if (!state.showFeedin) return;
+
+    const t = feedinInfo();
+    const sup = getSupplier();
+    const ct = Math.abs(t.opslag_per_kwh) * 100;
+    let regel;
+    if (!t.opslag_per_kwh) {
+      regel = `${sup.name} betaalt je de kale beursprijs, zonder opslag en zonder inhouding.`;
+    } else if (t.opslag_per_kwh > 0) {
+      regel = `${sup.name} betaalt je de kale beursprijs plus ${fmtNum(ct, 2)} ct per kWh.`;
+    } else {
+      regel = `${sup.name} betaalt je de kale beursprijs min ${fmtNum(ct, 2)} ct per kWh.`;
+    }
+    const staat = t.voorlopig ? " <em>Dit bedrag is nog een aanname; de aanbieder maakt het niet openbaar.</em>" : "";
+    note.innerHTML =
+      `<span class="feedin-note-dot" aria-hidden="true"></span>` +
+      `<strong>Teruglevering:</strong> ${regel} Over teruglevering betaal je geen energiebelasting en geen btw. ` +
+      `Zakt de lijn onder nul, dan betaal je op dat moment bij als je teruglevert — ontlaad je batterij dan liever in huis. ` +
+      `De lijn rekent zonder zonnebonus: Frank, NextEnergy en Zonneplan betalen die alleen over zonnestroom, niet over stroom uit een thuisbatterij. ` +
+      `<a href="/kennisbank/teruglevertarief-vergelijken">Hoe zit dat per aanbieder?</a>${staat}`;
+  }
+
+  function toggleFeedin() {
+    state.showFeedin = !state.showFeedin;
+    saveStored(STORAGE_KEYS.feedin, state.showFeedin ? "1" : "0");
+    renderFeedinToggle();
+    renderChart();
   }
 
   // ---- Resolution toggle ----
@@ -1354,6 +1429,30 @@
             fill: false,
             spanGaps: false,
           }]),
+          ...(state.showFeedin ? [{
+            label: "teruglevering",
+            data: timeline.map((t) => t.kind === "actual" ? feedinCents(t.price) : null),
+            borderColor: FEEDIN_COLOR,
+            borderDash: [5, 3],
+            borderWidth: 2,
+            tension: 0.25,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            fill: false,
+            spanGaps: false,
+          }] : []),
+          ...(state.showFeedin && !isQuarter ? [{
+            label: "teruglevering (voorspeld)",
+            data: timeline.map((t) => t.kind === "forecast" ? feedinCents(t.forecast.predicted) : null),
+            borderColor: "rgba(161,27,107,0.55)",
+            borderDash: [2, 3],
+            borderWidth: 2,
+            tension: 0.25,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            fill: false,
+            spanGaps: false,
+          }] : []),
         ],
       },
       options: {
@@ -1410,11 +1509,15 @@
                 const t = timeline[idx];
                 if (t.kind === "actual") {
                   const eurMwh = t.price;
-                  return [
+                  const lines = [
                     `Kale EPEX: ${fmtNum(priceCentsRaw(eurMwh), 2)} ct/kWh`,
                     `Excl. belasting: ${fmtNum(priceCents(eurMwh, "exclusive"), 2)} ct/kWh`,
                     `Incl. belasting: ${fmtNum(priceCents(eurMwh, "inclusive"), 2)} ct/kWh`,
                   ];
+                  if (state.showFeedin && feedinAvailable()) {
+                    lines.push(`Teruglevering: ${fmtNum(feedinCents(eurMwh), 2)} ct/kWh`);
+                  }
+                  return lines;
                 }
                 if (!t.forecast) return [];
                 const f = t.forecast;
@@ -1492,6 +1595,11 @@
     timeline.forEach((t) => {
       if (t.kind === "actual") yVals.push(priceCents(t.price));
       else if (t.forecast) yVals.push(priceCents(t.forecast.lower), priceCents(t.forecast.upper));
+      // De teruglever-lijn moet binnen beeld vallen, anders loopt hij buiten de grafiek.
+      if (state.showFeedin && feedinAvailable()) {
+        if (t.kind === "actual") yVals.push(feedinCents(t.price));
+        else if (t.forecast) yVals.push(feedinCents(t.forecast.predicted));
+      }
     });
     let yMin, yMax;
     if (yVals.length) {
@@ -1543,12 +1651,19 @@
         `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
         `<span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></span>` +
         `<strong>${label}</strong></span>`;
+      // Teruglever-lijn krijgt een streepje in plaats van een stip: andere marker,
+      // zodat hij ook zonder kleur te onderscheiden is van de prijsklassen.
+      const dash = (color, label) =>
+        `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
+        `<span style="width:16px;height:0;border-top:2px dashed ${color};flex-shrink:0;"></span>` +
+        `<strong>${label}</strong></span>`;
       wrap.innerHTML =
         dot("#7048e8", "Gratis/negatief") +
         dot("#2f9e44", "Goedkoop") +
         dot("#d4a017", "Normaal") +
         dot("#c92a2a", "Duur") +
         dot("#0f6cbd", "Nu") +
+        (state.showFeedin && feedinAvailable() ? dash(FEEDIN_COLOR, "Teruglevering") : "") +
         (isQuarter
           ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Kwartierlijkse day-ahead prijzen. Beide grafieken delen dezelfde schaal.</span>`
           : `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag. Beide grafieken delen dezelfde schaal.</span>`
@@ -1927,6 +2042,10 @@
         switchResolution(btn.dataset.resBtn);
       });
     });
+
+    // Teruglever-lijn aan/uit
+    const feedinBtn = document.getElementById("feedin-btn");
+    if (feedinBtn) feedinBtn.addEventListener("click", toggleFeedin);
   }
 
   // ---- Boot ----
@@ -1941,6 +2060,7 @@
     }
     const storedRes = loadStored(STORAGE_KEYS.chartRes, "hourly");
     state.chartResolution = storedRes === "quarter" ? "quarter" : "hourly";
+    state.showFeedin = loadStored(STORAGE_KEYS.feedin, "0") === "1";
     state.profile = loadProfile();
   }
   function applyConfigDefaults() {

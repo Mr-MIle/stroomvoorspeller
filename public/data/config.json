@@ -1,6 +1,6 @@
 {
   "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in ct/kWh consumentenprijs incl. energiebelasting + btw + leverancieropslag. Per v9: suppliers bevatten ook weergavevelden (score, flags, app_text, wie_text, opzeg, let_op) voor de aanbieders-pagina. De homepage gebruikt alleen id/name/markup_per_kwh/fixed_per_month.",
-  "version": 9,
+  "version": 10,
   "updated": "2026-06-19",
   "taxes": {
     "energiebelasting_per_kwh": 0.0916,
@@ -81,7 +81,14 @@
       "consumer": false,
       "verified": "2026-05-16",
       "source": "Berekend gemiddelde van de oorspronkelijke elf kernaanbieders",
-      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan ≈ 0.018, gemiddelde = 0.0178. Nieuwe aanbieders zijn apart selecteerbaar maar nog niet in dit gemiddelde verwerkt."
+      "note": "Gebruik dit als je je eigen aanbieder niet kent. Mediaan ≈ 0.018, gemiddelde = 0.0178. Nieuwe aanbieders zijn apart selecteerbaar maar nog niet in dit gemiddelde verwerkt.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.0133,
+        "methode": "gemiddelde",
+        "uitleg": "Gemiddelde van de 25 aanbieders in deze lijst. Gebruik dit als je je eigen aanbieder niet kent.",
+        "bron": "Berekend gemiddelde",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "tibber",
@@ -100,7 +107,14 @@
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Beste app van het veld. Officiële Home Assistant-integratie, GraphQL API, Tibber Pulse (slim energiemonitor), Grid Rewards (bonus op goedkope uren) en slim EV-laden ingebouwd. Op Trustpilot scoort Tibber 3,9 — lager dan de app-reputatie doet vermoeden.",
       "wie_text": "Tech-enthousiastelingen, EV-rijders en Home Assistant-gebruikers. Niet de goedkoopste opslag, maar de rijkste app-functies. Minder aantrekkelijk als je zonnepanelen hebt.",
-      "let_op": "Per 1 januari 2026 betaalt Tibber geen terugleveringsvergoeding meer voor zonnepanelen. Minder geschikt als je PV hebt."
+      "let_op": "Per 1 januari 2026 betaalt Tibber geen terugleveringsvergoeding meer voor zonnepanelen. Minder geschikt als je PV hebt.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.0248,
+        "methode": "jaaroverschot",
+        "uitleg": "Tibber rekent sinds 1 januari 2026 een verkoopvergoeding op alle teruggeleverde stroom.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "frank",
@@ -118,7 +132,22 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Goede app met prijsoverzicht en verbruiksdata. Uitstekende integratiemogelijkheden via de ENTSO-E-gebaseerde prijsdata — populair bij Home Assistant- en EVCC-gebruikers. Winnaar Overstappen.nl Energie Award 2026.",
-      "wie_text": "Prijs-bewuste gebruikers en techneuten die willen automatiseren. Een van de laagste opslagen onder de pure-play dynamisch-spelers. Minder extra features voor zonnepaneel-eigenaren."
+      "wie_text": "Prijs-bewuste gebruikers en techneuten die willen automatiseren. Een van de laagste opslagen onder de pure-play dynamisch-spelers. Minder extra features voor zonnepaneel-eigenaren.",
+      "teruglevering": {
+        "opslag_per_kwh": 0.0182,
+        "methode": "bijbetaling",
+        "bonus": {
+          "naam": "Terugleverbonus",
+          "pct": 0.15,
+          "venster": "zonsopkomst tot zonsondergang",
+          "max_kwh": null,
+          "geldt_voor_batterij": false,
+          "eis": "Slim Terugleveren aan, Frank mag je omvormer aansturen"
+        },
+        "uitleg": "Inkoopvergoeding van €0,0182 per teruggeleverde kWh, bovenop de uurprijs.",
+        "bron": "frankenergie.nl kennisbank terugleververgoeding + klantenservice-artikel bonusvoorwaarden",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "energyzero",
@@ -137,7 +166,14 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Functionele app met directe ENTSO-E prijzen. Geen extra smart-laad features. Transparant over de prijsopbouw.",
-      "wie_text": "Gebruikers die transparantie en lage vaste lasten zoeken zonder extra gadgets. Compenseer de opslag met slim gebruik op goedkope uren."
+      "wie_text": "Gebruikers die transparantie en lage vaste lasten zoeken zonder extra gadgets. Compenseer de opslag met slim gebruik op goedkope uren.",
+      "teruglevering": {
+        "opslag_per_kwh": 0.0,
+        "methode": "geen",
+        "uitleg": "Kale uurprijs, niets erbij en niets eraf.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "anwb",
@@ -155,7 +191,14 @@
       "no_feedin_cost": false,
       "opzeg": "30 dagen",
       "app_text": "Basis app zonder geavanceerde smart-features. Geen officiële Home Assistant-integratie of EV-laad-optimalisatie. Geschikt als je gewoon je verbruik wilt inzien.",
-      "wie_text": "ANWB-leden die alles bij een bekende naam willen regelen. Minder interessant voor techneuten of EV-rijders die willen automatiseren. Trustpilot-score hoog (4,6), al stuurt ANWB tevreden klanten actief naar Trustpilot — weeg dat mee."
+      "wie_text": "ANWB-leden die alles bij een bekende naam willen regelen. Minder interessant voor techneuten of EV-rijders die willen automatiseren. Trustpilot-score hoog (4,6), al stuurt ANWB tevreden klanten actief naar Trustpilot — weeg dat mee.",
+      "teruglevering": {
+        "opslag_per_kwh": 0.0,
+        "methode": "geen",
+        "uitleg": "Kale uurprijs. Binnen het saldeerbereik betaalt ANWB €0,018 per kWh extra.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "vandebron",
@@ -173,7 +216,14 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "App met inzicht in verbruik en herkomst van energie (direct van producenten). Geen geavanceerde smart-laad functies. Focus op duurzaamheid en transparantie.",
-      "wie_text": "Huishoudens die waarde hechten aan aantoonbaar groene energie direct van de bron. Relatief hoog vast maandbedrag; compenseer dat met hoog verbruik op goedkope uren."
+      "wie_text": "Huishoudens die waarde hechten aan aantoonbaar groene energie direct van de bron. Relatief hoog vast maandbedrag; compenseer dat met hoog verbruik op goedkope uren.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.0136,
+        "methode": "jaaroverschot",
+        "uitleg": "Verkoopvergoeding, alleen over het jaaroverschot.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "zonneplan",
@@ -191,7 +241,22 @@
       "no_feedin_cost": true,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Vernieuwde app (2026) die zonnepanelen, thuisbatterij, laadpaal én energiecontract in één dashboard combineert. Trustpilot-score 4,2 (ruim 2.200 reviews) — hoogste onder de all-in-one spelers.",
-      "wie_text": "Huishoudens met zonnepanelen, thuisbatterij of EV die alles in één app willen beheren. Beste keuze als je meerdere energiesystemen in één app wilt koppelen en beheren."
+      "wie_text": "Huishoudens met zonnepanelen, thuisbatterij of EV die alles in één app willen beheren. Beste keuze als je meerdere energiesystemen in één app wilt koppelen en beheren.",
+      "teruglevering": {
+        "opslag_per_kwh": 0.02,
+        "methode": "bijbetaling",
+        "bonus": {
+          "naam": "Zonnebonus",
+          "pct": 0.1,
+          "venster": "zonsopkomst tot zonsondergang",
+          "max_kwh": 7500,
+          "geldt_voor_batterij": false,
+          "eis": null
+        },
+        "uitleg": "Uurprijs plus €0,02. Batterij-teruglevering loopt onder aparte Powerplay-tarieven.",
+        "bron": "zonneplan.nl/energie/zonnepanelen (Zonnebonus-formule en batterij-uitzondering)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "easy",
@@ -209,7 +274,14 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Eenvoudige app met prijsoverzicht en verbruiksdata. Geen bijzondere smart-features of EV-integratie. Functioneel voor de basis.",
-      "wie_text": "Kleine huishoudens en laagverbruikers voor wie het vaste maandbedrag het zwaarst weegt. Minder geschikt als je geavanceerde domotica-integratie zoekt."
+      "wie_text": "Kleine huishoudens en laagverbruikers voor wie het vaste maandbedrag het zwaarst weegt. Minder geschikt als je geavanceerde domotica-integratie zoekt.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.0218,
+        "methode": "per_kwh",
+        "uitleg": "Verkoopvergoeding over elke teruggeleverde kWh.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "nextenergy",
@@ -227,7 +299,22 @@
       "no_feedin_cost": true,
       "opzeg": "dagelijks opzegbaar, geen minimum",
       "app_text": "Goede app met prijsalerts en verbruiksinzicht per uur. Eigen P1-meter en slim laden voor EV ingebouwd. NextSolar-contract voor zonnepaneelhouders: geen terugleverkosten én 50% zonnebonus op teruggeleverde stroom tussen 22:00 en 06:00.",
-      "wie_text": "Actieve gebruikers die hun verbruik willen automatiseren en slim omgaan met dalmomenten. Sterk voor huishoudens met zonnepanelen of een thuisbatterij — NextEnergy biedt specifieke producten voor beide. Lage vaste kosten."
+      "wie_text": "Actieve gebruikers die hun verbruik willen automatiseren en slim omgaan met dalmomenten. Sterk voor huishoudens met zonnepanelen of een thuisbatterij — NextEnergy biedt specifieke producten voor beide. Lage vaste kosten.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.0219,
+        "methode": "per_kwh",
+        "bonus": {
+          "naam": "Zonnebonus",
+          "pct": 0.5,
+          "venster": "06:00 tot 22:00",
+          "max_kwh": 6000,
+          "geldt_voor_batterij": false,
+          "eis": "zelf aanzetten in de app"
+        },
+        "uitleg": "Verkoopvergoeding over elke teruggeleverde kWh; de Zonnebonus geldt alleen voor zonnestroom.",
+        "bron": "nextenergy.nl/zonnebonus + FAQ 'Wat is de Zonnebonus precies'",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "budget",
@@ -245,7 +332,14 @@
       "no_feedin_cost": true,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Budget Thuis-app met inzicht in actuele tarieven en uurverbruik. Tarieven worden een dag van tevoren getoond zodat je verbruik kunt plannen. Geen geavanceerde smart home-integratie of EV-functies.",
-      "wie_text": "Prijsbewuste huishoudens die de laagst mogelijke opslag willen bij een grote, gevestigde leverancier (1,2+ miljoen klanten). Geen terugleverkosten voor zonnepaneelhouders. Winnaar Keuze.nl 2025 voor laagste prijs dynamisch. Let op: lage klanttevredenheid (2,1/5 op Trustpilot)."
+      "wie_text": "Prijsbewuste huishoudens die de laagst mogelijke opslag willen bij een grote, gevestigde leverancier (1,2+ miljoen klanten). Geen terugleverkosten voor zonnepaneelhouders. Winnaar Keuze.nl 2025 voor laagste prijs dynamisch. Let op: lage klanttevredenheid (2,1/5 op Trustpilot).",
+      "teruglevering": {
+        "opslag_per_kwh": 0.0,
+        "methode": "geen",
+        "uitleg": "Kale uurprijs, niets erbij en niets eraf.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "eneco",
@@ -263,7 +357,14 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Mijn Eneco-app met verbruiksoverzicht en tariefinzicht. Integratie met Toon-thermostaat. Geen geavanceerde EV-laad- of Home Assistant-functies. Eneco was in september 2023 de eerste grote Nederlandse leverancier met dynamische tarieven.",
-      "wie_text": "Huishoudens die de zekerheid van een grote leverancier (circa 2 miljoen klanten) willen combineren met een dynamisch tarief. Hogere opslag én vaste kosten dan de pure dynamisch-spelers. Minder aantrekkelijk voor zonnepaneelhouders: terugleverkosten van toepassing."
+      "wie_text": "Huishoudens die de zekerheid van een grote leverancier (circa 2 miljoen klanten) willen combineren met een dynamisch tarief. Hogere opslag én vaste kosten dan de pure dynamisch-spelers. Minder aantrekkelijk voor zonnepaneelhouders: terugleverkosten van toepassing.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.0292,
+        "methode": "jaaroverschot",
+        "uitleg": "Verkoopvergoeding, alleen over het jaaroverschot.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "om",
@@ -281,7 +382,15 @@
       "no_feedin_cost": false,
       "opzeg": "30 dagen",
       "app_text": "Eigen app voor verbruiksinzicht en energiebeheer. Geen geavanceerde smart-laad- of Home Assistant-integratie. Focus ligt op coöperatieve samenwerking en lokale opwek in plaats van technische automatisering.",
-      "wie_text": "Huishoudens die 100% lokaal opgewekte, aantoonbaar groene stroom willen van een coöperatief zonder winstoogmerk. Uniek in het veld: om werkt samen met meer dan 80 lokale energiecoöperaties door heel Nederland. Hogere vaste kosten dan de meeste andere aanbieders. Let op: vaste terugleveringskosten zijn van toepassing voor zonnepaneelhouders."
+      "wie_text": "Huishoudens die 100% lokaal opgewekte, aantoonbaar groene stroom willen van een coöperatief zonder winstoogmerk. Uniek in het veld: om werkt samen met meer dan 80 lokale energiecoöperaties door heel Nederland. Hogere vaste kosten dan de meeste andere aanbieders. Let op: vaste terugleveringskosten zijn van toepassing voor zonnepaneelhouders.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.02,
+        "methode": "jaaroverschot",
+        "uitleg": "Bedrag nog niet bevestigd bij om zelf; aanname gelijk aan het veldgemiddelde.",
+        "voorlopig": true,
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "vattenfall",
@@ -299,7 +408,14 @@
       "no_feedin_cost": true,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Eigen app scoort hoog in de stores. Geen open API of Home Assistant-integratie. Vattenfall mag de opslag maximaal vier keer per jaar wijzigen en meldt dat vooraf.",
-      "wie_text": "Wie de zekerheid van een grote, stabiele leverancier wil (Beste Energieleverancier 2026 volgens Overstappen). Trustpilot-score laag (2,9). Geen vaste terugleverkosten; teruglevering tegen marktprijs."
+      "wie_text": "Wie de zekerheid van een grote, stabiele leverancier wil (Beste Energieleverancier 2026 volgens Overstappen). Trustpilot-score laag (2,9). Geen vaste terugleverkosten; teruglevering tegen marktprijs.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.0255,
+        "methode": "jaaroverschot",
+        "uitleg": "Verkoopvergoeding over het jaaroverschot. Binnen het saldeerbereik betaalt Vattenfall €0,0255 per kWh extra.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "coolblue",
@@ -318,7 +434,14 @@
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Strakke app met duidelijke facturen en maandelijkse besparingsoverzichten. Geen open API of Home Assistant-integratie. Achteraf betalen in plaats van voorschot.",
       "wie_text": "Huishoudens die de eenvoud en service van het Coolblue-merk waarderen en geen gas via dezelfde leverancier hoeven. Geen vaste terugleverkosten; teruglevering tegen de marktprijs van dat moment.",
-      "let_op": "Levert alleen stroom, geen gas."
+      "let_op": "Levert alleen stroom, geen gas.",
+      "teruglevering": {
+        "opslag_per_kwh": 0.0,
+        "methode": "geen",
+        "uitleg": "Kale uurprijs, niets erbij en niets eraf.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "pure",
@@ -336,7 +459,14 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Basis-app voor verbruiksinzicht. 100% Nederlandse groene stroom uit eigen wind- en zonneparken. Geen smart-laad- of Home Assistant-functies.",
-      "wie_text": "Huishoudens die aantoonbaar Nederlandse groene stroom willen tegen de laagste vaste kosten van de vergelijking (€ 2,41/maand). Let op: geen terugleververgoeding voor zonnepaneelhouders."
+      "wie_text": "Huishoudens die aantoonbaar Nederlandse groene stroom willen tegen de laagste vaste kosten van de vergelijking (€ 2,41/maand). Let op: geen terugleververgoeding voor zonnepaneelhouders.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.037,
+        "methode": "per_kwh",
+        "uitleg": "Hoogste verkoopvergoeding van het veld, over elke teruggeleverde kWh.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "essent",
@@ -354,13 +484,20 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Grootste leverancier van Nederland met een ruime app. Geen open API of Home Assistant-integratie. Teruglever-verkoopvergoeding €0,0253/kWh.",
-      "wie_text": "Wie de zekerheid van de grootste en financieel sterkste leverancier zoekt. Let op: laagste Trustpilot-score van de hele vergelijking (1,4)."
+      "wie_text": "Wie de zekerheid van de grootste en financieel sterkste leverancier zoekt. Let op: laagste Trustpilot-score van de hele vergelijking (1,4).",
+      "teruglevering": {
+        "opslag_per_kwh": -0.0253,
+        "methode": "jaaroverschot",
+        "uitleg": "Verkoopvergoeding, alleen over het jaaroverschot.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "greenchoice",
       "name": "Greenchoice",
       "markup_per_kwh": 0.0185,
-      "fixed_per_month": 6.20,
+      "fixed_per_month": 6.2,
       "verified": "2026-06-19",
       "source": "Opgave Emile — offerte greenchoice.nl, juni 2026",
       "note": "Inkoopvergoeding €0,0185/kWh excl. btw. Vaste kosten €7,50/maand incl. btw = €6,20 excl. 100% groen.",
@@ -372,7 +509,14 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "App scoort goed in de stores (circa 8,7). 100% groen profiel. Geen open API of Home Assistant-integratie.",
-      "wie_text": "Huishoudens met voorkeur voor een gevestigde groene leverancier die dynamisch wil. Let op: Trustpilot-score laag (1,5 op ruim 1.000 reviews)."
+      "wie_text": "Huishoudens met voorkeur voor een gevestigde groene leverancier die dynamisch wil. Let op: Trustpilot-score laag (1,5 op ruim 1.000 reviews).",
+      "teruglevering": {
+        "opslag_per_kwh": 0.0,
+        "methode": "geen",
+        "uitleg": "Geen terugleverkosten op dynamisch, bevestigd juni 2026.",
+        "bron": "energievergelijk-lijst jan 2026, bevestigd juni 2026",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "engie",
@@ -390,7 +534,15 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "App scoort goed in de stores (circa 8,8). Grote internationale leverancier. Geen open API of Home Assistant-integratie.",
-      "wie_text": "Huishoudens die bij een grote, gevestigde leverancier willen zitten en daar een dynamisch contract willen. Let op: Trustpilot-score laag (2,6 op ruim 2.000 reviews)."
+      "wie_text": "Huishoudens die bij een grote, gevestigde leverancier willen zitten en daar een dynamisch contract willen. Let op: Trustpilot-score laag (2,6 op ruim 2.000 reviews).",
+      "teruglevering": {
+        "opslag_per_kwh": -0.02,
+        "methode": "jaaroverschot",
+        "uitleg": "Bedrag nog niet bevestigd bij ENGIE zelf; aanname gelijk aan het veldgemiddelde.",
+        "voorlopig": true,
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "energievanons",
@@ -408,7 +560,14 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Coöperatieve leverancier; stroom van lokale, vaak noordelijke opwekprojecten. Basis-app voor verbruiksinzicht, geen smart-laad- of Home Assistant-functies.",
-      "wie_text": "Huishoudens die 100% lokaal opgewekte groene stroom via een coöperatie willen. Hoge opslag van de vergelijking; geen technische meerwaarde voor wie wil automatiseren."
+      "wie_text": "Huishoudens die 100% lokaal opgewekte groene stroom via een coöperatie willen. Hoge opslag van de vergelijking; geen technische meerwaarde voor wie wil automatiseren.",
+      "teruglevering": {
+        "opslag_per_kwh": 0.0,
+        "methode": "geen",
+        "uitleg": "Geen terugleverkosten op dynamisch, bevestigd juni 2026.",
+        "bron": "energievergelijk-lijst jan 2026, bevestigd juni 2026",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "innova",
@@ -426,7 +585,14 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Leverancier met focus op vaste én dynamische contracten. Basis-app voor verbruiksinzicht, geen EV- of Home Assistant-automatisering.",
-      "wie_text": "Prijsbewuste huishoudens: een van de laagste opslagen van het veld (1,49 ct excl. btw), met een gemiddeld vastrecht. Solide Trustpilot-score op ruim 5.000 reviews."
+      "wie_text": "Prijsbewuste huishoudens: een van de laagste opslagen van het veld (1,49 ct excl. btw), met een gemiddeld vastrecht. Solide Trustpilot-score op ruim 5.000 reviews.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.0306,
+        "methode": "per_kwh",
+        "uitleg": "Verkoopvergoeding over elke teruggeleverde kWh.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "powerpeers",
@@ -445,7 +611,15 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Vattenfall-dochter, sinds najaar 2025 gericht op dynamisch. Vernieuwde app voor verbruiksinzicht.",
-      "wie_text": "Laagste geschatte jaarkosten van de vergelijking: zeer lage opslag (0,83 ct) met een gematigd vastrecht. Vattenfall-dochter met een vernieuwde app."
+      "wie_text": "Laagste geschatte jaarkosten van de vergelijking: zeer lage opslag (0,83 ct) met een gematigd vastrecht. Vattenfall-dochter met een vernieuwde app.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.02,
+        "methode": "per_kwh",
+        "uitleg": "Powerpeers rekent geen terugleverkosten maar wel een kleine verkoopvergoeding; het bedrag staat alleen op de tarievenkaart in de app.",
+        "voorlopig": true,
+        "bron": "powerpeers.nl/dynamische-energie/terugleverkosten-en-dynamische-energie",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "vrijopnaam",
@@ -464,7 +638,15 @@
       "no_feedin_cost": false,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Coöperatief en groen, met focus op dynamisch. Basis-app voor verbruiksinzicht, geen geavanceerde smart-functies.",
-      "wie_text": "Huishoudens die groen en coöperatief willen met een dynamisch contract. Gemiddelde tarieven; sterk als je waarde hecht aan coöperatief eigenaarschap."
+      "wie_text": "Huishoudens die groen en coöperatief willen met een dynamisch contract. Gemiddelde tarieven; sterk als je waarde hecht aan coöperatief eigenaarschap.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.02,
+        "methode": "jaaroverschot",
+        "uitleg": "Bedrag nog niet bevestigd bij Vrijopnaam zelf; aanname gelijk aan het veldgemiddelde.",
+        "voorlopig": true,
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "delta",
@@ -482,7 +664,14 @@
       "no_feedin_cost": true,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Eenvoudige app met uurprijzen en verbruik; automatische sturing van apparaten zit er niet in. Op Trustpilot scoort DELTA 4,1 — de hoogste van de gevestigde namen in dit overzicht.",
-      "wie_text": "Wie een gevestigde leverancier zoekt met een lage opslag (1,04 ct excl. btw) en teruglevering tegen de volle beursprijs. Daar staan de hoogste vaste kosten van dit overzicht tegenover (€8,49/maand incl. btw)."
+      "wie_text": "Wie een gevestigde leverancier zoekt met een lage opslag (1,04 ct excl. btw) en teruglevering tegen de volle beursprijs. Daar staan de hoogste vaste kosten van dit overzicht tegenover (€8,49/maand incl. btw).",
+      "teruglevering": {
+        "opslag_per_kwh": 0.0,
+        "methode": "geen",
+        "uitleg": "Volle beursprijs bij teruglevering, volgens de eigen prijzenfolder.",
+        "bron": "eigen prijzenfolder DELTA 23-04-2026",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "energiedirect",
@@ -501,7 +690,14 @@
       "opzeg": "geen minimum, opzegtermijn 5 werkdagen",
       "app_text": "Regelneef-app toont vanaf 13:00 de stroomprijzen voor morgen en je verbruik per uur. Slim Laden voor EV's zit ingebouwd: de auto laadt automatisch op goedkope uren.",
       "wie_text": "Wie een grote leverancier (onderdeel van Essent) wil met ingebouwd slim EV-laden. Weeg de klantbeoordelingen mee voordat je kiest.",
-      "let_op": "Trustpilot-score 1,3 — de laagste in dit overzicht, met vooral klachten over facturen en bereikbaarheid. Bij een terugleveroverschot rekent Energiedirect 2,05 ct/kWh verkoopvergoeding."
+      "let_op": "Trustpilot-score 1,3 — de laagste in dit overzicht, met vooral klachten over facturen en bereikbaarheid. Bij een terugleveroverschot rekent Energiedirect 2,05 ct/kWh verkoopvergoeding.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.0205,
+        "methode": "jaaroverschot",
+        "uitleg": "Verkoopvergoeding, alleen over het jaaroverschot.",
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "oxxio",
@@ -520,7 +716,15 @@
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Volledig digitale dochter van Eneco: klantcontact loopt via app en chat. De app is duidelijk over verbruik en termijnbedrag; op Trustpilot scoort Oxxio 3,9.",
       "wie_text": "Wie dynamische prijzen wil zonder wisselend maandbedrag: Oxxio werkt met een vast termijnbedrag en verrekent achteraf. Digitale zelfbediening moet je wel liggen.",
-      "let_op": "Bij teruglevering houdt Oxxio ±2,2 ct/kWh (incl. btw) in op de beursprijs."
+      "let_op": "Bij teruglevering houdt Oxxio ±2,2 ct/kWh (incl. btw) in op de beursprijs.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.02,
+        "methode": "per_kwh",
+        "uitleg": "Oxxio rekent geen terugleverkosten op dynamisch maar wel een verkoopvergoeding; bedrag niet gepubliceerd.",
+        "voorlopig": true,
+        "bron": "oxxio.nl dynamisch energiecontract en zonnepanelen",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "mega",
@@ -539,7 +743,15 @@
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "app_text": "Van oorsprong Belgische leverancier, daar een van de grotere spelers. Eenvoudige app met prijzen en verbruik; op Trustpilot scoort Mega Nederland 3,0.",
       "wie_text": "Prijsbewuste overstappers: opslag van 1,5 ct excl. btw en €5,00 vaste kosten horen bij de laagste van dit overzicht. De gasopslag (9,5 ct/m³ incl. btw) is juist aan de hoge kant.",
-      "let_op": "Bij teruglevering houdt Mega ±3,0 ct/kWh (incl. btw) in op de beursprijs."
+      "let_op": "Bij teruglevering houdt Mega ±3,0 ct/kWh (incl. btw) in op de beursprijs.",
+      "teruglevering": {
+        "opslag_per_kwh": -0.02,
+        "methode": "per_kwh",
+        "uitleg": "Bedrag niet gepubliceerd voor het dynamische contract; aanname gelijk aan het veldgemiddelde.",
+        "voorlopig": true,
+        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
+        "verified": "2026-09-21"
+      }
     },
     {
       "id": "custom",
@@ -549,5 +761,17 @@
       "consumer": false,
       "note": "Vul zelf je opslag in (excl. btw)."
     }
-  ]
+  ],
+  "teruglevering_toelichting": {
+    "formule": "vergoeding_per_kwh = kale_uurprijs + opslag_per_kwh",
+    "note": "Positief bedrag = de aanbieder betaalt erbovenop, negatief = de aanbieder houdt het in. Over teruglevering betaal je geen energiebelasting en geen btw. Bonussen (Frank, NextEnergy, Zonneplan) gelden alleen voor zonnestroom, niet voor stroom uit een thuisbatterij.",
+    "methode_uitleg": {
+      "geen": "Kale uurprijs, geen inhouding.",
+      "per_kwh": "Inhouding over elke teruggeleverde kWh.",
+      "jaaroverschot": "Inhouding alleen over het jaaroverschot. Vervalt per 1 januari 2027, want dan is er geen saldering meer.",
+      "bijbetaling": "De aanbieder betaalt bovenop de uurprijs.",
+      "gemiddelde": "Berekend veldgemiddelde."
+    },
+    "verified": "2026-09-21"
+  }
 }

@@ -307,6 +307,7 @@ h3{font-size:.95rem;margin:22px 0 6px}
     <h2>Hoe we rekenen</h2>
     <p>Per paneel rekenen we met ongeveer 350 kWh zonnestroom per jaar, gericht op het zuiden. Je verbruik volgt een gemiddeld dagpatroon; zet je een warmtepomp aan, dan komt dat verbruik er winterzwaar bovenop, precies wanneer je panelen weinig leveren. De batterij verliest wat stroom bij laden en ontladen (ruwweg 1 op de 10 kWh) en gebruikt 90% van zijn opgegeven capaciteit.</p>
     <p>Voor stroom die je inkoopt betaal je de marktprijs plus belasting; voor teruglevering krijg je de kale marktprijs, minus de terugleverkosten van je leverancier. De batterij stuurt op de prijzen die een dag van tevoren bekend zijn. We rekenen zonder salderingsregeling; zolang die nog geldt (tot 2027) levert terugleveren iets meer op. De werkelijke opbrengst kan afwijken en aan deze uitkomsten kun je geen rechten ontlenen.</p>
+    <p>Wat we er bewust <b>niet</b> in stoppen: de zonnebonus van Frank, NextEnergy en Zonneplan. Die drie betalen een flinke opslag boven op de marktprijs &#8211; 15, 50 en 10 procent &#8211; maar alleen over stroom die rechtstreeks van je zonnepanelen komt. Over stroom die je batterij teruglevert krijg je hem niet; dat staat in hun eigen voorwaarden. Zou de tool die bonus toch meerekenen, dan zou hij je opbrengst bij precies die drie aanbieders te rooskleurig voorstellen. Hoe het per aanbieder zit staat in <a href="/kennisbank/teruglevertarief-vergelijken">teruglevertarief vergelijken</a>.</p>
 
     <h2>Veelgestelde vragen over thuisbatterijen</h2>
     <div class="faq">
@@ -346,34 +347,43 @@ h3{font-size:.95rem;margin:22px 0 6px}
 
 // ---------- data ----------
 // tlv = terugleverkosten per teruggeleverde kWh bij een DYNAMISCH contract.
-//  > 0 = je betaalt deze inkoopvergoeding per kWh teruglevering (boete)
+//  > 0 = je betaalt deze verkoopvergoeding per kWh teruglevering
 //  = 0 = geen terugleverkosten (je krijgt de kale marktprijs)
 //  < 0 = je ontvangt juist een vergoeding bovenop de marktprijs
-// Bron: Zonneplan-vergelijking dynamische contracten (mrt 2026), aangevuld per leverancier.
-// LET OP: 'tlvProv:true' = voorlopige aanname, bedrag nog niet hard bevestigd (zie lijst voor Emile).
+// BRON: public/data/config.json -> suppliers[].teruglevering (peildatum 21 sep 2026).
+// tlv = -opslag_per_kwh uit dat blok; wijzig het DAAR, niet hier, en trek deze lijst na.
+// BEWUST ZONDER ZONNEBONUS: Frank (+-15%), NextEnergy (50%) en Zonneplan (10%) betalen
+// die bonus alleen over zonnestroom. Over stroom die een thuisbatterij teruglevert krijg
+// je hem niet -- dat staat met zoveel woorden in hun eigen voorwaarden. Deze tool rekent
+// batterij-teruglevering door, dus hier hoort alleen de kale regel.
+// 'tlvProv:true' = bedrag nog een aanname, de aanbieder maakt het niet openbaar.
 const SUPPLIERS = [
- {id:"average",name:"Algemeen gemiddelde",markup:0.0178,fixed:0,tlv:0.020},
+ {id:"average",name:"Algemeen gemiddelde",markup:0.0178,fixed:0,tlv:0.0133},
  {id:"tibber",name:"Tibber",markup:0.0205,fixed:6.99,tlv:0.0248},
  {id:"frank",name:"Frank Energie",markup:0.015,fixed:6.95,tlv:-0.0182},
  {id:"energyzero",name:"EnergyZero",markup:0.01853,fixed:5.95,tlv:0},
  {id:"anwb",name:"ANWB Energie",markup:0.018,fixed:6.5,tlv:0},
  {id:"vandebron",name:"Vandebron Dynamisch",markup:0.0165,fixed:7.5,tlv:0.0136},
- {id:"zonneplan",name:"Zonneplan Dynamic",markup:0.0165,fixed:6.5,tlv:-0.020},
+ {id:"zonneplan",name:"Zonneplan Dynamic",markup:0.0165,fixed:6.5,tlv:-0.02},
  {id:"easy",name:"Easy Energy Dynamisch",markup:0.018,fixed:5.5,tlv:0.0218},
  {id:"nextenergy",name:"NextEnergy",markup:0.0181,fixed:4.95,tlv:0.0219},
  {id:"budget",name:"Budget Energie",markup:0.01405,fixed:4.95,tlv:0},
  {id:"eneco",name:"Eneco Dynamisch",markup:0.02,fixed:5.79,tlv:0.0292},
- {id:"om",name:"om | nieuwe energie",markup:0.02066,fixed:8.57,tlv:0.020,tlvProv:true},
+ {id:"om",name:"om | nieuwe energie",markup:0.02066,fixed:8.57,tlv:0.02,tlvProv:true},
  {id:"vattenfall",name:"Vattenfall FlexPrijs",markup:0.021,fixed:4.95,tlv:0.0255},
  {id:"coolblue",name:"Coolblue Energie",markup:0.01877,fixed:5.12,tlv:0},
- {id:"pure",name:"Pure Energie",markup:0.02479,fixed:2.41,tlv:0.0370},
+ {id:"pure",name:"Pure Energie",markup:0.02479,fixed:2.41,tlv:0.037},
  {id:"essent",name:"Essent",markup:0.0209,fixed:6.19,tlv:0.0253},
  {id:"greenchoice",name:"Greenchoice",markup:0.0185,fixed:6.2,tlv:0},
- {id:"engie",name:"ENGIE",markup:0.0157,fixed:5.74,tlv:0.020,tlvProv:true},
+ {id:"engie",name:"ENGIE",markup:0.0157,fixed:5.74,tlv:0.02,tlvProv:true},
  {id:"energievanons",name:"Energie VanOns",markup:0.02397,fixed:5.78,tlv:0},
  {id:"innova",name:"Innova Energie",markup:0.01488,fixed:5.75,tlv:0.0306},
- {id:"powerpeers",name:"Powerpeers",markup:0.0083,fixed:5.17,tlv:0.020,tlvProv:true},
- {id:"vrijopnaam",name:"Vrijopnaam",markup:0.0165,fixed:6.61,tlv:0.020,tlvProv:true},
+ {id:"powerpeers",name:"Powerpeers",markup:0.0083,fixed:5.17,tlv:0.02,tlvProv:true},
+ {id:"vrijopnaam",name:"Vrijopnaam",markup:0.0165,fixed:6.61,tlv:0.02,tlvProv:true},
+ {id:"delta",name:"DELTA Energie",markup:0.01037,fixed:7.02,tlv:0},
+ {id:"energiedirect",name:"Energiedirect",markup:0.01694,fixed:5.78,tlv:0.0205},
+ {id:"oxxio",name:"Oxxio",markup:0.01849,fixed:5.36,tlv:0.02,tlvProv:true},
+ {id:"mega",name:"Mega",markup:0.015,fixed:5.0,tlv:0.02,tlvProv:true},
 ];
 const EB=0.0916, BTW=1.21;
 const SOLAR_PER_PANEL=350;
@@ -483,7 +493,10 @@ function updateTlvNote(){
   if(t>0.0005) txt=`We rekenen met <b>${ct} ct per teruggeleverde kWh aan terugleverkosten</b> bij ${sup.name}. Dat gaat van je teruglever-opbrengst af.`;
   else if(t<-0.0005) txt=`${sup.name} geeft een <b>vergoeding van ${ct} ct/kWh</b> bovenop de marktprijs voor teruglevering &#8211; daar rekenen we mee.`;
   else txt=`Bij ${sup.name} rekenen we met <b>geen terugleverkosten</b>: je krijgt de kale marktprijs voor teruglevering.`;
-  if(sup.tlvProv) txt+=' <span style="font-style:italic">(voorlopige aanname, nog niet hard bevestigd)</span>';
+  if(sup.tlvProv) txt+=' <span style="font-style:italic">(voorlopige aanname; de aanbieder maakt het bedrag niet openbaar)</span>';
+  if(sup.id==='frank'||sup.id==='nextenergy'||sup.id==='zonneplan'){
+    txt+=' <span style="font-style:italic">De zonnebonus van deze aanbieder zit er bewust niet in: die geldt alleen voor zonnestroom, niet voor stroom die je batterij teruglevert.</span>';
+  }
   el.innerHTML=txt;
 }
 

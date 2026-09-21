@@ -10,6 +10,7 @@
     mode:         "sv.viewMode",
     supplier:     "sv.supplierId",
     customMarkup: "sv.customMarkup",
+    feedin:       "sv.feedinLine",
   };
 
   const state = {
@@ -20,6 +21,7 @@
     tomorrowForecasts: [],   // forecast-entries voor morgen (optioneel)
     hasPt15m:          false,
     chartRes:          "hourly",   // 'hourly' | 'quarter'
+    showFeedin:        false,      // teruglever-lijn over de staven
     mode:              "inclusive",
     supplierId:        "average",
     customMarkup:      0.025,
@@ -61,6 +63,21 @@
     return (epex + (Number(supplier.markup_per_kwh) || 0) + t.energiebelasting_per_kwh) * t.btw_factor * 100;
   }
   function priceCentsRaw(eurMwh) { return (eurMwh / 1000) * 100; }
+
+  // ---- Teruglevering ----
+  // vergoeding = kale uurprijs + opslag van je aanbieder, zonder energiebelasting
+  // en zonder btw. Zonder zonnebonus, want die geldt niet voor batterijstroom.
+  const FEEDIN_COLOR = "#a11b6b";
+  function feedinInfo() {
+    const s = getSupplier();
+    return (s && s.teruglevering) || null;
+  }
+  function feedinAvailable() { return !!feedinInfo(); }
+  function feedinCents(eurMwh) {
+    const t = feedinInfo();
+    const off = t && typeof t.opslag_per_kwh === "number" ? t.opslag_per_kwh : 0;
+    return (eurMwh / 1000 + off) * 100;
+  }
 
   // #13: relatieve drempels (hybride, begrensd) — zelfde regels als app.js.
   // Kwartielen van de morgen-uren, geklemd op de vaste cheap/pricey-band (22-28 ct);
@@ -293,7 +310,22 @@
           borderColor: colors,
           borderWidth: isQuarter ? 0.5 : 1.5,
           borderRadius: isQuarter ? 1 : 4,
-        }],
+          order: 2,
+        },
+        ...(state.showFeedin && feedinAvailable() ? [{
+          type: "line",
+          label: "Teruglevering",
+          data: prices.map(p => feedinCents(p.price)),
+          borderColor: FEEDIN_COLOR,
+          borderDash: [5, 3],
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          tension: 0.25,
+          fill: false,
+          order: 1,
+        }] : []),
+        ],
       },
       options: {
         responsive: true,
@@ -301,6 +333,9 @@
         plugins: {
           legend: { display: false },
           tooltip: {
+            // Alleen het staaf-item toont een tooltip; de teruglever-regel hangt
+            // daaronder, anders krijg je twee blokken met dezelfde titel.
+            filter: item => item.datasetIndex === 0,
             callbacks: {
               title: items => {
                 const i = items[0].dataIndex;
@@ -311,12 +346,16 @@
                 const i   = item.dataIndex;
                 const p   = prices[i];
                 const cls = classes[i];
-                return [
+                const lines = [
                   CLASS_LABEL[cls] || cls,
                   `Incl. belasting: ${fmtNum(priceCents(p.price, "inclusive"), 2)} ct/kWh`,
                   `Excl. belasting: ${fmtNum(priceCents(p.price, "exclusive"), 2)} ct/kWh`,
                   `Kale EPEX: ${fmtNum(priceCentsRaw(p.price), 2)} ct/kWh`,
                 ];
+                if (state.showFeedin && feedinAvailable()) {
+                  lines.push(`Teruglevering: ${fmtNum(feedinCents(p.price), 2)} ct/kWh`);
+                }
+                return lines;
               },
             },
           },
@@ -880,6 +919,52 @@
     });
   }
 
+  // ---- Teruglever-toggle ----
+  function renderFeedinToggle() {
+    const wrap = document.getElementById("morgen-feedin-wrap");
+    const cb   = document.getElementById("morgen-feedin-toggle");
+    const note = document.getElementById("morgen-feedin-note");
+    const leg  = document.getElementById("morgen-feedin-legend");
+    if (!wrap || !cb) return;
+
+    wrap.hidden = !feedinAvailable();
+    cb.checked = state.showFeedin;
+    if (leg) leg.hidden = !(state.showFeedin && feedinAvailable());
+    if (!note) return;
+    note.hidden = !(state.showFeedin && feedinAvailable());
+    if (note.hidden) return;
+
+    const t = feedinInfo();
+    const sup = getSupplier();
+    const ct = Math.abs(t.opslag_per_kwh) * 100;
+    let regel;
+    if (!t.opslag_per_kwh) {
+      regel = `${sup.name} betaalt je de kale beursprijs, zonder opslag en zonder inhouding.`;
+    } else if (t.opslag_per_kwh > 0) {
+      regel = `${sup.name} betaalt je de kale beursprijs plus ${fmtNum(ct, 2)} ct per kWh.`;
+    } else {
+      regel = `${sup.name} betaalt je de kale beursprijs min ${fmtNum(ct, 2)} ct per kWh.`;
+    }
+    const staat = t.voorlopig ? " <em>Dit bedrag is nog een aanname; de aanbieder maakt het niet openbaar.</em>" : "";
+    note.innerHTML =
+      `<span class="feedin-note-dot" aria-hidden="true"></span>` +
+      `<strong>Teruglevering:</strong> ${regel} Over teruglevering betaal je geen energiebelasting en geen btw. ` +
+      `Zakt de lijn onder nul, dan betaal je op dat moment bij als je teruglevert — ontlaad je batterij dan liever in huis. ` +
+      `De lijn rekent zonder zonnebonus: Frank, NextEnergy en Zonneplan betalen die alleen over zonnestroom, niet over stroom uit een thuisbatterij. ` +
+      `<a href="/kennisbank/teruglevertarief-vergelijken">Hoe zit dat per aanbieder?</a>${staat}`;
+  }
+
+  function initFeedinToggle() {
+    const cb = document.getElementById("morgen-feedin-toggle");
+    if (!cb) return;
+    cb.addEventListener("change", () => {
+      state.showFeedin = cb.checked;
+      try { localStorage.setItem(STORAGE_KEYS.feedin, state.showFeedin ? "1" : "0"); } catch (e) {}
+      renderFeedinToggle();
+      renderChart();
+    });
+  }
+
   // ---- Render: alles ----
   function renderAll() {
     renderDateLabels();
@@ -887,6 +972,7 @@
     renderSupplierSelect();
     renderHighlights();
     renderSummary();
+    renderFeedinToggle();
     renderChart();
     renderMoments();
     renderSupplierTable();
@@ -910,6 +996,7 @@
   async function init() {
     state.mode       = loadStored(STORAGE_KEYS.mode, "inclusive");
     state.supplierId = loadStored(STORAGE_KEYS.supplier, "average");
+    state.showFeedin = loadStored(STORAGE_KEYS.feedin, "0") === "1";
     const cm = parseFloat(loadStored(STORAGE_KEYS.customMarkup, "0.025"));
     state.customMarkup = Number.isFinite(cm) && cm >= 0 ? cm : 0.025;
 
@@ -942,6 +1029,7 @@
       initModeToggle();
       initSupplierSelect();
       initResolutionToggle();
+      initFeedinToggle();
       renderAll();
 
     } catch (e) {

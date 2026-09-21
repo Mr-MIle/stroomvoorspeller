@@ -382,6 +382,62 @@ a:hover { text-decoration: underline; }
   .res-toggle { padding-top: 0; }
   .res-btn { padding: 5px 11px; font-size: 0.82rem; }
   .res-toggle-note { white-space: normal; text-align: left; }
+  .feedin-toggle { padding-top: 0; }
+  .feedin-btn { padding: 5px 11px; font-size: 0.82rem; }
+}
+
+/* Teruglever-lijn: schakelaar bij de grafiekkop + toelichting eronder */
+.feedin-toggle {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  padding-top: 4px;
+}
+.feedin-toggle[hidden] { display: none; }
+.feedin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--c-border, #d8e0e8);
+  background: var(--c-surface, #fff);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--c-text-mute);
+  padding: 6px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.feedin-btn:hover { color: var(--c-text); border-color: #a11b6b; }
+.feedin-btn .feedin-btn-line {
+  width: 16px;
+  height: 0;
+  border-top: 2px dashed #a11b6b;
+  flex-shrink: 0;
+  opacity: 0.45;
+}
+.feedin-btn.is-active {
+  color: #a11b6b;
+  border-color: #a11b6b;
+  background: #fdf2f8;
+}
+.feedin-btn.is-active .feedin-btn-line { opacity: 1; }
+.feedin-note {
+  margin: 10px 0 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--c-text-soft, #4b5563);
+}
+.feedin-note[hidden] { display: none; }
+.feedin-note .feedin-note-dot {
+  display: inline-block;
+  width: 16px;
+  height: 0;
+  border-top: 2px dashed #a11b6b;
+  vertical-align: middle;
+  margin-right: 7px;
 }
 
 /* Now-card aanpassing — extra mode-label en EPEX-regel */
