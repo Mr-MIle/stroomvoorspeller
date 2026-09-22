@@ -30,8 +30,8 @@
 
   <style>
     .callout {
-      background: #f0f7ff;
-      border-left: 4px solid #0f6cbd;
+      background: var(--c-surface-soft);
+      border-left: 4px solid var(--c-brand);
       padding: 0.85rem 1.1rem;
       border-radius: 0 0.5rem 0.5rem 0;
       margin: 1.25rem 0;
@@ -44,18 +44,18 @@
       font-size: 0.92rem;
     }
     .besparing-table th, .besparing-table td {
-      border: 1px solid #d7dee6;
+      border: 1px solid var(--c-border);
       padding: 0.55rem 0.7rem;
       text-align: left;
       vertical-align: top;
     }
     .besparing-table thead th {
-      background: #eef5fc;
+      background: var(--c-surface-soft);
       font-weight: 600;
     }
-    .besparing-table tbody tr:nth-child(even) { background: #f7fafc; }
+    .besparing-table tbody tr:nth-child(even) { background: var(--c-surface-soft); }
     .besparing-table td.num { white-space: nowrap; }
-    .table-note { font-size: 0.85rem; color: #718096; margin-top: 0; }
+    .table-note { font-size: 0.85rem; color: var(--c-text-mute); margin-top: 0; }
     @media (max-width: 540px) {
       .besparing-table { font-size: 0.82rem; }
       .besparing-table th, .besparing-table td { padding: 0.4rem 0.45rem; }
@@ -325,7 +325,7 @@
       <p class="legal-related" style="margin-top:14px;"><a href="/kennisbank">← Terug naar de Kennisbank</a> · <a href="/aanbieders">Aanbieders</a> · <a href="/disclaimer">Disclaimer</a></p>
     </section>
 
-    <p style="font-size:0.8rem;color:#718096;margin-top:2rem;">Bronnen: <a href="https://www.vvde.nl/analyse-2022/" rel="noopener">VvDE — analyse dynamische energiecontracten 2022</a> · <a href="https://selectra.be/nl/energie/nieuws/dynamisch-energiecontract-interessant" rel="noopener">Roland Berger / Selectra — besparing 10-30%</a> · <a href="https://www.anwb.nl/energie/energiebelasting" rel="noopener">ANWB — energiebelasting 2026</a> · <a href="https://www.milieucentraal.nl/energie-besparen/inzicht-in-je-energierekening/gemiddeld-energieverbruik/" rel="noopener">Milieu Centraal — gemiddeld stroomverbruik</a> — geraadpleegd juni 2026.</p>
+    <p style="font-size:0.8rem;color:var(--c-text-mute);margin-top:2rem;">Bronnen: <a href="https://www.vvde.nl/analyse-2022/" rel="noopener">VvDE — analyse dynamische energiecontracten 2022</a> · <a href="https://selectra.be/nl/energie/nieuws/dynamisch-energiecontract-interessant" rel="noopener">Roland Berger / Selectra — besparing 10-30%</a> · <a href="https://www.anwb.nl/energie/energiebelasting" rel="noopener">ANWB — energiebelasting 2026</a> · <a href="https://www.milieucentraal.nl/energie-besparen/inzicht-in-je-energierekening/gemiddeld-energieverbruik/" rel="noopener">Milieu Centraal — gemiddeld stroomverbruik</a> — geraadpleegd juni 2026.</p>
   </main>
 
   <footer class="site-footer">

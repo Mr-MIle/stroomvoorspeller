@@ -49,6 +49,28 @@
   function saveStored(key, value) {
     try { localStorage.setItem(key, String(value)); } catch (e) { /* no-op */ }
   }
+  // ── Thema ────────────────────────────────────────────────────────────────
+  // De grafiek haalt zijn kleuren uit de CSS-variabelen. Zo klopt licht én
+  // donker vanzelf, zonder tweede kleurenlijst in de JavaScript. Verandert
+  // de systeeminstelling, dan tekenen we de grafieken opnieuw.
+  const cssVar = (naam, terugval) => {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(naam).trim();
+    return v || terugval;
+  };
+  const donkerMQ = window.matchMedia("(prefers-color-scheme: dark)");
+  const minderBewegingMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const CH = {
+    get tekst()  { return cssVar("--c-text-soft", "#4a5b6e"); },
+    get zwak()   { return cssVar("--c-text-mute", "#7c8a99"); },
+    get raster() { return donkerMQ.matches ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.06)"; },
+    get feest()  { return donkerMQ.matches ? "rgba(255,214,140,0.95)" : "rgba(110,70,0,0.90)"; },
+    get feestEU(){ return donkerMQ.matches ? "rgba(255,196,128,0.95)" : "rgba(140,70,0,0.90)"; },
+    get weekend(){ return donkerMQ.matches ? "rgba(165,180,252,0.95)" : "rgba(67,56,202,0.98)"; },
+    get dag()    { return donkerMQ.matches ? "rgba(203,213,225,0.90)" : "rgba(51,65,85,0.95)"; },
+    get as()     { return donkerMQ.matches ? "rgba(203,213,225,0.75)" : "rgba(71,85,105,0.75)"; },
+    get animatie() { return minderBewegingMQ.matches ? false : { duration: 280 }; },
+  };
+
   function loadProfile() {
     try {
       const raw = loadStored(STORAGE_KEYS.profile, "");
@@ -125,7 +147,7 @@
   // Geen energiebelasting en geen btw: die gelden alleen over stroom die je afneemt.
   // BEWUST zonder zonnebonus: Frank, NextEnergy en Zonneplan betalen die alleen over
   // zonnestroom, niet over stroom uit een thuisbatterij.
-  const FEEDIN_COLOR = "#a11b6b";
+  const FEEDIN_COLOR = () => cssVar("--c-feedin", "#a11b6b");
   function feedinInfo() {
     const s = getSupplier();
     return (s && s.teruglevering) || null;
@@ -300,12 +322,12 @@
 
   function pointColor(eurMwh) {
     const c = classify(eurMwh);
-    if (c === "negative")    return "#7048e8";
-    if (c === "very_cheap")  return "#1a7a31";
-    if (c === "cheap")       return "#2f9e44";
-    if (c === "very_pricey") return "#9c1a1a";
-    if (c === "pricey")      return "#c92a2a";
-    return "#d4a017";
+    if (c === "negative")    return cssVar("--c-free", "#7048e8");
+    if (c === "very_cheap")  return cssVar("--c-cheap-link", "#1a7a31");
+    if (c === "cheap")       return cssVar("--c-cheap", "#2f9e44");
+    if (c === "very_pricey") return cssVar("--c-pricey-deep", "#9c1a1a");
+    if (c === "pricey")      return cssVar("--c-pricey", "#c92a2a");
+    return cssVar("--c-normal", "#d4a017");
   }
 
   // ---- Negatieve-prijs detectie ----
@@ -1127,16 +1149,16 @@
         const cx = (x1 + x2) / 2;
 
         let text, color, minW;
-        if (isNL && isCB) { text = "NL + EU feestdag"; color = "rgba(110, 70, 0, 0.90)"; minW = 92; }
-        else if (isNL)    { text = "NL feestdag";      color = "rgba(110, 70, 0, 0.88)"; minW = 64; }
-        else if (isCB)    { text = "EU-feestdag";      color = "rgba(140, 70, 0, 0.90)"; minW = 60; }
+        if (isNL && isCB) { text = "NL + EU feestdag"; color = CH.feest; minW = 92; }
+        else if (isNL)    { text = "NL feestdag";      color = CH.feest; minW = 64; }
+        else if (isCB)    { text = "EU-feestdag";      color = CH.feestEU; minW = 60; }
         else if (hideWeekdayLabel) {
           return; // weekdag staat al als kolomkop boven de grafiek
         }
         else {
           const wd = dObj.toLocaleDateString("nl-NL", { weekday: "short" }).replace(".", "");
           text = `${wd} ${dObj.getDate()}`;
-          color = isWeekend ? "rgba(67, 56, 202, 0.98)" : "rgba(51, 65, 85, 0.95)";
+          color = isWeekend ? CH.weekend : CH.dag;
           minW = 30;
         }
         if (bandW < minW) return;
@@ -1200,7 +1222,7 @@
         if (label) {
           const pad = 5;
           const textX = labelSide === "left" ? x - pad : x + pad;
-          ctx.fillStyle = "rgba(71, 85, 105, 0.75)";
+          ctx.fillStyle = CH.as;
           ctx.font = "bold 10px system-ui, -apple-system, sans-serif";
           ctx.textAlign = labelSide === "left" ? "right" : "left";
           ctx.textBaseline = "top";
@@ -1353,7 +1375,7 @@
     const actualData = timeline.map((t) => t.kind === "actual" ? priceCents(t.price) : null);
     const actualColors = timeline.map((t, i) => {
       if (t.kind !== "actual") return "transparent";
-      return i === chartNowIdx ? "#0f6cbd" : pointColor(t.price);
+      return i === chartNowIdx ? cssVar("--c-brand", "#0f6cbd") : pointColor(t.price);
     });
     // In quarter-mode: kleinere punten (veel datapunten), grotere 'nu'-stip.
     const actualRadii = timeline.map((t, i) => {
@@ -1405,7 +1427,7 @@
             label: `ct/kWh (${modeLabel()})`,
             data: actualData,
             tension: 0.25,
-            borderColor: "#2e75b6",
+            borderColor: cssVar("--c-accent", "#2e75b6"),
             borderWidth: isQuarter ? 1.5 : 2,
             pointBackgroundColor: actualColors,
             pointBorderColor: actualColors,
@@ -1432,7 +1454,7 @@
           ...(state.showFeedin ? [{
             label: "teruglevering",
             data: timeline.map((t) => t.kind === "actual" ? feedinCents(t.price) : null),
-            borderColor: FEEDIN_COLOR,
+            borderColor: FEEDIN_COLOR(),
             borderDash: [5, 3],
             borderWidth: 2,
             tension: 0.25,
@@ -1458,7 +1480,7 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: { duration: 280 },
+        animation: CH.animatie,
         interaction: { mode: "index", intersect: false },
         scales: {
           x: {
@@ -1467,7 +1489,7 @@
               maxTicksLimit,
               maxRotation: 0,             // nooit kantelen — voorkomt de chaotische schuine labels
               minRotation: 0,
-              color: "#7c8a99",
+              color: CH.zwak,
               font: { size: 11 },
               callback: xTickCallback,
             },
@@ -1478,8 +1500,8 @@
           y: {
             min: yMin,
             max: yMax,
-            ticks: { color: "#7c8a99", font: { size: 11 }, callback: (v) => v + " ct" },
-            grid: { color: "rgba(0,0,0,0.06)" },
+            ticks: { color: CH.zwak, font: { size: 11 }, callback: (v) => v + " ct" },
+            grid: { color: CH.raster },
           },
         },
         plugins: {
@@ -1648,28 +1670,28 @@
       wrap.setAttribute("aria-hidden", "true");
       wrap.style.cssText = "margin:10px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;line-height:1.8;";
       const dot = (color, label) =>
-        `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
+        `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--c-text-soft);">` +
         `<span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></span>` +
         `<strong>${label}</strong></span>`;
       // Teruglever-lijn krijgt een streepje in plaats van een stip: andere marker,
       // zodat hij ook zonder kleur te onderscheiden is van de prijsklassen.
       const dash = (color, label) =>
-        `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#374151;">` +
+        `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--c-text-soft);">` +
         `<span style="width:16px;height:0;border-top:2px dashed ${color};flex-shrink:0;"></span>` +
         `<strong>${label}</strong></span>`;
       wrap.innerHTML =
-        dot("#7048e8", "Gratis/negatief") +
-        dot("#2f9e44", "Goedkoop") +
-        dot("#d4a017", "Normaal") +
-        dot("#c92a2a", "Duur") +
-        dot("#0f6cbd", "Nu") +
-        (state.showFeedin && feedinAvailable() ? dash(FEEDIN_COLOR, "Teruglevering") : "") +
+        dot("var(--c-free)", "Gratis/negatief") +
+        dot("var(--c-cheap)", "Goedkoop") +
+        dot("var(--c-normal)", "Normaal") +
+        dot("var(--c-pricey)", "Duur") +
+        dot("var(--c-brand)", "Nu") +
+        (state.showFeedin && feedinAvailable() ? dash(FEEDIN_COLOR(), "Teruglevering") : "") +
         (isQuarter
-          ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Kwartierlijkse day-ahead prijzen. Beide grafieken delen dezelfde schaal.</span>`
-          : `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag. Beide grafieken delen dezelfde schaal.</span>`
+          ? `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">Kwartierlijkse day-ahead prijzen. Beide grafieken delen dezelfde schaal.</span>`
+          : `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag. Beide grafieken delen dezelfde schaal.</span>`
         ) +
         (tomorrowIsForecast
-          ? `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">De <strong>gestippelde lijn</strong> bij morgen is de voorspelling — de day-ahead prijzen voor morgen zijn nog niet gepubliceerd.</span>`
+          ? `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">De <strong>gestippelde lijn</strong> bij morgen is de voorspelling — de day-ahead prijzen voor morgen zijn nog niet gepubliceerd.</span>`
           : ``);
       splitEl.insertAdjacentElement("afterend", wrap);
 
@@ -1687,7 +1709,7 @@
           : `${dagLabel} gemiddeld ${Math.abs(pct)}% ${pct < 0 ? "onder" : "boven"} het gemiddelde van de afgelopen 30 dagen (${avgTxt} ct/kWh, incl. belasting).`;
         const ctxEl = document.createElement("p");
         ctxEl.id = "chart-ref-context";
-        ctxEl.style.cssText = "margin:8px 0 18px;font-size:12px;color:#6b7280;";
+        ctxEl.style.cssText = "margin:8px 0 18px;font-size:12px;color:var(--c-text-mute);";
         ctxEl.textContent = zin;
         wrap.insertAdjacentElement("afterend", ctxEl);
       }
@@ -1874,13 +1896,13 @@
       wrap.setAttribute("aria-hidden", "true");
       wrap.style.cssText = "margin:6px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;line-height:1.8;";
       wrap.innerHTML =
-        `<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#374151;">` +
+        `<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--c-text-soft);">` +
         `<span style="width:18px;border-top:2px dashed rgba(46,117,182,0.7);flex-shrink:0;"></span>` +
         `<strong>Voorspelde prijs</strong></span>` +
-        `<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#374151;">` +
+        `<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--c-text-soft);">` +
         `<span style="width:14px;height:10px;border-radius:2px;background:rgba(147,197,253,0.45);flex-shrink:0;"></span>` +
         `<strong>Onzekerheidsband</strong></span>` +
-        `<span style="font-size:11px;color:#6b7280;flex-basis:100%;">Eigen model voor de dagen ná morgen. Hoe verder vooruit, hoe breder de band. Geen garantie — bij extreme situaties (PV-overschot, gascrisis, centrale-uitval) kan de prijs erbuiten vallen.</span>`;
+        `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">Eigen model voor de dagen ná morgen. Hoe verder vooruit, hoe breder de band. Geen garantie — bij extreme situaties (PV-overschot, gascrisis, centrale-uitval) kan de prijs erbuiten vallen.</span>`;
       (canvas.closest(".chart-wrapper") || canvas).insertAdjacentElement("afterend", wrap);
     }
   }
@@ -2133,6 +2155,14 @@
       applyConfigDefaults();
       wireUI();
       renderAll();
+
+      // Wisselt het toestel van lichte naar donkere modus (of terug), dan
+      // tekenen we de grafieken opnieuw: die staan op een canvas en volgen
+      // de CSS-variabelen niet vanzelf.
+      donkerMQ.addEventListener("change", () => {
+        renderChart();
+        renderForecastChart();
+      });
     })
     .catch((err) => {
       console.error("[stroomvoorspeller] Fatal:", err);

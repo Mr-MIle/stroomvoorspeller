@@ -1,38 +1,84 @@
 /* Stroomvoorspeller — basis-stijlen
    Mobiel-eerst, sober, hoge leesbaarheid.
+   Kleuren staan als tokens in :root. De donkere modus hieronder
+   zet dezelfde tokens om; losse kleurcodes horen niet meer in de CSS.
 */
 
 :root {
+  color-scheme: light dark;
+
+  /* vlakken en tekst */
   --c-bg: #f6f8fb;
   --c-surface: #ffffff;
+  --c-surface-soft: #f4f8ff;
+  --c-surface-alt: #ecf1f6;
+  --c-surface-hover: #e3eef9;
   --c-text: #18222e;
   --c-text-soft: #4a5b6e;
   --c-text-mute: #5d6f80;
   --c-border: #e1e7ee;
+  --c-border-strong: #c3cede;
 
+  /* merk */
   --c-brand: #0f6cbd;
   --c-brand-deep: #0a4f8b;
   --c-accent: #2e75b6;
+  --c-brand-fill: #0f6cbd;
+  --c-brand-fill-deep: #0a4f8b;
 
+  /* gratis / negatief */
   --c-free: #7048e8;
   --c-free-bg: #f0ebff;
+  --c-free-border: #c4b5fd;
+  --c-free-text: #3b1d8a;
+  --c-free-link: #5b21b6;
+
+  /* goedkoop */
   --c-cheap: #2f9e44;
   --c-cheap-bg: #e6f4ea;
+  --c-cheap-border: #86efac;
+  --c-cheap-text: #14532d;
+  --c-cheap-link: #117c39;
+  --c-cheap-fill: #2f9e44;
+  --c-cheap-fill-deep: #1a7a31;
+
+  /* normaal en waarschuwing */
   --c-normal: #d4a017;
   --c-normal-bg: #fff4d6;
-  --c-pricey: #c92a2a;
-  --c-pricey-bg: #fde8e8;
+  --c-normal-border: #fde68a;
+  --c-normal-text: #7a5c00;
+  --c-warn: #d97706;
+  --c-warn-text: #92400e;
 
+  /* duur */
+  --c-pricey: #c92a2a;
+  --c-pricey-deep: #9c1a1a;
+  --c-pricey-bg: #fde8e8;
+  --c-pricey-border: #ffb3b3;
+  --c-pricey-text: #7f1d1d;
+
+  /* overig */
+  --c-feedin: #a11b6b;
+  --c-feedin-bg: #fdf2f8;
+  --c-wa-bg: #e7f8ee;
+
+  /* schaduwen en maten */
   --shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.05);
   --shadow-md: 0 4px 16px rgba(20, 30, 50, 0.08);
-
   --radius: 14px;
   --radius-sm: 8px;
-
   --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
-}
 
+  /* aliassen: oudere paginastijlen gebruiken deze namen */
+  --surface: var(--c-surface);
+  --surface-2: var(--c-surface-soft);
+  --border: var(--c-border);
+  --text-muted: var(--c-text-mute);
+  --accent: var(--c-brand);
+  --color-primary: var(--c-brand);
+  --color-bg-alt: var(--c-surface-soft);
+}
 * { box-sizing: border-box; }
 
 html, body {
@@ -99,7 +145,7 @@ a:hover { text-decoration: underline; }
   align-items: center;
   gap: 8px;
   border: 1.5px solid var(--c-brand);
-  background: #f0f6fc;
+  background: var(--c-surface-soft);
   border-radius: 999px;
   padding: 6px 14px 6px 12px;
   font-family: inherit;
@@ -111,14 +157,14 @@ a:hover { text-decoration: underline; }
   max-width: 100%;
 }
 .settings-toggle:hover {
-  background: #e3eef9;
+  background: var(--c-surface-hover);
   border-color: var(--c-brand-deep);
   box-shadow: 0 2px 6px rgba(15, 108, 189, 0.15);
 }
 .settings-toggle[aria-expanded="true"] {
-  background: var(--c-brand);
+  background: var(--c-brand-fill);
   color: #fff;
-  border-color: var(--c-brand);
+  border-color: var(--c-brand-fill);
 }
 .settings-toggle[aria-expanded="true"] .settings-toggle-prefix,
 .settings-toggle[aria-expanded="true"] .settings-toggle-value { color: #fff; }
@@ -200,7 +246,7 @@ a:hover { text-decoration: underline; }
   font-size: 1rem;
   font-weight: 600;
   color: var(--c-text);
-  background: #fff;
+  background: var(--c-surface);
 }
 .settings-select:focus {
   outline: none;
@@ -224,7 +270,7 @@ a:hover { text-decoration: underline; }
   align-items: center;
   gap: 6px;
   border: 1px solid var(--c-border);
-  background: #fff;
+  background: var(--c-surface);
   color: var(--c-text-soft);
   font: inherit;
   font-size: 0.82rem;
@@ -241,7 +287,7 @@ a:hover { text-decoration: underline; }
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: var(--c-brand);
+  background: var(--c-brand-fill);
   color: #fff;
   font-size: 0.68rem;
   font-weight: 700;
@@ -269,7 +315,7 @@ a:hover { text-decoration: underline; }
 .info-dialog-note { margin: 0; color: var(--c-text-mute); font-size: 0.83rem; line-height: 1.55; }
 .info-dialog-close {
   margin-top: 14px;
-  background: var(--c-brand);
+  background: var(--c-brand-fill);
   color: #fff;
   border: none;
   border-radius: var(--radius-sm);
@@ -300,7 +346,7 @@ a:hover { text-decoration: underline; }
 }
 .mode-toggle-buttons {
   display: inline-flex;
-  background: #ecf1f6;
+  background: var(--c-surface-alt);
   border-radius: 999px;
   padding: 3px;
   gap: 2px;
@@ -346,7 +392,7 @@ a:hover { text-decoration: underline; }
 .res-toggle[hidden] { display: none; }
 .res-toggle-buttons {
   display: inline-flex;
-  background: #ecf1f6;
+  background: var(--c-surface-alt);
   border-radius: 999px;
   padding: 3px;
   gap: 2px;
@@ -410,18 +456,18 @@ a:hover { text-decoration: underline; }
   transition: background 0.15s, color 0.15s, border-color 0.15s;
   white-space: nowrap;
 }
-.feedin-btn:hover { color: var(--c-text); border-color: #a11b6b; }
+.feedin-btn:hover { color: var(--c-text); border-color: var(--c-feedin); }
 .feedin-btn .feedin-btn-line {
   width: 16px;
   height: 0;
-  border-top: 2px dashed #a11b6b;
+  border-top: 2px dashed var(--c-feedin);
   flex-shrink: 0;
   opacity: 0.45;
 }
 .feedin-btn.is-active {
-  color: #a11b6b;
-  border-color: #a11b6b;
-  background: #fdf2f8;
+  color: var(--c-feedin);
+  border-color: var(--c-feedin);
+  background: var(--c-feedin-bg);
 }
 .feedin-btn.is-active .feedin-btn-line { opacity: 1; }
 .feedin-note {
@@ -435,7 +481,7 @@ a:hover { text-decoration: underline; }
   display: inline-block;
   width: 16px;
   height: 0;
-  border-top: 2px dashed #a11b6b;
+  border-top: 2px dashed var(--c-feedin);
   vertical-align: middle;
   margin-right: 7px;
 }
@@ -445,7 +491,7 @@ a:hover { text-decoration: underline; }
   font-size: 0.9rem;
   color: var(--c-text-soft);
   font-weight: 500;
-  background: #ecf1f6;
+  background: var(--c-surface-alt);
   padding: 3px 10px;
   border-radius: 999px;
   margin-left: 4px;
@@ -500,25 +546,25 @@ a:hover { text-decoration: underline; }
 
 /* Kleurvarianten — identiek aan de voormalige tomorrow-tip */
 .hero-verdict--neg  {
-  background: #f0ebff;
-  border-color: #c4b5fd;
-  color: #3b1d8a;
+  background: var(--c-free-bg);
+  border-color: var(--c-free-border);
+  color: var(--c-free-text);
 }
-.hero-verdict--neg .hero-verdict-text a { color: #5b21b6; }
+.hero-verdict--neg .hero-verdict-text a { color: var(--c-free-link); }
 
 .hero-verdict--cheap {
-  background: #e6f4ea;
-  border-color: #86efac;
-  color: #14532d;
+  background: var(--c-cheap-bg);
+  border-color: var(--c-cheap-border);
+  color: var(--c-cheap-text);
 }
-.hero-verdict--cheap .hero-verdict-text a { color: #15803d; }
+.hero-verdict--cheap .hero-verdict-text a { color: var(--c-cheap-link); }
 
 .hero-verdict--pricey {
-  background: #fff8e1;
-  border-color: #fde68a;
-  color: #78350f;
+  background: var(--c-normal-bg);
+  border-color: var(--c-normal-border);
+  color: var(--c-warn-text);
 }
-.hero-verdict--pricey .hero-verdict-text a { color: #92400e; }
+.hero-verdict--pricey .hero-verdict-text a { color: var(--c-warn-text); }
 
 /* Neutraal (geen bijzonder scenario / no-data) */
 .hero-verdict--neutral {
@@ -750,15 +796,15 @@ a:hover { text-decoration: underline; }
 .fh-title { font-size: 0.92rem; font-weight: 600; margin-top: 3px; color: var(--c-text); }
 .fh-detail { font-size: 0.8rem; color: var(--c-text-soft); margin-top: 1px; }
 .fh-neg    { background: var(--c-free-bg);   border-left-color: var(--c-free); }
-.fh-neg    .fh-label { color: #5b21b6; }
+.fh-neg    .fh-label { color: var(--c-free-link); }
 .fh-pricey { background: var(--c-pricey-bg); border-left-color: var(--c-pricey); }
-.fh-pricey .fh-label { color: #92400e; }
+.fh-pricey .fh-label { color: var(--c-warn-text); }
 .fh-cheap  { background: var(--c-cheap-bg);  border-left-color: var(--c-cheap); }
-.fh-cheap  .fh-label { color: #15803d; }
+.fh-cheap  .fh-label { color: var(--c-cheap-link); }
 .fh-neutral { grid-column: 1 / -1; background: var(--c-bg); border-left-color: var(--c-border); }
 .fh-neutral .fh-label { color: var(--c-text-mute); }
 .fh-solar  { background: var(--c-normal-bg); border-left-color: var(--c-normal); }
-.fh-solar  .fh-label { color: #8a6d10; }
+.fh-solar  .fh-label { color: var(--c-normal-text); }
 /* Profiel-actieregel onderaan een kaart (personalisatie) */
 .fh-action {
   margin-top: 8px;
@@ -800,7 +846,7 @@ a:hover { text-decoration: underline; }
   align-items: center;
   gap: 7px;
   border: 1px solid var(--c-border);
-  background: #fff;
+  background: var(--c-surface);
   border-radius: 999px;
   padding: 7px 13px;
   font-size: 0.87rem;
@@ -815,7 +861,7 @@ a:hover { text-decoration: underline; }
   height: 15px;
   flex-shrink: 0;
   border-radius: 4px;
-  border: 1.5px solid #c3cede;
+  border: 1.5px solid var(--c-border-strong);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -827,13 +873,13 @@ a:hover { text-decoration: underline; }
 .situation-chip input:focus-visible ~ .situation-box { box-shadow: 0 0 0 3px rgba(15, 108, 189, 0.3); }
 .situation-chip.is-on,
 .situation-chip:has(input:checked) {
-  background: #eaf3fb;
+  background: var(--c-surface-soft);
   border-color: var(--c-brand);
   color: var(--c-brand-deep);
   font-weight: 600;
 }
 .situation-chip.is-on .situation-box,
-.situation-chip:has(input:checked) .situation-box { background: var(--c-brand); border-color: var(--c-brand); }
+.situation-chip:has(input:checked) .situation-box { background: var(--c-brand-fill); border-color: var(--c-brand-fill); }
 .situation-chip.is-on .situation-box::after,
 .situation-chip:has(input:checked) .situation-box::after { content: "\2713"; }
 
@@ -891,7 +937,7 @@ a:hover { text-decoration: underline; }
 .legend-cheap::before   { background: var(--c-cheap); }
 .legend-normal::before  { background: var(--c-normal); }
 .legend-pricey::before  { background: var(--c-pricey); }
-.legend-current::before { background: var(--c-brand); border-radius: 50%; }
+.legend-current::before { background: var(--c-brand-fill); border-radius: 50%; }
 
 /* Collapsible details (#60) */
 .forecast-details {
@@ -990,7 +1036,7 @@ a:hover { text-decoration: underline; }
 .moment-when small { color: var(--c-text-mute); font-weight: 500; margin-left: 6px; }
 .moment-price {
   font-weight: 700;
-  color: #1e7b34;
+  color: var(--c-cheap-link);
   font-variant-numeric: tabular-nums;
   display: flex;
   align-items: center;
@@ -1060,7 +1106,7 @@ a:hover { text-decoration: underline; }
 .legal-page ul { padding-left: 22px; margin: 10px 0; }
 .legal-page li { margin: 6px 0; }
 .legal-page code {
-  background: #ecf1f6;
+  background: var(--c-surface-alt);
   padding: 1px 6px;
   border-radius: 4px;
   font-size: 0.9em;
@@ -1077,7 +1123,7 @@ a:hover { text-decoration: underline; }
 .legal-breadcrumb a { color: var(--c-text-soft); }
 .legal-breadcrumb a:hover { color: var(--c-brand); }
 .legal-summary {
-  background: #f3f7fb;
+  background: var(--c-surface-soft);
   border-left: 4px solid var(--c-brand);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   padding: 14px 18px !important;
@@ -1154,25 +1200,25 @@ a:hover { text-decoration: underline; }
 .tomorrow-tip-text a { font-weight: 600; margin-left: 4px; }
 
 .tomorrow-tip--neg  {
-  background: #f0ebff;
-  border-color: #c4b5fd;
-  color: #3b1d8a;
+  background: var(--c-free-bg);
+  border-color: var(--c-free-border);
+  color: var(--c-free-text);
 }
-.tomorrow-tip--neg .tomorrow-tip-text a { color: #5b21b6; }
+.tomorrow-tip--neg .tomorrow-tip-text a { color: var(--c-free-link); }
 
 .tomorrow-tip--cheap {
-  background: #e6f4ea;
-  border-color: #86efac;
-  color: #14532d;
+  background: var(--c-cheap-bg);
+  border-color: var(--c-cheap-border);
+  color: var(--c-cheap-text);
 }
-.tomorrow-tip--cheap .tomorrow-tip-text a { color: #15803d; }
+.tomorrow-tip--cheap .tomorrow-tip-text a { color: var(--c-cheap-link); }
 
 .tomorrow-tip--pricey {
-  background: #fff8e1;
-  border-color: #fde68a;
-  color: #78350f;
+  background: var(--c-normal-bg);
+  border-color: var(--c-normal-border);
+  color: var(--c-warn-text);
 }
-.tomorrow-tip--pricey .tomorrow-tip-text a { color: #92400e; }
+.tomorrow-tip--pricey .tomorrow-tip-text a { color: var(--c-warn-text); }
 
 @media (max-width: 640px) {
   .tomorrow-tip-inner { padding: 10px 12px; }
@@ -1195,7 +1241,7 @@ a:hover { text-decoration: underline; }
   flex-shrink: 0;
 }
 .morgen-link-btn:hover {
-  background: var(--c-brand);
+  background: var(--c-brand-fill);
   color: #fff;
   text-decoration: none;
 }
@@ -1206,9 +1252,9 @@ a:hover { text-decoration: underline; }
 /* ----- Stale-data banner (subtiele waarschuwing als prices.json ouder is dan 6 uur) ----- */
 .stale-alert {
   width: 100%;
-  background: #fff8e1;
-  border-bottom: 1px solid #ffe082;
-  color: #5a4100;
+  background: var(--c-normal-bg);
+  border-bottom: 1px solid var(--c-normal-border);
+  color: var(--c-normal-text);
   font-size: 0.88rem;
 }
 .stale-alert-inner {
@@ -1226,9 +1272,9 @@ a:hover { text-decoration: underline; }
 /* ----- Source-fout banner (rood, als ENTSO-E onbereikbaar en sample-data wordt getoond) ----- */
 .source-alert {
   width: 100%;
-  background: #fff0f0;
-  border-bottom: 1px solid #ffb3b3;
-  color: #7f1d1d;
+  background: var(--c-pricey-bg);
+  border-bottom: 1px solid var(--c-pricey-border);
+  color: var(--c-pricey-text);
   font-size: 0.88rem;
 }
 .source-alert-inner {
@@ -1249,7 +1295,7 @@ a:hover { text-decoration: underline; }
   top: 0;
   z-index: 100;
   width: 100%;
-  background: linear-gradient(90deg, #1a7a31 0%, #2f9e44 100%);
+  background: linear-gradient(90deg, var(--c-cheap-link) 0%, var(--c-cheap) 100%);
   color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   font-size: 0.95rem;
@@ -1331,7 +1377,7 @@ body.has-neg-alert .site-header { top: 56px; }
   text-align: left;
   font-weight: 600;
   color: var(--c-text-soft);
-  background: #f7fafc;
+  background: var(--c-surface-soft);
   padding: 12px 16px;
   border-bottom: 1px solid var(--c-border);
   font-size: 0.85rem;
@@ -1352,12 +1398,12 @@ body.has-neg-alert .site-header { top: 56px; }
   transition: background 0.1s;
 }
 .suppliers-table tbody tr:last-child { border-bottom: none; }
-.suppliers-table tbody tr:hover { background: #fafcfe; }
+.suppliers-table tbody tr:hover { background: var(--c-surface-soft); }
 .suppliers-table tbody tr.is-mine {
-  background: #f0f6fc;
+  background: var(--c-surface-soft);
   font-weight: 500;
 }
-.suppliers-table tbody tr.is-mine:hover { background: #e3eef9; }
+.suppliers-table tbody tr.is-mine:hover { background: var(--c-surface-hover); }
 .suppliers-table td {
   padding: 12px 16px;
   vertical-align: middle;
@@ -1395,7 +1441,7 @@ body.has-neg-alert .site-header { top: 56px; }
   gap: 4px;
   padding: 6px 14px;
   border: 1px solid var(--c-brand);
-  background: #fff;
+  background: var(--c-surface);
   color: var(--c-brand);
   border-radius: 6px;
   font-size: 0.85rem;
@@ -1405,7 +1451,7 @@ body.has-neg-alert .site-header { top: 56px; }
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 .supplier-pick-btn:hover {
-  background: var(--c-brand);
+  background: var(--c-brand-fill);
   color: #fff;
 }
 .supplier-pick-btn:focus-visible {
@@ -1433,7 +1479,7 @@ body.has-neg-alert .site-header { top: 56px; }
   margin-left: 8px;
   padding: 2px 8px;
   border-radius: 999px;
-  background: var(--c-brand);
+  background: var(--c-brand-fill);
   color: #fff;
   font-size: 0.7rem;
   font-weight: 600;
@@ -1485,7 +1531,7 @@ body.has-neg-alert .site-header { top: 56px; }
 
 /* ── Hero ──────────────────────────────────────────────── */
 .kb-hero {
-  background: var(--c-brand-deep);
+  background: var(--c-brand-fill-deep);
   color: #fff;
   border-radius: var(--radius);
   padding: 28px 32px;
@@ -1566,8 +1612,8 @@ body.has-neg-alert .site-header { top: 56px; }
   color: var(--c-brand);
 }
 .kb-chip.is-active {
-  background: var(--c-brand);
-  border-color: var(--c-brand);
+  background: var(--c-brand-fill);
+  border-color: var(--c-brand-fill);
   color: #fff;
 }
 .kb-filter-empty {
@@ -1616,7 +1662,7 @@ body.has-neg-alert .site-header { top: 56px; }
 .kb-leerpad-step {
   flex: 1;
   min-width: 140px;
-  background: #f3f7fb;
+  background: var(--c-surface-soft);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   text-decoration: none;
@@ -1626,7 +1672,7 @@ body.has-neg-alert .site-header { top: 56px; }
 }
 .kb-leerpad-step:hover {
   border-color: var(--c-brand);
-  background: #eaf2fa;
+  background: var(--c-surface-soft);
   text-decoration: none;
 }
 .kb-leerpad-step-n {
@@ -1717,7 +1763,7 @@ body.has-neg-alert .site-header { top: 56px; }
   align-items: center;
   gap: 10px;
   padding: 9px 14px;
-  background: var(--c-brand-deep);
+  background: var(--c-brand-fill-deep);
   color: #fff;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
@@ -1758,7 +1804,7 @@ body.has-neg-alert .site-header { top: 56px; }
   transition: background 0.15s;
 }
 .kb-card:hover {
-  background: #f3f8fd;
+  background: var(--c-surface-soft);
   text-decoration: none;
 }
 .kb-card-head {
@@ -1787,9 +1833,9 @@ body.has-neg-alert .site-header { top: 56px; }
   white-space: nowrap;
   flex-shrink: 0;
 }
-.kb-level-begin { background: #d3f9d8; color: #1a6629; }
-.kb-level-mid   { background: #fff3bf; color: #7d5a00; }
-.kb-level-adv   { background: #ffe3e3; color: #9b2020; }
+.kb-level-begin { background: var(--c-cheap-bg); color: var(--c-cheap-text); }
+.kb-level-mid   { background: var(--c-normal-bg); color: var(--c-normal-text); }
+.kb-level-adv   { background: var(--c-pricey-bg); color: var(--c-pricey-deep); }
 
 .kb-card-icon {
   font-size: 1.5rem;
@@ -1839,7 +1885,7 @@ body.has-neg-alert .site-header { top: 56px; }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  background: var(--c-brand);
+  background: var(--c-brand-fill);
   color: #fff;
   padding: 1px 5px;
   border-radius: 3px;
@@ -1881,7 +1927,7 @@ body.has-neg-alert .site-header { top: 56px; }
 }
 .kb-lees-ook-card:hover {
   border-left-color: var(--c-brand-deep);
-  background: #f3f8fd;
+  background: var(--c-surface-soft);
   text-decoration: none;
 }
 .kb-lees-ook-tag {
@@ -2084,20 +2130,20 @@ body.has-neg-alert .site-header { top: 56px; }
   margin: 20px 0 4px;
   padding: 14px 18px;
   border-radius: var(--radius);
-  border-left: 4px solid var(--c-brand);
-  background: color-mix(in srgb, var(--c-brand) 6%, var(--c-bg));
+  border-left: 4px solid var(--c-brand-fill);
+  background: color-mix(in srgb, var(--c-brand-fill) 6%, var(--c-bg));
   font-size: 0.95rem;
   line-height: 1.65;
   color: var(--c-text);
 }
 .morgen-summary-box strong { font-weight: 600; }
 /* Kleurvarianten per classificatie */
-.morgen-summary-negative  { border-left-color: #7048e8; background: color-mix(in srgb, #7048e8 7%, var(--c-bg)); }
-.morgen-summary-very_cheap { border-left-color: #1a7a31; background: color-mix(in srgb, #1a7a31 7%, var(--c-bg)); }
-.morgen-summary-cheap      { border-left-color: #2f9e44; background: color-mix(in srgb, #2f9e44 6%, var(--c-bg)); }
-.morgen-summary-normal     { border-left-color: var(--c-brand); background: color-mix(in srgb, var(--c-brand) 6%, var(--c-bg)); }
-.morgen-summary-pricey     { border-left-color: #c92a2a; background: color-mix(in srgb, #c92a2a 6%, var(--c-bg)); }
-.morgen-summary-very_pricey { border-left-color: #9c1a1a; background: color-mix(in srgb, #9c1a1a 7%, var(--c-bg)); }
+.morgen-summary-negative  { border-left-color: var(--c-free); background: color-mix(in srgb, var(--c-free) 7%, var(--c-bg)); }
+.morgen-summary-very_cheap { border-left-color: var(--c-cheap-link); background: color-mix(in srgb, var(--c-cheap-link) 7%, var(--c-bg)); }
+.morgen-summary-cheap      { border-left-color: var(--c-cheap); background: color-mix(in srgb, var(--c-cheap) 6%, var(--c-bg)); }
+.morgen-summary-normal     { border-left-color: var(--c-brand); background: color-mix(in srgb, var(--c-brand-fill) 6%, var(--c-bg)); }
+.morgen-summary-pricey     { border-left-color: var(--c-pricey); background: color-mix(in srgb, var(--c-pricey) 6%, var(--c-bg)); }
+.morgen-summary-very_pricey { border-left-color: var(--c-pricey-deep); background: color-mix(in srgb, var(--c-pricey-deep) 7%, var(--c-bg)); }
 
 /* ── Vandaag vs. Morgen vergelijkingstabel ── */
 .morgen-cmp-wrap {
@@ -2147,11 +2193,11 @@ body.has-neg-alert .site-header { top: 56px; }
   white-space: nowrap;
 }
 .cmp-arrow { font-size: 0.9rem; margin-left: 4px; font-weight: 700; }
-.cmp-better { color: #1e7b34; }
-.cmp-worse  { color: #c92a2a; }
+.cmp-better { color: var(--c-cheap-link); }
+.cmp-worse  { color: var(--c-pricey); }
 .cmp-neutral { color: var(--c-text-mute); }
-.cmp-diff-better { color: #1e7b34; font-weight: 600; }
-.cmp-diff-worse  { color: #c92a2a; font-weight: 600; }
+.cmp-diff-better { color: var(--c-cheap-link); font-weight: 600; }
+.cmp-diff-worse  { color: var(--c-pricey); font-weight: 600; }
 
 /* ── Prijsanalyse als nieuwsbericht ── */
 .morgen-news-article {
@@ -2351,13 +2397,13 @@ body.has-neg-alert .site-header { top: 56px; }
   left: 3px;
   width: 16px;
   height: 16px;
-  background: #fff;
+  background: var(--c-surface);
   border-radius: 50%;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   transition: transform 0.2s;
 }
 .morgen-quarter-cb:checked + .morgen-quarter-track {
-  background: var(--c-brand);
+  background: var(--c-brand-fill);
 }
 .morgen-quarter-cb:checked + .morgen-quarter-track::after {
   transform: translateX(18px);
@@ -2420,7 +2466,7 @@ body.has-neg-alert .site-header { top: 56px; }
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #e7f8ee;
+  background: var(--c-wa-bg);
 }
 .wa-cta-icon svg { width: 26px; height: 26px; fill: #25d366; }
 .wa-cta-text { flex: 1 1 240px; }
@@ -2477,12 +2523,12 @@ body.has-neg-alert .site-header { top: 56px; }
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
 }
-.share-btn:hover { background: #f0f6fc; }
+.share-btn:hover { background: var(--c-surface-soft); }
 .share-btn:active { transform: scale(0.94); }
 .share-btn svg { width: 19px; height: 19px; fill: currentColor; }
 .share-btn.share-wa:hover { background: #25d366; border-color: #25d366; color: #fff; }
 .share-btn.share-x:hover { background: #000; border-color: #000; color: #fff; }
-.share-btn.share-native:hover { background: var(--c-brand); border-color: var(--c-brand); color: #fff; }
+.share-btn.share-native:hover { background: var(--c-brand-fill); border-color: var(--c-brand-fill); color: #fff; }
 .share-btn[hidden] { display: none; }
 /* Kopieer-bevestiging */
 .share-btn.is-copied { background: var(--c-cheap-bg); border-color: var(--c-cheap); color: var(--c-cheap); }
@@ -2649,7 +2695,7 @@ body.has-neg-alert .site-header { top: 56px; }
 /* Vensterduur-chips (home, goedkoopste vensters) — tap-targets 44px */
 .moment-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 14px; }
 .moment-chips button { border: 1px solid var(--c-border); background: var(--c-surface); border-radius: 999px; padding: 9px 16px; min-height: 44px; font-family: inherit; font-size: 0.9rem; cursor: pointer; color: var(--c-text-soft); }
-.moment-chips button.on { background: var(--c-brand); border-color: var(--c-brand); color: #fff; font-weight: 600; }
+.moment-chips button.on { background: var(--c-brand-fill); border-color: var(--c-brand-fill); color: #fff; font-weight: 600; }
 
 /* Trefzekerheid-regel onder de voorspelling-intro */
 .forecast-accuracy { margin: 6px 0 0; color: var(--c-text-soft); font-size: 0.95rem; }
@@ -2661,8 +2707,8 @@ body.has-neg-alert .site-header { top: 56px; }
 .fp-table { width: 100%; border-collapse: collapse; }
 .fp-table td { padding: 3px 10px 3px 0; vertical-align: top; }
 .fp-pts { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
-.fp-pts.up { color: #b45309; }
-.fp-pts.down { color: #1a7f37; }
+.fp-pts.up { color: var(--c-warn-text); }
+.fp-pts.down { color: var(--c-cheap-link); }
 .fp-total { margin: 8px 0 0; color: var(--c-text-soft); }
 
 
@@ -2685,7 +2731,7 @@ body.has-neg-alert .site-header { top: 56px; }
 }
 .vergelijk-bar span { font-size: 0.92rem; color: var(--c-text-soft); }
 .btn-vergelijk {
-  background: var(--c-brand);
+  background: var(--c-brand-fill);
   color: #fff;
   border: 0;
   border-radius: var(--radius-sm);
@@ -2769,8 +2815,8 @@ body.heeft-vergelijk-bar { padding-bottom: 4.4rem; }
   gap: 18px;
   margin: 26px 0;
   padding: 16px 46px 16px 18px;
-  background: #f2f8fe;
-  border: 1px solid #cfe2f5;
+  background: var(--c-surface-soft);
+  border: 1px solid var(--c-border-strong);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
 }
@@ -2804,7 +2850,7 @@ body.heeft-vergelijk-bar { padding-bottom: 4.4rem; }
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
-  background: var(--c-brand);
+  background: var(--c-brand-fill);
   color: #fff;
   font-size: 0.92rem;
   font-weight: 600;
@@ -2813,7 +2859,7 @@ body.heeft-vergelijk-bar { padding-bottom: 4.4rem; }
   text-decoration: none;
   transition: background 0.12s;
 }
-.partner-cta:hover { background: var(--c-brand-deep); color: #fff; text-decoration: none; }
+.partner-cta:hover { background: var(--c-brand-fill-deep); color: #fff; text-decoration: none; }
 .partner-cta:focus-visible { outline: 2px solid var(--c-brand-deep); outline-offset: 2px; }
 
 .partner-dismiss {
@@ -2830,7 +2876,7 @@ body.heeft-vergelijk-bar { padding-bottom: 4.4rem; }
   border-radius: 50%;
   cursor: pointer;
 }
-.partner-dismiss:hover { background: #e2edf8; color: var(--c-text); }
+.partner-dismiss:hover { background: var(--c-surface-hover); color: var(--c-text); }
 
 @media (max-width: 640px) {
   .partner-card {
@@ -3070,4 +3116,75 @@ details[open] > .faq-q::before { transform: rotate(90deg); }
    containerklassen (artikel-content, legal-page, aanbieder-meta, ...). */
 p a, li a, td a, p code, li code, .aanbieder-meta span {
   overflow-wrap: anywhere;
+}
+
+/* ── Donkere modus ─────────────────────────────────────────
+   Volgt de systeeminstelling van het toestel. Dezelfde tokens,
+   andere waarden. Alle combinaties tekst-op-vlak halen WCAG AA.
+   ──────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-bg: #0f141b;
+    --c-surface: #171d26;
+    --c-surface-soft: #1b2330;
+    --c-surface-alt: #222b38;
+    --c-surface-hover: #28323f;
+    --c-text: #e7edf4;
+    --c-text-soft: #b6c2d0;
+    --c-text-mute: #93a1b2;
+    --c-border: #2c3542;
+    --c-border-strong: #3e4a59;
+    --c-brand: #63aaf0;
+    --c-brand-deep: #93c6f7;
+    --c-accent: #7fb9ee;
+    --c-free: #a78bfa;
+    --c-free-bg: #241d3c;
+    --c-free-border: #4b3d85;
+    --c-free-text: #ddd2ff;
+    --c-free-link: #c0aaff;
+    --c-cheap: #4ade80;
+    --c-cheap-bg: #132a1c;
+    --c-cheap-border: #2f5d3e;
+    --c-cheap-text: #b9f0cc;
+    --c-cheap-link: #6ee7a0;
+    --c-normal: #e3b341;
+    --c-normal-bg: #2b2413;
+    --c-normal-border: #5c4c20;
+    --c-normal-text: #f2dfae;
+    --c-warn: #e8973a;
+    --c-warn-text: #f7c893;
+    --c-pricey: #f87171;
+    --c-pricey-deep: #fca5a5;
+    --c-pricey-bg: #2e1818;
+    --c-pricey-border: #5e2c2c;
+    --c-pricey-text: #ffcaca;
+    --c-feedin: #ef8ac4;
+    --c-feedin-bg: #2a1722;
+    --c-wa-bg: #14291d;
+    --c-brand-fill: #1d6cb0;
+    --c-brand-fill-deep: #15497a;
+    --c-cheap-fill: #1f7a37;
+    --c-cheap-fill-deep: #166129;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Losse gevallen: een vlak dat in licht donker is, moet omdraaien. */
+  .share-copied-toast { background: var(--c-text); color: var(--c-bg); }
+}
+
+/* ── Minder beweging ───────────────────────────────────────
+   Wie in zijn systeem 'beperk beweging' aanzet, krijgt geen
+   overgangen en geen animaties. Verplicht voor toegankelijkheid.
+   ──────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  html { scroll-behavior: auto !important; }
 }

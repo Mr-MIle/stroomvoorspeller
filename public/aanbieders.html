@@ -188,7 +188,7 @@
       display: grid;
       grid-template-columns: 30px minmax(0, 1fr);
       padding-left: 16px;
-      background: #f2f6fa;
+      background: var(--c-surface-soft);
       border-bottom: 1px solid var(--c-border);
     }
     .aanb-koprij-inner {
@@ -209,7 +209,7 @@
     .aanb-rij { border-bottom: 1px solid var(--c-border); position: relative; }
     #aanbieder-grid .aanb-rij:last-child { border-bottom: none; }
     .aanb-rij-kop { display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: center; padding-left: 16px; }
-    .aanb-rij.open .aanb-rij-kop { background: #f4f9fd; }
+    .aanb-rij.open .aanb-rij-kop { background: var(--c-surface-soft); }
     .aanb-open {
       display: grid;
       grid-template-columns: var(--aanb-cols);
@@ -224,14 +224,14 @@
       padding: 10px 16px 10px 0;
       cursor: pointer;
     }
-    .aanb-open:hover { background: #f7fafd; }
+    .aanb-open:hover { background: var(--c-surface-soft); }
     .aanb-naam { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; font-weight: 700; font-size: 0.95rem; color: var(--c-brand-deep); }
     .aanb-badges { display: inline-flex; gap: 5px; flex-wrap: wrap; }
-    .aanb-badge { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; padding: 2px 7px; border-radius: 999px; background: #eef2f7; color: var(--c-text-mute); }
+    .aanb-badge { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; padding: 2px 7px; border-radius: 999px; background: var(--c-surface-alt); color: var(--c-text-mute); }
     .badge-groen { background: var(--c-cheap-bg); color: var(--c-cheap); }
-    .badge-smart { background: #eaf3fb; color: var(--c-brand-deep); }
+    .badge-smart { background: var(--c-surface-soft); color: var(--c-brand-deep); }
     .badge-tlv   { background: var(--c-free-bg); color: var(--c-free); }
-    .badge-let   { background: var(--c-normal-bg); color: #8a6608; }
+    .badge-let   { background: var(--c-normal-bg); color: var(--c-normal-text); }
     .aanb-cel { text-align: right; font-size: 0.9rem; color: var(--c-text-soft); white-space: nowrap; }
     .aanb-cel strong { color: var(--c-text); font-weight: 600; }
     .aanb-jk strong { color: var(--c-brand-deep); font-weight: 700; }
@@ -240,7 +240,7 @@
     .aanb-caret { justify-self: end; color: var(--c-text-mute); transition: transform 0.15s ease; }
     .aanb-rij.open .aanb-caret { transform: rotate(180deg); }
     .score-goed   { background: var(--c-cheap-bg);  color: var(--c-cheap); }
-    .score-matig  { background: var(--c-normal-bg); color: #8a6608; }
+    .score-matig  { background: var(--c-normal-bg); color: var(--c-normal-text); }
     .score-slecht { background: var(--c-pricey-bg); color: var(--c-pricey); }
 
     .aanb-vergelijk { display: inline-flex; align-items: center; justify-content: center; width: 30px; min-height: 44px; cursor: pointer; }
@@ -252,14 +252,14 @@
       grid-template-columns: 1fr 1fr;
       gap: 2px 24px;
       padding: 2px 16px 16px 46px;
-      background: #f8fbfe;
+      background: var(--c-surface-soft);
       border-top: 1px dashed var(--c-border);
     }
     .aanb-details p { margin: 0; font-size: 0.89rem; line-height: 1.6; color: var(--c-text-soft); }
     .aanb-sectie-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--c-text-mute); font-weight: 700; margin: 10px 0 3px; }
     .aanb-opzeg { grid-column: 1 / -1; margin-top: 10px; font-size: 0.82rem; color: var(--c-text-mute); }
     .aanb-teruglever { grid-column: 1 / -1; margin-top: 10px; }
-    .aanb-let-op { grid-column: 1 / -1; margin-top: 10px; background: var(--c-normal-bg); border-radius: var(--radius-sm); padding: 8px 11px; font-size: 0.85rem; color: #7a5c05; line-height: 1.5; }
+    .aanb-let-op { grid-column: 1 / -1; margin-top: 10px; background: var(--c-normal-bg); border-radius: var(--radius-sm); padding: 8px 11px; font-size: 0.85rem; color: var(--c-normal-text); line-height: 1.5; }
     .aanb-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
     @media (max-width: 720px) {

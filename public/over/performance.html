@@ -122,8 +122,8 @@
       margin-top: 0.3rem;
     }
 
-    .score-card.score-good  .score-value { color: #1a7f37; }
-    .score-card.score-mid   .score-value { color: #b45309; }
+    .score-card.score-good  .score-value { color: var(--c-cheap-link); }
+    .score-card.score-mid   .score-value { color: var(--c-warn-text); }
     .score-card.score-note  .score-value { color: var(--accent, #0f6cbd); }
 
     /* Grafiek-containers */
@@ -160,8 +160,8 @@
 
     .horizon-table tr:last-child td { border-bottom: none; }
 
-    .badge-better { color: #1a7f37; font-weight: 600; }
-    .badge-worse  { color: #b91c1c; font-weight: 600; }
+    .badge-better { color: var(--c-cheap-link); font-weight: 600; }
+    .badge-worse  { color: var(--c-pricey); font-weight: 600; }
 
     /* Bucket-grid */
     .bucket-grid {
@@ -179,12 +179,12 @@
 
     .bucket-card strong { display: block; font-size: 1.3rem; margin-bottom: 0.2rem; }
 
-    .bucket-neg     { background: #f0ebff; border: 1px solid #c4b5fd; }
-    .bucket-vcheap  { background: #eff9f0; border: 1px solid #86efac; }
-    .bucket-cheap   { background: #f0fdf4; border: 1px solid #bbf7d0; }
-    .bucket-normal  { background: #f8f9fa; border: 1px solid #dee2e6; }
-    .bucket-pricey  { background: #fff8ed; border: 1px solid #fed7aa; }
-    .bucket-vpricey { background: #fff0f0; border: 1px solid #fca5a5; }
+    .bucket-neg     { background: var(--c-free-bg); border: 1px solid var(--c-free-border); }
+    .bucket-vcheap  { background: var(--c-cheap-bg); border: 1px solid var(--c-cheap-border); }
+    .bucket-cheap   { background: var(--c-cheap-bg); border: 1px solid var(--c-cheap-border); }
+    .bucket-normal  { background: var(--c-bg); border: 1px solid var(--c-border); }
+    .bucket-pricey  { background: var(--c-normal-bg); border: 1px solid var(--c-normal-border); }
+    .bucket-vpricey { background: var(--c-pricey-bg); border: 1px solid var(--c-pricey-border); }
 
     /* Modelversie-tijdlijn */
     .version-timeline {
@@ -267,10 +267,10 @@
       font-size: clamp(1.5rem, 4.5vw, 2.1rem);
       font-weight: 800;
       line-height: 1.15;
-      color: #136f3a;
+      color: var(--c-cheap-link);
     }
 
-    .hero-headline .hl-num { color: #0f6cbd; }
+    .hero-headline .hl-num { color: var(--c-brand); }
 
     .hero-sub {
       max-width: 54ch;
@@ -288,8 +288,8 @@
     }
 
     .highlight-card {
-      background: #f1faf3;
-      border: 1px solid #b7e4c7;
+      background: var(--c-cheap-bg);
+      border: 1px solid var(--c-cheap-border);
       border-radius: 10px;
       padding: 0.85rem 1rem;
     }
@@ -297,7 +297,7 @@
     .highlight-card .hc-value {
       font-size: 1.25rem;
       font-weight: 700;
-      color: #136f3a;
+      color: var(--c-cheap-link);
       line-height: 1.1;
     }
 
@@ -326,7 +326,7 @@
     .within-readout .wr-num {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #136f3a;
+      color: var(--c-cheap-link);
       line-height: 1.05;
     }
 
@@ -945,7 +945,7 @@
         div.innerHTML = `
           <strong>${recallPct}</strong>
           ${c.emoji} ${c.label}<br>
-          <span style="color:#666;font-size:0.78rem;">${b.n_hours} uren · MAE ${b.mae_eur_mwh !== null ? mwhToCt(b.mae_eur_mwh).toFixed(1) + ' ct' : '–'}</span>
+          <span style="color:var(--c-text-mute);font-size:0.78rem;">${b.n_hours} uren · MAE ${b.mae_eur_mwh !== null ? mwhToCt(b.mae_eur_mwh).toFixed(1) + ' ct' : '–'}</span>
         `;
         grid.appendChild(div);
       }

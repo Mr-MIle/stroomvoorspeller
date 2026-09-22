@@ -36,7 +36,7 @@
       margin: 1.25rem 0 1.75rem;
     }
     .artikel-table th {
-      background: #0f6cbd;
+      background: var(--c-brand-fill);
       color: #fff;
       text-align: left;
       padding: 0.55rem 0.75rem;
@@ -48,24 +48,24 @@
       vertical-align: top;
     }
     .artikel-table tbody tr:nth-child(even) td {
-      background: #f0f7ff;
+      background: var(--c-surface-soft);
     }
     .artikel-table .col-label {
       font-weight: 600;
-      color: #1a5c8a;
+      color: var(--c-brand-deep);
       white-space: nowrap;
     }
     .callout {
-      background: #f0f7ff;
-      border-left: 4px solid #0f6cbd;
+      background: var(--c-surface-soft);
+      border-left: 4px solid var(--c-brand);
       padding: 0.85rem 1.1rem;
       border-radius: 0 0.5rem 0.5rem 0;
       margin: 1.25rem 0;
       font-size: 0.93rem;
     }
     .callout-warn {
-      background: #fffbeb;
-      border-left-color: #d97706;
+      background: var(--c-normal-bg);
+      border-left-color: var(--c-warn);
     }
     .aanbieder-block {
       border: 1px solid var(--border, #e2e8f0);
@@ -81,10 +81,10 @@
       flex-wrap: wrap;
       gap: 0.4rem 1.2rem;
       font-size: 0.85rem;
-      color: #4a5568;
+      color: var(--c-text-soft);
       margin: 0.6rem 0 0.9rem;
       padding: 0.55rem 0.75rem;
-      background: #f8fafc;
+      background: var(--c-surface-soft);
       border-radius: 0.35rem;
     }
     .aanbieder-meta span { white-space: nowrap; }
@@ -93,9 +93,9 @@
     @media (max-width: 640px) {
       .aanbieder-meta span { white-space: normal; overflow-wrap: anywhere; min-width: 0; }
     }
-    .aanbieder-meta .label { font-weight: 600; color: #2d3748; }
+    .aanbieder-meta .label { font-weight: 600; color: var(--c-text); }
     .keuze-block {
-      border-left: 3px solid #0f6cbd;
+      border-left: 3px solid var(--c-brand);
       padding: 0.5rem 0 0.5rem 1rem;
       margin: 0.9rem 0;
     }
@@ -374,7 +374,7 @@
       </tbody>
     </table>
     </div>
-    <p style="font-size:0.82rem;color:#718096;margin-top:-1rem;">Tarieven zijn indicatief en gebaseerd op gepubliceerde data van mei 2026. Controleer altijd de actuele tarieven op de website van de aanbieder.</p>
+    <p style="font-size:0.82rem;color:var(--c-text-mute);margin-top:-1rem;">Tarieven zijn indicatief en gebaseerd op gepubliceerde data van mei 2026. Controleer altijd de actuele tarieven op de website van de aanbieder.</p>
 
     <h2>4. Wanneer kies je voor welke aanbieder?</h2>
 
@@ -469,7 +469,7 @@
       <p class="legal-related" style="margin-top:14px;"><a href="/kennisbank">← Terug naar de Kennisbank</a> · <a href="/aanbieders">Aanbieders</a> · <a href="/disclaimer">Disclaimer</a></p>
     </section>
 
-    <p style="font-size:0.8rem;color:#718096;margin-top:2rem;">Bronnen: <a href="https://jeroen.nl/dynamische-energie/aanbieders/vergelijken" rel="noopener">jeroen.nl (mei 2026)</a> · <a href="https://www.keuze.nl/energie/energieleveranciers/tibber" rel="noopener">keuze.nl</a> · <a href="https://www.anwb.nl/energie/nieuws/2026/april/hoera-al-1-miljoen-dynamische-energiecontracten-in-nederland" rel="noopener">ANWB: 1 miljoen dynamische contracten</a> · <a href="https://www.energieprijzengids.nl/info/tibber-schrapt-inkoopvergoeding-bij-teruglevering-stroom-per-2026/" rel="noopener">Tibber teruglevering 2026</a> · <a href="https://selectra.nl/energie/energieleverancier/frank-energie/tarieven" rel="noopener">selectra.nl Frank Energie tarieven</a> — geraadpleegd mei 2026.</p>
+    <p style="font-size:0.8rem;color:var(--c-text-mute);margin-top:2rem;">Bronnen: <a href="https://jeroen.nl/dynamische-energie/aanbieders/vergelijken" rel="noopener">jeroen.nl (mei 2026)</a> · <a href="https://www.keuze.nl/energie/energieleveranciers/tibber" rel="noopener">keuze.nl</a> · <a href="https://www.anwb.nl/energie/nieuws/2026/april/hoera-al-1-miljoen-dynamische-energiecontracten-in-nederland" rel="noopener">ANWB: 1 miljoen dynamische contracten</a> · <a href="https://www.energieprijzengids.nl/info/tibber-schrapt-inkoopvergoeding-bij-teruglevering-stroom-per-2026/" rel="noopener">Tibber teruglevering 2026</a> · <a href="https://selectra.nl/energie/energieleverancier/frank-energie/tarieven" rel="noopener">selectra.nl Frank Energie tarieven</a> — geraadpleegd mei 2026.</p>
   </main>
 
   <footer class="site-footer">

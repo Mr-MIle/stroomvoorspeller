@@ -48,7 +48,7 @@
   padding: 8px 10px;
   font-size: 13px;
   line-height: 1.5;
-  color: #7a5c00;
+  color: var(--c-normal-text);
 }
 
 /* Optie 3: uitklap "Waarom is dit zo?" */
@@ -88,9 +88,9 @@
   background: var(--c-bg);
   color: var(--c-text-soft);
 }
-.duiding-chip--laag    { background: var(--c-cheap-bg);  color: #1e5e2c; }
-.duiding-chip--hoog    { background: var(--c-pricey-bg); color: #8a1f1f; }
-.duiding-chip--neutraal{ background: var(--c-normal-bg); color: #7a5c00; }
+.duiding-chip--laag    { background: var(--c-cheap-bg);  color: var(--c-cheap-text); }
+.duiding-chip--hoog    { background: var(--c-pricey-bg); color: var(--c-pricey-text); }
+.duiding-chip--neutraal{ background: var(--c-normal-bg); color: var(--c-normal-text); }
 
 .duiding-tip {
   margin: 0 0 8px;

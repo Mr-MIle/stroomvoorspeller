@@ -250,24 +250,24 @@
       </p>
       <ul>
         <li>
-          <strong style="color:#0f6cbd;">Normaal</strong> — de gebruikelijke dagelijkse prijsschommeling.
+          <strong style="color:var(--c-brand);">Normaal</strong> — de gebruikelijke dagelijkse prijsschommeling.
           Gemiddelde fout: ±3 ct/kWh.
         </li>
         <li>
-          <strong style="color:#f59e0b;">Oversupply ☀️</strong> — veel zon en/of wind,
+          <strong style="color:var(--c-normal);">Oversupply ☀️</strong> — veel zon en/of wind,
           gecombineerd met lage vraag (weekend of feestdag). De stroomprijs kan dan uur voor uur
           sterk dalen of zelfs negatief worden. Het model herkent dit patroon en past de voorspelling
           fors neerwaarts aan, maar de werkelijke daling kan nog extremer zijn.
           Gemiddelde fout: ±5 ct/kWh.
         </li>
         <li>
-          <strong style="color:#ef4444;">Schaarste ❄️</strong> — koud weer met weinig zon en wind
+          <strong style="color:var(--c-pricey);">Schaarste ❄️</strong> — koud weer met weinig zon en wind
           (Dunkelflaute). Prijzen liggen dan structureel hoger. Het normale niveau schat het model
           redelijk, maar de scherpe winterpieken onderschat het systematisch — zie
           <a href="#klopt-niet">Wanneer klopt de voorspelling niet?</a> hieronder.
         </li>
         <li>
-          <strong style="color:#ef4444;">Zomerschaarste 🌡️</strong> — hete, windstille
+          <strong style="color:var(--c-pricey);">Zomerschaarste 🌡️</strong> — hete, windstille
           zomeravonden (18–22 uur). De zon zakt weg, maar de vraag blijft hoog en er is geen wind
           om het gat te vullen. De avondprijs kan dan een veelvoud van het dagniveau worden. Het
           model herkent dit sinds juli 2026 en stelt de avonduren gericht opwaarts bij; net als bij
@@ -315,16 +315,16 @@
       <p>Er zijn vier niveaus:</p>
       <ul>
         <li>
-          <strong style="color:#3b82f6;">Normaal</strong> — genoeg vergelijkbare uren gevonden.
+          <strong style="color:var(--c-brand);">Normaal</strong> — genoeg vergelijkbare uren gevonden.
           De schaduwband is lichtblauw, zoals gewoonlijk.
         </li>
         <li>
-          <strong style="color:#f97316;">⚠ Zelden gezien</strong> — weinig vergelijkbare uren in
+          <strong style="color:var(--c-warn);">⚠ Zelden gezien</strong> — weinig vergelijkbare uren in
           de log. De band kleurt oranje als waarschuwing. Het model rekent wel een prijs, maar de
           historische basis is dun.
         </li>
         <li>
-          <strong style="color:#ef4444;">⚠⚠ Historisch zeldzaam</strong> — nauwelijks vergelijkbare
+          <strong style="color:var(--c-pricey);">⚠⚠ Historisch zeldzaam</strong> — nauwelijks vergelijkbare
           uren gevonden. Rode band. Denk aan een combinatie die het model nog zelden of nooit heeft
           meegemaakt: een extreme lentedag met piekzon, nauwelijks wind én een feestdag tegelijk.
           De onzekerheid is dan veel groter dan de band aangeeft.

@@ -67,7 +67,12 @@
   // ---- Teruglevering ----
   // vergoeding = kale uurprijs + opslag van je aanbieder, zonder energiebelasting
   // en zonder btw. Zonder zonnebonus, want die geldt niet voor batterijstroom.
-  const FEEDIN_COLOR = "#a11b6b";
+  const cssVar = (naam, terugval) => {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(naam).trim();
+    return v || terugval;
+  };
+
+  const FEEDIN_COLOR = () => cssVar("--c-feedin", "#a11b6b");
   function feedinInfo() {
     const s = getSupplier();
     return (s && s.teruglevering) || null;
@@ -120,12 +125,12 @@
   }
 
   const CLASS_COLOR = {
-    negative:   "#7048e8",
-    very_cheap: "#1a7a31",
-    cheap:      "#2f9e44",
-    normal:     "#d4a017",
-    pricey:     "#c92a2a",
-    very_pricey:"#9c1a1a",
+    negative:   () => cssVar("--c-free", "#7048e8"),
+    very_cheap: () => cssVar("--c-cheap-link", "#1a7a31"),
+    cheap:      () => cssVar("--c-cheap", "#2f9e44"),
+    normal:     () => cssVar("--c-normal", "#d4a017"),
+    pricey:     () => cssVar("--c-pricey", "#c92a2a"),
+    very_pricey:() => cssVar("--c-pricey-deep", "#9c1a1a"),
   };
   const CLASS_LABEL = {
     negative:   "Negatief / gratis",
@@ -294,7 +299,7 @@
     const labels  = prices.map(p => fmtTime(p.time));
     const values  = prices.map(p => priceCents(p.price));
     const classes = prices.map(p => classify(p.price));
-    const colors  = classes.map(c => CLASS_COLOR[c] || "#d4a017");
+    const colors  = classes.map(c => (CLASS_COLOR[c] || CLASS_COLOR.normal)());
     const intervalMs = isQuarter ? 900_000 : 3_600_000;
 
     if (state.chart) { state.chart.destroy(); state.chart = null; }
@@ -316,7 +321,7 @@
           type: "line",
           label: "Teruglevering",
           data: prices.map(p => feedinCents(p.price)),
-          borderColor: FEEDIN_COLOR,
+          borderColor: FEEDIN_COLOR(),
           borderDash: [5, 3],
           borderWidth: 2,
           pointRadius: 0,
@@ -1048,4 +1053,8 @@
   } else {
     init();
   }
+
+  // Grafiek opnieuw tekenen bij een wissel tussen lichte en donkere modus.
+  window.matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => init());
 })();
