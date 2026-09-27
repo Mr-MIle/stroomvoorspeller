@@ -772,6 +772,16 @@
     if (!banner) return;
     const payload = state.payload || {};
     if (payload.source === "sample") {
+      // Tekst pas hier invullen: de HTML bevat een lege <p>, zodat crawlers zonder JS
+      // geen actieve-lijkende storingsmelding uit de broncode lezen.
+      const txt = banner.querySelector(".source-alert-text");
+      if (txt) {
+        txt.textContent = "Verbinding met ENTSO-E tijdelijk verbroken — getoonde prijzen zijn ";
+        const b = document.createElement("strong");
+        b.textContent = "testdata";
+        txt.appendChild(b);
+        txt.appendChild(document.createTextNode(" en niet de echte day-ahead prijzen."));
+      }
       banner.removeAttribute("hidden");
     } else {
       banner.setAttribute("hidden", "");
@@ -792,8 +802,9 @@
     if (ageMs > STALE_THRESHOLD_MS) {
       const timeStr = generatedAt.toLocaleString("nl-NL", { hour: "2-digit", minute: "2-digit" });
       const dateStr = generatedAt.toLocaleString("nl-NL", { weekday: "short", day: "numeric", month: "short" });
-      const el = document.getElementById("stale-alert-time");
-      if (el) el.textContent = `${dateStr} ${timeStr}`;
+      // Tekst pas hier invullen (zie renderSourceAlert): de HTML bevat een lege <p>.
+      const txt = banner.querySelector(".stale-alert-text");
+      if (txt) txt.textContent = `Data tijdelijk niet bijgewerkt — laatste update: ${dateStr} ${timeStr}`;
       banner.removeAttribute("hidden");
     } else {
       banner.setAttribute("hidden", "");
