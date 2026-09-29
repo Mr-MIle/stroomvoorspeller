@@ -130,7 +130,7 @@
           "@id": "https://stroomvoorspeller.nl/#organization"
         },
         "datePublished": "2026-06-06",
-        "dateModified": "2026-06-06",
+        "dateModified": "2026-09-29",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/home-assistant",
@@ -163,7 +163,7 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Stroomprijzen in Home Assistant</h1>
-    <p class="legal-meta">Gratis open data · geen account · bijgewerkt 6 juni 2026</p>
+    <p class="legal-meta">Gratis open data · geen account · bijgewerkt 29 september 2026</p>
 
     <p class="legal-summary">
       Stroomvoorspeller.nl publiceert een vast JSON-bestand met de day-ahead stroomprijzen van
@@ -177,10 +177,10 @@
       <p>Alle waarden staan in één bestand:</p>
       <p><span class="ha-url">https://stroomvoorspeller.nl/data/ha.json</span></p>
       <p>
-        Het bestand wordt een paar keer per dag ververst, telkens als er nieuwe day-ahead data
-        binnenkomt (de prijzen van morgen verschijnen rond 14:00). Het is een statisch bestand achter
-        een CDN, dus je mag het gerust elke 30 minuten ophalen. De prijzen zelf veranderen gedurende
-        de dag niet meer zodra ze bekend zijn.
+        Ik ververs het bestand een paar keer per dag. Twee momenten doen ertoe: kort na middernacht
+        schuift morgen door naar vandaag, en rond 14:00 komen de prijzen van morgen erbij. Het is een
+        statisch bestand achter een CDN, dus je mag het gerust elke 30 minuten ophalen. De prijzen zelf
+        veranderen niet meer zodra ze bekend zijn.
       </p>
       <div class="ha-note">
         <strong>Twee prijzen per uur, beide in EUR/kWh.</strong>
@@ -252,14 +252,25 @@
         (getal of tekst). De volledige uurlijst van 24 prijzen hoort daarom in de <code>json_attributes</code>
         van een drager-sensor, niet in de state. Dat is precies wat de laatste sensor hierboven doet.
       </div>
+      <div class="ha-note">
+        <strong>Rond middernacht:</strong> de sensoren met "vandaag" in de naam tonen net na 00:00 nog
+        even de cijfers van gisteren. Ze springen om zodra Home Assistant het nieuwe bestand heeft
+        opgehaald, meestal binnen een uur. Stuur je op het uur zelf, gebruik dan de template-sensoren
+        uit stap 2. Die zoeken op tijdstip en hebben daar geen last van.
+      </div>
     </section>
 
     <section>
       <h2>2. De huidige prijs (altijd actueel)</h2>
       <p>
-        De drager-sensor wordt maar een paar keer per dag opgehaald. Toch wil je een sensor die <em>elk
+        Het bestand verandert maar een paar keer per dag. Toch wil je een sensor die <em>elk
         uur</em> de juiste prijs toont. Dat los je lokaal op met een <code>template</code>-sensor: die
-        kiest elke minuut het juiste uur uit de attributen — zonder opnieuw te downloaden.
+        kiest elke minuut het juiste uur uit de attributen, zonder opnieuw te downloaden.
+      </p>
+      <p>
+        De template zoekt in <code>today</code> en <code>tomorrow</code> samen en kiest het uur op
+        tijdstip. Zo klopt de prijs ook net na middernacht, als Home Assistant nog het bestand van
+        gisteren heeft. De uren van vandaag staan dan nog onder <code>tomorrow</code>.
       </p>
       <p class="ha-code-label">configuration.yaml</p>
       <div class="ha-code"><code>template:
@@ -268,30 +279,32 @@
         unique_id: sv_now_price
         unit_of_measurement: "EUR/kWh"
         state: >
-          {% set hours = state_attr('sensor.stroomprijzen_data', 'today').hours %}
+          {% set dag1 = state_attr('sensor.stroomprijzen_data', 'today') %}
+          {% set dag2 = state_attr('sensor.stroomprijzen_data', 'tomorrow') %}
+          {% set hours = (dag1.hours if dag1 and dag1.hours is defined else [])
+                       + (dag2.hours if dag2 and dag2.hours is defined else []) %}
           {% set ns = namespace(price='unknown') %}
-          {% if hours %}
-            {% for h in hours %}
-              {% if as_timestamp(h.start) <= as_timestamp(now()) < as_timestamp(h.start) + 3600 %}
-                {% set ns.price = h.all_in %}
-              {% endif %}
-            {% endfor %}
-          {% endif %}
+          {% for h in hours %}
+            {% if as_timestamp(h.start) <= as_timestamp(now()) < as_timestamp(h.start) + 3600 %}
+              {% set ns.price = h.all_in %}
+            {% endif %}
+          {% endfor %}
           {{ ns.price }}
 
       - name: "Stroom huidige prijs (markt)"
         unique_id: sv_now_price_market
         unit_of_measurement: "EUR/kWh"
         state: >
-          {% set hours = state_attr('sensor.stroomprijzen_data', 'today').hours %}
+          {% set dag1 = state_attr('sensor.stroomprijzen_data', 'today') %}
+          {% set dag2 = state_attr('sensor.stroomprijzen_data', 'tomorrow') %}
+          {% set hours = (dag1.hours if dag1 and dag1.hours is defined else [])
+                       + (dag2.hours if dag2 and dag2.hours is defined else []) %}
           {% set ns = namespace(price='unknown') %}
-          {% if hours %}
-            {% for h in hours %}
-              {% if as_timestamp(h.start) <= as_timestamp(now()) < as_timestamp(h.start) + 3600 %}
-                {% set ns.price = h.market %}
-              {% endif %}
-            {% endfor %}
-          {% endif %}
+          {% for h in hours %}
+            {% if as_timestamp(h.start) <= as_timestamp(now()) < as_timestamp(h.start) + 3600 %}
+              {% set ns.price = h.market %}
+            {% endif %}
+          {% endfor %}
           {{ ns.price }}</code></div>
       <div class="ha-note">
         Wil je je <strong>eigen</strong> exacte tarief? Vervang in de eerste sensor <code>h.all_in</code>
@@ -312,10 +325,19 @@ trigger:
     minutes: "0"
 condition:
   - condition: template
+    # Zoekt in today + tomorrow de uren met de datum van vandaag. Zo telt
+    # ook een goedkoop nachtuur mee als het bestand nog van gisteren is.
     value_template: >
-      {{ now().strftime('%Y-%m-%dT%H') ==
-         as_timestamp(state_attr('sensor.stroomprijzen_data', 'today').cheapest.start)
-         | timestamp_custom('%Y-%m-%dT%H', true) }}
+      {% set dag1 = state_attr('sensor.stroomprijzen_data', 'today') %}
+      {% set dag2 = state_attr('sensor.stroomprijzen_data', 'tomorrow') %}
+      {% set hours = (dag1.hours if dag1 and dag1.hours is defined else [])
+                   + (dag2.hours if dag2 and dag2.hours is defined else []) %}
+      {% set vandaag = hours | selectattr('start', 'match', now().strftime('%Y-%m-%d')) | list %}
+      {% if vandaag %}
+        {{ (vandaag | sort(attribute='market') | first).start[:13] == now().strftime('%Y-%m-%dT%H') }}
+      {% else %}
+        false
+      {% endif %}
 action:
   - service: switch.turn_on
     target:

@@ -1,0 +1,80 @@
+name: Home Assistant-feed naar nieuwe dag
+
+# ha.json legt bij het genereren vast wat 'today' en 'tomorrow' is. Zonder deze
+# workflow was de eerste run na middernacht de ochtendupdate van
+# update-forecast.yml (~08:45). Tot dan stond 'today' nog op gisteren en gaven
+# de Home Assistant-templates 's nachts 'unknown' (gemeld door een gebruiker,
+# 29 sep 2026). Deze workflow genereert ha.json kort na middernacht opnieuw,
+# zodat 'tomorrow' op tijd 'today' wordt.
+#
+# GitHub-cron rekent in UTC en kent geen zomer- of wintertijd. Daarom vier
+# tijdstippen: 22:05 en 22:35 UTC (= 00:05/00:35 zomertijd) en 23:05 en
+# 23:35 UTC (= 00:05/00:35 wintertijd). De datumcheck maakt elke overbodige
+# run een no-op zonder commit. De :35-run vangt een vertraagde of overgeslagen
+# :05-run op; GitHub laat geplande runs bij drukte soms vallen.
+#
+# Raakt alleen ha.json. Nieuwe prijzen en de voorspelling komen uit
+# check-prices.yml en update-forecast.yml.
+
+on:
+  schedule:
+    - cron: "5,35 22,23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rollover-ha
+  cancel-in-progress: false
+
+jobs:
+  rollover:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Staat ha.json nog op gisteren?
+        id: check
+        run: |
+          VANDAAG=$(TZ=Europe/Amsterdam date +%Y-%m-%d)
+          IN_BESTAND=$(python -c "import json; print(json.load(open('public/data/ha.json')).get('today', {}).get('date', ''))")
+          echo "Vandaag (Amsterdam): $VANDAAG | today in ha.json: $IN_BESTAND"
+          if [ "$VANDAAG" = "$IN_BESTAND" ]; then
+            echo "ha.json staat al op vandaag, niets te doen."
+            echo "nodig=nee" >> "$GITHUB_OUTPUT"
+          else
+            echo "nodig=ja" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Genereer Home Assistant feed
+        if: steps.check.outputs.nodig == 'ja'
+        run: python scripts/generate_ha.py
+
+      - name: Commit en push
+        if: steps.check.outputs.nodig == 'ja'
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          git add public/data/ha.json
+          if git diff --cached --quiet; then
+            echo "Geen wijzigingen, niets te committen."
+            exit 0
+          fi
+          git commit -m "auto: ha.json naar nieuwe dag $(TZ=Europe/Amsterdam date +%Y-%m-%d)"
+          # Een andere workflow kan net gepusht hebben: rebasen en opnieuw proberen.
+          for poging in 1 2 3; do
+            if git pull --rebase -q origin main && git push; then
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "Push mislukt na 3 pogingen."
+          exit 1
