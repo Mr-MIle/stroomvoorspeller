@@ -159,7 +159,7 @@ def derive_eur_mwh_thresholds(config: dict) -> dict:
     btw = float(taxes.get("btw_factor", 1.21))
 
     # Gemiddelde leverancieropslag uit de 'average'-supplier (anders eerste, anders fallback).
-    markup = 0.0178
+    markup = 0.0170
     for sup in config.get("suppliers", []):
         if sup.get("id") == "average":
             markup = float(sup.get("markup_per_kwh", markup))

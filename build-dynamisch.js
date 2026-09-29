@@ -77,7 +77,7 @@ const base = {
   months, epexFor,
   verbruik: 2900, panelen: 0, evKwh: 0, hpKwh: 0,
   evMode: "slim", profiel: "avond", batKwh: 10,
-  vastPrijs: 0.30, vastTerug: 0.05, markup: 0.0178, tlv: 0.020
+  vastPrijs: 0.30, vastTerug: 0.05, markup: 0.017, tlv: 0.020
 };
 const run = (extra) => M.runYear(Object.assign({}, base, extra));
 const la_vast = run({ contract: "vast", saldering: false, batKwh: 0 });

@@ -97,7 +97,7 @@ class Rekenaar:
         taxes = (config or {}).get("taxes", {})
         self.belasting = float(taxes.get("energiebelasting_per_kwh", 0.0916))
         self.btw = float(taxes.get("btw_factor", 1.21))
-        self.opslag = 0.0178
+        self.opslag = 0.0170
         for supplier in (config or {}).get("suppliers", []):
             if supplier.get("id") == "average":
                 self.opslag = float(supplier.get("markup_per_kwh", self.opslag))

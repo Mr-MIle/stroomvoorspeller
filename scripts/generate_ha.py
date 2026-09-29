@@ -47,7 +47,7 @@ SCHEMA_VER = 1
 # Fallback-belasting als config.json ontbreekt (tarief 2026).
 DEFAULT_ENERGY_TAX = 0.0916   # EUR/kWh, excl. btw
 DEFAULT_VAT        = 1.21
-DEFAULT_MARKUP     = 0.0178   # EUR/kWh, gemiddelde leverancieropslag excl. btw
+DEFAULT_MARKUP     = 0.0170   # EUR/kWh, gemiddelde leverancieropslag excl. btw
 
 
 def load_json(path: Path) -> dict:

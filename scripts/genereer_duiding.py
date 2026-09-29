@@ -41,7 +41,7 @@ from pathlib import Path
 # Belastingconfig — spiegelt ha.json. Pas hier aan als het jaar wisselt.
 # ---------------------------------------------------------------------------
 ENERGY_TAX = 0.0916      # EUR/kWh
-AVG_MARKUP = 0.0178      # EUR/kWh
+AVG_MARKUP = 0.0170      # EUR/kWh
 VAT = 1.21
 
 WEEKDAGEN_NL = ["maandag", "dinsdag", "woensdag", "donderdag",
