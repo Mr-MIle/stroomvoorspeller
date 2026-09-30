@@ -1,0 +1,52 @@
+name: Teller aanbieders
+
+# Telt dagelijks de paginaweergaven van /aanbieders op uit Cloudflare Web
+# Analytics en schrijft public/data/teller.json. De pagina toont het getal
+# alleen als dat bestand bestaat.
+#
+# Eenmalig nodig (Settings > Secrets and variables > Actions):
+#   CF_API_TOKEN   Cloudflare API-token met Account > Account Analytics > Read
+#   CF_ACCOUNT_ID  Cloudflare account-ID
+#   CF_SITE_TAG    site tag van stroomvoorspeller.nl in Web Analytics
+# Zonder deze secrets doet de workflow niets en faalt hij niet.
+
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: teller-aanbieders
+  cancel-in-progress: false
+
+jobs:
+  teller:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Haal weergaven op
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_SITE_TAG: ${{ secrets.CF_SITE_TAG }}
+        run: python3 scripts/update_teller.py
+
+      - name: Commit en push als er iets veranderd is
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          git add public/data/teller.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Geen wijzigingen."
+            exit 0
+          fi
+          git commit -m "auto: teller aanbieders $(date -u +%Y-%m-%d) [skip ci]"
+          for i in 1 2 3; do
+            git pull --rebase -q origin main && git push && exit 0
+            sleep 10
+          done
+          exit 1
