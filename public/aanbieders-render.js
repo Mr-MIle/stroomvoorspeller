@@ -68,6 +68,41 @@
   // { kwh, panelen, afname: Δ kWh, terug: Δ kWh, besparing: € per jaar }. Leeg = geen correctie.
   function batEffect(c) { return c.bat && c.batEffect ? c.batEffect : null; }
 
+  // Scenario uit data/batterij-effect.json dat het best bij de situatie past: zonder
+  // zonnepanelen het scenario zonder panelen, anders dat met de dichtstbijzijnde teruglevering.
+  // naBatterijKwh: de ingevulde teruglevering is al mét deze batterij (batterij stond er het
+  // hele jaar); vergelijk dan met de teruglevering van het scenario na de batterij.
+  function kiesScenario(data, c, naBatterijKwh) {
+    if (!data || !data.scenarios) return null;
+    var sc = data.scenarios.filter(function (s) { return c.zon && c.terug > 0 ? s.panelen > 0 : s.panelen === 0; });
+    if (!sc.length) return null;
+    var terugVan = function (s) {
+      var g = naBatterijKwh && s.groottes && s.groottes[naBatterijKwh];
+      return s.terug + (g ? g.terug : 0);
+    };
+    if (c.zon && c.terug > 0) sc.sort(function (a, b) { return Math.abs(terugVan(a) - c.terug) - Math.abs(terugVan(b) - c.terug); });
+    return sc[0];
+  }
+  // Wat bij elke aanbieder gelijk is: beursprijs, energiebelasting, netbeheer, vermindering.
+  // cfg = config.json, data = batterij-effect.json, batKwh = gekozen batterijgrootte (of 0).
+  function rekenbasis(cfg, data, c, batKwh) {
+    var s = kiesScenario(data, c, c.bat && batKwh && !c.batNieuw ? batKwh : 0);
+    if (!s || !cfg || !cfg.taxes || !cfg.netbeheer) return null;
+    var g = c.bat && batKwh && s.groottes ? s.groottes[batKwh] : null;
+    var mA = g ? g.markt_afname_ct : s.markt_afname_ct;
+    var mT = g && g.markt_terug_ct != null ? g.markt_terug_ct : s.markt_terug_ct;
+    if (mT == null) { var z = kiesScenario(data, { zon: true, terug: 1 }); mT = z ? z.markt_terug_ct : 0; }
+    var lijst = cfg.netbeheer.per_jaar_incl, namen = Object.keys(lijst);
+    var net = lijst[c.netbeheerder], netNaam = c.netbeheerder;
+    if (net == null) {
+      net = namen.reduce(function (a, n) { return a + lijst[n]; }, 0) / namen.length;
+      netNaam = "gemiddeld van " + namen.length + " netbeheerders";
+    }
+    return { mA: mA / 100, mT: (mT || 0) / 100, eb: cfg.taxes.energiebelasting_per_kwh, korting: cfg.taxes.vermindering_eb_per_jaar,
+             netIncl: net, netNaam: netNaam, panelen: s.panelen, batKwh: g ? batKwh : 0,
+             periode: data.periode, netBron: cfg.netbeheer.bron };
+  }
+
   // Leverancierskosten per jaar, per onderdeel.
   function kosten(s, c) {
     var f = c.btw ? BTW : 1;
@@ -83,7 +118,22 @@
       tlKwh = (tl.methode === "jaaroverschot" && c.jaar === 2026) ? Math.max(0, t - v) : t;
       terug = -o * tlKwh;   // negatief = scheelt je geld
     }
-    return { opslag: opslag, vast: vast, terug: terug, tlKwh: tlKwh, afname: v, teruglevering: t, totaal: opslag + vast + terug };
+    var uit = { opslag: opslag, vast: vast, terug: terug, tlKwh: tlKwh, afname: v, teruglevering: t, totaal: opslag + vast + terug };
+    var b0 = c.basis;
+    if (b0) {
+      // Saldering (t/m 2026) geldt op een dynamisch contract voor de energiebelasting: die betaal
+      // je over afname min teruglevering. De stroom zelf wordt per uur verrekend: afname tegen de
+      // beursprijs van dat uur, teruglevering ook (meestal lager, want overdag).
+      var g = c.jaar === 2026 && t > 0 ? Math.min(v, t) : 0;
+      uit.gesaldeerd = g;
+      uit.stroom = b0.mA * v * f;
+      uit.eb = b0.eb * (v - g) * f;
+      uit.terugwaarde = -b0.mT * t;
+      uit.netbeheer = b0.netIncl / (c.btw ? 1 : BTW);
+      uit.korting = -b0.korting * f;
+      uit.rekening = uit.totaal + uit.stroom + uit.eb + uit.terugwaarde + uit.netbeheer + uit.korting;
+    }
+    return uit;
   }
 
   // ── herkomst ─────────────────────────────────────────────────────────
@@ -169,7 +219,8 @@
     opts = opts || {};
     var k = kosten(s, c), id = esc(s.id), f = c.btw ? BTW : 1;
     var open = opts.open === s.id, gekozen = opts.gekozen && opts.gekozen.indexOf(s.id) !== -1;
-    var h = '<div class="aanb-rij' + (open ? " open" : "") + '" data-id="' + id + '" id="' + id + '">';
+    var h = '<div class="aanb-rij' + (open ? " open" : "") + '" data-id="' + id + '" id="' + id + '" data-lev="' + Math.round(k.totaal) + '"' +
+            (k.rekening != null ? ' data-rekening="' + Math.round(k.rekening) + '"' : "") + ">";
     h += '<div class="aanb-rij-kop">';
     h += '<button type="button" class="aanb-open" aria-expanded="' + (open ? "true" : "false") + '" aria-controls="det-' + id + '">';
     h += '<span class="aanb-naam"><span class="aanb-nr">' + nr + '.</span> ' + esc(s.name) + "</span>";
@@ -179,7 +230,9 @@
     h += '<span class="aanb-cel aanb-terug' + (c.zon ? "" : " leeg") + '"><span class="aanb-lbl">terug </span><b>' + terugKort(s) + "</b>" + teken(herkomstVan(s, "teruglevering"), { lijst: true }) + "</span>";
     h += '<span class="aanb-cel aanb-score"><span class="aanb-lbl">score </span>' + scoreTekst(s) + "</span>";
     h += "</span>";
-    h += '<span class="aanb-bedrag">' + bedragTekst(k.totaal) + "<small>per jaar</small></span>";
+    h += k.rekening != null
+      ? '<span class="aanb-bedrag">' + bedragTekst(k.rekening / 12) + "<small>per maand</small><small>" + bedragTekst(k.rekening) + " per jaar</small></span>"
+      : '<span class="aanb-bedrag">' + bedragTekst(k.totaal) + "<small>per jaar</small></span>";
     var km = "";
     if (c.ev) km += kenmerkChip(s, "ev");
     if (c.bat) km += kenmerkChip(s, "batterij") + kenmerkChip(s, "kwartier");
@@ -195,6 +248,25 @@
     return h;
   }
 
+  function rekeningHtml(k, c) {
+    var b0 = c.basis, f = c.btw ? BTW : 1, v = k.afname - k.gesaldeerd;
+    var h = '<h3 class="aanb-kopje">Je hele stroomrekening (schatting)</h3><p class="aanb-som">';
+    h += "Wat deze aanbieder rekent: " + bedragTekst(k.totaal) + "<br>";
+    h += "Stroom tegen de beursprijs: " + eur0(k.stroom) + " (gemiddeld " + ct(b0.mA * f) + " ct × " + kwh(k.afname) + ")<br>";
+    h += "Energiebelasting: " + eur0(k.eb) + " (" + ct(b0.eb * f) + " ct × " + kwh(v) +
+         (k.gesaldeerd ? ": je afname min " + kwh(k.gesaldeerd) + " gesaldeerde teruglevering" : "") + ")<br>";
+    if (k.terugwaarde) h += "Teruglevering tegen de beursprijs: − " + eur0(k.terugwaarde) + " (gemiddeld " + ct(b0.mT) + " ct × " + kwh(k.teruglevering) + ")<br>";
+    h += "Netbeheer (" + esc(b0.netNaam) + "): " + eur0(k.netbeheer) + " " + teken("tweede_bron") + "<br>";
+    h += "Vermindering energiebelasting: − " + eur0(k.korting) + "<br>";
+    h += "<b>Samen " + bedragTekst(k.rekening) + " per jaar, " + bedragTekst(k.rekening / 12) + " per maand.</b></p>";
+    h += '<p class="aanb-noot">Alleen stroom, zonder gas. Alles behalve het eerste bedrag is bij elke aanbieder gelijk. De beursprijs is een gemiddelde over ' +
+         maandJaar(b0.periode.van) + " tot en met " + maandJaar(b0.periode.tot) + ", gewogen naar het verbruik van " +
+         (b0.panelen ? "een huis met ongeveer " + b0.panelen + " zonnepanelen" : "een huis zonder zonnepanelen") + (b0.batKwh ? " en een batterij van " + b0.batKwh + " kWh" : "") +
+         "; je werkelijke prijs hangt af van wanneer je stroom gebruikt.</p>";
+    return h;
+  }
+  function maandJaar(ym) { return datumNL((ym || "") + "-01").replace(/^1 /, ""); }
+
   function detailsHtml(s, c, k, open) {
     var f = c.btw ? BTW : 1, btw = c.btw ? "inclusief btw" : "zonder btw";
     var h = '<div class="aanb-details" id="det-' + esc(s.id) + '"' + (open ? "" : " hidden") + ">";
@@ -203,7 +275,7 @@
     if (s.let_op) h += '<p class="aanb-let">' + esc(s.let_op) + "</p>";
     if (s.omschrijving) h += '<p class="aanb-omschr">' + esc(s.omschrijving) + "</p>";
 
-    h += '<h3 class="aanb-kopje">Kosten bij jouw situatie</h3><p class="aanb-som">';
+    h += '<h3 class="aanb-kopje">Wat deze aanbieder rekent</h3><p class="aanb-som">';
     var evDeel = c.ev ? Math.max(0, c.evKwh || 0) : 0, be = batEffect(c);
     if (evDeel || (be && be.afname)) {
       h += "Van het net: " + kwh(Math.max(0, c.afname || 0)) + " huis" + (evDeel ? " + " + kwh(evDeel) + " thuisladen" : "") +
@@ -223,6 +295,7 @@
            (o ? eur0(k.terug) + (k.terug <= 0 ? " eraf" : " erbij") + " (" + ct(Math.abs(o)) + " ct × " + kwh(k.tlKwh) + (overschot ? " jaaroverschot" : "") + ")" : "kale beursprijs, niets erbij of eraf") + "<br>";
     }
     h += "<b>Samen " + bedragTekst(k.totaal) + " per jaar</b>, " + btw + " over opslag en vaste kosten.</p>";
+    if (k.rekening != null) h += rekeningHtml(k, c);
 
     h += '<h3 class="aanb-kopje">Teruglevering</h3><p>' + terugLang(s) + " " + teken(herkomstVan(s, "teruglevering")) +
          (s.teruglevering && s.teruglevering.bron ? ' <span class="bron">bron: ' + esc(s.teruglevering.bron) + "</span>" : "") + "</p>";
@@ -293,7 +366,11 @@
     var f = c.btw ? BTW : 1, rijen = [];
     function r(groep, label, waarden, getallen, twijfel) { rijen.push({ g: groep, l: label, w: waarden, n: getallen, tw: twijfel }); }
 
-    r("Kosten", "Per jaar bij jouw situatie", K.map(function (k) { return bedragTekst(k.totaal); }), K.map(function (k) { return k.totaal; }),
+    if (K[0].rekening != null) {
+      r("Kosten", "Hele stroomrekening per maand", K.map(function (k) { return bedragTekst(k.rekening / 12); }), K.map(function (k) { return k.rekening; }),
+        sel.some(function (s) { return isVoorlopig(s, c); }));
+    }
+    r("Kosten", "Wat de aanbieder rekent per jaar", K.map(function (k) { return bedragTekst(k.totaal); }), K.map(function (k) { return k.totaal; }),
       sel.some(function (s) { return isVoorlopig(s, c); }));
     r("Kosten", "Opslag per kWh", sel.map(function (s) { return ct(s.markup_per_kwh * f) + " ct " + teken(herkomstVan(s, "opslag"), { lijst: true }); }),
       sel.map(function (s) { return s.markup_per_kwh; }), sel.some(function (s) { return herkomstVan(s, "opslag") !== "aanbieder"; }));
@@ -368,7 +445,7 @@
   return {
     BTW: BTW, HERKOMST: HERKOMST, KENMERK_LABEL: KENMERK_LABEL, VEROUDERD_DAGEN: VEROUDERD_DAGEN,
     esc: esc, duizend: duizend, eur0: eur0, eur2: eur2, ct: ct, datumNL: datumNL, dagenOud: dagenOud, bedragTekst: bedragTekst,
-    standaardSituatie: standaardSituatie, netAfname: netAfname, batEffect: batEffect, kosten: kosten,
+    standaardSituatie: standaardSituatie, netAfname: netAfname, batEffect: batEffect, kiesScenario: kiesScenario, rekenbasis: rekenbasis, kosten: kosten, maandJaar: maandJaar,
     herkomstVan: herkomstVan, verouderd: verouderd, teken: teken, isVoorlopig: isVoorlopig,
     terugKort: terugKort, terugLang: terugLang, kenmerk: kenmerk,
     regelHtml: regelHtml, lijstHtml: lijstHtml, sorteer: sorteer, filter: filter,

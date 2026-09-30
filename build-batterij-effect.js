@@ -59,6 +59,15 @@ function main() {
   const tlv = -((gem.teruglevering && gem.teruglevering.opslag_per_kwh) || -0.0133);
   const basis = { months: maanden, epexFor, contract: "dyn", markup, tlv, verbruik: VERBRUIK };
   const jaar = (extra) => M.runYear(Object.assign({}, basis, extra));
+  // Kale marktprijs per afgenomen en per teruggeleverde kWh (excl. btw), zonder opslag:
+  // de basis voor "stroom tegen de beursprijs" in de hele rekening op /aanbieders.
+  const markt = (extra) => {
+    const r = M.runYear(Object.assign({}, basis, { markup: 0, tlv: 0, saldering: false }, extra));
+    return {
+      markt_afname_ct: r.impKwh > 0 ? Math.round((r.impCost / r.impKwh / M.BTW - M.EB) * 10000) / 100 : null,
+      markt_terug_ct: r.expKwh > 0 ? Math.round(r.expRev / r.expKwh * 10000) / 100 : null
+    };
+  };
 
   const scenarios = PANELEN.map((panelen) => {
     const nul = { 2026: jaar({ panelen, batKwh: 0, saldering: true }), 2027: jaar({ panelen, batKwh: 0, saldering: false }) };
@@ -72,14 +81,15 @@ function main() {
         besparing: { 2026: Math.round(nul[2026].jaarkosten - b26.jaarkosten), 2027: Math.round(nul[2027].jaarkosten - b27.jaarkosten) },
         prijs_ct: Math.round(b27.avgImp * 1000) / 10
       };
+      Object.assign(groottes[kwh], markt({ panelen, batKwh: kwh }));
     }
-    return { panelen, afname: Math.round(nul[2027].impKwh), terug: Math.round(nul[2027].expKwh),
-             prijs_ct: Math.round(nul[2027].avgImp * 1000) / 10, groottes };
+    return Object.assign({ panelen, afname: Math.round(nul[2027].impKwh), terug: Math.round(nul[2027].expKwh),
+             prijs_ct: Math.round(nul[2027].avgImp * 1000) / 10 }, markt({ panelen, batKwh: 0 }), { groottes });
   });
 
   const eerste = maanden[0], laatste = maanden[maanden.length - 1];
   const uit = {
-    toelichting: "Effect van een nieuwe thuisbatterij, berekend met public/dyn-model.js. afname/terug = verschil in kWh per jaar; besparing = lagere stroomrekening in euro per jaar (stroom, energiebelasting en btw, gemiddelde aanbieder), apart voor 2026 (saldering) en 2027. prijs_ct = gemiddelde prijs per afgenomen kWh incl. belasting. Gegenereerd door build-batterij-effect.js.",
+    toelichting: "Effect van een nieuwe thuisbatterij, berekend met public/dyn-model.js. afname/terug = verschil in kWh per jaar; besparing = lagere stroomrekening in euro per jaar (stroom, energiebelasting en btw, gemiddelde aanbieder), apart voor 2026 (saldering) en 2027. prijs_ct = gemiddelde prijs per afgenomen kWh incl. belasting. markt_afname_ct / markt_terug_ct = kale beursprijs per afgenomen / teruggeleverde kWh, excl. btw, zonder opslag. Gegenereerd door build-batterij-effect.js.",
     periode: { van: eerste.y + "-" + pad(eerste.m + 1), tot: laatste.y + "-" + pad(laatste.m + 1) },
     verbruik_kwh: VERBRUIK,
     batterij: "bruikbaar 90% van de capaciteit, vermogen 0,5C, 95% rendement laden en ontladen, laadt ook van het net als dat loont",

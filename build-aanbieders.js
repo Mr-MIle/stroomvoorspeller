@@ -57,6 +57,10 @@ function build() {
   const cfg = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
   const lijst = (cfg.suppliers || []).filter((s) => s.consumer !== false && s.id !== "average" && s.id !== "custom");
   const c = R.standaardSituatie(cfg.aanbieders_page);
+  const EFFECT = path.join(__dirname, "public", "data", "batterij-effect.json");
+  const effect = fs.existsSync(EFFECT) ? JSON.parse(fs.readFileSync(EFFECT, "utf8")) : null;
+  c.basis = R.rekenbasis(cfg, effect, c, 0);
+  if (!c.basis) console.warn("LET OP: geen batterij-effect.json of netbeheer in config; de lijst toont alleen wat de aanbieder rekent.");
   const datum = R.datumNL(cfg.updated);
   const kwhTxt = R.duizend(c.afname) + " kWh";
   const gesorteerd = R.sorteer(lijst, "kosten", c);
@@ -73,6 +77,11 @@ function build() {
   let sam = "Goedkoopst bij " + kwhTxt + " per jaar, inclusief btw: " + top3[0].name + " (" + kost(top3[0]) +
     " aan opslag en vaste kosten), gevolgd door " + top3[1].name + " (" + kost(top3[1]) + ") en " + top3[2].name + " (" + kost(top3[2]) + ").";
   if (voorbehoud.length) sam += " Bij " + namen(voorbehoud) + " komt een deel van de tarieven uit een tweede bron.";
+  if (c.basis) {
+    const maand = (s) => R.eur0(R.kosten(s, c).rekening / 12);
+    sam += " Je hele stroomrekening komt dan op ± " + maand(top3[0]) + " per maand bij " + top3[0].name + " en ± " +
+           maand(gesorteerd[gesorteerd.length - 1]) + " bij de duurste, inclusief beursprijs, energiebelasting, netbeheer en de vermindering energiebelasting.";
+  }
   sam += " Tarieven gecontroleerd op " + datum + ".";
   html = vervang(html, "SAMENVATTING", '\n    <p class="aanb-samenvatting">' + sam + "</p>\n    ");
 
@@ -90,7 +99,7 @@ function build() {
   let sit = "\n";
   sit += '      <h2 id="zonnepanelen">Dynamisch contract met zonnepanelen</h2>\n';
   sit += "      <p>Met zonnepanelen telt vooral wat de aanbieder doet met je teruglevering. Bij 3.500 kWh afname en 3.000 kWh teruglevering zijn in 2026 " +
-         zTop26.map((s) => R.esc(s.name) + " (" + kost(s, zon26) + ")").join(", ") + " het goedkoopst. Vanaf 2027, als de saldering stopt en de tarieven gelijk blijven, zijn dat " +
+         zTop26.map((s) => R.esc(s.name) + " (" + kost(s, zon26) + ")").join(", ") + " het goedkoopst, als je kijkt naar wat de aanbieder rekent. Vanaf 2027, als de saldering stopt en de tarieven gelijk blijven, zijn dat " +
          zTop27.map((s) => R.esc(s.name) + " (" + kost(s, zon27) + ")").join(", ") + ".</p>\n";
   sit += "      <p>" + namen(bonus) + " geven daarbovenop een bonus over zonnestroom. Die zit niet in de bedragen, omdat hij afhangt van wanneer je teruglevert. Meer uitleg staat in <a href=\"/kennisbank/teruglevertarief-vergelijken\">teruglevertarieven vergelijken</a>.</p>\n";
   sit += '      <h2 id="thuisbatterij">Dynamisch contract met een thuisbatterij</h2>\n';
@@ -109,6 +118,10 @@ function build() {
     ["Wat is de goedkoopste dynamische energieleverancier?",
      "Bij " + kwhTxt + " per jaar zonder zonnepanelen is dat nu " + top3[0].name + ", met " + kost(top3[0]) + " per jaar aan opslag en vaste kosten inclusief btw, gevolgd door " +
      top3[1].name + " (" + kost(top3[1]) + ") en " + top3[2].name + " (" + kost(top3[2]) + "). De stroomprijs per uur is bij alle aanbieders gelijk. Heb je zonnepanelen, vul dan je teruglevering in; dan verandert de volgorde flink."],
+    ...(c.basis ? [["Wat kost een dynamisch energiecontract per maand?",
+     "Bij " + kwhTxt + " stroom per jaar, zonder zonnepanelen, komt je hele stroomrekening op ± " + R.eur0(R.kosten(top3[0], c).rekening / 12) +
+     " per maand bij de goedkoopste aanbieder en ± " + R.eur0(R.kosten(gesorteerd[gesorteerd.length - 1], c).rekening / 12) +
+     " bij de duurste. Daarin zitten de stroom tegen de beursprijs van de afgelopen twaalf maanden, energiebelasting, netbeheer, de vaste kosten en opslag van de aanbieder, min de vermindering energiebelasting. Gas telt niet mee. Wat je precies betaalt, hangt af van wanneer je stroom gebruikt."]] : []),
     ["Wat is de beste dynamische energieleverancier?",
      "Dat hangt af van je situatie. Met zonnepanelen telt vooral de teruglevering, met een elektrische auto of thuisbatterij of de aanbieder die kan aansturen. Op Trustpilot heeft " +
      namen(hoogste) + " de hoogste score (" + hoogste[0].score.toFixed(1).replace(".", ",") + ") van de aanbieders met minstens 100 reviews."],

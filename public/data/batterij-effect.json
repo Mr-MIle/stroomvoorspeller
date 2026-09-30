@@ -1,5 +1,5 @@
 {
-  "toelichting": "Effect van een nieuwe thuisbatterij, berekend met public/dyn-model.js. afname/terug = verschil in kWh per jaar; besparing = lagere stroomrekening in euro per jaar (stroom, energiebelasting en btw, gemiddelde aanbieder), apart voor 2026 (saldering) en 2027. prijs_ct = gemiddelde prijs per afgenomen kWh incl. belasting. Gegenereerd door build-batterij-effect.js.",
+  "toelichting": "Effect van een nieuwe thuisbatterij, berekend met public/dyn-model.js. afname/terug = verschil in kWh per jaar; besparing = lagere stroomrekening in euro per jaar (stroom, energiebelasting en btw, gemiddelde aanbieder), apart voor 2026 (saldering) en 2027. prijs_ct = gemiddelde prijs per afgenomen kWh incl. belasting. markt_afname_ct / markt_terug_ct = kale beursprijs per afgenomen / teruggeleverde kWh, excl. btw, zonder opslag. Gegenereerd door build-batterij-effect.js.",
   "periode": {
     "van": "2025-09",
     "tot": "2026-08"
@@ -12,6 +12,8 @@
       "afname": 2900,
       "terug": 0,
       "prijs_ct": 25.3,
+      "markt_afname_ct": 10.02,
+      "markt_terug_ct": null,
       "groottes": {
         "5": {
           "afname": 134,
@@ -20,7 +22,9 @@
             "2026": 142,
             "2027": 146
           },
-          "prijs_ct": 19.6
+          "prijs_ct": 19.6,
+          "markt_afname_ct": 5.25,
+          "markt_terug_ct": 29.46
         },
         "10": {
           "afname": 262,
@@ -29,7 +33,9 @@
             "2026": 152,
             "2027": 172
           },
-          "prijs_ct": 19.1
+          "prijs_ct": 19.1,
+          "markt_afname_ct": 4.57,
+          "markt_terug_ct": 25.82
         },
         "15": {
           "afname": 385,
@@ -38,7 +44,9 @@
             "2026": 160,
             "2027": 195
           },
-          "prijs_ct": 18.7
+          "prijs_ct": 18.7,
+          "markt_afname_ct": 4.08,
+          "markt_terug_ct": 25.52
         },
         "20": {
           "afname": 507,
@@ -47,7 +55,9 @@
             "2026": 167,
             "2027": 218
           },
-          "prijs_ct": 18.4
+          "prijs_ct": 18.4,
+          "markt_afname_ct": 3.66,
+          "markt_terug_ct": 25.4
         }
       }
     },
@@ -56,6 +66,8 @@
       "afname": 1636,
       "terug": 836,
       "prijs_ct": 27.3,
+      "markt_afname_ct": 11.69,
+      "markt_terug_ct": 4.65,
       "groottes": {
         "5": {
           "afname": -496,
@@ -64,7 +76,9 @@
             "2026": 21,
             "2027": 209
           },
-          "prijs_ct": 22.5
+          "prijs_ct": 22.5,
+          "markt_afname_ct": 7.37,
+          "markt_terug_ct": 21.49
         },
         "10": {
           "afname": -371,
@@ -73,7 +87,9 @@
             "2026": 28,
             "2027": 232
           },
-          "prijs_ct": 21.2
+          "prijs_ct": 21.2,
+          "markt_afname_ct": 5.57,
+          "markt_terug_ct": 23.29
         },
         "15": {
           "afname": -248,
@@ -82,7 +98,9 @@
             "2026": 34,
             "2027": 254
           },
-          "prijs_ct": 20.1
+          "prijs_ct": 20.1,
+          "markt_afname_ct": 4.4,
+          "markt_terug_ct": 23.93
         },
         "20": {
           "afname": -126,
@@ -91,7 +109,9 @@
             "2026": 38,
             "2027": 276
           },
-          "prijs_ct": 19.2
+          "prijs_ct": 19.2,
+          "markt_afname_ct": 3.55,
+          "markt_terug_ct": 24.26
         }
       }
     },
@@ -100,6 +120,8 @@
       "afname": 1472,
       "terug": 2072,
       "prijs_ct": 27.3,
+      "markt_afname_ct": 11.69,
+      "markt_terug_ct": 5.41,
       "groottes": {
         "5": {
           "afname": -759,
@@ -108,7 +130,9 @@
             "2026": 29,
             "2027": 259
           },
-          "prijs_ct": 23.7
+          "prijs_ct": 23.7,
+          "markt_afname_ct": 8.65,
+          "markt_terug_ct": 10.86
         },
         "10": {
           "afname": -725,
@@ -117,7 +141,9 @@
             "2026": 54,
             "2027": 349
           },
-          "prijs_ct": 23.2
+          "prijs_ct": 23.2,
+          "markt_afname_ct": 7.62,
+          "markt_terug_ct": 19.57
         },
         "15": {
           "afname": -615,
@@ -126,7 +152,9 @@
             "2026": 54,
             "2027": 373
           },
-          "prijs_ct": 21.2
+          "prijs_ct": 21.2,
+          "markt_afname_ct": 5.25,
+          "markt_terug_ct": 20.7
         },
         "20": {
           "afname": -498,
@@ -135,7 +163,9 @@
             "2026": 53,
             "2027": 396
           },
-          "prijs_ct": 19.6
+          "prijs_ct": 19.6,
+          "markt_afname_ct": 3.77,
+          "markt_terug_ct": 21.41
         }
       }
     },
@@ -144,6 +174,8 @@
       "afname": 1409,
       "terug": 3409,
       "prijs_ct": 27.2,
+      "markt_afname_ct": 11.65,
+      "markt_terug_ct": 5.76,
       "groottes": {
         "5": {
           "afname": -915,
@@ -152,7 +184,9 @@
             "2026": 52,
             "2027": 278
           },
-          "prijs_ct": 23.7
+          "prijs_ct": 23.7,
+          "markt_afname_ct": 8.73,
+          "markt_terug_ct": 8.31
         },
         "10": {
           "afname": -912,
@@ -161,7 +195,9 @@
             "2026": 162,
             "2027": 422
           },
-          "prijs_ct": 23.7
+          "prijs_ct": 23.7,
+          "markt_afname_ct": 8.58,
+          "markt_terug_ct": 15.2
         },
         "15": {
           "afname": -885,
@@ -170,7 +206,9 @@
             "2026": 213,
             "2027": 494
           },
-          "prijs_ct": 23.1
+          "prijs_ct": 23.1,
+          "markt_afname_ct": 7.29,
+          "markt_terug_ct": 18.92
         },
         "20": {
           "afname": -785,
@@ -179,7 +217,9 @@
             "2026": 223,
             "2027": 521
           },
-          "prijs_ct": 20.6
+          "prijs_ct": 20.6,
+          "markt_afname_ct": 4.62,
+          "markt_terug_ct": 19.79
         }
       }
     },
@@ -188,6 +228,8 @@
       "afname": 1370,
       "terug": 4770,
       "prijs_ct": 27.2,
+      "markt_afname_ct": 11.62,
+      "markt_terug_ct": 5.95,
       "groottes": {
         "5": {
           "afname": -1026,
@@ -196,7 +238,9 @@
             "2026": 55,
             "2027": 290
           },
-          "prijs_ct": 23.9
+          "prijs_ct": 23.9,
+          "markt_afname_ct": 8.85,
+          "markt_terug_ct": 7.49
         },
         "10": {
           "afname": -1048,
@@ -205,7 +249,9 @@
             "2026": 206,
             "2027": 461
           },
-          "prijs_ct": 23.9
+          "prijs_ct": 23.9,
+          "markt_afname_ct": 8.89,
+          "markt_terug_ct": 12.62
         },
         "15": {
           "afname": -1045,
@@ -214,7 +260,9 @@
             "2026": 309,
             "2027": 576
           },
-          "prijs_ct": 23.8
+          "prijs_ct": 23.8,
+          "markt_afname_ct": 8.58,
+          "markt_terug_ct": 16.46
         },
         "20": {
           "afname": -1022,
@@ -223,7 +271,9 @@
             "2026": 361,
             "2027": 638
           },
-          "prijs_ct": 22.9
+          "prijs_ct": 22.9,
+          "markt_afname_ct": 6.78,
+          "markt_terug_ct": 18.64
         }
       }
     }
