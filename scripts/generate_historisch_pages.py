@@ -348,7 +348,7 @@ def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, di
   </footer>
 
   <script src="/nav.js" defer></script>
-  <script defer src="https://static.cloudflare.com/beacon.min.js" data-cf-beacon='{{"token": "b0c666a71b274ee7b092122def7755e8"}}'></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "b0c666a71b274ee7b092122def7755e8"}}'></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
