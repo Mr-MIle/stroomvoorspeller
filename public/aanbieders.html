@@ -45,48 +45,64 @@
     .aanb-teller { color: var(--c-text-mute); font-size: 0.85rem; margin: 0 0 4px; }
     .aanb-teller[hidden] { display: none; }
     .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-    details.aanb-hoe { margin: 0 0 12px; color: var(--c-text-soft); font-size: 0.9rem; }
+    .aanb-lead a { text-decoration: underline; white-space: nowrap; }
+    details.aanb-hoe { margin: 4px 0 12px; color: var(--c-text-soft); font-size: 0.9rem; }
     details.aanb-hoe > summary { cursor: pointer; color: var(--c-brand); min-height: 44px; display: flex; align-items: center; }
     details.aanb-hoe p { margin: 0.35em 0; max-width: 700px; }
 
     /* situatiebalk */
-    .aanb-situatie { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 12px 14px; margin: 0 0 10px; box-shadow: var(--shadow-sm); }
+    .aanb-situatie { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 10px 12px; margin: 10px 0 8px; box-shadow: var(--shadow-sm); }
+    .aanb-samenv { display: none; align-items: center; gap: 4px 10px; }
+    .aanb-samenv p { flex: 1; margin: 0; font-size: 0.9rem; color: var(--c-text-soft); min-width: 0; }
+    .aanb-samenv b { color: var(--c-text); }
+    .aanb-situatie.dicht .aanb-samenv { display: flex; }
+    .aanb-situatie.dicht .aanb-velden { display: none; }
+    .aanb-basis { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-bottom: 8px; }
+    .aanb-kol { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .aanb-kol label { font-size: 0.88rem; font-weight: 600; color: var(--c-text); }
+    .aanb-kol > :last-child { margin-top: auto; }
+    .aanb-inv { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--c-text-mute); white-space: nowrap; }
+    .aanb-basis select { width: 100%; min-height: 44px; font: inherit; color: var(--c-text); background: var(--c-bg); border: 1px solid var(--c-border-strong); border-radius: var(--radius-sm); padding: 0 8px; }
+    .aanb-basis .aanb-hint { grid-column: 1 / -1; margin: 0; }
+    .aanb-info { all: unset; box-sizing: border-box; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+    .aanb-info span[aria-hidden] { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--c-border-strong); display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--c-text-soft); }
+    .aanb-info[aria-expanded="true"] span[aria-hidden] { background: var(--c-surface-soft); border-color: var(--c-brand); color: var(--c-brand-deep); }
+    .aanb-info:focus-visible { outline: 3px solid var(--c-brand); outline-offset: -4px; border-radius: 50%; }
+    .aanb-situatie [hidden] { display: none !important; }
+    .aanb-klaar { display: flex; justify-content: flex-end; margin-top: 8px; }
     .aanb-situatie fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
     .aanb-situatie legend { font-weight: 600; font-size: 0.95rem; padding: 0; margin-bottom: 6px; color: var(--c-text); }
-    .aanb-veld { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 10px; }
-    .aanb-veld label { font-size: 0.92rem; color: var(--c-text); font-weight: 600; }
-    .aanb-veld input[type=number] { width: 6.5em; min-height: 44px; padding: 6px 10px; font: inherit; color: var(--c-text); background: var(--c-bg); border: 1px solid var(--c-border-strong); border-radius: var(--radius-sm); }
+    .aanb-veld { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+    .aanb-veld label:not(.sr) { font-size: 0.88rem; color: var(--c-text); font-weight: 600; }
+    .aanb-situatie input[type=number] { width: 5.4em; min-height: 44px; padding: 6px 10px; font: inherit; color: var(--c-text); background: var(--c-bg); border: 1px solid var(--c-border-strong); border-radius: var(--radius-sm); }
     .aanb-eenheid { font-size: 0.9rem; color: var(--c-text-mute); }
-    .aanb-hint { font-size: 0.8rem; color: var(--c-text-mute); flex-basis: 100%; margin: -2px 0 0; }
+    .aanb-hint { font-size: 0.8rem; color: var(--c-text-mute); flex-basis: 100%; margin: 0; }
     .aanb-chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .aanb-chip { position: relative; }
     .aanb-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-    .aanb-chip span { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 1px solid var(--c-border-strong); border-radius: 999px; background: var(--c-surface); font-size: 0.92rem; cursor: pointer; user-select: none; color: var(--c-text); }
+    .aanb-chip span { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border: 1px solid var(--c-border-strong); border-radius: 999px; background: var(--c-surface); font-size: 0.92rem; cursor: pointer; user-select: none; color: var(--c-text); }
     .aanb-chip input:checked + span { background: var(--c-surface-soft); border-color: var(--c-brand); color: var(--c-brand-deep); font-weight: 600; }
     .aanb-chip input:checked + span::before { content: "✓"; }
     .aanb-chip input:focus-visible + span { outline: 3px solid var(--c-brand); outline-offset: 2px; }
-    .aanb-extra { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--c-border); }
+    .aanb-extra { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--c-border); }
     .aanb-extra[hidden] { display: none; }
-    .aanb-radio { display: flex; flex-wrap: wrap; gap: 0 16px; font-size: 0.9rem; border: 0; padding: 0; margin: 0; }
-    .aanb-radio label { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
-    .aanb-vraag { font-size: 0.92rem; font-weight: 600; color: var(--c-text); padding: 0; margin-bottom: 2px; }
     .aanb-veld select { min-height: 44px; font: inherit; color: var(--c-text); background: var(--c-bg); border: 1px solid var(--c-border-strong); border-radius: var(--radius-sm); padding: 0 10px; }
-    .aanb-batregel { font-size: 0.9rem; margin: 10px 2px 0; padding: 10px 12px; background: var(--c-surface-soft); border-left: 3px solid var(--c-brand); border-radius: var(--radius-sm); color: var(--c-text-soft); }
+    .aanb-batregel { font-size: 0.88rem; margin: 8px 2px 0; padding: 10px 12px; background: var(--c-surface-soft); border-left: 3px solid var(--c-brand); border-radius: var(--radius-sm); color: var(--c-text-soft); }
     .aanb-batregel[hidden] { display: none; }
     .aanb-batregel a { text-decoration: underline; }
 
     /* verschil, bediening, legenda */
-    .aanb-verschil { font-size: 0.95rem; margin: 10px 2px; }
+    .aanb-verschil { font-size: 0.95rem; margin: 8px 2px; }
     .aanb-verschil strong { font-size: 1.05rem; }
-    .aanb-bediening { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0 6px; }
-    .aanb-bediening select { max-width: 62%; min-height: 44px; font: inherit; border: 1px solid var(--c-border-strong); border-radius: var(--radius-sm); padding: 0 10px; background: var(--c-surface); color: var(--c-text); }
+    .aanb-bediening { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0 8px; }
+    .aanb-bediening select { max-width: 55%; min-height: 44px; font: inherit; border: 1px solid var(--c-border-strong); border-radius: var(--radius-sm); padding: 0 10px; background: var(--c-surface); color: var(--c-text); }
     .aanb-knop { min-height: 44px; padding: 0 14px; font: inherit; border: 1px solid var(--c-border-strong); border-radius: var(--radius-sm); background: var(--c-surface); color: var(--c-text); cursor: pointer; }
     .aanb-knop:hover { border-color: var(--c-brand); }
     .aanb-knop.primair { background: var(--c-brand-fill); border-color: var(--c-brand-fill); color: #fff; font-weight: 600; }
     .aanb-knop:disabled { opacity: 0.5; cursor: default; }
     .aanb-btw { display: inline-flex; align-items: center; gap: 6px; font-size: 0.88rem; color: var(--c-text-soft); min-height: 44px; margin-left: auto; }
-    .aanb-btw input, .aanb-filters-lijst input, .aanb-radio input { width: 20px; height: 20px; }
-    .aanb-legenda { font-size: 0.8rem; color: var(--c-text-mute); margin: 0 2px 8px; }
+    .aanb-btw input, .aanb-filters-lijst input { width: 20px; height: 20px; }
+    .aanb-legenda { font-size: 0.8rem; color: var(--c-text-mute); margin: 10px 2px 0; }
     .aanb-legenda span { display: inline-block; margin-right: 12px; }
 
     /* lijst */
@@ -170,9 +186,14 @@
     /* desktop */
     @media (min-width: 760px) {
       .aanbieders-page { padding-top: 28px; }
-      .aanb-situatie { display: grid; grid-template-columns: minmax(260px, 380px) 1fr; gap: 0 24px; align-items: start; }
-      .aanb-situatie > .aanb-veld { margin: 0; }
-      .aanb-situatie > .aanb-extra { grid-column: 1 / 3; }
+      .aanb-velden { display: grid; grid-template-columns: minmax(300px, 380px) 1fr; gap: 0 24px; align-items: start; }
+      .aanb-basis { margin: 0; }
+      .aanb-velden > .aanb-extra, .aanb-velden > .aanb-klaar { grid-column: 1 / 3; }
+    }
+    @media (min-width: 900px) {
+      /* Klaar rechts naast de laatste extra vraag in plaats van op een eigen regel */
+      .aanb-velden { position: relative; }
+      .aanb-velden > .aanb-klaar { position: absolute; right: 0; bottom: 0; margin: 0; }
       .aanb-koprij, .aanb-open { grid-template-columns: minmax(170px, 1.6fr) 84px 88px 130px 56px 124px; }
       .aanb-koprij { display: grid; gap: 0 10px; padding: 10px 52px 10px 12px; font-size: 0.78rem; color: var(--c-text-mute); border-bottom: 1px solid var(--c-border-strong); position: sticky; top: 0; background: var(--c-surface); z-index: 1; border-radius: var(--radius) var(--radius) 0 0; }
       .aanb-koprij .r { text-align: right; }
@@ -234,72 +255,64 @@
 
   <main class="aanbieders-page">
     <h1>Dynamisch energiecontract vergelijken: 25 aanbieders</h1>
-    <p class="aanb-lead">De stroomprijs per uur is bij elke aanbieder gelijk. Ze verschillen in opslag, vaste kosten en wat je krijgt voor teruglevering.</p>
+    <p class="aanb-lead">De stroomprijs per uur is bij elke aanbieder gelijk. Ze verschillen in opslag, vaste kosten en wat je krijgt voor teruglevering. <a href="#hoe">Hoe we rekenen</a></p>
     <p class="aanb-teller" id="aanb-teller" hidden></p>
-    <details class="aanb-hoe">
-      <summary>Hoe we rekenen en waar de cijfers vandaan komen</summary>
-      <p>Het bedrag per maand is je hele stroomrekening: wat de aanbieder rekent (opslag × je afname van het net, vaste kosten, en wat hij bijbetaalt of inhoudt op je teruglevering), plus de stroom tegen de beursprijs, energiebelasting en netbeheer, min de vermindering energiebelasting. Standaard inclusief 21% btw. Alleen het deel van de aanbieder verschilt; de rest is bij elke aanbieder gelijk en bepaalt dus niet de volgorde. De beursprijs is een gemiddelde over de afgelopen twaalf maanden, gewogen naar een gewoon verbruikspatroon; gas telt niet mee. Vast tegenover dynamisch vergelijk je met <a href="/dynamisch-berekenen">Is dynamisch iets voor jou?</a></p>
-      <p>Zonnebonussen en welkomstkortingen tellen niet mee in het bedrag; bonussen staan wel bij de aanbieder. Heb je een nieuwe thuisbatterij, dan schatten we met het rekenmodel van de batterijcalculator hoeveel minder je van het net haalt en teruglevert; wat de batterij je daarnaast oplevert aan goedkopere uurprijzen, is bij elke aanbieder gelijk en staat er apart bij. Geen enkele aanbieder betaalt voor een plek of vermelding: de volgorde is deze rekensom.</p>
-      <p>Tarieven controleer ik met de hand op de websites en prijscalculators van de aanbieders. Publiceert een aanbieder iets niet openbaar, dan staat er ◐ (tweede bron) of ○ (aanname) bij. Klantscores komen van Trustpilot, met het aantal reviews en de datum; wij controleren die reviews niet.</p>
-    </details>
 
     <form class="aanb-situatie" id="aanb-situatie" onsubmit="return false">
-      <div class="aanb-veld">
-        <label for="afname">Stroom van het net</label>
-        <input id="afname" type="number" inputmode="numeric" min="0" max="100000" step="100" value="2900">
-        <span class="aanb-eenheid">kWh per jaar</span>
-        <p class="aanb-hint" id="afname-hint">Staat op je jaarafrekening als "levering". Trek je teruglevering er niet van af.</p>
+      <script>try { if (localStorage.getItem("sv.aanbieders") || localStorage.getItem("sv.profile")) document.getElementById("aanb-situatie").classList.add("dicht"); } catch (e) {}</script>
+      <div class="aanb-samenv" id="sit-samenv">
+        <p id="sit-tekst"><b>Jouw situatie</b></p>
+        <button type="button" class="aanb-knop" id="sit-wijzig" aria-controls="sit-velden" aria-expanded="false">Wijzig</button>
       </div>
-      <div class="aanb-veld">
-        <label for="netbeheerder">Netbeheerder</label>
-        <select id="netbeheerder">
-          <option value="">Weet ik niet (gemiddelde)</option>
-          <option>Coteq</option><option>Enexis</option><option>Liander</option><option>Rendo</option><option>Stedin</option><option>Westland Infra</option>
-        </select>
-        <p class="aanb-hint">Staat op je jaarafrekening en hangt af van waar je woont. Telt mee in je hele rekening, bij elke aanbieder even veel.</p>
-      </div>
-      <fieldset>
-        <legend>Wat heb je?</legend>
-        <div class="aanb-chips">
-          <label class="aanb-chip"><input type="checkbox" id="c-zon"><span>Zonnepanelen</span></label>
-          <label class="aanb-chip"><input type="checkbox" id="c-ev"><span>Elektrische auto</span></label>
-          <label class="aanb-chip"><input type="checkbox" id="c-bat"><span>Thuisbatterij</span></label>
-          <label class="aanb-chip"><input type="checkbox" id="c-api"><span>Home Assistant / API</span></label>
+      <div class="aanb-velden" id="sit-velden">
+        <div class="aanb-basis">
+          <div class="aanb-kol">
+            <label for="afname">Stroom van het net</label>
+            <span class="aanb-inv"><input id="afname" type="number" inputmode="numeric" min="0" max="100000" step="100" value="2900"> kWh</span>
+          </div>
+          <div class="aanb-kol">
+            <label for="netbeheerder">Netbeheerder</label>
+            <select id="netbeheerder">
+              <option value="">Weet ik niet</option>
+              <option>Coteq</option><option>Enexis</option><option>Liander</option><option>Rendo</option><option>Stedin</option><option>Westland Infra</option>
+            </select>
+          </div>
+          <p class="aanb-hint" id="afname-hint">Beide staan op je jaarafrekening. Neem de "levering", zonder je teruglevering eraf te halen.</p>
         </div>
-      </fieldset>
-      <div class="aanb-extra" id="x-zon" hidden>
-        <div class="aanb-veld">
+        <fieldset>
+          <legend>Wat heb je?</legend>
+          <div class="aanb-chips">
+            <label class="aanb-chip"><input type="checkbox" id="c-zon"><span>Zonnepanelen</span></label>
+            <label class="aanb-chip"><input type="checkbox" id="c-ev"><span>Elektrische auto</span></label>
+            <label class="aanb-chip"><input type="checkbox" id="c-bat"><span>Thuisbatterij</span></label>
+            <label class="aanb-chip"><input type="checkbox" id="c-api"><span>Home Assistant / API</span></label>
+          </div>
+        </fieldset>
+        <div class="aanb-extra aanb-veld" id="x-zon" hidden>
           <label for="terug">Teruglevering</label>
-          <input id="terug" type="number" inputmode="numeric" min="0" max="100000" step="100" value="3000">
-          <span class="aanb-eenheid">kWh per jaar</span>
-          <p class="aanb-hint">Ook dit staat op je jaarafrekening.</p>
+          <span class="aanb-inv"><input id="terug" type="number" inputmode="numeric" min="0" max="100000" step="100" value="3000"> kWh</span>
+          <label for="rekenjaar" class="sr">Rekenjaar</label>
+          <select id="rekenjaar"><option value="2026" selected>2026, met saldering</option><option value="2027">vanaf 2027, zonder saldering</option></select>
+          <button type="button" class="aanb-info" aria-expanded="false" aria-controls="h-zon"><span aria-hidden="true">?</span><span class="sr">Uitleg bij teruglevering</span></button>
+          <p class="aanb-hint" id="h-zon" hidden>Ook de teruglevering staat op je jaarafrekening. 2027 rekent met de tarieven van nu; de meeste aanbieders hebben hun 2027-tarieven nog niet gepubliceerd.</p>
         </div>
-        <fieldset class="aanb-radio">
-          <legend class="sr">Rekenjaar</legend>
-          <label><input type="radio" name="rekenjaar" value="2026" checked> 2026, met saldering</label>
-          <label><input type="radio" name="rekenjaar" value="2027"> vanaf 2027, zonder saldering</label>
-        </fieldset>
-        <p class="aanb-hint">2027 rekent met de tarieven van nu; de meeste aanbieders hebben hun 2027-tarieven nog niet gepubliceerd.</p>
-      </div>
-      <div class="aanb-extra" id="x-ev" hidden>
-        <div class="aanb-veld">
+        <div class="aanb-extra aanb-veld" id="x-ev" hidden>
           <label for="evkwh">Thuisladen</label>
-          <input id="evkwh" type="number" inputmode="numeric" min="0" max="100000" step="100" value="2700">
-          <span class="aanb-eenheid">kWh per jaar extra</span>
-          <p class="aanb-hint">Aanname: 15.000 km per jaar × 0,18 kWh per km. Pas aan naar je eigen situatie.</p>
+          <span class="aanb-inv"><input id="evkwh" type="number" inputmode="numeric" min="0" max="100000" step="100" value="2700"> kWh extra</span>
+          <button type="button" class="aanb-info" aria-expanded="false" aria-controls="h-ev"><span aria-hidden="true">?</span><span class="sr">Uitleg bij thuisladen</span></button>
+          <p class="aanb-hint" id="h-ev" hidden>Aanname: 15.000 km per jaar × 0,18 kWh per km. Pas het aan naar je eigen situatie.</p>
         </div>
-      </div>
-      <div class="aanb-extra" id="x-bat" hidden>
-        <fieldset class="aanb-radio">
-          <legend class="aanb-vraag">Had je de batterij al het hele jaar van je jaarafrekening?</legend>
-          <label><input type="radio" name="bat-al" value="ja" checked> Ja, dat zit al in mijn getallen</label>
-          <label><input type="radio" name="bat-al" value="nee"> Nee, hij is nieuw of komt er nog</label>
-        </fieldset>
-        <div class="aanb-veld" id="bat-maat-wrap" hidden>
-          <label for="bat-kwh">Capaciteit</label>
-          <select id="bat-kwh"><option value="5">5 kWh</option><option value="10" selected>10 kWh</option><option value="15">15 kWh</option><option value="20">20 kWh</option></select>
-          <p class="aanb-hint" id="bat-hint">Bepaalt de gemiddelde beursprijs in je hele rekening. Is de batterij nieuw, dan schatten we ook hoeveel minder je van het net haalt en teruglevert, met het rekenmodel van de <a href="/batterij-berekenen">batterijcalculator</a>.</p>
+        <div class="aanb-extra aanb-veld" id="x-bat" hidden>
+          <label for="bat-al">Thuisbatterij</label>
+          <select id="bat-al"><option value="ja" selected>al in mijn afrekening</option><option value="nee">nieuw of komt nog</option></select>
+          <span class="aanb-veld" id="bat-maat-wrap" hidden>
+            <label for="bat-kwh">Capaciteit</label>
+            <select id="bat-kwh"><option value="5">5 kWh</option><option value="10" selected>10 kWh</option><option value="15">15 kWh</option><option value="20">20 kWh</option></select>
+          </span>
+          <button type="button" class="aanb-info" aria-expanded="false" aria-controls="h-bat"><span aria-hidden="true">?</span><span class="sr">Uitleg bij de thuisbatterij</span></button>
+          <p class="aanb-hint" id="h-bat" hidden>Had je de batterij al het hele jaar van je jaarafrekening, dan zit het effect al in je getallen. Is hij nieuw, dan schatten we hoeveel minder je van het net haalt en teruglevert, met het rekenmodel van de <a href="/batterij-berekenen">batterijcalculator</a>. De capaciteit bepaalt de gemiddelde beursprijs in je hele rekening.</p>
         </div>
+        <div class="aanb-klaar"><button type="button" class="aanb-knop" id="sit-klaar">Klaar</button></div>
       </div>
     </form>
 
@@ -308,16 +321,15 @@
     <div class="aanb-bediening">
       <label for="sort" class="sr">Sorteer op</label>
       <select id="sort">
-        <option value="kosten">Kosten bij jouw situatie</option>
-        <option value="opslag">Opslag per kWh</option>
-        <option value="vast">Vaste kosten</option>
-        <option value="terug" id="opt-terug" hidden disabled>Teruglevering</option>
-        <option value="naam">Naam</option>
+        <option value="kosten" data-lang="kosten bij jouw situatie">Op kosten</option>
+        <option value="opslag" data-lang="opslag per kWh">Op opslag</option>
+        <option value="vast" data-lang="vaste kosten">Op vaste kosten</option>
+        <option value="terug" data-lang="teruglevering" id="opt-terug" hidden disabled>Op teruglevering</option>
+        <option value="naam" data-lang="naam">Op naam</option>
       </select>
       <button type="button" class="aanb-knop" id="flt-open" aria-haspopup="dialog">Filters <span id="flt-n"></span></button>
       <label class="aanb-btw"><input type="checkbox" id="btw" checked> incl. btw</label>
     </div>
-    <p class="aanb-legenda"><span>Zonder teken: van de aanbieder zelf</span> <span>◐ tweede bron</span> <span>○ aanname</span> <span>⚠ nakijken</span> <span>* minder dan 100 reviews</span></p>
 
     <div class="aanb-lijst" id="aanb-lijst">
       <div class="aanb-koprij" aria-hidden="true"><span>Aanbieder</span><span class="r">Opslag</span><span class="r">Vast/mnd</span><span class="r" id="kop-terug">Teruglevering</span><span class="r">Score</span><span class="r">Per maand</span></div>
@@ -351,7 +363,14 @@
       <!-- BUILD:CARDS:END -->
       </div>
     </div>
+    <p class="aanb-legenda"><span>Zonder teken: van de aanbieder zelf</span> <span>◐ tweede bron</span> <span>○ aanname</span> <span>⚠ nakijken</span> <span>* minder dan 100 reviews</span></p>
     <p class="aanb-bronregel" id="aanb-count" aria-live="polite"></p>
+    <details class="aanb-hoe" id="hoe">
+      <summary>Hoe we rekenen en waar de cijfers vandaan komen</summary>
+      <p>Het bedrag per maand is je hele stroomrekening: wat de aanbieder rekent (opslag × je afname van het net, vaste kosten, en wat hij bijbetaalt of inhoudt op je teruglevering), plus de stroom tegen de beursprijs, energiebelasting en netbeheer, min de vermindering energiebelasting. Standaard inclusief 21% btw. Alleen het deel van de aanbieder verschilt; de rest is bij elke aanbieder gelijk en bepaalt dus niet de volgorde. De beursprijs is een gemiddelde over de afgelopen twaalf maanden, gewogen naar een gewoon verbruikspatroon; gas telt niet mee. Vast tegenover dynamisch vergelijk je met <a href="/dynamisch-berekenen">Is dynamisch iets voor jou?</a></p>
+      <p>Zonnebonussen en welkomstkortingen tellen niet mee in het bedrag; bonussen staan wel bij de aanbieder. Heb je een nieuwe thuisbatterij, dan schatten we met het rekenmodel van de batterijcalculator hoeveel minder je van het net haalt en teruglevert; de goedkopere uurprijzen die een batterij oplevert, zitten in de hele rekening. Dat deel is bij elke aanbieder gelijk; de besparing staat er ook apart bij. Geen enkele aanbieder betaalt voor een plek of vermelding: de volgorde is deze rekensom.</p>
+      <p>Tarieven controleer ik met de hand op de websites en prijscalculators van de aanbieders. Publiceert een aanbieder iets niet openbaar, dan staat er ◐ (tweede bron) of ○ (aanname) bij. Klantscores komen van Trustpilot, met het aantal reviews en de datum; wij controleren die reviews niet.</p>
+    </details>
     <!-- BUILD:SAMENVATTING:START -->
     <p class="aanb-samenvatting">Goedkoopst bij 2.900 kWh per jaar, inclusief btw: Powerpeers (€ 104 aan opslag en vaste kosten), gevolgd door Vattenfall FlexPrijs (€ 115) en Budget Energie (€ 121). Bij Powerpeers en Budget Energie komt een deel van de tarieven uit een tweede bron. Je hele stroomrekening komt dan op ± € 52 per maand bij Powerpeers en ± € 60 bij de duurste, inclusief beursprijs, energiebelasting, netbeheer en de vermindering energiebelasting. Tarieven gecontroleerd op 30 september 2026.</p>
     <!-- BUILD:SAMENVATTING:END -->

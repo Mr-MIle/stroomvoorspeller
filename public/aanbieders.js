@@ -13,7 +13,7 @@
   var velden = { afname: $("afname"), terug: $("terug"), evKwh: $("evkwh") };
   var chips = { zon: $("c-zon"), ev: $("c-ev"), bat: $("c-bat"), api: $("c-api") };
   var filterEls = Array.prototype.slice.call(document.querySelectorAll("[data-filter]"));
-  var jaarEls = Array.prototype.slice.call(document.querySelectorAll('input[name="rekenjaar"]'));
+  var jaarEl = $("rekenjaar");
   var vbalk = $("aanb-vbalk"), vnamen = $("aanb-vbalk-namen"), vopen = $("vergelijk-open"), vwis = $("vergelijk-wis");
   var vglDialog = $("vgl-dialog"), fltDialog = $("flt-dialog"), vglBody = $("vgl-body"), alleenV = $("alleen-verschillen");
 
@@ -22,7 +22,9 @@
   var batData = null, batLaden = null;   // data/batterij-effect.json: batterij-effect + beursprijs per kWh
   var netEl = $("netbeheerder");
   var batKwhEl = $("bat-kwh");
-  var batAlEls = Array.prototype.slice.call(document.querySelectorAll('input[name="bat-al"]'));
+  var batAlEl = $("bat-al");
+  var sitForm = $("aanb-situatie");
+  var OPSLAG = "sv.aanbieders";   // eigen situatie op dit apparaat (alleen gemak; mag leeg of geblokkeerd zijn)
   var state = { gekozen: [], open: null, toonOnbekend: false };
   var terugNaar = null;
 
@@ -32,14 +34,13 @@
     return isNaN(v) || v < 0 ? standaard : Math.min(v, 100000);
   }
   function situatie() {
-    var jaar = 2026;
-    jaarEls.forEach(function (el) { if (el.checked) jaar = parseInt(el.value, 10); });
+    var jaar = parseInt(jaarEl.value, 10) || 2026;
     var c = {
       afname: getal(velden.afname, 0), terug: getal(velden.terug, 0), evKwh: getal(velden.evKwh, 0), jaar: jaar,
       btw: btwEl.checked, zon: chips.zon.checked, ev: chips.ev.checked, bat: chips.bat.checked, api: chips.api.checked
     };
     c.netbeheerder = netEl ? netEl.value : "";
-    c.batNieuw = c.bat && batAlEls.some(function (el) { return el.checked && el.value === "nee"; });
+    c.batNieuw = c.bat && batAlEl.value === "nee";
     c.batEffect = c.batNieuw ? batterijEffect(c) : null;
     c.basis = batData ? R.rekenbasis(cfg, batData, c, c.bat ? parseInt(batKwhEl.value, 10) : 0) : null;
     return c;
@@ -65,12 +66,12 @@
     var el = $("aanb-batregel"), e = c.batEffect;
     if (!e) { el.hidden = true; return; }
     var basis = e.panelen ? "ongeveer " + e.panelen + " zonnepanelen" : "een huis zonder zonnepanelen";
-    el.innerHTML = "Een nieuwe batterij van " + e.kwh + " kWh verlaagt daarnaast je hele stroomrekening met <strong>± " + R.eur0(e.besparing) + " per jaar</strong>" +
+    el.innerHTML = "Een nieuwe batterij van " + e.kwh + " kWh maakt je hele stroomrekening <strong>± " + R.eur0(e.besparing) + " per jaar</strong> lager" +
       (c.zon ? " (" + (c.jaar === 2026 ? "2026, met saldering" : "vanaf 2027") + ")" : "") +
-      ": je betaalt gemiddeld " + String(e.prijsNa).replace(".", ",") + " in plaats van " + String(e.prijsVoor).replace(".", ",") +
-      " cent per kWh van het net. Dat is bij elke aanbieder gelijk en telt niet mee in de volgorde. " +
-      "Schatting voor " + basis + " en 2.900 kWh verbruik, op de uurprijzen van " + R.maandJaar(batData.periode.van) + " tot en met " + R.maandJaar(batData.periode.tot) +
-      ". Precies uitrekenen: <a href=\"/batterij-berekenen\">batterijcalculator</a>.";
+      ". Dat zit al in de bedragen: je betaalt gemiddeld " + String(e.prijsNa).replace(".", ",") + " in plaats van " + String(e.prijsVoor).replace(".", ",") +
+      " cent per kWh van het net, bij elke aanbieder even veel. " +
+      "Schatting voor " + basis + " en 2.900 kWh, op de uurprijzen van " + R.maandJaar(batData.periode.van) + " tot en met " + R.maandJaar(batData.periode.tot) +
+      "; precies uitrekenen doe je met de <a href=\"/batterij-berekenen\">batterijcalculator</a>.";
     el.hidden = false;
   }
   function actieveFilters() {
@@ -81,12 +82,64 @@
     return null;
   }
 
+  // ── situatie in één regel, opslaan en inklappen ──
+  function samenvatting(c) {
+    var d = [R.duizend(c.afname) + " kWh van het net"];
+    if (c.netbeheerder) d.push(R.esc(c.netbeheerder));
+    if (c.zon) d.push("zonnepanelen, " + R.duizend(c.terug) + " kWh terug (" + (c.jaar === 2026 ? "2026" : "vanaf 2027") + ")");
+    if (c.ev) d.push("auto " + R.duizend(c.evKwh) + " kWh");
+    if (c.bat) d.push("batterij " + batKwhEl.value + " kWh" + (c.batNieuw ? ", nieuw" : ""));
+    if (c.api) d.push("Home Assistant / API");
+    return "<b>Jouw situatie:</b> " + d.join(" · ");
+  }
+  function bewaar() {
+    var c = situatie();
+    var s = { afname: c.afname, net: c.netbeheerder, zon: c.zon, terug: c.terug, jaar: c.jaar, ev: c.ev, evKwh: c.evKwh,
+              bat: c.bat, batAl: batAlEl.value, batKwh: batKwhEl.value, api: c.api };
+    try { localStorage.setItem(OPSLAG, JSON.stringify(s)); } catch (e) { /* geen opslag: niets aan de hand */ }
+  }
+  function herstel() {
+    var s = null;
+    try { s = JSON.parse(localStorage.getItem(OPSLAG) || "null"); } catch (e) { s = null; }
+    if (!s || typeof s !== "object") return false;
+    var zet = function (el, v) { if (v != null && v !== "") el.value = v; };
+    zet(velden.afname, s.afname); zet(velden.terug, s.terug); zet(velden.evKwh, s.evKwh);
+    if (s.net != null && Array.prototype.some.call(netEl.options, function (o) { return o.value === s.net; })) netEl.value = s.net;
+    if (s.jaar === 2026 || s.jaar === 2027) jaarEl.value = String(s.jaar);
+    if (s.batAl === "ja" || s.batAl === "nee") batAlEl.value = s.batAl;
+    if (["5", "10", "15", "20"].indexOf(String(s.batKwh)) !== -1) batKwhEl.value = String(s.batKwh);
+    chips.zon.checked = !!s.zon; chips.ev.checked = !!s.ev; chips.bat.checked = !!s.bat; chips.api.checked = !!s.api;
+    return true;
+  }
+  function klap(dicht) {
+    sitForm.classList.toggle("dicht", dicht);
+    $("sit-wijzig").setAttribute("aria-expanded", String(!dicht));
+    if (dicht) $("sit-wijzig").focus(); else velden.afname.focus();
+  }
+  $("sit-wijzig").addEventListener("click", function () { klap(false); });
+  $("sit-klaar").addEventListener("click", function () { klap(true); });
+
+  // ── uitleg-knopjes (?) bij de extra vragen ──
+  sitForm.addEventListener("click", function (e) {
+    var k = e.target.closest ? e.target.closest(".aanb-info") : null;
+    if (!k) return;
+    var open = k.getAttribute("aria-expanded") !== "true";
+    k.setAttribute("aria-expanded", String(open));
+    $(k.getAttribute("aria-controls")).hidden = !open;
+  });
+
+  // ── "Hoe we rekenen" in de intro opent de uitleg onder de lijst ──
+  function openHoe() { var d = $("hoe"); if (d) d.open = true; }
+  Array.prototype.forEach.call(document.querySelectorAll('a[href="#hoe"]'), function (a) { a.addEventListener("click", openHoe); });
+  if (window.location.hash === "#hoe") openHoe();
+
   function render() {
     var c = situatie();
     $("x-zon").hidden = !c.zon;
     $("x-ev").hidden = !c.ev;
     $("x-bat").hidden = !c.bat;
     $("bat-maat-wrap").hidden = !c.bat;
+    $("sit-klaar").parentElement.hidden = !(c.zon || c.ev || c.bat);   // zonder extra vragen is het formulier al kort
     batRegel(c);
     var optTerug = $("opt-terug");
     optTerug.hidden = optTerug.disabled = !c.zon;
@@ -107,11 +160,13 @@
 
     verschilEl.innerHTML = R.verschilTekst(aanbieders, c);
     $("flt-n").textContent = f.length ? "(" + f.length + ")" : "";
+    var so = sortEl.options[sortEl.selectedIndex];
     countEl.textContent = delen.ja.length + " van " + aanbieders.length + " aanbieders" + (f.length ? ", gefilterd" : "") +
-      ". Volgorde: " + sortEl.options[sortEl.selectedIndex].text.toLowerCase() + ". Geen enkele aanbieder betaalt voor een plek.";
+      ". Volgorde: " + (so.getAttribute("data-lang") || so.text.toLowerCase()) + ". Geen enkele aanbieder betaalt voor een plek.";
     $("afname-hint").textContent = c.ev
-      ? 'Staat op je jaarafrekening als "levering". De auto telt er apart bij op.'
-      : 'Staat op je jaarafrekening als "levering". Trek je teruglevering er niet van af.';
+      ? 'Beide staan op je jaarafrekening. Neem de "levering"; de auto telt er apart bij op.'
+      : 'Beide staan op je jaarafrekening. Neem de "levering", zonder je teruglevering eraf te halen.';
+    $("sit-tekst").innerHTML = samenvatting(c);
     if (vglDialog.open) vergelijk();
   }
 
@@ -176,8 +231,9 @@
     if (el === alleenV) { vergelijk(); return; }
     if (el.type === "number") return; // al verwerkt bij 'input'; opnieuw renderen bij blur slikt de eerstvolgende klik in
     render();
+    if (sitForm.contains(el)) bewaar();
   });
-  Object.keys(velden).forEach(function (k) { velden[k].addEventListener("input", render); });
+  Object.keys(velden).forEach(function (k) { velden[k].addEventListener("input", function () { render(); bewaar(); }); });
 
   vopen.addEventListener("click", function () { vergelijk(); openDialog(vglDialog, vopen); });
   vwis.addEventListener("click", function () {
@@ -215,11 +271,14 @@
       var page = cfg.aanbieders_page || {};
       if (page.default_verbruik_kwh) velden.afname.value = page.default_verbruik_kwh;
 
-      // Situatie van de homepage overnemen (EV / zon / batterij), als die er is.
-      try {
-        var p = JSON.parse(localStorage.getItem("sv.profile") || "null");
-        if (p) { chips.ev.checked = !!p.ev; chips.zon.checked = !!p.solar; chips.bat.checked = !!p.battery; }
-      } catch (e) { /* geen opslag beschikbaar */ }
+      // Eerder ingevulde situatie op dit apparaat, anders die van de homepage (EV / zon / batterij).
+      // In beide gevallen staat het formulier ingeklapt tot één regel (dat doet het scriptje in de HTML al).
+      if (!herstel()) {
+        try {
+          var p = JSON.parse(localStorage.getItem("sv.profile") || "null");
+          if (p) { chips.ev.checked = !!p.ev; chips.zon.checked = !!p.solar; chips.bat.checked = !!p.battery; }
+        } catch (e) { /* geen opslag beschikbaar */ }
+      }
 
       var pre = (new URLSearchParams(window.location.search).get("vergelijk") || "").split(",").filter(byId);
       state.gekozen = pre.slice(0, max());
