@@ -200,7 +200,10 @@
     if (s.omschrijving) h += '<p class="aanb-omschr">' + esc(s.omschrijving) + "</p>";
 
     h += '<h3 class="aanb-kopje">Kosten bij jouw situatie</h3><p class="aanb-som">';
-    h += "Opslag " + ct(s.markup_per_kwh * f) + " ct × " + kwh(k.afname) + " = " + eur0(k.opslag) + " " + teken(herkomstVan(s, "opslag")) + "<br>";
+    var evDeel = c.ev ? Math.max(0, c.evKwh || 0) : 0;
+    h += "Opslag " + ct(s.markup_per_kwh * f) + " ct × " + kwh(k.afname) +
+         (evDeel ? " (" + kwh(k.afname - evDeel) + " huis + " + kwh(evDeel) + " thuisladen)" : "") +
+         " = " + eur0(k.opslag) + " " + teken(herkomstVan(s, "opslag")) + "<br>";
     h += "Vaste kosten " + eur2(s.fixed_per_month * f) + " × 12 = " + eur0(k.vast) + " " + teken(herkomstVan(s, "vast")) + "<br>";
     if (c.zon && c.terug > 0) {
       var o = (s.teruglevering && s.teruglevering.opslag_per_kwh) || 0;
