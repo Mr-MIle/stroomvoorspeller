@@ -1603,25 +1603,43 @@
 
     const holidays   = buildHolidayLookup();
     const priceZones = buildPriceZones();
-    const isQuarter  = state.chartResolution === "quarter" && state.dayPrices15m.length > 0;
+    // Resolutie per dag kiezen. In kwartier-modus toont een dag kwartierprijzen als
+    // die er zijn, en anders de uurprijzen. Zo verdwijnt morgen nooit meer omdat
+    // de kwartierprijzen later of niet binnenkomen (30 sep 2026: morgen stond alleen
+    // als uurprijzen in prices.json en de morgen-kolom bleef leeg).
+    const wantQuarter = state.chartResolution === "quarter";
+    const nowD = new Date();
+    const todayStart = new Date(nowD.getFullYear(), nowD.getMonth(), nowD.getDate());
+    const tomorrowStart = new Date(nowD.getFullYear(), nowD.getMonth(), nowD.getDate() + 1);
+    const dayAfterStart = new Date(nowD.getFullYear(), nowD.getMonth(), nowD.getDate() + 2);
+    const sliceDay = (list, from, to) => (list || []).filter((p) => {
+      const t = new Date(p.time);
+      return t >= from && t < to;
+    });
+    // Echte kwartierdata = minstens één punt dat niet op het hele uur valt.
+    const hasQuarters = (list) => list.some((p) => new Date(p.time).getMinutes() !== 0);
+    const asActual = (list) => list.map((p) => ({ kind: "actual", time: p.time, price: p.price }));
 
-    // Actuals: vandaag + morgen (voor zover gepubliceerd).
-    const timeline = isQuarter
-      ? state.dayPrices15m.map((p) => ({ kind: "actual", time: p.time, price: p.price }))
-      : state.dayPrices.map((p) => ({ kind: "actual", time: p.time, price: p.price }));
-    const chartNowIdx = isQuarter ? state.nowIdx15m : state.nowIdx;
+    const todayQ    = sliceDay(state.dayPrices15m, todayStart, tomorrowStart);
+    const tomorrowQ = sliceDay(state.dayPrices15m, tomorrowStart, dayAfterStart);
+    const todayIsQuarter    = wantQuarter && hasQuarters(todayQ);
+    const tomorrowIsQuarter = wantQuarter && hasQuarters(tomorrowQ);
 
-    // Is morgen nog niet bekend? Dan de voorspelling voor morgen tonen (alleen uur-modus).
+    const todayTL = asActual(todayIsQuarter ? todayQ : sliceDay(state.dayPrices, todayStart, tomorrowStart));
+    const tomorrowTL = asActual(tomorrowIsQuarter ? tomorrowQ : sliceDay(state.dayPrices, tomorrowStart, dayAfterStart));
+    const chartNowIdx = findCurrentIndex(todayTL, nowD);
+
+    // Is morgen nog niet bekend? Dan de voorspelling voor morgen tonen (per uur, ook in kwartier-modus).
     const tomorrowForecast = state.tomorrowForecast || [];
-    if (!isQuarter && tomorrowForecast.length) {
-      tomorrowForecast.forEach((f) => timeline.push({ kind: "forecast", time: f.time, forecast: f }));
+    if (!tomorrowTL.length && tomorrowForecast.length) {
+      tomorrowForecast.forEach((f) => tomorrowTL.push({ kind: "forecast", time: f.time, forecast: f }));
     }
-
-    // Splitsen op datum: het eerste dag-blok is vandaag, de rest is morgen.
-    const firstDate  = timeline.length ? timeline[0].time.slice(0, 10) : null;
-    const todayTL    = timeline.filter((t) => t.time.slice(0, 10) === firstDate);
-    const tomorrowTL = timeline.filter((t) => t.time.slice(0, 10) !== firstDate);
     const tomorrowIsForecast = tomorrowTL.length > 0 && tomorrowTL.every((t) => t.kind === "forecast");
+    // Kwartier gevraagd, maar morgen staat (nog) per uur: dat melden we onder de grafiek.
+    const tomorrowHourlyFallback = wantQuarter && state.dayPrices15m.length > 0
+      && !tomorrowIsQuarter && tomorrowTL.length > 0 && !tomorrowIsForecast;
+    const isQuarter = todayIsQuarter || tomorrowIsQuarter;
+    const timeline = todayTL.concat(tomorrowTL);
 
     // Gedeelde y-schaal, zodat de twee grafieken eerlijk te vergelijken zijn.
     const yVals = [];
@@ -1655,7 +1673,7 @@
 
     // Vandaag: met 'nu'-stip.
     state.chartToday = buildPriceChart(canvasToday, {
-      timeline: todayTL, isQuarter, chartNowIdx, boundaries: [], holidays, priceZones,
+      timeline: todayTL, isQuarter: todayIsQuarter, chartNowIdx, boundaries: [], holidays, priceZones,
       yMin, yMax, hideWeekdayLabel: true,
     });
 
@@ -1665,7 +1683,7 @@
     if (tomorrowTL.length) {
       if (tomorrowCol) tomorrowCol.style.display = "";
       state.chartTomorrow = buildPriceChart(canvasTomorrow, {
-        timeline: tomorrowTL, isQuarter, chartNowIdx: -1, boundaries: [], holidays, priceZones,
+        timeline: tomorrowTL, isQuarter: tomorrowIsQuarter, chartNowIdx: -1, boundaries: [], holidays, priceZones,
         yMin, yMax, hideWeekdayLabel: true,
       });
     } else if (tomorrowCol) {
@@ -1701,6 +1719,9 @@
           ? `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">Kwartierlijkse day-ahead prijzen. Beide grafieken delen dezelfde schaal.</span>`
           : `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag. Beide grafieken delen dezelfde schaal.</span>`
         ) +
+        (tomorrowHourlyFallback
+          ? `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">De kwartierprijzen voor morgen zijn nog niet binnen; morgen staat daarom per uur.</span>`
+          : ``) +
         (tomorrowIsForecast
           ? `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">De <strong>gestippelde lijn</strong> bij morgen is de voorspelling — de day-ahead prijzen voor morgen zijn nog niet gepubliceerd.</span>`
           : ``);
