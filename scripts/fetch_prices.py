@@ -570,29 +570,6 @@ def main() -> int:
                     if p["time"][:10] in (today_date, tomorrow_date)
                 ]
                 print(f"[ok] {len(prices_15m)} PT15M-punten bewaard voor vandaag+morgen.", file=sys.stderr)
-
-                # Aanvullen: voeg uurdata toe voor uren die geen kwartierdata hebben.
-                # ENTSO-E publiceert de PT15M dag-ahead soms partieel (bv. alleen de eerste
-                # N uur), waardoor de kwartier-grafiek halverwege afkapt. Voor ontbrekende
-                # uren pakken we het uurgemiddelde uit `prices` als fallback-punt, zodat de
-                # grafiek altijd de volledige dag toont — in die uren met uurresolutie ipv
-                # kwartierresolutie. [:13] geeft "YYYY-MM-DDTHH" ongeacht de tijdzone-suffix.
-                covered_hours = {p["time"][:13] for p in prices_15m}
-                hourly_today_tomorrow = [
-                    p for p in prices
-                    if p["time"][:10] in (today_date, tomorrow_date)
-                ]
-                supplemented = 0
-                for hp in hourly_today_tomorrow:
-                    if hp["time"][:13] not in covered_hours:
-                        prices_15m.append(hp)
-                        supplemented += 1
-                if supplemented:
-                    prices_15m.sort(key=lambda p: p["time"])
-                    print(
-                        f"[ok] {supplemented} ontbrekende uren aangevuld met uurdata in prices_15m.",
-                        file=sys.stderr,
-                    )
         except Exception as exc:  # noqa: BLE001
             error_msg = f"ENTSO-E fout: {exc}"
             print(f"[warn] {error_msg}", file=sys.stderr)
@@ -602,6 +579,14 @@ def main() -> int:
     # Beide geven dezelfde SDAC-uitslag via een andere pijplijn; op een dag waarop de
     # markt zélf laat publiceert hebben ze allebei nog niets.
     fallback_sources = (("energyzero", fetch_energyzero), ("energy-charts", fetch_epex))
+    # Ruwe achtervangpunten van de uren die de achtervang aanvulde. Levert de
+    # achtervang kwartieren (energy-charts), dan gaan die ook de kwartiergrafiek in.
+    fallback_raw_added: list[dict] = []
+    # Welke bron morgen heeft geleverd. check_new_prices.py leest dit om te weten of
+    # een latere ENTSO-E-publicatie de achtervang nog moet vervangen. `source` zelf
+    # blijft "entsoe" zodra ENTSO-E de historie leverde, ook als morgen van de
+    # achtervang kwam — daardoor bleef morgen op 30 sep 2026 op EnergyZero hangen.
+    tomorrow_source: str | None = None
 
     # Scenario a: ENTSO-E leverde data, maar er zitten gaten in de opgehaalde periode.
     # Vroeger checkten we hier alléén morgen — maar op 1 juli 2026 sloeg de parser
@@ -634,6 +619,10 @@ def main() -> int:
                 if added:
                     prices.extend(added)
                     prices.sort(key=lambda x: x["time"])
+                    added_hours = {p["time"][:13] for p in added}
+                    if any(h[:10] == tomorrow_date for h in added_hours):
+                        tomorrow_source = name
+                    fallback_raw_added.extend(p for p in raw if p["time"][:13] in added_hours)
                     fallback_source = f"{fallback_source}+{name}" if fallback_source else name
                     print(
                         f"[ok] Achtervang {name}: {len(added)} uren aangevuld "
@@ -650,6 +639,36 @@ def main() -> int:
                 warn = f"gaten in prijsdata na achtervang: {', '.join(missing_days)}"
                 print(f"[warn] {warn}", file=sys.stderr)
                 error_msg = f"{error_msg}; {warn}" if error_msg else warn
+
+    # Kwartierdata aanvullen. Dit moet NA de achtervang: op 30 sep 2026 had ENTSO-E
+    # morgen nog niet om 12:10 UTC, vulde EnergyZero morgen in de uurreeks aan, maar
+    # stond deze aanvulstap nog vóór de achtervang. Gevolg: `prices` had morgen wél,
+    # `prices_15m` niet, en de kwartiergrafiek toonde geen morgen-kolom.
+    # Ook voor partiële PT15M-publicaties: elk uur zonder kwartierdata krijgt de
+    # kwartieren van de achtervang (als die sub-uurlijk zijn) of anders het
+    # uurgemiddelde, zodat de grafiek altijd de volledige dag toont.
+    # [:13] geeft "YYYY-MM-DDTHH" ongeacht de tijdzone-suffix.
+    if has_pt15m:
+        covered_hours = {p["time"][:13] for p in prices_15m}
+        fb_by_hour: dict[str, list[dict]] = {}
+        for p in fallback_raw_added:
+            if p["time"][:10] in (today_date, tomorrow_date):
+                fb_by_hour.setdefault(p["time"][:13], []).append(p)
+        supplemented = 0
+        for hp in prices:
+            hour = hp["time"][:13]
+            if hp["time"][:10] not in (today_date, tomorrow_date) or hour in covered_hours:
+                continue
+            quarters = fb_by_hour.get(hour, [])
+            prices_15m.extend(quarters if len(quarters) > 1 else [hp])
+            covered_hours.add(hour)
+            supplemented += 1
+        if supplemented:
+            prices_15m.sort(key=lambda p: p["time"])
+            print(
+                f"[ok] {supplemented} uren zonder ENTSO-E-kwartierdata aangevuld in prices_15m.",
+                file=sys.stderr,
+            )
 
     # Scenario b: ENTSO-E leverde helemaal niets, maar er was wél een token (dus
     # productie, geen dev). Haal de hele periode — inclusief historie voor de forecast —
@@ -715,6 +734,9 @@ def main() -> int:
         source = "sample"
         print(f"[ok] {len(prices)} sample-uurprijzen + {len(prices_15m)} sample-kwartierdata gegenereerd.", file=sys.stderr)
 
+    if tomorrow_source is None and any(p["time"][:10] == tomorrow_date for p in prices):
+        tomorrow_source = source
+
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "currency": "EUR",
@@ -722,6 +744,7 @@ def main() -> int:
         "tz": "Europe/Amsterdam",
         "source": source,
         "fallback_source": fallback_source,
+        "tomorrow_source": tomorrow_source,  # bron van morgen: entsoe / energyzero / energy-charts / None
         "has_pt15m": has_pt15m,
         "prices": prices,
         "prices_15m": prices_15m,  # Kwartierdata voor vandaag+morgen (leeg als PT60M of fout)
