@@ -142,6 +142,12 @@ jobs:
         run: |
           python scripts/render_static.py
 
+      - name: Effect van een thuisbatterij voor /aanbieders
+        # Schrijft public/data/batterij-effect.json met dyn-model.js op de laatste
+        # twaalf volledige maanden. Verandert alleen als er een maand bij komt. Mag falen.
+        continue-on-error: true
+        run: node build-batterij-effect.js
+
       - name: Commit en push als er iets veranderd is
         run: |
           git config user.name "stroomvoorspeller-bot"
@@ -151,6 +157,7 @@ jobs:
           git add public/data/ha.json 2>/dev/null || true
           git add public/data/duiding.json 2>/dev/null || true
           git add public/data/performance.json 2>/dev/null || true
+          git add public/data/batterij-effect.json 2>/dev/null || true
           git add public/index.html public/morgen.html public/over/performance.html 2>/dev/null || true
           git add public/aanbieders.html public/historisch.html 2>/dev/null || true
           git add data/forecast_archive/ 2>/dev/null || true

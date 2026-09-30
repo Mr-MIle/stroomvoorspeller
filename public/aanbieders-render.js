@@ -64,12 +64,16 @@
              btw: true, zon: false, ev: false, bat: false, api: false };
   }
   function netAfname(c) { return Math.max(0, c.afname || 0) + (c.ev ? Math.max(0, c.evKwh || 0) : 0); }
+  // Effect van een nieuwe batterij (c.batEffect, uit data/batterij-effect.json via aanbieders.js):
+  // { kwh, panelen, afname: Δ kWh, terug: Δ kWh, besparing: € per jaar }. Leeg = geen correctie.
+  function batEffect(c) { return c.bat && c.batEffect ? c.batEffect : null; }
 
   // Leverancierskosten per jaar, per onderdeel.
   function kosten(s, c) {
     var f = c.btw ? BTW : 1;
-    var v = netAfname(c);
-    var t = c.zon ? Math.max(0, c.terug || 0) : 0;
+    var b = batEffect(c);
+    var v = Math.max(0, netAfname(c) + (b ? b.afname : 0));
+    var t = Math.max(0, (c.zon ? Math.max(0, c.terug || 0) : 0) + (b ? b.terug : 0));
     var opslag = s.markup_per_kwh * v * f;
     var vast = s.fixed_per_month * 12 * f;
     var tl = s.teruglevering || {};
@@ -79,7 +83,7 @@
       tlKwh = (tl.methode === "jaaroverschot" && c.jaar === 2026) ? Math.max(0, t - v) : t;
       terug = -o * tlKwh;   // negatief = scheelt je geld
     }
-    return { opslag: opslag, vast: vast, terug: terug, tlKwh: tlKwh, afname: v, totaal: opslag + vast + terug };
+    return { opslag: opslag, vast: vast, terug: terug, tlKwh: tlKwh, afname: v, teruglevering: t, totaal: opslag + vast + terug };
   }
 
   // ── herkomst ─────────────────────────────────────────────────────────
@@ -146,7 +150,7 @@
     if (k.hoe) d.push(esc(k.hoe));
     if (k.voorwaarde) d.push(esc(k.voorwaarde));
     if (k.noot) d.push(esc(k.noot));
-    var h = "<li><b>" + KENMERK_LABEL[f].lang + ":</b> " + kenmerkWoord(k) + (d.length ? ". " + hoofdletter(d.join(". ")) + "." : ".");
+    var h = "<li><b>" + KENMERK_LABEL[f].lang + ":</b> " + kenmerkWoord(k) + (d.length ? ". " + d.map(hoofdletter).join(". ") + "." : ".");
     if (k.bron) h += ' <span class="bron">' + teken(k.herkomst || "aanbieder") + " bron: " + esc(k.bron) + "</span>";
     return h + "</li>";
   }
@@ -200,15 +204,23 @@
     if (s.omschrijving) h += '<p class="aanb-omschr">' + esc(s.omschrijving) + "</p>";
 
     h += '<h3 class="aanb-kopje">Kosten bij jouw situatie</h3><p class="aanb-som">';
-    var evDeel = c.ev ? Math.max(0, c.evKwh || 0) : 0;
-    h += "Opslag " + ct(s.markup_per_kwh * f) + " ct × " + kwh(k.afname) +
-         (evDeel ? " (" + kwh(k.afname - evDeel) + " huis + " + kwh(evDeel) + " thuisladen)" : "") +
-         " = " + eur0(k.opslag) + " " + teken(herkomstVan(s, "opslag")) + "<br>";
+    var evDeel = c.ev ? Math.max(0, c.evKwh || 0) : 0, be = batEffect(c);
+    if (evDeel || (be && be.afname)) {
+      h += "Van het net: " + kwh(Math.max(0, c.afname || 0)) + " huis" + (evDeel ? " + " + kwh(evDeel) + " thuisladen" : "") +
+           (be && be.afname ? (be.afname < 0 ? " − " : " + ") + kwh(Math.abs(be.afname)) + " batterij (geschat)" : "") +
+           " = " + kwh(k.afname) + "<br>";
+    }
+    if (be && be.terug) {
+      h += "Naar het net: " + (c.zon ? kwh(Math.max(0, c.terug || 0)) + (be.terug < 0 ? " − " : " + ") : "") +
+           kwh(Math.abs(be.terug)) + " batterij (geschat) = " + kwh(k.teruglevering) + "<br>";
+    }
+    h += "Opslag " + ct(s.markup_per_kwh * f) + " ct × " + kwh(k.afname) + " = " + eur0(k.opslag) + " " + teken(herkomstVan(s, "opslag")) + "<br>";
     h += "Vaste kosten " + eur2(s.fixed_per_month * f) + " × 12 = " + eur0(k.vast) + " " + teken(herkomstVan(s, "vast")) + "<br>";
-    if (c.zon && c.terug > 0) {
+    if (k.teruglevering > 0) {
       var o = (s.teruglevering && s.teruglevering.opslag_per_kwh) || 0;
-      h += "Teruglevering: " + (k.terug <= 0 ? eur0(k.terug) + " eraf" : eur0(k.terug) + " erbij") +
-           (o ? " (" + ct(Math.abs(o)) + " ct × " + kwh(k.tlKwh) + ")" : " (kale beursprijs)") + "<br>";
+      var overschot = k.tlKwh !== k.teruglevering;
+      h += (o > 0 ? "Bijbetaling op teruglevering: " : o < 0 ? "Inhouding op teruglevering: " : "Teruglevering: ") +
+           (o ? eur0(k.terug) + (k.terug <= 0 ? " eraf" : " erbij") + " (" + ct(Math.abs(o)) + " ct × " + kwh(k.tlKwh) + (overschot ? " jaaroverschot" : "") + ")" : "kale beursprijs, niets erbij of eraf") + "<br>";
     }
     h += "<b>Samen " + bedragTekst(k.totaal) + " per jaar</b>, " + btw + " over opslag en vaste kosten.</p>";
 
@@ -356,7 +368,7 @@
   return {
     BTW: BTW, HERKOMST: HERKOMST, KENMERK_LABEL: KENMERK_LABEL, VEROUDERD_DAGEN: VEROUDERD_DAGEN,
     esc: esc, duizend: duizend, eur0: eur0, eur2: eur2, ct: ct, datumNL: datumNL, dagenOud: dagenOud, bedragTekst: bedragTekst,
-    standaardSituatie: standaardSituatie, netAfname: netAfname, kosten: kosten,
+    standaardSituatie: standaardSituatie, netAfname: netAfname, batEffect: batEffect, kosten: kosten,
     herkomstVan: herkomstVan, verouderd: verouderd, teken: teken, isVoorlopig: isVoorlopig,
     terugKort: terugKort, terugLang: terugLang, kenmerk: kenmerk,
     regelHtml: regelHtml, lijstHtml: lijstHtml, sorteer: sorteer, filter: filter,

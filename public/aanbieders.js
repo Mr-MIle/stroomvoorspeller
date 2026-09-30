@@ -18,6 +18,9 @@
   var vglDialog = $("vgl-dialog"), fltDialog = $("flt-dialog"), vglBody = $("vgl-body"), alleenV = $("alleen-verschillen");
 
   var aanbieders = [];
+  var batData = null, batLaden = null;   // data/batterij-effect.json, pas geladen als het nodig is
+  var batKwhEl = $("bat-kwh");
+  var batAlEls = Array.prototype.slice.call(document.querySelectorAll('input[name="bat-al"]'));
   var state = { gekozen: [], open: null, toonOnbekend: false };
   var terugNaar = null;
 
@@ -29,10 +32,46 @@
   function situatie() {
     var jaar = 2026;
     jaarEls.forEach(function (el) { if (el.checked) jaar = parseInt(el.value, 10); });
-    return {
+    var c = {
       afname: getal(velden.afname, 0), terug: getal(velden.terug, 0), evKwh: getal(velden.evKwh, 0), jaar: jaar,
       btw: btwEl.checked, zon: chips.zon.checked, ev: chips.ev.checked, bat: chips.bat.checked, api: chips.api.checked
     };
+    c.batNieuw = c.bat && batAlEls.some(function (el) { return el.checked && el.value === "nee"; });
+    c.batEffect = c.batNieuw ? batterijEffect(c) : null;
+    return c;
+  }
+
+  // Nieuwe batterij: kies het rekenscenario dat het dichtst bij je teruglevering ligt
+  // (zonder zonnepanelen: het scenario zonder panelen) en neem de verschuiving in kWh over.
+  function batterijEffect(c) {
+    if (!batData) { laadBatData(); return null; }
+    var sc = batData.scenarios.filter(function (s) { return c.zon && c.terug > 0 ? s.panelen > 0 : s.panelen === 0; });
+    if (!sc.length) return null;
+    if (c.zon && c.terug > 0) sc.sort(function (a, b) { return Math.abs(a.terug - c.terug) - Math.abs(b.terug - c.terug); });
+    var s = sc[0], g = s.groottes[batKwhEl.value];
+    if (!g) return null;
+    return { kwh: parseInt(batKwhEl.value, 10), panelen: s.panelen, afname: g.afname, terug: g.terug,
+             besparing: g.besparing[c.zon ? c.jaar : 2027], prijsVoor: s.prijs_ct, prijsNa: g.prijs_ct };
+  }
+  function laadBatData() {
+    if (batLaden) return;
+    batLaden = fetch("/data/batterij-effect.json", { cache: "no-cache" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { batData = d; render(); })
+      .catch(function () { batData = null; });
+  }
+  function batRegel(c) {
+    var el = $("aanb-batregel"), e = c.batEffect;
+    if (!e) { el.hidden = true; return; }
+    var basis = e.panelen ? "ongeveer " + e.panelen + " zonnepanelen" : "een huis zonder zonnepanelen";
+    function maandJaar(ym) { return R.datumNL(ym + "-01").replace(/^1 /, ""); }
+    el.innerHTML = "Een nieuwe batterij van " + e.kwh + " kWh verlaagt daarnaast je hele stroomrekening met <strong>± " + R.eur0(e.besparing) + " per jaar</strong>" +
+      (c.zon ? " (" + (c.jaar === 2026 ? "2026, met saldering" : "vanaf 2027") + ")" : "") +
+      ": je betaalt gemiddeld " + String(e.prijsNa).replace(".", ",") + " in plaats van " + String(e.prijsVoor).replace(".", ",") +
+      " cent per kWh van het net. Dat is bij elke aanbieder gelijk en telt niet mee in de volgorde. " +
+      "Schatting voor " + basis + " en 2.900 kWh verbruik, op de uurprijzen van " + maandJaar(batData.periode.van) + " tot en met " + maandJaar(batData.periode.tot) +
+      ". Precies uitrekenen: <a href=\"/batterij-berekenen\">batterijcalculator</a>.";
+    el.hidden = false;
   }
   function actieveFilters() {
     return filterEls.filter(function (el) { return el.checked; }).map(function (el) { return el.getAttribute("data-filter"); });
@@ -46,6 +85,9 @@
     var c = situatie();
     $("x-zon").hidden = !c.zon;
     $("x-ev").hidden = !c.ev;
+    $("x-bat").hidden = !c.bat;
+    $("bat-maat-wrap").hidden = !c.batNieuw;
+    batRegel(c);
     var optTerug = $("opt-terug");
     optTerug.hidden = optTerug.disabled = !c.zon;
     if (!c.zon && sortEl.value === "terug") sortEl.value = "kosten";
