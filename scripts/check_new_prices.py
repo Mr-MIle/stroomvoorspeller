@@ -98,7 +98,23 @@ def prices_json_tomorrow_source(tomorrow: str) -> str | None:
         if src not in ("entsoe", "energyzero", "energy-charts"):
             return None
         count = sum(1 for p in data.get("prices", []) if p.get("time", "")[:10] == tomorrow)
-        return src if count >= 24 else None
+        if count < 24:
+            return None
+        # `source` blijft "entsoe" zodra ENTSO-E de historie leverde, ook als morgen
+        # van de achtervang kwam (30 sep 2026: morgen via EnergyZero, geen kwartieren,
+        # en deze check meldde "al ENTSO-E" waardoor er nooit een upgrade kwam).
+        # Daarom eerst het expliciete veld `tomorrow_source` van fetch_prices.py.
+        tsrc = data.get("tomorrow_source")
+        if tsrc in ("entsoe", "energyzero", "energy-charts"):
+            return tsrc
+        # Oudere prices.json zonder dat veld: had ENTSO-E kwartierdata maar staan er
+        # voor morgen geen kwartieren (alleen hele uren), dan kwam morgen van de achtervang.
+        if src == "entsoe" and data.get("fallback_source") and data.get("has_pt15m"):
+            q_tomorrow = [p for p in data.get("prices_15m", [])
+                          if p.get("time", "")[:10] == tomorrow and p.get("time", "")[14:16] != "00"]
+            if not q_tomorrow:
+                return str(data["fallback_source"]).split("+")[-1]
+        return src
     except Exception as exc:
         print(f"[warn] Kon prices.json niet lezen: {exc}", file=sys.stderr)
         return None
