@@ -6,13 +6,20 @@ name: Update prijzen (handmatig / fallback)
 # workflow_dispatch, niet bij push naar main om dubbele tweets te voorkomen).
 #
 # Wanneer draait deze workflow?
-#  - na elke push naar main (handig om de cache direct te verversen)
+#  - elke 3 uur via GitHub-cron (sinds 2 okt 2026), op minuut 17 om de drukte op het
+#    hele uur te ontlopen: 00:17, 03:17, ... 21:17 UTC. Reden: check-prices.yml stopt
+#    zodra de uurprijzen van morgen binnen zijn, maar ENTSO-E/EPEX leveren de
+#    kwartierprijzen soms uren later. Zonder deze run bleef de morgen-grafiek in
+#    kwartiermodus dan op uurprijzen staan (2 okt: om 12:10 UTC 24 van de 96
+#    kwartieren voor morgen).
 #  - dagelijks om 14:01 CEST via Pipedream (workflow_dispatch)
 #  - handmatig, via Run workflow in de GitHub UI
 on:
 #  push:
 #    branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 */3 * * *"
 
 permissions:
   contents: write   # nodig om data terug te committen
@@ -212,11 +219,13 @@ jobs:
   tweet:
     name: Post dagelijkse X-tweet
     needs: update
-    # Alleen bij workflow_dispatch (Pipedream / handmatig), nooit bij push naar main.
-    # En alleen als deze run de morgen-prijzen NIEUW heeft toegevoegd (morgen_nieuw).
-    # Waren ze al bekend - bijvoorbeeld omdat check-prices.yml ze eerder publiceerde
-    # en al tweette - dan niet opnieuw posten. Zo komt de tweet precies een keer per
-    # dag, bij de eerste publicatie.
-    if: github.event_name == 'workflow_dispatch' && needs.update.outputs.morgen_nieuw == 'true'
+    # Alleen bij workflow_dispatch (Pipedream / handmatig) of de 3-uurs-cron, nooit bij
+    # push naar main. En alleen als deze run de morgen-prijzen NIEUW heeft toegevoegd
+    # (morgen_nieuw). Waren ze al bekend - bijvoorbeeld omdat check-prices.yml ze eerder
+    # publiceerde en al tweette - dan niet opnieuw posten. Zo komt de tweet precies een
+    # keer per dag, bij de eerste publicatie. De cron hoort erbij: haalt de run van
+    # 12:17 UTC de prijzen als eerste binnen, dan ziet check-prices daarna niets nieuws
+    # en zou de tweet anders wegvallen. tweet_state.json vangt een dubbele af.
+    if: (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && needs.update.outputs.morgen_nieuw == 'true'
     uses: ./.github/workflows/daily-tweet.yml
     secrets: inherit
