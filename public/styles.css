@@ -432,6 +432,38 @@ a:hover { text-decoration: underline; }
   .feedin-btn { padding: 5px 11px; font-size: 0.82rem; }
 }
 
+/* Okt 2026: vaste opbouw van de grafiekkop. Regel 1 = titel + ondertitel over de
+   volle breedte; regel 2 = de knoppen, allemaal even hoog. Zo verspringt er niets
+   meer als de ondertitel bij "Per kwartier" een andere lengte krijgt. */
+.chart-section-head {
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 10px;
+}
+.chart-section-head .chart-head-text { flex: 1 1 100%; }
+.chart-section-head .res-toggle    { order: 1; padding-top: 0; }
+.chart-section-head .feedin-toggle { order: 2; padding-top: 0; }
+.chart-section-head .morgen-link-btn { order: 3; margin-left: auto; }
+.chart-section-head .res-toggle-buttons { height: 36px; box-sizing: border-box; align-items: stretch; }
+.chart-section-head .res-btn { min-height: 0; padding: 0 13px; display: inline-flex; align-items: center; }
+.chart-section-head .feedin-btn,
+.chart-section-head .morgen-link-btn { height: 36px; box-sizing: border-box; padding: 0 13px; }
+@media (max-width: 640px) {
+  /* Tapdoelen 44 px; alle drie de knoppen dezelfde hoogte. */
+  .chart-section-head .res-toggle-buttons,
+  .chart-section-head .feedin-btn,
+  .chart-section-head .morgen-link-btn { height: 44px; }
+  .chart-section-head .res-btn,
+  .chart-section-head .feedin-btn,
+  .chart-section-head .morgen-link-btn { padding: 0 11px; font-size: 0.82rem; }
+}
+@media (max-width: 560px) {
+  .chart-section-head { flex-direction: row; }
+  .chart-section-head .morgen-link-btn { margin-left: 0; }
+}
+
 /* Teruglever-lijn: schakelaar bij de grafiekkop + toelichting eronder */
 .feedin-toggle {
   flex: 0 0 auto;
