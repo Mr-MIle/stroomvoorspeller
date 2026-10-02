@@ -459,6 +459,7 @@
       const tdFixed = document.createElement("td");
       tdFixed.className = "td-fixed";
       tdFixed.textContent = s.fixed_per_month > 0 ? `€${fmtNum(s.fixed_per_month, 2)}` : "—";
+      if (!(s.fixed_per_month > 0)) tdFixed.classList.add("is-leeg");
 
       tr.append(tdName, tdPrice, tdMarkup, tdFixed);
       tbody.appendChild(tr);

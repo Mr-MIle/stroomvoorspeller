@@ -609,7 +609,6 @@
     renderSettingsToggle();
     renderModeBadges();
     renderNowCard();
-    renderSummary();
     renderSupplierTable();
     renderMoments();
     renderFooterMeta();
@@ -703,20 +702,6 @@
 
     if (html) { nextEl.textContent = html; nextEl.hidden = false; }
     else      { nextEl.hidden = true; }
-  }
-
-  function renderSummary() {
-    const prices = state.dayPrices;  // altijd uurresolutie voor dagstatistieken
-    const nowIdx = state.nowIdx;
-    const current = nowIdx >= 0 ? prices[nowIdx] : prices[0];
-    const today = prices.filter((p) => isSameLocalDay(p.time, current.time));
-    if (!today.length) return;
-    const cheapest = today.reduce((a, b) => (a.price <= b.price ? a : b));
-    const priciest = today.reduce((a, b) => (a.price >= b.price ? a : b));
-    const avg = today.reduce((s, p) => s + p.price, 0) / today.length;
-    setText("cheapest-today", `${fmtCents(cheapest.price)} ct · ${fmtTime(cheapest.time)}`);
-    setText("priciest-today", `${fmtCents(priciest.price)} ct · ${fmtTime(priciest.time)}`);
-    setText("avg-today", `${fmtCents(avg)} ct/kWh`);
   }
 
   function renderMoments() {
@@ -876,14 +861,19 @@
     const current = state.nowIdx >= 0 ? prices[state.nowIdx] : prices[0];
     if (!current) return;
 
-    setText("suppliers-now-time", `Nu, ${fmtTime(current.time)}`);
+    setText("suppliers-now-time", `het uur van ${fmtTime(current.time)}`);
 
     const verifiedDates = (state.config.suppliers || [])
       .map((s) => s.verified)
       .filter((v) => typeof v === "string" && v.length === 10);
     if (verifiedDates.length) {
-      const oldest = verifiedDates.sort()[0];
-      const d = new Date(oldest + "T00:00:00");
+      // De datum waarop de meeste tarieven zijn gecontroleerd. De oudste datum (één
+      // nakomer van mei) liet de hele tabel er verouderd uitzien; de tekst zegt
+      // daarom "de meeste" (okt 2026).
+      const tel = {};
+      verifiedDates.forEach((v) => { tel[v] = (tel[v] || 0) + 1; });
+      const meest = Object.keys(tel).sort((a, b) => tel[b] - tel[a] || (a < b ? 1 : -1))[0];
+      const d = new Date(meest + "T00:00:00");
       setText("suppliers-verified", d.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" }));
     }
 
@@ -892,10 +882,10 @@
       .map((s) => ({ supplier: s, cents: priceCentsForSupplier(current.price, s) }))
       .sort((a, b) => a.cents - b.cents);
 
-    // De home toont de acht goedkoopste aanbieders van dit uur; de volledige lijst
-    // (25 stuks, ruim 5.000 px op mobiel) staat achter de knop en op /aanbieders.
-    // Je eigen leverancier staat er altijd bij, ook als die buiten de top 8 valt.
-    const LIMIT = 8;
+    // De home toont de drie goedkoopste aanbieders van dit uur (okt 2026: was acht);
+    // de volledige lijst staat achter de knop en op /aanbieders. Je eigen leverancier
+    // staat er altijd bij, ook als die buiten de top 3 valt.
+    const LIMIT = 3;
     let shown = rows;
     if (!state.suppliersExpanded && rows.length > LIMIT) {
       shown = rows.slice(0, LIMIT);
@@ -909,7 +899,7 @@
       if (rows.length > LIMIT) {
         moreBtn.hidden = false;
         moreBtn.textContent = state.suppliersExpanded
-          ? "Toon alleen de acht goedkoopste"
+          ? "Toon alleen de drie goedkoopste"
           : "Toon alle aanbieders";
         moreBtn.setAttribute("aria-expanded", state.suppliersExpanded ? "true" : "false");
       } else {
@@ -957,6 +947,7 @@
       tdFixed.className = "td-fixed";
       const fx = Number(s.fixed_per_month) || 0;
       tdFixed.textContent = fx ? `€${fmtNum(fx, 2)}` : "—";
+      if (!fx) tdFixed.classList.add("is-leeg");
       tr.appendChild(tdFixed);
 
       const tdAction = document.createElement("td");
@@ -1063,14 +1054,12 @@
     if (state.chartResolution === "quarter") {
       if (heading) heading.textContent = "Vandaag & morgen, per kwartier";
       if (sub) sub.innerHTML =
-        `Kwartierlijkse day-ahead prijzen (EPEX Spot, v.a. okt&nbsp;2025), weergegeven als <span data-field="mode-label">${modeLabel()}</span>. ` +
-        `Tooltip toont alle varianten.`;
+        `Kwartierprijzen van EPEX Spot, <span data-field="mode-label">${modeLabel()}</span>. Tik op een kwartier voor de details.`;
       if (note) note.hidden = true;
     } else {
       if (heading) heading.textContent = "Vandaag & morgen";
       if (sub) sub.innerHTML =
-        `Day-ahead prijzen van EPEX Spot, weergegeven als <span data-field="mode-label">${modeLabel()}</span>. ` +
-        `Tooltip toont alle drie de varianten.`;
+        `Uurprijzen van EPEX Spot, <span data-field="mode-label">${modeLabel()}</span>. Tik op een uur voor de details.`;
       if (note) note.hidden = true;
     }
   }
@@ -1708,23 +1697,35 @@
         `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--c-text-soft);">` +
         `<span style="width:16px;height:0;border-top:2px dashed ${color};flex-shrink:0;"></span>` +
         `<strong>${label}</strong></span>`;
+      // Okt 2026, rustiger: alleen de prijsklassen die echt in beeld zijn, en een
+      // toelichtingsregel alleen als er iets te verklaren valt (feestdag in beeld,
+      // voorspelling voor morgen, kwartier-terugval). Staan vandaag en morgen vast
+      // zonder feestdag, dan blijft er één regel met stippen over.
+      const shownClasses = new Set(
+        timeline.filter((t) => t.kind === "actual").map((t) => classifyToCard(classify(t.price)))
+      );
+      const holidayInView = timeline.some((t) => {
+        const d = String(t.time).slice(0, 10);
+        return holidays.nl.has(d) || holidays.crossborder.has(d);
+      });
+      const note = (html) =>
+        `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">${html}</span>`;
       wrap.innerHTML =
-        dot("var(--c-free)", "Gratis/negatief") +
-        dot("var(--c-cheap)", "Goedkoop") +
-        dot("var(--c-normal)", "Normaal") +
-        dot("var(--c-pricey)", "Duur") +
-        dot("var(--c-brand)", "Nu") +
+        (shownClasses.has("free")   ? dot("var(--c-free)", "Gratis") : "") +
+        (shownClasses.has("cheap")  ? dot("var(--c-cheap)", "Goedkoop") : "") +
+        (shownClasses.has("normal") ? dot("var(--c-normal)", "Normaal") : "") +
+        (shownClasses.has("pricey") ? dot("var(--c-pricey)", "Duur") : "") +
+        (chartNowIdx >= 0 ? dot("var(--c-brand)", "Nu") : "") +
         (state.showFeedin && feedinAvailable() ? dash(FEEDIN_COLOR(), "Teruglevering") : "") +
-        (isQuarter
-          ? `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">Kwartierlijkse day-ahead prijzen. Beide grafieken delen dezelfde schaal.</span>`
-          : `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">Gekleurde blokken zijn feestdagen (geel NL, oranje EU) — op die dagen valt de prijs vaak extra laag. Beide grafieken delen dezelfde schaal.</span>`
-        ) +
+        (holidayInView
+          ? note("Gekleurde blokken zijn feestdagen (geel NL, oranje EU). Op die dagen valt de prijs vaak extra laag.")
+          : "") +
         (tomorrowHourlyFallback
-          ? `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">De kwartierprijzen voor morgen zijn nog niet binnen; morgen staat daarom per uur.</span>`
-          : ``) +
+          ? note("De kwartierprijzen voor morgen zijn nog niet binnen; morgen staat daarom per uur.")
+          : "") +
         (tomorrowIsForecast
-          ? `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">De <strong>gestippelde lijn</strong> bij morgen is de voorspelling — de day-ahead prijzen voor morgen zijn nog niet gepubliceerd.</span>`
-          : ``);
+          ? note("De <strong>gestippelde lijn</strong> bij morgen is de voorspelling. De echte prijzen voor morgen zijn nog niet bekend.")
+          : "");
       splitEl.insertAdjacentElement("afterend", wrap);
 
       // Context-zin (#63, optie 2): hoe liggen vandaag+morgen t.o.v. het 30-daags gemiddelde?
@@ -1961,6 +1962,15 @@
 
   // ---- Event wiring ----
   function wireUI() {
+    // Het cijferblok staat ingeklapt; wie via een link op #uurprijzen landt, ziet het open.
+    const openCijfers = () => {
+      if (location.hash !== "#uurprijzen") return;
+      const fold = document.querySelector("#uurprijzen .static-fold");
+      if (fold) fold.open = true;
+    };
+    openCijfers();
+    window.addEventListener("hashchange", openCijfers);
+
     // Incl./excl. belasting toggle
     document.querySelectorAll("[data-mode-btn]").forEach((btn) => {
       btn.addEventListener("click", () => {

@@ -220,10 +220,15 @@
     if (!isMobiel() || alsAppGeopend() || installWeggeklikt()) return;
     var anker = document.querySelector(".share-tip");
     if (!anker || document.querySelector(".install-tip")) return;
+    // Op de home staan de deelknoppen sinds okt 2026 ín de nu-kaart; de strip komt
+    // dan onder de kaart, niet erin.
+    var kaart = anker.closest ? anker.closest(".now-card") : null;
+    if (kaart) anker = kaart;
 
     var ios = isIOS();
     var strip = document.createElement("section");
     strip.className = "install-tip";
+    if (kaart) strip.style.margin = "12px 0 0";
     strip.setAttribute("aria-label", "Stroomvoorspeller op je beginscherm");
 
     var tekst = document.createElement("p");

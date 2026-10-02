@@ -235,11 +235,10 @@
         .hero-lint a.is-eerst:hover{color:#fff;opacity:.92}
         @media(max-width:480px){.hero-lint a{font-size:.82rem;padding:9px 12px}}
         </style>
+        <!-- Okt 2026: één knop. Morgen, aanbieders en batterij staan in het menu en
+             verderop bij hun eigen blok; de rekentool staat niet in het menu. -->
         <nav class="hero-lint" aria-label="Snel naar">
           <a class="is-eerst" href="/dynamisch-berekenen">Is dynamisch iets voor jou?</a>
-          <a href="/morgen">Prijzen van morgen</a>
-          <a href="/aanbieders">Aanbieders vergelijken</a>
-          <a href="/batterij-berekenen">Batterij berekenen</a>
         </nav>
         <div class="mode-toggle" role="group" aria-label="Prijsweergave kiezen">
           <span class="mode-toggle-label">Toon prijzen</span>
@@ -269,6 +268,27 @@
             <span class="dot-sep" aria-hidden="true">·</span>
             <span class="now-meta-soft" data-field="now-epex">—</span>
           </p>
+          <!-- Deelknoppen (okt 2026: in de nu-kaart in plaats van een eigen band) -->
+          <div class="share-tip share-tip--card" hidden aria-label="Deel deze prijzen" role="group">
+            <div class="share-tip-inner">
+              <span class="share-tip-label">Deel deze tip:</span>
+              <div class="share-tip-buttons" id="share-row" data-share-day="today">
+                <button type="button" class="share-btn share-wa" aria-label="Delen via WhatsApp">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                </button>
+                <button type="button" class="share-btn share-copy" aria-label="Kopieer naar klembord">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                  <span class="share-copied-toast" aria-hidden="true">Gekopieerd!</span>
+                </button>
+                <button type="button" class="share-btn share-x" aria-label="Delen op X">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </button>
+                <button type="button" class="share-btn share-native" hidden aria-label="Delen">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Situatie-chips inline (aug 2026, CoPilot-punt 4): zichtbaar zolang 'Mijn situatie'
@@ -291,34 +311,12 @@
       </div>
     </section>
 
-    <!-- Deelknoppen -->
-    <section class="share-tip" hidden aria-label="Deel deze prijzen">
-      <div class="container share-tip-inner">
-        <span class="share-tip-label">Deel deze tip:</span>
-        <div class="share-tip-buttons" id="share-row" data-share-day="today">
-          <button type="button" class="share-btn share-wa" aria-label="Delen via WhatsApp">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          </button>
-          <button type="button" class="share-btn share-copy" aria-label="Kopieer naar klembord">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            <span class="share-copied-toast" aria-hidden="true">Gekopieerd!</span>
-          </button>
-          <button type="button" class="share-btn share-x" aria-label="Delen op X">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </button>
-          <button type="button" class="share-btn share-native" hidden aria-label="Delen">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-          </button>
-        </div>
-      </div>
-    </section>
-
     <!-- Chart -->
     <section id="grafiek" class="chart-section container">
       <div class="section-head chart-section-head">
         <div class="chart-head-text">
           <h2 id="chart-heading">Vandaag &amp; morgen, per uur</h2>
-          <p class="section-sub" id="chart-sub">Day-ahead prijzen van EPEX Spot, weergegeven als <span data-field="mode-label">incl. belasting</span>. Tooltip toont alle drie de varianten.</p>
+          <p class="section-sub" id="chart-sub">Uurprijzen van EPEX Spot, <span data-field="mode-label">incl. belasting</span>. Tik op een uur voor de details.</p>
         </div>
         <a id="morgen-link-btn" href="/morgen" class="morgen-link-btn" hidden>Morgen in detail →</a>
         <div id="chart-res-toggle" class="res-toggle" hidden>
@@ -352,10 +350,11 @@
       <p class="chart-meta">Bron: EPEX Spot via <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E</a> · bijgewerkt <span data-field="generated-at">—</span> · <a href="/over/voorspelling">waar komen deze cijfers vandaan?</a></p>
     </section>
 
-    <!-- Quick-summary: goedkoopste/duurste/gemiddelde vandaag -->
+    <!-- Cijferblok: ingeklapt, voor zoekmachines en wie de tabel wil (okt 2026) -->
     <!-- STATIC:PRICES:START -->
     <section class="static-prices container is-secondary" id="uurprijzen" aria-labelledby="uurprijzen-h2">
-      <h2 id="uurprijzen-h2">Stroomprijzen per uur, in cijfers</h2>
+      <details class="static-fold">
+        <summary class="static-fold-summary"><h2 id="uurprijzen-h2">Stroomprijzen per uur, in cijfers</h2><span class="static-fold-sub">Vandaag, morgen en de komende dagen als tabel</span></summary>
       <p>Vandaag (vrijdag 2 oktober 2026) is de gemiddelde all-in stroomprijs <strong>37,2 ct/kWh</strong>. Het goedkoopste uur is <strong>13:00&ndash;14:00 met 30,0 ct/kWh</strong>, het duurste <strong>19:00&ndash;20:00 met 51,5 ct/kWh</strong>.</p>
       <p>Morgen (zaterdag 3 oktober 2026) is de gemiddelde all-in stroomprijs <strong>33,8 ct/kWh</strong>. Het goedkoopste uur is <strong>13:00&ndash;14:00 met 20,9 ct/kWh</strong>, het duurste <strong>19:00&ndash;20:00 met 41,8 ct/kWh</strong>.</p>
       <p>All-in betekent: kale EPEX-prijs plus de gemiddelde inkoopvergoeding van 1,70 ct/kWh en de energiebelasting van 9,16 ct/kWh, alles maal 1,21 btw.</p>
@@ -436,7 +435,6 @@
           <caption>Voorspelde stroomprijs per dag, all-in ct/kWh</caption>
           <thead><tr><th scope="col">Dag</th><th scope="col">Gemiddeld</th><th scope="col">Laagste</th><th scope="col">Hoogste</th><th scope="col">Goedkoopste uur</th></tr></thead>
           <tbody>
-          <tr><td>zaterdag 3 oktober 2026</td><td class="num">25,3</td><td class="num">13,1</td><td class="num">40,5</td><td>14:00&ndash;15:00</td></tr>
           <tr><td>zondag 4 oktober 2026</td><td class="num">29,8</td><td class="num">13,4</td><td class="num">42,6</td><td>14:00&ndash;15:00</td></tr>
           <tr><td>maandag 5 oktober 2026</td><td class="num">36,1</td><td class="num">24,3</td><td class="num">49,0</td><td>12:00&ndash;13:00</td></tr>
           <tr><td>dinsdag 6 oktober 2026</td><td class="num">36,2</td><td class="num">24,3</td><td class="num">49,0</td><td>12:00&ndash;13:00</td></tr>
@@ -447,24 +445,9 @@
         </table>
       </div>
       <p class="static-prices-meta">Bron: EPEX Spot via ENTSO-E Transparency (NL bidding zone). Cijfers bijgewerkt op 2026-10-02 12:10 UTC.</p>
+      </details>
     </section>
     <!-- STATIC:PRICES:END -->
-    <!-- Na grafiek zodat de grafiek direct zichtbaar is op mobiel (#56) -->
-    <div class="quick-summary container">
-      <div class="summary-item">
-        <span class="summary-label">Goedkoopste uur vandaag</span>
-        <span class="summary-value" data-field="cheapest-today">—</span>
-      </div>
-      <div class="summary-item">
-        <span class="summary-label">Duurste uur vandaag</span>
-        <span class="summary-value" data-field="priciest-today">—</span>
-      </div>
-      <div class="summary-item">
-        <span class="summary-label">Gemiddelde vandaag</span>
-        <span class="summary-value" data-field="avg-today">—</span>
-      </div>
-    </div>
-
     <!-- Best moments -->
     <section id="tips" class="moments-section container">
       <div class="section-head">
@@ -505,7 +488,7 @@
       <div class="section-head">
         <h2>Voorspelling 5–7 dagen vooruit</h2>
         <p class="forecast-accuracy" id="forecast-accuracy" hidden></p>
-        <p class="section-sub">Eigen model-voorspelling voor de dagen ná morgen: een <strong>gestippelde lijn</strong> met een onzekerheidsband eromheen. Klik of tik op een voorspeld uur: onder de grafiek verschijnt dan de opbouw per factor (zon, wind, temperatuur, gas, dagtype, uurpatroon). Verder vooruit wordt de schatting onzekerder; <a href="/kennisbank/waarom-stroomprijzen-moeilijk-te-voorspellen">waarom stroomprijzen lastig te voorspellen zijn</a>, lees je in de kennisbank.</p>
+        <p class="section-sub">Mijn eigen voorspelling voor de dagen ná morgen. Tik op een uur om te zien waar het getal vandaan komt.</p>
       </div>
       <button type="button" id="profile-nudge" class="profile-nudge" hidden>
         <span class="profile-nudge-icon" aria-hidden="true">⚙</span>
@@ -518,6 +501,14 @@
       <div id="factor-panel" class="factor-panel" hidden></div>
       <details class="forecast-explainer forecast-details">
         <summary class="forecast-details-summary">Hoe werkt de voorspelling?</summary>
+        <p>
+          De gestippelde lijn is de verwachte prijs, de band eromheen de onzekerheid.
+          Tik je op een voorspeld uur, dan zie je onder de grafiek de opbouw per factor:
+          zon, wind, temperatuur, gas, dagtype en uurpatroon. Hoe verder vooruit, hoe
+          onzekerder de schatting.
+          <a href="/kennisbank/waarom-stroomprijzen-moeilijk-te-voorspellen">Waarom stroomprijzen lastig te voorspellen zijn</a>
+          lees je in de kennisbank.
+        </p>
         <p>
           Het model kijkt naar <strong>historische patronen</strong>: wat de prijs de
           afgelopen vier weken op ditzelfde uur deed. Dat startpunt corrigeert het met
@@ -537,7 +528,7 @@
     <section id="aanbieders" class="suppliers-section container is-secondary">
       <div class="section-head">
         <h2>Wat betaal je per aanbieder, voor het huidige uur</h2>
-        <p class="section-sub">All-in prijs (kale EPEX + opslag + energiebelasting + 21% btw) voor <span data-field="suppliers-now-time">—</span>. Tarieven gevalideerd op <span data-field="suppliers-verified">—</span>; controleer altijd op de site van de aanbieder zelf.</p>
+        <p class="section-sub">Prijs per kWh voor <span data-field="suppliers-now-time">—</span>, met opslag, energiebelasting en btw.</p>
       </div>
       <div class="suppliers-table-wrap">
         <table class="suppliers-table" data-field="suppliers-table">
@@ -556,7 +547,7 @@
         </table>
       </div>
       <button type="button" id="suppliers-more" class="suppliers-more" hidden aria-expanded="false"></button>
-      <p class="suppliers-note">Sortering: goedkoopst voor het huidige uur. Geen ranking — verschillen tussen aanbieders kunnen per uur wisselen. Het vaste maandbedrag staat los; bij laag verbruik weegt dat zwaarder dan de opslag.</p>
+      <p class="suppliers-note">Gesorteerd op de prijs van dit uur. Het vaste bedrag per maand telt hier niet mee; bij laag verbruik weegt dat zwaarder dan de opslag. De meeste tarieven heb ik gecontroleerd op <span data-field="suppliers-verified">—</span>. Kijk voor de zekerheid ook op de site van de aanbieder.</p>
       <a class="aanbieders-cta" href="/aanbieders">
         <strong>Vergelijk alle 25 aanbieders op jouw situatie</strong>
         <span>Kosten per jaar bij jouw verbruik, met teruglevering, slim laden en thuisbatterij. Inclusief btw, met de bron bij elk bedrag.</span>
@@ -590,6 +581,13 @@
       .bat-promo-cta:hover { background:var(--c-brand-fill-deep, #0a4f8b); }
       .bat-promo-cta-2 { background:transparent; color:var(--c-brand); border:1px solid var(--c-border); }
       .bat-promo-cta-2:hover { background:var(--c-surface-soft); color:var(--c-brand-deep); }
+      /* Okt 2026: op de telefoon drie smalle kaarten naast elkaar, geen losse derde rij */
+      @media (max-width:520px) {
+        .bat-promo-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
+        .bat-promo-card { padding:10px 10px; }
+        .bp-value { font-size:1.1rem; }
+        .bp-label, .bp-sub { font-size:0.74rem; }
+      }
     </style>
     <script>
       (function () {
@@ -598,10 +596,10 @@
           .then((doc) => {
             if (!doc || !doc.totals || !(doc.days || []).length) return;
             const t = doc.totals;
-            const eur = (x) => "\u20ac" + (x ?? 0).toFixed(2);
+            const eur = (x) => "\u20ac\u00a0" + (x ?? 0).toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             document.getElementById("bp-total").textContent = eur(t.saving_eur);
             document.getElementById("bp-days").textContent = (t.days || doc.days.length) + " dagen gemeten";
-            document.getElementById("bp-gratis").textContent = (t.solar_charged_kwh ?? 0).toFixed(0) + " kWh";
+            document.getElementById("bp-gratis").textContent = Math.round(t.solar_charged_kwh ?? 0).toLocaleString("nl-NL") + " kWh";
             const avg = (t.saving_eur ?? 0) / (t.days || doc.days.length);
             document.getElementById("bp-avg").textContent = eur(avg);
           })
@@ -622,7 +620,7 @@
         <h2>Meer weten? Uit de kennisbank</h2>
         <p class="section-sub">Uitleg over dynamische prijzen, thuisbatterijen, zonnepanelen en slim meten &mdash; in gewone taal en met concrete bedragen.</p>
       </div>
-      <div class="kb-lees-ook-grid">
+      <div class="kb-lees-ook-grid kb-home-grid">
         <a class="kb-lees-ook-card" href="/kennisbank/p1-poort-uitlezen">
           <span class="kb-lees-ook-tag">💡 Slim besparen · Beginner</span>
           <span class="kb-lees-ook-title">Slimme meter P1 poort uitlezen: zo zie je je verbruik per uur</span>

@@ -235,9 +235,14 @@ def blok_prices(prices, forecast, config):
               file=sys.stderr)
         return blok_verouderd(prices, "Stroomprijzen per uur, in cijfers")
 
+    # Het hele cijferblok staat ingeklapt onder de grafiek: de grafiek, de nu-kaart en
+    # de goedkoopste vensters tonen dezelfde cijfers al. De tekst blijft in de HTML
+    # staan, dus zoekmachines en schermlezers lezen hem gewoon (okt 2026, rustiger home).
     delen = [
         '    <section class="static-prices container is-secondary" id="uurprijzen" aria-labelledby="uurprijzen-h2">',
-        '      <h2 id="uurprijzen-h2">Stroomprijzen per uur, in cijfers</h2>',
+        '      <details class="static-fold">',
+        '        <summary class="static-fold-summary"><h2 id="uurprijzen-h2">Stroomprijzen per uur, in cijfers</h2>'
+        '<span class="static-fold-sub">Vandaag, morgen en de komende dagen als tabel</span></summary>',
         zin_over_dag("Vandaag", vandaag, stat_vandaag),
     ]
     if stat_morgen:
@@ -264,7 +269,10 @@ def blok_prices(prices, forecast, config):
         delen.append(tabel_html(stat_morgen, morgen))
         delen.append("      </details>")
 
-    voorspel = blok_voorspelling_tabel(forecast, rek)
+    bekend = {vandaag}
+    if stat_morgen and len(stat_morgen["uren"]) >= MIN_UREN_PER_DAG:
+        bekend.add(morgen)
+    voorspel = blok_voorspelling_tabel(forecast, rek, bekend)
     if voorspel:
         delen.append(voorspel)
 
@@ -276,17 +284,24 @@ def blok_prices(prices, forecast, config):
                  "De prijzen hieronder kloppen wel, maar de voorspelling verderop kan "
                  "achterlopen.")
     delen.append(meta + "</p>")
+    delen.append("      </details>")
     delen.append("    </section>")
     return "\n".join(delen)
 
 
-def blok_voorspelling_tabel(forecast, rek):
+def blok_voorspelling_tabel(forecast, rek, bekende_dagen=()):
+    """Tabel met de voorspelling per dag.
+
+    Dagen waarvoor de echte day-ahead prijzen al binnen zijn, slaan we over. Anders
+    zet het blok rond 13:00 een voorspeld daggemiddelde voor morgen naast het echte
+    (2 okt 2026: 25,3 voorspeld in de tabel, 33,8 echt in de zin erboven).
+    """
     if not forecast:
         return None
     per_dag = {}
     for f in forecast.get("forecasts", []):
         datum = str(f.get("time", ""))[:10]
-        if not datum:
+        if not datum or datum in bekende_dagen:
             continue
         per_dag.setdefault(datum, []).append(f)
     if not per_dag:

@@ -726,35 +726,6 @@ a:hover { text-decoration: underline; }
   .now-advice-next { font-size: 0.9rem; }
 }
 
-/* Quick summary — staat nu na de grafiek (standalone, buiten de hero) (#56) */
-.quick-summary {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin: 12px auto 24px;
-}
-.summary-item {
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  padding: 14px 14px;
-}
-.summary-label {
-  display: block;
-  font-size: 0.78rem;
-  color: var(--c-text-mute);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 4px;
-}
-.summary-value {
-  font-weight: 700;
-  color: var(--c-text);
-  font-size: 1rem;
-  line-height: 1.3;
-  display: block;
-}
-
 /* Sections */
 .section-head { margin: 36px 0 14px; }
 .tips-notes-head { margin-top: 40px; }
@@ -1154,9 +1125,6 @@ a:hover { text-decoration: underline; }
 .footer-meta-small { color: var(--c-text-mute); font-size: 0.85rem; }
 
 @media (max-width: 640px) {
-  /* #48 quick-summary: 2+1 grid (goedkoopst + duurste naast elkaar, gemiddelde vol-breed) */
-  .quick-summary { grid-template-columns: 1fr 1fr; }
-  .quick-summary .summary-item:last-child { grid-column: 1 / -1; }
   .footer-grid { grid-template-columns: 1fr; }
   .chart-wrapper { height: 300px; }
   .now-card { padding: 22px 20px 18px; }
@@ -1366,7 +1334,7 @@ body.has-neg-alert .site-header { top: 56px; }
   border: 1px solid var(--c-border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
-  min-height: 380px;
+  min-height: 240px; /* kop + 3 rijen, tegen verspringen bij het laden (okt 2026: was 380 bij 8 rijen) */
 }
 .suppliers-table {
   width: 100%;
@@ -1514,6 +1482,32 @@ body.has-neg-alert .site-header { top: 56px; }
   /* Kies-knop in de mobile-card-fallback: vol-breed onderaan de kaart, grotere tap-zone */
   .suppliers-table .td-action { padding-top: 10px; width: 100%; text-align: left; }
   .supplier-pick-btn { width: 100%; padding: 10px 14px; font-size: 0.95rem; }
+
+  /* Okt 2026: compacte kaart van twee regels in plaats van vijf.
+     Regel 1: naam + prijs. Regel 2: opslag, vast bedrag en de Kies-knop. */
+  .suppliers-table tbody tr {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    column-gap: 12px;
+    row-gap: 2px;
+    align-items: center;
+    padding: 10px 14px;
+  }
+  .suppliers-table tbody td { width: auto; padding: 0; }
+  .suppliers-table tbody .suppliers-loading { grid-column: 1 / -1; padding: 24px 0; text-align: center; }
+  .suppliers-table .td-supplier { grid-column: 1 / 3; grid-row: 1; padding-bottom: 0; }
+  .suppliers-table .td-price { grid-column: 3; grid-row: 1; text-align: right; font-weight: 700; }
+  .suppliers-table .td-price::before { content: none; }
+  .suppliers-table .td-price::after { content: " ct"; font-weight: 400; color: var(--c-text-mute); font-size: 0.85rem; }
+  .suppliers-table .td-markup { grid-column: 1; grid-row: 2; font-size: 0.85rem; }
+  .suppliers-table .td-markup::before { content: "Opslag "; }
+  .suppliers-table .td-fixed { grid-column: 2; grid-row: 2; font-size: 0.85rem; }
+  .suppliers-table .td-fixed::before { content: "Vast "; }
+  .suppliers-table .td-fixed::after { content: " p/m"; color: var(--c-text-mute); }
+  .suppliers-table .td-fixed.is-leeg::after { content: none; }
+  .suppliers-table .td-markup, .suppliers-table .td-fixed { white-space: nowrap; }
+  .suppliers-table .td-action { grid-column: 3; grid-row: 2; padding-top: 0; width: auto; text-align: right; }
+  .suppliers-table .supplier-pick-btn { width: auto; min-height: 40px; padding: 6px 14px; font-size: 0.9rem; }
 }
 
 
@@ -1912,6 +1906,9 @@ body.has-neg-alert .site-header { top: 56px; }
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
 }
+/* Home: zes kaarten als 3 x 2 (of 2 x 3), nooit één losse kaart op een eigen rij. */
+.kb-home-grid { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 860px) { .kb-home-grid { grid-template-columns: repeat(2, 1fr); } }
 .kb-lees-ook-card {
   display: flex;
   flex-direction: column;
@@ -2492,6 +2489,13 @@ body.has-neg-alert .site-header { top: 56px; }
 /* ── Deelknoppen (share tip) ── */
 .share-tip { margin: 1.4rem 0; }
 .share-tip[hidden] { display: none; }
+/* Home, okt 2026: deelknoppen onderin de nu-kaart, gescheiden door een dunne lijn. */
+.share-tip--card {
+  margin: 6px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--c-border);
+}
+.share-tip--card .share-tip-label { font-size: 0.85rem; font-weight: 500; }
 .share-tip-inner {
   display: flex;
   align-items: center;
@@ -2967,6 +2971,36 @@ details[open] > .faq-q::before { transform: rotate(90deg); }
    crawlers zonder JavaScript ze ook zien.
    ────────────────────────────────────────────────────────────── */
 .static-prices { padding-block: 1.5rem 2rem; }
+/* Okt 2026: het hele blok staat ingeklapt; de kop is de uitklapknop. */
+.static-prices:has(> .static-fold:not([open])) { padding-block: .75rem; }
+.static-fold-summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  min-height: 44px;
+  padding: 10px 0;
+}
+.static-fold-summary::-webkit-details-marker { display: none; }
+.static-fold-summary::before {
+  content: "\25B8";
+  color: var(--c-text-mute);
+  transition: transform 0.15s ease;
+  flex: none;
+  align-self: center;
+}
+.static-fold[open] > .static-fold-summary::before { transform: rotate(90deg); }
+.static-prices .static-fold-summary h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--c-brand-deep);
+}
+.static-fold-summary:hover h2 { color: var(--c-brand); }
+.static-fold-sub { font-size: .875rem; color: var(--c-text-mute); }
+.static-fold[open] > .static-fold-summary { margin-bottom: .5rem; }
 .static-prices h2 { margin: 0 0 .5rem; }
 .static-prices h3 { margin: 1.75rem 0 .5rem; }
 .static-prices p { color: var(--c-text-soft); line-height: 1.6; margin: 0 0 .75rem; }
