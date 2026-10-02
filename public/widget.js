@@ -103,8 +103,9 @@
     return (epexEurMwh / 1000 + markup + taxes.energiebelasting_per_kwh) * taxes.btw_factor * 100;
   }
 
-  function fmt(ct) {
-    return ct.toFixed(1) + ' ct';
+  function fmt(ct, lang) {
+    var s = ct.toFixed(1);
+    return (lang === 'en' ? s : s.replace('.', ',')) + ' ct';
   }
 
   function nowUtcHour() {
@@ -116,14 +117,18 @@
     return new Date(str.replace('Z', '+00:00'));
   }
 
+  // Dag en klokuur in Nederlandse tijd. Tot okt 2026 stond hier UTC, waardoor de
+  // widget "Nu · 17:00u" toonde terwijl het in Nederland 19:00 was.
+  var NL_TZ = 'Europe/Amsterdam';
+  function nlDag(dt) {
+    return dt.toLocaleDateString('sv-SE', { timeZone: NL_TZ });
+  }
   function sameDay(a, b) {
-    return a.getUTCFullYear() === b.getUTCFullYear() &&
-           a.getUTCMonth()    === b.getUTCMonth() &&
-           a.getUTCDate()     === b.getUTCDate();
+    return nlDag(a) === nlDag(b);
   }
 
   function formatHour(dt) {
-    return dt.getUTCHours() + ':00';
+    return dt.toLocaleTimeString('nl-NL', { hour: 'numeric', minute: '2-digit', timeZone: NL_TZ });
   }
 
   // ── Injecteer scoped CSS ──────────────────────────────────────────────────
@@ -206,7 +211,6 @@
 
     // Verwerk uurdata — bereken beide varianten per uur
     var now = nowUtcHour();
-    var today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
     var allPrices = prices.prices || [];
     var currentEntry = null;
@@ -226,8 +230,31 @@
       entry._dt = dt;
 
       if (dt.getTime() === now.getTime()) currentEntry = entry;
-      if (sameDay(dt, today)) todayEntries.push(entry);
+      if (sameDay(dt, now)) todayEntries.push(entry);
       if (dt >= now) upcomingEntries.push(entry);
+    }
+
+    // Lopend kwartier: aanbieders rekenen sinds okt 2025 per kwartier en tonen dat
+    // in hun app. Is die prijs er, dan staat hij bovenaan in plaats van het
+    // uurgemiddelde (okt 2026, gelijk aan de nu-kaart op de site).
+    var nuLabel = formatHour(now) + 'u';
+    var nuExact = new Date();
+    var kwartieren = prices.prices_15m || [];
+    for (var qi = 0; qi < kwartieren.length; qi++) {
+      var qdt = parseHour(kwartieren[qi].time || '');
+      if (!qdt || isNaN(qdt.getTime())) continue;
+      var verschil = nuExact.getTime() - qdt.getTime();
+      if (verschil >= 0 && verschil < 15 * 60000 && currentEntry) {
+        var qEpex = kwartieren[qi].price;
+        currentEntry = {
+          _epex: qEpex,
+          _inclCt: toInclCt(qEpex, markup, taxes),
+          _exclCt: toExclCt(qEpex, markup),
+          _dt: qdt
+        };
+        nuLabel = formatHour(qdt) + '\u2013' + formatHour(new Date(qdt.getTime() + 15 * 60000));
+        break;
+      }
     }
 
     // Welke ct-waarde tonen we?
@@ -254,7 +281,7 @@
       html += '<div class="sv-header" style="background:' + palette.bg + ';color:' + palette.text + '">';
       html +=   '<div class="sv-header-left">';
       html +=     '<span class="sv-dot" style="background:' + palette.dot + '"></span>';
-      html +=     '<span class="sv-label">' + t.now + ' · ' + formatHour(now) + 'u</span>';
+      html +=     '<span class="sv-label">' + t.now + ' · ' + nuLabel + '</span>';
       html +=   '</div>';
       // Incl/excl toggle
       html +=   '<div class="sv-toggle">';
@@ -266,7 +293,7 @@
       // Body: prijs + status + details
       html += '<div class="sv-body" style="background:' + palette.bg + ';color:' + palette.text + '">';
       html +=   '<div class="sv-price-row">';
-      html +=     '<span class="sv-price">' + fmt(currentCt) + '</span>';
+      html +=     '<span class="sv-price">' + fmt(currentCt, lang) + '</span>';
       html +=     '<span class="sv-unit">' + t.per_kwh + '</span>';
       html +=   '</div>';
       html +=   '<div class="sv-status">' + statusLabel + '</div>';
@@ -277,14 +304,14 @@
         if (cheapestToday) {
           html += '<div class="sv-row">';
           html +=   '<span class="sv-row-label">' + t.cheapest + '</span>';
-          html +=   '<span class="sv-row-value">' + fmt(ctFor(cheapestToday)) + ' ' + t.at + ' ' + formatHour(cheapestToday._dt) + 'u</span>';
+          html +=   '<span class="sv-row-value">' + fmt(ctFor(cheapestToday), lang) + ' ' + t.at + ' ' + formatHour(cheapestToday._dt) + 'u</span>';
           html += '</div>';
         }
 
         if (next6 && next6._dt.getTime() !== now.getTime()) {
           html += '<div class="sv-row">';
           html +=   '<span class="sv-row-label">' + t.cheapest_upcoming + '</span>';
-          html +=   '<span class="sv-row-value">' + fmt(ctFor(next6)) + ' ' + t.at + ' ' + formatHour(next6._dt) + 'u</span>';
+          html +=   '<span class="sv-row-value">' + fmt(ctFor(next6), lang) + ' ' + t.at + ' ' + formatHour(next6._dt) + 'u</span>';
           html += '</div>';
         }
       }

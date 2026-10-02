@@ -270,6 +270,46 @@
     return idx;
   }
 
+  // Prijs van NU, zoals de leverancier hem rekent. Sinds oktober 2025 heeft de beurs
+  // een prijs per kwartier, en aanbieders als Frank tonen in hun app het lopende
+  // kwartier. De uurprijs is het gemiddelde van vier kwartieren en wijkt daar soms
+  // een paar tienden (bij pieken 1-2 ct) van af. Nu-kaart en aanbiederstabel
+  // gebruiken daarom het kwartier als dat er is, anders het uur (okt 2026).
+  function currentPricePoint() {
+    const hour = state.nowIdx >= 0 ? state.dayPrices[state.nowIdx] : state.dayPrices[0];
+    const q = state.nowIdx15m >= 0 ? state.dayPrices15m[state.nowIdx15m] : null;
+    if (q && state.hasPt15m) {
+      const start = new Date(q.time);
+      const sinds = Date.now() - start.getTime();
+      if (start.getMinutes() % 15 === 0 && sinds >= 0 && sinds < 15 * 60000) {
+        const eind = new Date(start.getTime() + 15 * 60000);
+        return { time: q.time, price: q.price, isQuarter: true,
+                 label: `${fmtTime(q.time)}–${fmtTime(eind.toISOString())}` };
+      }
+    }
+    if (!hour) return null;
+    return { time: hour.time, price: hour.price, isQuarter: false, label: fmtTime(hour.time) };
+  }
+
+  // Zet nowIdx en nowIdx15m opnieuw en tekent wat van 'nu' afhangt. Draait bij elke
+  // kwartiergrens, zodat een open tabblad niet op een oud kwartier blijft staan.
+  function planKwartierUpdate() {
+    const nu = new Date();
+    const volgende = new Date(nu);
+    volgende.setMinutes(Math.floor(nu.getMinutes() / 15) * 15 + 15, 0, 200);
+    setTimeout(() => {
+      const n = new Date();
+      state.nowIdx    = findCurrentIndex(state.dayPrices, n);
+      state.nowIdx15m = findCurrentIndex(state.dayPrices15m, n);
+      try {
+        renderNowCard();
+        renderSupplierTable();
+        renderChart();
+      } catch (e) { console.error("[stroomvoorspeller] kwartier-update:", e); }
+      planKwartierUpdate();
+    }, Math.max(1000, volgende.getTime() - nu.getTime()));
+  }
+
   function filterTodayTomorrow(prices, now) {
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
     const dayAfterTomorrow = new Date(todayStart.getTime() + 48 * 3600 * 1000);
@@ -629,19 +669,23 @@
   }
 
   function renderNowCard() {
-    const prices = state.dayPrices;  // altijd uurresolutie
+    const prices = state.dayPrices;  // uurresolutie, voor het advies en de vensters
     const nowIdx = state.nowIdx;
-    const current = nowIdx >= 0 ? prices[nowIdx] : prices[0];
-    const cls = classify(current.price);
+    const hour = nowIdx >= 0 ? prices[nowIdx] : prices[0];
+    const nu = currentPricePoint();  // kwartier als dat er is, anders het uur
+    if (!hour || !nu) return;
+    const cls = classify(nu.price);
     const card = document.querySelector(".now-card");
     if (card) card.dataset.status = classifyToCard(cls);
-    setText("now-cents", fmtCents(current.price, 1));
-    setText("now-time", `Nu, ${fmtTime(current.time)}`);
-    setText("now-secondary", `${fmtNum(priceCents(current.price, otherMode()), 1)} ct/kWh ${modeLabel(otherMode())}`);
-    setText("now-epex", `Kale EPEX: ${fmtNum(priceCentsRaw(current.price), 2)} ct/kWh`);
+    setText("now-cents", fmtCents(nu.price, 1));
+    setText("now-time", `Nu, ${nu.label}`);
+    setText("now-secondary", `${fmtNum(priceCents(nu.price, otherMode()), 1)} ct/kWh ${modeLabel(otherMode())}`);
+    setText("now-epex", `Kale EPEX: ${fmtNum(priceCentsRaw(nu.price), 2)} ct/kWh`);
     const statusEl = document.querySelector(".status-value");
     if (statusEl) statusEl.textContent = statusLabel(cls);
-    renderNowAdvice(prices, nowIdx, current, cls);
+    // Het advies kijkt vooruit in hele uren (vanaf het lopende uur), maar vergelijkt
+    // met de prijs die nu op de kaart staat.
+    renderNowAdvice(prices, nowIdx, { time: hour.time, price: nu.price }, cls);
   }
 
   // ---- Instap-advies: vertaalt de prijsstatus naar een concrete actie in gewone taal ----
@@ -858,10 +902,12 @@
     if (!tbody) return;
     const prices = state.dayPrices;
     if (!prices.length) return;
-    const current = state.nowIdx >= 0 ? prices[state.nowIdx] : prices[0];
+    const current = currentPricePoint();
     if (!current) return;
 
-    setText("suppliers-now-time", `het uur van ${fmtTime(current.time)}`);
+    setText("suppliers-now-time", current.isQuarter
+      ? `het kwartier van ${current.label}`
+      : `het uur van ${current.label}`);
 
     const verifiedDates = (state.config.suppliers || [])
       .map((s) => s.verified)
@@ -2197,6 +2243,7 @@
       applyConfigDefaults();
       wireUI();
       renderAll();
+      planKwartierUpdate();
 
       // Wisselt het toestel van lichte naar donkere modus (of terug), dan
       // tekenen we de grafieken opnieuw: die staan op een canvas en volgen
