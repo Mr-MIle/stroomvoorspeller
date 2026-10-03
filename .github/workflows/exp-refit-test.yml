@@ -1,0 +1,39 @@
+name: Exp — test refit_model_v5 op main
+
+on:
+  push:
+    branches: [exp/model-lab]
+    paths:
+      - 'exp-data/request_refit.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  refit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+      - uses: actions/checkout@v4
+        with:
+          ref: exp/model-lab
+          path: lab
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Refit op main-code, live opgehaalde data
+        run: |
+          cd main
+          python scripts/refit_model_v5.py --out ../lab/exp-data/model_v5_ci.json 2>&1 | tail -20
+      - name: Commit resultaat
+        run: |
+          cd lab
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f exp-data/model_v5_ci.json
+          git commit -m "exp: refit-test [skip ci]" || exit 0
+          for i in 1 2 3; do git pull --rebase origin exp/model-lab && git push origin HEAD:exp/model-lab && break; sleep 5; done
