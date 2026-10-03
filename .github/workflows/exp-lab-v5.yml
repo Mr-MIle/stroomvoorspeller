@@ -1,0 +1,53 @@
+name: Exp lab v5 — verwacht weer per horizon ophalen
+
+# Draait bij een push naar exp/model-lab die het dumpscript, de weerpunten of
+# exp-data/request_v5.txt raakt. workflow_dispatch is vanuit de
+# ontwikkelomgeving niet aanroepbaar, een push wel. main wordt niet geraakt.
+
+on:
+  push:
+    branches: [exp/model-lab]
+    paths:
+      - 'scripts/dump_lab_v5.py'
+      - 'scripts/weather_points.py'
+      - 'exp-data/request_v5.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: exp-lab-v5
+  cancel-in-progress: false
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: exp/model-lab
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bouw labdata
+        run: |
+          START=$(grep -E '^start=' exp-data/request_v5.txt | head -1 | cut -d= -f2)
+          python scripts/dump_lab_v5.py --start "${START:-2024-01-01}" --out exp-data/lab_v5.json.gz
+
+      - name: Commit terug naar de branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f exp-data/lab_v5.json.gz
+          if git diff --cached --quiet; then
+            echo "geen wijziging"
+          else
+            git commit -m "exp: labdata v5 [skip ci]"
+            for i in 1 2 3; do
+              git pull --rebase origin exp/model-lab && git push origin HEAD:exp/model-lab && break
+              sleep 5
+            done
+          fi
