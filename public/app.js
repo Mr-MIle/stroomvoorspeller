@@ -1988,6 +1988,28 @@
 
   // Opbouw per factor voor één voorspeld uur (gevuld bij klik op de voorspelgrafiek)
   function renderFactorPanel(panel, f) {
+    // v5: elke factor heeft een bijdrage in EUR/MWh (veld eur). We tonen die in
+    // ct/kWh kale beursprijs; basis + bijdragen = voorspelling.
+    if (f.factors.some((x) => typeof x.eur === "number")) {
+      const ct = (eur) => eur / 10;
+      const sgn = (n) => (n > 0.05 ? "+" : "") + fmtNum(n, 1);
+      const sum = f.factors.reduce((acc, x) => acc + (x.eur || 0), 0);
+      const rows5 = f.factors.map((x) => {
+        const v = ct(x.eur || 0);
+        const cls = v > 0.05 ? "fp-pts up" : v < -0.05 ? "fp-pts down" : "fp-pts";
+        return `<tr><td>${x.name}</td><td class="${cls}">${sgn(v)} ct</td><td>${x.reason || ""}</td></tr>`;
+      }).join("");
+      panel.innerHTML = `
+      <div class="fp-head">
+        <strong>Opbouw van ${fmtDateTime(f.time)}</strong>
+        <button type="button" class="fp-close" aria-label="Sluiten">×</button>
+      </div>
+      <table class="fp-table"><tbody>${rows5}</tbody></table>
+      <p class="fp-total">Basisprijs ${fmtNum(ct(f.baseline), 1)} ct, samen ${sgn(ct(sum))} ct: voorspeld ${fmtNum(ct(f.predicted), 1)} ct/kWh kale beursprijs (plus = duurder, min = goedkoper). In de grafiek staat dat als ${fmtNum(priceCents(f.predicted), 1)} ct/kWh. <a href="/over/voorspelling">Hoe het model werkt →</a></p>`;
+      panel.hidden = false;
+      panel.querySelector(".fp-close").onclick = () => { panel.hidden = true; };
+      return;
+    }
     const sign = (n) => (n > 0 ? `+${n}` : `${n}`);
     const total = f.factors.reduce((sum, x) => sum + (x.points || 0), 0);
     const rows = f.factors.map((x) => {

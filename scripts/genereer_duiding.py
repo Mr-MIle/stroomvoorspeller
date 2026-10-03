@@ -315,21 +315,37 @@ def lees_factoren(forecast_path: str, date: str) -> dict | None:
     # (sw_ratio_daily en temp_c), met dezelfde drempels als het model gebruikte.
     afgeleid = _weer_uit_rijen(rows)
     for naam in ("zon", "wind", "gas", "temperatuur"):
-        punten, reason = [], ""
+        punten, reason, eur = [], "", []
         for r in rows:
             for f in r.get("factors", []):
                 if f.get("name") == naam:
                     punten.append(f.get("points", 0))
                     reason = f.get("reason", "") or reason
+                    if isinstance(f.get("eur"), (int, float)):
+                        eur.append(f["eur"])
+        # v5: zon en temperatuur verschillen per uur (zon is 's nachts 0), dus de
+        # mediaan zegt weinig. Voor die twee blijft de afleiding uit het weer leidend.
+        if naam in ("zon", "temperatuur") and naam in afgeleid:
+            out[naam] = afgeleid[naam]
+            continue
         if not punten:
             if naam in afgeleid:
                 out[naam] = afgeleid[naam]
             continue
-        m = re.search(r"\(([-\d.]+)", reason)
+        if eur:
+            # v5 geeft bijdragen in EUR/MWh; vertaal naar de puntenschaal van v4 waar
+            # de teksten hieronder op gebouwd zijn.
+            ct = median(eur) / 10.0
+            if naam == "wind":
+                pts = 3 if ct >= 2 else 1 if ct >= 0.5 else -3 if ct <= -2 else -2 if ct <= -0.5 else 0
+            else:
+                pts = 2 if ct >= 1 else -2 if ct <= -1 else 0
+            punten = [pts]
+        m = re.search(r"\(([-\d.,]+)", reason)
         waarde = None
         if m:
             try:
-                waarde = float(m.group(1))
+                waarde = float(m.group(1).replace(",", "."))
             except ValueError:
                 waarde = None
         out[naam] = {"points": round(median(punten)), "reason": reason, "waarde": waarde}

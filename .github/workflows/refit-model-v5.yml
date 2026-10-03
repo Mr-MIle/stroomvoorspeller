@@ -1,0 +1,48 @@
+name: Model v5 — gewichten opnieuw schatten
+
+# Wekelijks (zondag 04:17 UTC) en op verzoek. Haalt het weer op zoals het 1-7
+# dagen vooraf verwacht werd (Open-Meteo Previous Runs, sinds januari 2024), de
+# prijzen uit het archief en de TTF-gasprijs, en schat per uur van de dag de
+# gewichten van het correctiemodel opnieuw. Resultaat: public/data/model_v5.json.
+# Mislukt iets, dan blijft het oude bestand staan en draait de voorspelling door.
+
+on:
+  schedule:
+    - cron: "17 4 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refit-model-v5
+  cancel-in-progress: false
+
+jobs:
+  refit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Schat de gewichten
+        run: python scripts/refit_model_v5.py
+
+      - name: Commit en push
+        run: |
+          git config user.name "stroomvoorspeller-bot"
+          git config user.email "bot@stroomvoorspeller.nl"
+          git add public/data/model_v5.json
+          if git diff --cached --quiet; then
+            echo "Geen wijziging."
+          else
+            git commit -m "auto: gewichten model v5 opnieuw geschat $(date -u +%Y-%m-%d) [skip ci]"
+            for i in 1 2 3; do
+              git pull --rebase --autostash && git push && break
+              sleep 10
+            done
+          fi

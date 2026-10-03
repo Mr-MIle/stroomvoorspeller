@@ -64,6 +64,19 @@ try:
     from load_archive import load_same_period as _load_same_period  # noqa: E402
 except Exception:  # noqa: BLE001
     _load_same_period = None
+try:
+    from load_archive import load_range as _load_range  # noqa: E402
+except Exception:  # noqa: BLE001
+    _load_range = None
+# v5 (okt 2026): meerpunts-weer + lineair correctiemodel. Ontbreekt een van deze
+# modules, dan draait v4 gewoon door.
+try:
+    import model_v5 as _m5                                          # noqa: E402
+    from weather_points import FORECAST_URL as _WP_FORECAST_URL     # noqa: E402
+    from weather_points import fetch_point_series as _wp_fetch      # noqa: E402
+except Exception as _exc:  # noqa: BLE001
+    _m5 = None
+    print(f"[warn] model_v5 niet te laden: {_exc}", file=sys.stderr)
 
 # Modelversie — komt mee in de output zodat de frontend hem kan tonen.
 # v2.1: EVENT_PLAUSIBILITY_LAYER toegevoegd als post-processing stap.
@@ -118,6 +131,20 @@ V4_FACTORS = {"wind", "gas", "vorige_dag", "dagtype", "nonlinear",
               "scarcity", "zomerschaarste"}
 V4_NONLINEAR_FLOOR = -3.0
 
+# v5 (3 okt 2026, rapport 01-documenten/ab-model-v5-uitkomst.md):
+#   - basis = half v4-baseline over 28 dagen, half het profiel van de 5 dagen uit de
+#     laatste 3 weken met het meest vergelijkbare zon en wind;
+#   - correctie per uur uit een lineair model op het verwachte weer op 9 windpunten
+#     (100 m, NL+DE), 5 zonpunten, temperatuur, dagtype en gas; gewichten wekelijks
+#     opnieuw geschat door refit_model_v5.py (public/data/model_v5.json);
+#   - historie uit het archief (28 dagen) in plaats van alleen prices.json (16 dagen).
+# Eerlijke backtest juli 2024 - sept 2026 met het weer zoals het vooraf verwacht
+# werd: MAE 25,2 -> 21,1 EUR/MWh. Live-venster v4 (20 aug - 1 okt 2026): 34,1 -> 28,1.
+# v4 rekent als schaduw mee (veld predicted_v4) zodat de twee live te vergelijken zijn.
+# Kill-switch: terug op False, dan draait v4 ongewijzigd.
+ENABLE_MODEL_V5 = True
+V5_HISTORY_DAYS = 40
+
 # ---------------------------------------------------------------------------
 # Paden
 # ---------------------------------------------------------------------------
@@ -126,6 +153,7 @@ PRICES_FILE        = PROJECT_ROOT / "public" / "data" / "prices.json"
 FORECAST_FILE      = PROJECT_ROOT / "public" / "data" / "forecast.json"
 PREDICTION_LOG_FILE    = PROJECT_ROOT / "03-data" / "prediction_log.json"
 BIAS_CORRECTIONS_FILE  = PROJECT_ROOT / "03-data" / "bias_corrections.json"
+MODEL_V5_FILE          = PROJECT_ROOT / "public" / "data" / "model_v5.json"
 
 # Hoeveel dagen we prediction-log bewaren (voor bias-correctie en analog search)
 PREDICTION_LOG_MAX_DAYS = 90
@@ -340,6 +368,54 @@ def compute_ttf_ratio(ttf_series: dict) -> float:
 
 
 # ---------------------------------------------------------------------------
+# v5: invoer ophalen
+# ---------------------------------------------------------------------------
+
+def load_v5_inputs(history: list, now_ams: datetime):
+    """
+    Return (P, idx, k, coefs) of None als v5 niet kan draaien.
+      P     {date: [24 prijzen]} uit archief (40 dagen) + prices.json
+      idx   {date: weerindices} voor de afgelopen 35 en komende 8 dagen
+      k     laatste dag met complete prijzen
+      coefs inhoud van model_v5.json
+    """
+    if _m5 is None or not ENABLE_MODEL_V5:
+        return None
+    try:
+        coefs = json.loads(MODEL_V5_FILE.read_text(encoding="utf-8"))
+        if len(coefs.get("hours", [])) != 24:
+            raise ValueError("model_v5.json heeft geen 24 uren")
+    except (OSError, ValueError) as exc:
+        print(f"[warn] v5: model_v5.json niet bruikbaar ({exc}); v4 blijft.", file=sys.stderr)
+        return None
+    hist = []
+    if _load_range is not None:
+        try:
+            hist = _load_range(now_ams - timedelta(days=V5_HISTORY_DAYS),
+                               now_ams + timedelta(days=2))
+        except Exception as exc:  # noqa: BLE001
+            print(f"[warn] v5: archief lezen mislukt ({exc})", file=sys.stderr)
+    P = _m5.prices_by_day(list(hist) + list(history))
+    if len(P) < 28:
+        print(f"[warn] v5: maar {len(P)} complete prijsdagen; v4 blijft.", file=sys.stderr)
+        return None
+    try:
+        series = _wp_fetch(_WP_FORECAST_URL,
+                           {"wind": ["wind_speed_100m"], "solar": ["shortwave_radiation"],
+                            "temp": ["temperature_2m"]},
+                           {"past_days": 35, "forecast_days": 9})
+        idx = _m5.daily_indices(series, "wind_speed_100m", "shortwave_radiation",
+                                "temperature_2m")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[warn] v5: weerpunten ophalen mislukt ({exc}); v4 blijft.", file=sys.stderr)
+        return None
+    k = max(P)
+    print(f"[info] v5: {len(P)} prijsdagen t/m {k}, weer voor {len(idx)} dagen, "
+          f"gewichten van {coefs.get('fitted_at')}.", file=sys.stderr)
+    return P, idx, k, coefs
+
+
+# ---------------------------------------------------------------------------
 # Bias-correctie (MOS) — laden en toepassen
 # ---------------------------------------------------------------------------
 
@@ -530,6 +606,8 @@ def log_predictions(forecasts: list, log_file: Path) -> None:
             "temp_c":         fc.get("temp_c"),
             "regime":         fc.get("regime"),
             "P_negative":     fc.get("P_negative"),
+            # v5: wat v4 voor hetzelfde uur zei (schaduwmeting)
+            "predicted_v4":   fc.get("predicted_v4"),
             # Plausibility (v2.1)
             "plausibility_score": fc.get("event_plausibility_score"),
             "plausibility_label": fc.get("event_plausibility_label"),
@@ -693,6 +771,11 @@ def main() -> int:
         frac = (d - 15) / 30
         return MONTHLY_TEMP_NORM_C[m] * (1 - frac) + MONTHLY_TEMP_NORM_C[next_m] * frac
 
+    # v5: invoer eenmalig laden. Lukt dat niet, dan draait v4 ongewijzigd.
+    v5_inputs = load_v5_inputs(history, now_ams)
+    v5_gas = ttf_ratio - 1.0
+    v5_used = 0
+
     forecasts: list = []
     skipped = 0
     cursor = horizon_start
@@ -749,6 +832,22 @@ def main() -> int:
             except Exception as exc:  # noqa: BLE001
                 print(f"[warn] seizoensdata laden mislukt ({day_key}): {exc}", file=sys.stderr)
                 seasonal_history = None
+
+        # v5: één berekening per doeldag
+        v5_day = None
+        if v5_inputs is not None:
+            P5, idx5, k5, coefs5 = v5_inputs
+            fc_day = idx5.get(cursor.date())
+            if fc_day is not None:
+                k_eff = min(k5, cursor.date() - timedelta(days=1))
+                try:
+                    v5_day = _m5.forecast_day(P5, idx5, fc_day, k_eff, cursor.date(),
+                                              v5_gas, coefs5)
+                except Exception as exc:  # noqa: BLE001
+                    print(f"[warn] v5 {day_key}: {exc}; v4 voor deze dag.", file=sys.stderr)
+            else:
+                print(f"[warn] v5 {day_key}: geen volledig weer; v4 voor deze dag.",
+                      file=sys.stderr)
 
         for hour in range(24):
             target_dt = cursor.replace(hour=hour, minute=0, second=0, microsecond=0)
@@ -814,6 +913,27 @@ def main() -> int:
                 ],
             }
 
+            # v5: vervang voorspelling, band en factoren; v4 blijft als schaduw staan.
+            fc_dict["model"] = "4.0"
+            if v5_day is not None:
+                hr5 = v5_day["hours"][hour]
+                pred5 = round(hr5["pred"], 2)
+                half5 = _m5.band_half(pred5, v5_day["lead"])
+                fc_dict["predicted_v4"] = fc_dict["predicted"]
+                fc_dict.update({
+                    "baseline":        round(hr5["b4"], 2),
+                    "predicted":       pred5,
+                    "predicted_raw":   pred5,
+                    "lower":           round(pred5 - half5, 2),
+                    "upper":           round(pred5 + half5, 2),
+                    "uncertainty_pct": round(half5 / abs(pred5), 4) if abs(pred5) > 1e-6 else 1.0,
+                    "total_points":    0,
+                    "lead_days":       v5_day["lead"],
+                    "model":           _m5.MODEL_VERSION,
+                    "factors":         _m5.explain_hour(v5_day, hour),
+                })
+                v5_used += 1
+
             # v2.1: EVENT_PLAUSIBILITY_LAYER
             # Wijzigt fc_dict["predicted"] NIET. Voegt plausibility-metadata toe.
             # v2.3: als weerdata ontbreekt (fallback-normen), sla analogie-zoek over.
@@ -855,6 +975,9 @@ def main() -> int:
 
     print(f"[info] {len(forecasts)} voorspellingen gegenereerd; {skipped} overgeslagen.",
           file=sys.stderr)
+    if v5_used:
+        globals()["MODEL_VERSION"] = _m5.MODEL_VERSION
+        print(f"[info] v5 gebruikt voor {v5_used} van {len(forecasts)} uren.", file=sys.stderr)
 
     payload = {
         "generated_at":  datetime.now(timezone.utc).isoformat(),
@@ -866,6 +989,13 @@ def main() -> int:
         "horizon_end":   (horizon_end - timedelta(seconds=1)).isoformat(),
         "forecasts":     forecasts,
     }
+    if v5_used and v5_inputs is not None:
+        payload["model_v5"] = {
+            "fitted_at":      v5_inputs[3].get("fitted_at"),
+            "train_to":       v5_inputs[3].get("train_to"),
+            "last_price_day": str(v5_inputs[2]),
+            "hours_v5":       v5_used,
+        }
     if not weather:
         payload["error"] = "Open-Meteo niet beschikbaar; geen voorspelling deze run."
     elif not forecasts:

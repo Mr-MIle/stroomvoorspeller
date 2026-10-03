@@ -399,6 +399,7 @@
         </div>
       </div>
       <p class="window-note" id="window-note">Meetvenster en aantal geëvalueerde uren staan hieronder in de tekst.</p>
+      <p class="window-note" id="shadow-note" hidden></p>
     </section>
 
     <!-- ── Uitlegblok scores ── -->
@@ -689,6 +690,17 @@
         document.getElementById('window-note').textContent =
           `${nlDatum(d.first_date)} t/m ${nlDatum(d.last_date)}${dagen} · ` +
           `${(o.n_hours || 0).toLocaleString('nl-NL')} uren geëvalueerd${horizon}`;
+      }
+
+      // v5: zelfde uren, twee modelversies. En wat "simpele benchmark" betekent.
+      const sh = d.shadow_v4;
+      const shEl = document.getElementById('shadow-note');
+      if (shEl && sh && sh.n_hours >= 24) {
+        const ct = (v) => (v / 10).toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+        shEl.textContent = `Versie 5.0 tegen 4.0 op dezelfde ${sh.n_hours.toLocaleString('nl-NL')} uren: ` +
+          `5.0 zat er gemiddeld ${ct(sh.mae_v5_eur_mwh)} ct naast, 4.0 ${ct(sh.mae_v4_eur_mwh)} ct. ` +
+          `De simpele benchmark is de mediaan van hetzelfde uur over de laatste 7 dagen die op het moment van voorspellen bekend waren.`;
+        shEl.hidden = false;
       }
 
       renderHero(d);

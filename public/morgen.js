@@ -763,6 +763,8 @@
       state.tomorrowForecasts.forEach(f => {
         hrs++;
         (f.factors || []).forEach(fc => {
+          // v5: alleen de weer- en marktfactoren vertellen iets over morgen
+          if (fc.name === "vergelijkbare dagen" || fc.name === "vaste correctie") return;
           if (!factorAcc[fc.name]) factorAcc[fc.name] = { name: fc.name, pts: 0, reason: fc.reason };
           factorAcc[fc.name].pts += fc.points;
         });

@@ -79,6 +79,13 @@ jobs:
           DATE=$(date -u +%Y-%m-%d)
           cp public/data/forecast.json data/forecast_archive/forecast_${DATE}.json
 
+      - name: Leg meetlat vast (EpexPredictor)
+        # Alleen meten: zelfde moment als onze snapshot, zodat generate_performance.py
+        # beide modellen op dezelfde uren vergelijkt. Mag nooit iets blokkeren.
+        if: steps.check.outcome == 'success'
+        continue-on-error: true
+        run: python scripts/log_benchmark.py
+
       - name: Genereer RSS-feed
         if: steps.check.outcome == 'success'
         continue-on-error: true
@@ -137,6 +144,7 @@ jobs:
           git add public/aanbieders.html public/historisch.html 2>/dev/null || true
           git add public/records.html 2>/dev/null || true
           git add data/forecast_archive/ 2>/dev/null || true
+          git add data/benchmark_archive/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "auto: update prijzen + voorspelling $(date -u +%Y-%m-%dT%H:%MZ)"

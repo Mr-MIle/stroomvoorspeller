@@ -19,8 +19,12 @@ import math
 # 2026 en 2027 zijn GEEN lustrum, dus niet opgenomen.
 # 2027: Pasen = 28 maart (berekend via Gregoriaanse methode).
 NL_FEESTDAGEN = {
-    # 2025
-    "2025-01-01", "2025-04-18", "2025-04-20", "2025-04-21", "2025-04-27",
+    # 2024 — Pasen = 31 maart (v5: nodig voor de training op data sinds 2024)
+    "2024-01-01", "2024-03-29", "2024-03-31", "2024-04-01", "2024-04-27",
+    "2024-05-09", "2024-05-19", "2024-05-20",
+    "2024-12-25", "2024-12-26",
+    # 2025 — Koningsdag viel op zondag 27 april en schoof naar zaterdag 26 april
+    "2025-01-01", "2025-04-18", "2025-04-20", "2025-04-21", "2025-04-26",
     "2025-05-05",  # Bevrijdingsdag 2025 — 80e lustrum ✓
     "2025-05-29", "2025-06-08", "2025-06-09",
     "2025-12-25", "2025-12-26",
@@ -40,6 +44,8 @@ NL_FEESTDAGEN = {
 # die dag structureel afwijkend (buurland-overschot drukt de prijs) en
 # mogen ze niet meewegen in de baseline van een gewone werkdag.
 CROSSBORDER_FEESTDAGEN = {
+    "2024-05-01",  # v5: training sinds 2024
+    "2025-05-01",
     "2026-05-01",  # Dag van de Arbeid (DE+BE+FR vrij, NL open)
     "2027-05-01",  # Dag van de Arbeid
 }

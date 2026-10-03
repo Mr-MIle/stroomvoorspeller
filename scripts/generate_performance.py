@@ -27,6 +27,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PRICES_JSON = ROOT / "public" / "data" / "prices.json"
 ARCHIVE_DIR = ROOT / "data" / "forecast_archive"
+BENCHMARK_DIR = ROOT / "data" / "benchmark_archive"
+PRICE_ARCHIVE_DIR = ROOT / "public" / "data" / "archief"
 OUTPUT_JSON = ROOT / "public" / "data" / "performance.json"
 
 # Modelversie-geschiedenis (handmatig bijhouden)
@@ -40,9 +42,10 @@ MODEL_HISTORY = [
     {"version": "3.1", "date": "2026-06-13", "mae_eur_mwh": None,  "notes": "Dunkelflaute-amplifier (schaarste-correctie); winterbias −52 → −24"},
     {"version": "3.2", "date": "2026-07-05", "mae_eur_mwh": None,  "notes": "Zomerschaarste-regime + amplifier (windstille hitte, avondramp 18-22u)"},
     {"version": "4.0", "date": "2026-08-17", "mae_eur_mwh": None,  "notes": "Nieuwe niveauschatter (28d werkdag/weekend + trend), bodem op de oversupply-correctie, 7 factoren, band 80%"},
+    {"version": "5.0", "date": "2026-10-03", "mae_eur_mwh": None,  "notes": "Weer op 9 windpunten en 5 zonpunten (NL+DE), vergelijkbare dagen, lineaire correctie per uur; backtest met verwacht weer 25,2 -> 21,1"},
 ]
 
-CURRENT_MODEL_VERSION = "4.0"
+CURRENT_MODEL_VERSION = "5.0"
 
 # Evaluatievenster: afgelopen N dagen
 EVAL_WINDOW_DAYS = 30
@@ -53,9 +56,23 @@ EVAL_WINDOW_DAYS = 30
 # ---------------------------------------------------------------------------
 
 def load_prices():
-    """Laad prices.json en retourneer dict {iso_hour_str: epex_eur_mwh}."""
+    """Werkelijke prijzen {iso_hour_str: epex_eur_mwh}.
+
+    v5: prices.json bevat maar ~16 dagen, waardoor het "30-dagenvenster" in de
+    praktijk 15 dagen besloeg. Daarom eerst de maandbestanden uit het archief van
+    de laatste drie maanden, daarna prices.json (nieuwste waarden winnen).
+    """
+    entries = []
+    if PRICE_ARCHIVE_DIR.exists():
+        months = sorted(PRICE_ARCHIVE_DIR.glob("20??-??.json"))[-3:]
+        for mp in months:
+            try:
+                entries.extend(json.loads(mp.read_text(encoding="utf-8")).get("prices", []))
+            except (OSError, ValueError):
+                print(f"[WARN] Archiefmaand onleesbaar: {mp}")
     with open(PRICES_JSON, encoding="utf-8") as f:
         data = json.load(f)
+    data = {"prices": entries + data.get("prices", [])}
 
     actuals = {}
     # prices.json structuur: {"prices": [{"time": "2026-04-14T08:00:00+02:00", "price": 52.1, ...}, ...]}
@@ -74,19 +91,20 @@ def load_prices():
     return actuals
 
 
-def load_archive(prefix="forecast"):
+def load_archive(prefix="forecast", directory=None):
     """Laad forecast-archiefbestanden met een gegeven prefix.
 
     prefix="forecast"   -> de dagelijkse snapshot (na publicatie van de day-ahead)
     prefix="preauction" -> de snapshot van voor de veiling; alleen die kan een
                            eerlijke D+1-meting opleveren, zie de toelichting in main().
     """
-    if not ARCHIVE_DIR.exists():
-        print(f"[WARN] Archief-map niet gevonden: {ARCHIVE_DIR}")
+    adir = directory or ARCHIVE_DIR
+    if not adir.exists():
+        print(f"[WARN] Archief-map niet gevonden: {adir}")
         return []
 
     archives = []
-    for path in sorted(ARCHIVE_DIR.glob(f"{prefix}_*.json")):
+    for path in sorted(adir.glob(f"{prefix}_*.json")):
         # Bestandsnaam = <prefix>_YYYY-MM-DD.json
         stem = path.stem
         parts = stem.split("_", 1)
@@ -106,19 +124,25 @@ def load_archive(prefix="forecast"):
 
         # forecast.json structuur: {"forecasts": [{"time": "...", "predicted": 55.0, "lower": ..., "upper": ...}]}
         fc_dict = {}
+        snap_model = str(data.get("model_version", ""))
         for entry in data.get("forecasts", []):
             hour_str = entry.get("hour") or entry.get("time")
             fc_val = entry.get("epex_forecast") or entry.get("forecast_eur_mwh") or entry.get("predicted")
+            if fc_val is None:
+                fc_val = entry.get("price")          # benchmark-archief
             band_low = entry.get("band_low") or entry.get("lower")
             band_high = entry.get("band_high") or entry.get("upper")
             if hour_str and fc_val is not None:
                 try:
                     dt = datetime.fromisoformat(hour_str.replace("Z", "+00:00"))
                     key = dt.strftime("%Y-%m-%dT%H:00:00Z")
+                    v4 = entry.get("predicted_v4")
                     fc_dict[key] = {
                         "forecast": float(fc_val),
                         "band_low": float(band_low) if band_low is not None else None,
                         "band_high": float(band_high) if band_high is not None else None,
+                        "model": str(entry.get("model") or snap_model),
+                        "forecast_v4": float(v4) if v4 is not None else None,
                     }
                 except ValueError:
                     pass
@@ -147,11 +171,21 @@ def classify(epex_eur_mwh):
         return "very_pricey"
 
 
-def naive_forecast(actuals, target_dt, daytype):
-    """Naïeve voorspelling: mediaan van zelfde uur, 7d terug (werkdag) of 14d terug (weekend)."""
+def naive_forecast(actuals, target_dt, daytype, known_until=None):
+    """Naïeve voorspelling: mediaan van hetzelfde uur over de laatste 7 (werkdag) of
+    14 (weekend) dagen.
+
+    v5: known_until = laatste dag waarvan de prijzen op het voorspelmoment bekend
+    waren. Tot oktober 2026 telde de naïeve vergelijking ook dagen mee die op dat
+    moment nog niet bekend waren (doel-1 t/m doel-7), en kreeg ze dus informatie
+    die het model niet had. Nu eindigt het venster op known_until.
+    """
     window = 14 if daytype == "weekend" else 7
+    offset = 1
+    if known_until is not None:
+        offset = max(1, (target_dt.date() - known_until).days)
     candidates = []
-    for d in range(1, window + 1):
+    for d in range(offset, offset + window):
         candidate_dt = target_dt - timedelta(days=d)
         key = candidate_dt.strftime("%Y-%m-%dT%H:00:00Z")
         if key in actuals:
@@ -215,8 +249,10 @@ def compute_performance():
             band_low = fc_entry.get("band_low")
             band_high = fc_entry.get("band_high")
 
-            # Naïef
-            naive = naive_forecast(actuals, target_dt, day_type(target_dt))
+            # Naïef — alleen met prijzen die bij de snapshot bekend waren. De snapshot
+            # is de laatste run van de dag (na de publicatie van morgen), dus t/m dag+1.
+            naive = naive_forecast(actuals, target_dt, day_type(target_dt),
+                                   known_until=snap_date + timedelta(days=1))
 
             # Within band
             within_band = False
@@ -235,6 +271,10 @@ def compute_performance():
                 "within_band": within_band,
                 "error": abs(forecast - actual),
                 "signed_error": forecast - actual,
+                "model": fc_entry.get("model", ""),
+                "forecast_v4": fc_entry.get("forecast_v4"),
+                "snap": snap_date,
+                "key": hour_str,
             })
 
     # ---------------------------------------------------------------------------
@@ -429,7 +469,8 @@ def compute_performance():
             d1_pairs.append({
                 "actual": actual,
                 "forecast": forecast,
-                "naive": naive_forecast(actuals, target_dt, day_type(target_dt)),
+                "naive": naive_forecast(actuals, target_dt, day_type(target_dt),
+                                        known_until=snap_date),
                 "date": str(target_dt.date()),
                 "within_band": (band_low is not None and band_high is not None
                                 and band_low <= actual <= band_high),
@@ -455,6 +496,53 @@ def compute_performance():
     else:
         d1_preauction = None
         print("[INFO] Nog geen preauction-snapshots; D+1 blijft leeg tot die er zijn.")
+
+    # ---------------------------------------------------------------------------
+    # v5: per modelversie, v4 als schaduw, en een externe meetlat
+    # ---------------------------------------------------------------------------
+    by_model = []
+    for mv in sorted({p["model"] for p in pairs if p["model"]}):
+        mp = [p for p in pairs if p["model"] == mv]
+        by_model.append({"model_version": mv, "n_hours": len(mp), "mae_eur_mwh": mae(mp)})
+
+    # Zelfde uren, twee modellen: v5 en wat v4 er tegelijk van zei.
+    sh = [p for p in pairs if p.get("forecast_v4") is not None and p["model"].startswith("5")]
+    shadow_v4 = None
+    if sh:
+        shadow_v4 = {
+            "n_hours": len(sh),
+            "mae_v5_eur_mwh": mae(sh),
+            "mae_v4_eur_mwh": round(sum(abs(p["forecast_v4"] - p["actual"]) for p in sh) / len(sh), 2),
+        }
+
+    # EpexPredictor (open source, ook achter dynamisch-tarief.nl) als meetlat:
+    # dezelfde snapshotdag, hetzelfde doeluur, dezelfde werkelijke prijs.
+    benchmark = None
+    bench = {sd: fc for sd, fc in load_archive("epexpredictor", BENCHMARK_DIR)
+             if sd >= window_start}
+    if bench:
+        bp = []
+        for p in pairs:
+            b = bench.get(p["snap"], {}).get(p["key"])
+            if b is not None:
+                bp.append((p, b["forecast"]))
+        if bp:
+            per_h = []
+            for h in range(2, 8):
+                hp = [(p, b) for p, b in bp if p["horizon"] == h]
+                if hp:
+                    per_h.append({
+                        "horizon_days": h, "n_hours": len(hp),
+                        "mae_eigen_eur_mwh": round(sum(p["error"] for p, _ in hp) / len(hp), 2),
+                        "mae_epexpredictor_eur_mwh": round(sum(abs(b - p["actual"]) for p, b in hp) / len(hp), 2),
+                    })
+            benchmark = {
+                "naam": "EpexPredictor (github.com/b3nn0/EpexPredictor)",
+                "n_hours": len(bp),
+                "mae_eigen_eur_mwh": round(sum(p["error"] for p, _ in bp) / len(bp), 2),
+                "mae_epexpredictor_eur_mwh": round(sum(abs(b - p["actual"]) for p, b in bp) / len(bp), 2),
+                "by_horizon": per_h,
+            }
 
     # ---------------------------------------------------------------------------
     # Samenvoegen en schrijven
@@ -486,6 +574,11 @@ def compute_performance():
         "by_hour_of_day": by_hour_of_day,
         "by_price_bucket": by_price_bucket,
         "daily_series": daily_series,
+        "by_model": by_model,
+        "shadow_v4": shadow_v4,
+        "benchmark": benchmark,
+        "naive_note": ("Naïef = mediaan van hetzelfde uur over de laatste 7 (weekend: 14) "
+                       "dagen waarvan de prijs op het voorspelmoment bekend was."),
         "model_history": MODEL_HISTORY,
     }
 
