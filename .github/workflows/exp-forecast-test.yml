@@ -1,0 +1,42 @@
+name: Exp — test run_forecast (v5) op main
+
+on:
+  push:
+    branches: [exp/model-lab]
+    paths:
+      - 'exp-data/request_forecast.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  forecast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+      - uses: actions/checkout@v4
+        with:
+          ref: exp/model-lab
+          path: lab
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: run_forecast op main-code (niets terug naar main)
+        run: |
+          cd main
+          python scripts/run_forecast.py 2>&1 | tail -30
+          python scripts/log_benchmark.py 2>&1 | tail -3
+          cp public/data/forecast.json ../lab/exp-data/forecast_v5_test.json
+          cp data/benchmark_archive/*.json ../lab/exp-data/ 2>/dev/null || true
+      - name: Commit resultaat
+        run: |
+          cd lab
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f exp-data/forecast_v5_test.json exp-data/epexpredictor_*.json 2>/dev/null || git add -f exp-data/forecast_v5_test.json
+          git commit -m "exp: run_forecast-test [skip ci]" || exit 0
+          for i in 1 2 3; do git pull --rebase origin exp/model-lab && git push origin HEAD:exp/model-lab && break; sleep 5; done
