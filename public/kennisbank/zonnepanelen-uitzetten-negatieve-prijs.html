@@ -79,7 +79,7 @@
           "@id": "https://stroomvoorspeller.nl/#organization"
         },
         "datePublished": "2026-05-02",
-        "dateModified": "2026-07-08",
+        "dateModified": "2026-10-04",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/zonnepanelen-uitzetten-negatieve-prijs"
@@ -116,7 +116,7 @@
             "name": "Wat moet ik doen als ik naast zonnepanelen ook een thuisbatterij heb?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Stuur het hele systeem aan, niet alleen de panelen. Bij een hybride omvormer gaat dat automatisch goed: het systeem laadt de batterij met het zonneoverschot. Bij een AC-gekoppeld of standalone systeem heb je een slimme automatisering nodig (zoals Home Assistant of EVCC) die panelen én batterij tegelijk aanstuurt, anders kan het averechts werken."
+              "text": "Stuur het hele systeem aan, dus panelen én batterij. Bij een hybride omvormer gaat dat automatisch goed: het systeem laadt de batterij met het zonneoverschot. Bij een AC-gekoppeld of standalone systeem heb je een slimme automatisering nodig (zoals Home Assistant of EVCC) die panelen én batterij tegelijk aanstuurt, anders kan het averechts werken."
             }
           },
           {
@@ -158,11 +158,11 @@
     <h1>Zonnepanelen uitzetten bij negatieve stroomprijs: hoe werkt het en is het slim?</h1>
     <p class="legal-meta">2 mei 2026 · leestijd ~7 minuten</p>
 
-    <p>Op een zonnige zondag in de zomer kan de day-ahead prijs negatief worden: dan <em>betaal jij</em> om stroom terug te leveren aan het net in plaats van er geld voor te ontvangen. Logisch dat je dan denkt: zet die panelen dan gewoon uit. Maar hoe doe je dat precies, welke oplossingen bestaan er, en — belangrijk — wat als je naast zonnepanelen ook een thuisbatterij hebt?</p>
+    <p>Op een zonnige zondag in de zomer kan de day-ahead prijs negatief worden: dan <em>betaal jij</em> om stroom terug te leveren aan het net in plaats van er geld voor te ontvangen. Logisch dat je dan denkt: zet die panelen dan gewoon uit. Dat kan, maar heb je ook een thuisbatterij, dan ligt het lastiger.</p>
 
     <section>
       <h2>Waarom negatieve prijzen steeds vaker voorkomen</h2>
-      <p>Op dagen met veel wind en zon en weinig verbruik (denk aan zondagmiddag in mei) kan het aanbod van elektriciteit de vraag ver overtreffen. De day-ahead prijs op EPEX SPOT daalt dan onder nul. Voor huishoudens met een dynamisch energiecontract — zoals Tibber of Frank Energie — betekent dat: elke kWh die jij teruglevert op die momenten kost geld in plaats van het op te leveren. Hoe meer zon, hoe groter het verlies.</p>
+      <p>Op dagen met veel wind en zon en weinig verbruik (denk aan zondagmiddag in mei) kan het aanbod van elektriciteit de vraag ver overtreffen. De day-ahead prijs op EPEX SPOT daalt dan onder nul. Voor huishoudens met een dynamisch energiecontract (zoals Tibber of Frank Energie) betekent dat: elke kWh die jij teruglevert op die momenten kost geld in plaats van het op te leveren. Hoe meer zon, hoe groter het verlies.</p>
       <p>Negatieve prijzen waren vroeger zeldzaam, maar komen door de groei van zonne- en windenergie steeds regelmatiger voor, met name in het voorjaar en de zomer. Op <a href="/morgen">stroomvoorspeller.nl</a> zie je de verwachte uurprijzen voor morgen, inclusief de momenten die naar verwachting negatief worden.</p>
     </section>
 
@@ -248,13 +248,13 @@
       <p>Een Nederlandse dienst die specifiek is gebouwd voor het dimmen van zonnepanelen op basis van de day-ahead prijs. Werkt met meerdere omvormer-merken via de bestaande cloud-API. Net als bij Zonneplan is de prijsdrempel niet vrij instelbaar door de gebruiker — de dienst hanteert een vaste grens (doorgaans €0 ct/kWh).</p>
 
       <h3>Home Assistant + integraties</h3>
-      <p>Voor de technici onder ons is Home Assistant de meest flexibele optie. Met de ENTSO-E Transparency Platform integratie haal je de day-ahead prijzen op, en via de omvormer-integratie van jouw merk (er zijn integraties voor vrijwel elk merk) stuur je het vermogen aan. De populaire <em>SolarControl</em> blueprint maakt dit nog laagdrempeliger: je stelt zelf in vanaf welke prijs je de panelen wilt dimmen of uitzetten. Volledig in eigen beheer, geen maandelijkse kosten.</p>
+      <p>Voor de technici onder ons is Home Assistant de meest flexibele optie. Met de ENTSO-E Transparency Platform integratie haal je de day-ahead prijzen op, en via de omvormer-integratie van jouw merk (er zijn integraties voor vrijwel elk merk) stuur je het vermogen aan. De populaire <em>SolarControl</em> blueprint maakt dit nog laagdrempeliger: je stelt zelf in vanaf welke prijs je de panelen wilt dimmen of uitzetten. Alles blijft in eigen beheer, zonder maandelijkse kosten.</p>
 
       <h3>EVCC</h3>
-      <p>EVCC is primair een laadpaal-sturing tool maar kan via zijn energiebeheerfuncties ook Zero Export afdwingen bij negatieve prijzen. Met name interessant als je ook een elektrische auto laadt en alles in één systeem wilt beheren.</p>
+      <p>EVCC is primair een laadpaal-sturing tool maar kan via zijn energiebeheerfuncties ook Zero Export afdwingen bij negatieve prijzen. Dat is vooral interessant als je ook een elektrische auto laadt en alles in één systeem wilt beheren.</p>
 
       <h3>Homey</h3>
-      <p>Met Homey en een compatibele omvormer-app kun je flows instellen die op basis van de actuele of verwachte stroomprijs de omvormer aansturen. Flexibel, maar vereist wel wat knutselen en een geschikte omvormer-integratie.</p>
+      <p>Met Homey en een compatibele omvormer-app kun je flows instellen die op basis van de actuele of verwachte stroomprijs de omvormer aansturen. Dat is flexibel, maar vraagt wel wat knutselen en een geschikte omvormer-integratie.</p>
     </section>
 
     <section>
@@ -270,9 +270,9 @@
       <p>Bij een AC-gekoppeld systeem heb je een aparte PV-omvormer en een aparte batterij-omvormer. Als je de PV-omvormer uitzet maar de batterij niet, kan de batterij op dat moment stroom blijven afnemen van het net — of juist zelf gaan terugleveren. Het resultaat is onvoorspelbaar en kan zelfs averechts werken: je betaalt dan nóg meer dan als je niets had gedaan.</p>
 
       <h3>Standalone AC-batterij (bijv. Sessy, Powerwall)</h3>
-      <p>Sommige batterijen — zoals de Sessy of een Tesla Powerwall die niet direct is gekoppeld aan de PV-omvormer — kunnen niet communiceren met de omvormer. Als je de panelen uitzet maar de batterij zijn eigen strategie volgt (bijvoorbeeld toch laden vanuit het net of terugleveren), heb je het probleem niet opgelost.</p>
+      <p>Sommige batterijen (zoals de Sessy of een Tesla Powerwall die niet direct is gekoppeld aan de PV-omvormer) kunnen niet communiceren met de omvormer. Als je de panelen uitzet maar de batterij zijn eigen strategie volgt (bijvoorbeeld toch laden vanuit het net of terugleveren), heb je het probleem niet opgelost.</p>
 
-      <p>De conclusie: <strong>heb je een batterij, dan moet je het hele systeem aansturen — niet alleen de zonnepanelen</strong>. Bij een hybride omvormer gaat dat automatisch goed. Bij een AC-gekoppeld systeem heb je een slimme automatisering nodig (zoals Home Assistant of EVCC) die beide systemen tegelijk aanstuurt. Doe je dat niet, dan loop je het risico dat je uitschakeling van de panelen niets oplevert of zelfs kosten vergroot.</p>
+      <p>De conclusie: <strong>heb je een batterij, dan moet je het hele systeem aansturen, dus ook de batterij</strong>. Bij een hybride omvormer gaat dat automatisch goed. Bij een AC-gekoppeld systeem heb je een slimme automatisering nodig (zoals Home Assistant of EVCC) die beide systemen tegelijk aanstuurt. Doe je dat niet, dan loop je het risico dat je uitschakeling van de panelen niets oplevert of zelfs kosten vergroot.</p>
     </section>
 
     <section>
@@ -304,14 +304,14 @@
     <section>
       <h2>Slijtage: dimmen is beter dan uitzetten</h2>
       <p>Eén technisch punt dat snel wordt vergeten: frequente aan/uit-cycli zijn belastend voor de elektronische componenten in je omvormer. Condensatoren en relais zijn ontworpen voor een bepaald aantal schakelcycli. Als jouw systeem op een zonnige dag tien keer per uur aan- en uitgaat omdat de prijs fluctueert rond de nul, versnelt dat de slijtage merkbaar.</p>
-      <p>Systemen die kunnen <em>dimmen</em> — het vermogen geleidelijk terugregelen in plaats van volledig uitzetten — behandelen je hardware een stuk vriendelijker. Als jouw omvormer dat ondersteunt, verdient dimmen de voorkeur boven volledig uitschakelen.</p>
+      <p>Systemen die kunnen <em>dimmen</em> (het vermogen geleidelijk terugregelen in plaats van volledig uitzetten) behandelen je hardware een stuk vriendelijker. Als jouw omvormer dat ondersteunt, verdient dimmen de voorkeur boven volledig uitschakelen.</p>
     </section>
 
     <section>
       <h2>Praktisch advies: wat is voor jou de beste aanpak?</h2>
       <p>Het hangt af van jouw situatie:</p>
       <ul>
-        <li><strong>Alleen zonnepanelen, geen batterij, omvormer met native ondersteuning:</strong> Activeer Zero Export of de prijskoppeling in de app van je omvormer. Simpelste oplossing, geen extra tools nodig.</li>
+        <li><strong>Alleen zonnepanelen, geen batterij, omvormer met native ondersteuning:</strong> Activeer Zero Export of de prijskoppeling in de app van je omvormer. Dat is de simpelste oplossing, zonder extra tools.</li>
         <li><strong>Alleen zonnepanelen, geen batterij, omvormer zonder native ondersteuning:</strong> Overweeg Zonnedimmer.nl of, voor meer controle, Home Assistant.</li>
         <li><strong>Hybride omvormer met geïntegreerde batterij:</strong> Schakel Zero Export in op systeemniveau. De omvormer regelt de batterijlading automatisch. Je hoeft de afzonderlijke panelen niet apart aan te sturen.</li>
         <li><strong>AC-gekoppeld systeem of standalone batterij:</strong> Gebruik een platform dat beide systemen tegelijk kan aansturen, zoals Home Assistant of EVCC. Stuur niet alleen de panelen aan zonder ook de batterij mee te nemen in de logica.</li>
@@ -340,7 +340,7 @@
       <p>SolarEdge, Hoymiles, Huawei, Goodwe, Sungrow en Solis ondersteunen het via hun eigen app of cloud. Fronius en Enphase hebben geen native prijskoppeling en vereisen een externe tool zoals Home Assistant of EVCC. Functionaliteit verschilt per firmware en regio. Voor Enphase en Fronius loopt automatisch uitschakelen dus altijd via zo’n externe koppeling; hierboven lees je welke diensten dat kant-en-klaar aanbieden.</p>
 
       <h3>Wat moet ik doen als ik ook een thuisbatterij heb?</h3>
-      <p>Stuur het hele systeem aan, niet alleen de panelen. Bij een hybride omvormer gaat dat automatisch goed; bij een AC-gekoppeld of standalone systeem heb je een automatisering nodig (Home Assistant, EVCC) die panelen én batterij tegelijk aanstuurt, anders kan het averechts werken.</p>
+      <p>Stuur het hele systeem aan, dus panelen én batterij. Bij een hybride omvormer gaat dat automatisch goed; bij een AC-gekoppeld of standalone systeem heb je een automatisering nodig (Home Assistant, EVCC) die panelen én batterij tegelijk aanstuurt, anders kan het averechts werken.</p>
 
       <h3>Kan ik zelf de prijsdrempel instellen?</h3>
       <p>Niet bij elke oplossing. Zonneplan Powerplay en Zonnedimmer.nl hanteren een vaste grens. Wil je de drempel zelf bepalen, dan zijn Home Assistant, EVCC of Homey de flexibele keuzes — die vereisen wel wat technische kennis.</p>
