@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Historische stroomprijzen per uur terugkijken</title>
-  <meta name="description" content="Bekijk historische day-ahead stroomprijzen per uur voor elke dag. Filter op aanbieder, zoek negatieve prijsmomenten en vergelijk maanden." />
+  <title>Historische stroomprijzen per uur en per jaar terugkijken</title>
+  <meta name="description" content="Historische stroomprijzen per uur en per jaar, vanaf 2015. Kies je aanbieder en zie wat stroom per dag kostte, met de belasting van dat jaar." />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -14,13 +14,13 @@
   <meta property="og:locale" content="nl_NL" />
   <meta property="og:site_name" content="Stroomvoorspeller.nl" />
   <meta property="og:title" content="Historische stroomprijzen Nederland — per dag terugkijken" />
-  <meta property="og:description" content="Bekijk historische day-ahead stroomprijzen per uur voor elke dag. Filter op aanbieder, zoek negatieve prijsmomenten en vergelijk maanden." />
+  <meta property="og:description" content="Historische stroomprijzen per uur en per jaar, vanaf 2015. Kies je aanbieder en zie wat stroom per dag kostte, met de belasting van dat jaar." />
   <meta property="og:url" content="https://stroomvoorspeller.nl/historisch" />
   <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Historische stroomprijzen Nederland — per dag terugkijken" />
-  <meta name="twitter:description" content="Day-ahead stroomprijzen per uur voor elke dag, filter op aanbieder en negatieve prijzen." />
+  <meta name="twitter:description" content="Stroomprijzen per uur en per jaar vanaf 2015, voor jouw aanbieder." />
   <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
 
   <link rel="alternate" type="application/rss+xml" title="Stroomvoorspeller.nl — day-ahead prijzen" href="/data/feed.xml" />
@@ -36,7 +36,7 @@
         "@id": "https://stroomvoorspeller.nl/historisch",
         "url": "https://stroomvoorspeller.nl/historisch",
         "name": "Historische stroomprijzen Nederland — per dag terugkijken",
-        "description": "Bekijk historische day-ahead stroomprijzen per uur voor elke dag. Filter op aanbieder en negatieve prijsmomenten.",
+        "description": "Historische stroomprijzen per uur en per jaar, vanaf 2015. Kies je aanbieder en zie wat stroom per dag kostte, met de belasting van dat jaar.",
         "inLanguage": "nl-NL",
         "isPartOf": { "@id": "https://stroomvoorspeller.nl/#website" },
         "breadcrumb": {
@@ -298,6 +298,33 @@
 
     .cal-legend { max-width: 460px; }
 
+    /* ── Jaarverloop ── */
+    .jv-section {
+      border-top: 1px solid var(--c-border);
+      padding: 28px 0 36px;
+    }
+    .jv-section h2 { margin: 0 0 6px; font-size: 1.3rem; }
+    .jv-intro { margin: 0 0 14px; color: var(--c-text-soft); font-size: 0.95rem; max-width: 720px; }
+    .jv-controls { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 14px; }
+    .jv-field { display: flex; align-items: center; gap: 8px; }
+    .jv-field label { font-size: 0.85rem; color: var(--c-text-soft); }
+    .jv-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; min-height: 28px; }
+    .jv-chart-wrap {
+      position: relative;
+      height: 320px;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius);
+      padding: 12px 12px 6px;
+    }
+    .jv-leeg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; margin: 0; color: var(--c-text-mute); }
+    .jv-leeg[hidden] { display: none; }
+    .jv-hint { font-size: 0.8rem; color: var(--c-text-mute); margin: 6px 0 0; }
+    .jv-uitleg { max-width: 720px; font-size: 0.9rem; color: var(--c-text-soft); margin-top: 14px; }
+    .jv-uitleg p { margin: 0 0 8px; }
+    .jaar-links { font-size: 0.9rem; color: var(--c-text-soft); margin: 16px 0 0; line-height: 1.9; }
+    .jaar-links a { white-space: nowrap; }
+
     /* ── Responsive ── */
     @media (max-width: 720px) {
       .hist-main-grid {
@@ -308,6 +335,7 @@
       .cal-wrap, .cal-weekdays, .cal-legend { max-width: 100%; }
       .day-chart-wrap { height: 180px; }
       .hist-day-detail { padding: 16px; }
+      .jv-chart-wrap { height: 260px; padding: 8px 6px 4px; }
     }
   </style>
 
@@ -358,7 +386,7 @@
       <div class="container">
         <p class="hist-breadcrumb"><a href="/">← Terug naar vandaag</a> · <a href="/records">Records</a></p>
         <h1>Historische stroomprijzen</h1>
-        <p>Bekijk de day-ahead EPEX-prijzen per uur voor elke dag. Filter op aanbieder of zoek negatieve prijsmomenten.</p>
+        <p>Bekijk de stroomprijs per uur voor elke dag, of <a href="#jaarverloop">het verloop over een heel jaar</a>. Kies je aanbieder, dan rekenen we opslag en belasting mee.</p>
       </div>
     </section>
 
@@ -426,6 +454,39 @@
         </div><!-- /hist-main-grid -->
       </div>
     </section>
+
+    <!-- ── Jaarverloop ── -->
+    <section class="jv-section" id="jaarverloop" aria-labelledby="jv-titel">
+      <div class="container">
+        <h2 id="jv-titel">Jaarverloop van de stroomprijs</h2>
+        <p class="jv-intro">De prijs per dag over een heel jaar, voor de aanbieder die je kiest. De lijn is wat je die dag gemiddeld per kWh betaalde. Het lichte vlak loopt van het goedkoopste tot het duurste uur van die dag.</p>
+
+        <div class="jv-controls">
+          <div class="jv-field">
+            <label for="jv-jaar">Jaar</label>
+            <select id="jv-jaar" class="hist-supplier-select"></select>
+          </div>
+          <div class="jv-field">
+            <label for="jv-aanbieder">Aanbieder</label>
+            <select id="jv-aanbieder" class="hist-supplier-select"></select>
+          </div>
+        </div>
+
+        <div class="jv-chips" id="jv-chips" aria-live="polite"></div>
+
+        <div class="jv-chart-wrap">
+          <canvas id="jv-chart" role="img" aria-label="Stroomprijs per dag over het gekozen jaar"></canvas>
+          <p class="jv-leeg" id="jv-leeg" hidden>Het jaarverloop kon niet geladen worden.</p>
+        </div>
+        <p class="jv-hint">Tik of klik op een dag om de uurprijzen in de kalender hierboven te zien.</p>
+
+        <div class="jv-uitleg" id="jv-uitleg"></div>
+
+        <!-- BUILD:JAREN:START -->
+          <p class="jaar-links">Overzicht per jaar: <a href="/historisch/2026">2026</a> · <a href="/historisch/2025">2025</a> · <a href="/historisch/2024">2024</a> · <a href="/historisch/2023">2023</a> · <a href="/historisch/2022">2022</a> · <a href="/historisch/2021">2021</a> · <a href="/historisch/2020">2020</a> · <a href="/historisch/2019">2019</a> · <a href="/historisch/2018">2018</a> · <a href="/historisch/2017">2017</a> · <a href="/historisch/2016">2016</a> · <a href="/historisch/2015">2015</a></p>
+          <!-- BUILD:JAREN:END -->
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -473,9 +534,9 @@
                        'juli','augustus','september','oktober','november','december'];
     const NL_DAYS_ABBR = ['ma','di','wo','do','vr','za','zo'];
 
-    // Vroegste maand waarnaar terug genavigeerd kan worden.
-    // Maanden zonder archief-bestand tonen gewoon "Geen data beschikbaar".
-    const EARLIEST_MONTH = '2026-02';
+    // Vroegste maand waarnaar terug genavigeerd kan worden (archief begint
+    // in januari 2015). Maanden zonder archief-bestand tonen "Geen data".
+    const EARLIEST_MONTH = '2015-01';
 
     // ── Hulpfuncties ───────────────────────────────────────────────────────
 
@@ -483,12 +544,33 @@
       return cfg.suppliers.find(s => s.id === id) || cfg.suppliers[0];
     }
 
-    function toConsumerCt(epexEurMwh, supplierId) {
+    // Energiebelasting (+ ODE tot en met 2022) en btw zoals die op die datum
+    // golden, uit config.json -> belasting_per_jaar. Onbekend jaar: actueel tarief.
+    // Zelfde regels als scripts/generate_jaaroverzicht.py (class Belasting).
+    function taxFor(dateStr) {
+      const tab = cfg.belasting_per_jaar;
+      const rij = tab && tab.jaren ? tab.jaren[String(dateStr).slice(0, 4)] : null;
+      if (!rij) {
+        return { eb: cfg.taxes.energiebelasting_per_kwh, ode: 0, btw: cfg.taxes.btw_factor, actueel: true };
+      }
+      let btw = Number(tab.btw_factor) || cfg.taxes.btw_factor;
+      (tab.btw_uitzonderingen || []).forEach(u => {
+        if (dateStr >= u.van && dateStr <= u.tot) btw = Number(u.btw_factor);
+      });
+      return { eb: Number(rij.eb), ode: Number(rij.ode) || 0, btw, actueel: false };
+    }
+
+    function toConsumerCt(epexEurMwh, supplierId, dateStr) {
       const s = getSupplier(supplierId);
       const markup = Number(s.markup_per_kwh) || 0;
-      const eb = cfg.taxes.energiebelasting_per_kwh;
-      const btw = cfg.taxes.btw_factor;
-      return (epexEurMwh / 1000 + markup + eb) * btw * 100;
+      const t = taxFor(dateStr);
+      return (epexEurMwh / 1000 + markup + t.eb + t.ode) * t.btw * 100;
+    }
+
+    function nlNum(x, digits = 1) {
+      let s = x.toFixed(digits);
+      if (Number(s) === 0) s = (0).toFixed(digits);
+      return s.replace('-', '−').replace('.', ',');
     }
 
     function getDayColor(avgCt) {
@@ -512,7 +594,7 @@
     }
 
     function fmtCt(ct) {
-      return ct.toFixed(1) + ' ct';
+      return nlNum(ct) + ' ct';
     }
 
     function monthStr(ym) {
@@ -561,6 +643,9 @@
       populateSupplierDropdown();
       bindEvents();
 
+      // Jaarverloop laadt los van de kalender; een fout daar raakt de kalender niet.
+      initJaar();
+
       // Start op huidige maand
       currentMonth = todayYM();
       await loadMonth(currentMonth);
@@ -574,17 +659,30 @@
     // ── Dropdown ───────────────────────────────────────────────────────────
 
     function populateSupplierDropdown() {
-      const sel = document.getElementById('supplier-select');
-      sel.innerHTML = '';
-      cfg.suppliers
-        .filter(s => s.id !== 'custom')   // "Eigen waarde" niet aanbieden in archief
-        .forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s.id;
-          opt.textContent = s.name;
-          if (s.id === selectedSupplier) opt.selected = true;
-          sel.appendChild(opt);
-        });
+      ['supplier-select', 'jv-aanbieder'].forEach(id => {
+        const sel = document.getElementById(id);
+        sel.innerHTML = '';
+        cfg.suppliers
+          .filter(s => s.id !== 'custom')   // "Eigen waarde" niet aanbieden in archief
+          .forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.textContent = s.name;
+            if (s.id === selectedSupplier) opt.selected = true;
+            sel.appendChild(opt);
+          });
+      });
+    }
+
+    // Beide aanbieder-keuzes (kalender en jaarverloop) wijzen naar dezelfde state.
+    function setSupplier(id) {
+      selectedSupplier = id;
+      try { localStorage.setItem(STORAGE_SUPPLIER, selectedSupplier); } catch (e) {}
+      document.getElementById('supplier-select').value = id;
+      document.getElementById('jv-aanbieder').value = id;
+      renderCalendar();
+      if (selectedDate) renderDayDetail(selectedDate);
+      renderJaar();
     }
 
     // ── Events ─────────────────────────────────────────────────────────────
@@ -601,10 +699,13 @@
       });
 
       document.getElementById('supplier-select').addEventListener('change', function () {
-        selectedSupplier = this.value;
-        try { localStorage.setItem(STORAGE_SUPPLIER, selectedSupplier); } catch (e) {}
-        renderCalendar();
-        if (selectedDate) renderDayDetail(selectedDate);
+        setSupplier(this.value);
+      });
+      document.getElementById('jv-aanbieder').addEventListener('change', function () {
+        setSupplier(this.value);
+      });
+      document.getElementById('jv-jaar').addEventListener('change', function () {
+        loadJaar(Number(this.value));
       });
 
       document.getElementById('neg-only-toggle').addEventListener('change', function () {
@@ -669,7 +770,7 @@
       // Bouw dag-statistieken
       const dayStats = {};
       for (const [day, entries] of Object.entries(byDay)) {
-        const cts = entries.map(p => toConsumerCt(p.price, selectedSupplier));
+        const cts = entries.map(p => toConsumerCt(p.price, selectedSupplier, day));
         const avg = cts.reduce((a, b) => a + b, 0) / cts.length;
         const min = Math.min(...cts);
         const max = Math.max(...cts);
@@ -766,7 +867,7 @@
       if (!entries.length) { hideDayDetail(); return; }
 
       entries.sort((a, b) => a.time.localeCompare(b.time));
-      const cts = entries.map(p => toConsumerCt(p.price, selectedSupplier));
+      const cts = entries.map(p => toConsumerCt(p.price, selectedSupplier, dateStr));
       const avg = cts.reduce((a, b) => a + b, 0) / cts.length;
       const min = Math.min(...cts);
       const max = Math.max(...cts);
@@ -845,6 +946,296 @@
       document.getElementById('day-detail-inner').innerHTML =
         '<div class="hist-day-placeholder">Klik op een dag om de uurprijzen te bekijken.</div>';
       selectedDate = null;
+    }
+
+    // ── Jaarverloop ────────────────────────────────────────────────────────
+    // Data: /data/jaar/index.json en /data/jaar/YYYY.json (kale EPEX-prijzen per
+    // dag, gemaakt door scripts/generate_jaaroverzicht.py). Opslag en belasting
+    // komen er hier bij, met het belastingtarief van dat jaar.
+
+    let jaarIndex = null;
+    let jaarData = null;
+    let jaarChart = null;
+    const jaarCache = {};
+    const MAAND_KORT = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+
+    function cssVar(name, fallback) {
+      const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      return v || fallback;
+    }
+
+    function hexAlpha(hex, a) {
+      const m = /^#?([0-9a-f]{6})$/i.exec(hex);
+      if (!m) return hex;
+      const n = parseInt(m[1], 16);
+      return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+    }
+
+    function datumKort(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      return `${d} ${NL_MONTHS[m - 1]}`;
+    }
+
+    function jaarLeeg(tonen) {
+      document.getElementById('jv-leeg').hidden = !tonen;
+      if (tonen) {
+        if (jaarChart) { jaarChart.destroy(); jaarChart = null; }
+        document.getElementById('jv-chips').innerHTML = '';
+        document.getElementById('jv-uitleg').innerHTML = '';
+      }
+    }
+
+    async function initJaar() {
+      try {
+        const r = await fetch('/data/jaar/index.json');
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        jaarIndex = await r.json();
+      } catch (e) {
+        jaarLeeg(true);
+        return;
+      }
+      const jaren = (jaarIndex.jaren || []).map(j => j.jaar).sort((a, b) => b - a);
+      if (!jaren.length) { jaarLeeg(true); return; }
+
+      const sel = document.getElementById('jv-jaar');
+      sel.innerHTML = '';
+      jaarIndex.jaren.slice().sort((a, b) => b.jaar - a.jaar).forEach(j => {
+        const opt = document.createElement('option');
+        opt.value = j.jaar;
+        opt.textContent = j.laatste_dag.endsWith('-12-31')
+          ? String(j.jaar)
+          : `${j.jaar} (t/m ${datumKort(j.laatste_dag)})`;
+        sel.appendChild(opt);
+      });
+
+      // ?jaar=2023 (link vanaf de jaarpagina's) kiest dat jaar.
+      let start = jaren[0];
+      try {
+        const q = Number(new URLSearchParams(location.search).get('jaar'));
+        if (jaren.includes(q)) start = q;
+      } catch (e) {}
+      sel.value = String(start);
+      await loadJaar(start);
+
+      // Canvas volgt de kleurmodus niet vanzelf: opnieuw tekenen bij een wissel.
+      try {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderJaar);
+      } catch (e) {}
+    }
+
+    async function loadJaar(jaar) {
+      try {
+        if (!jaarCache[jaar]) {
+          const r = await fetch(`/data/jaar/${jaar}.json`);
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          jaarCache[jaar] = await r.json();
+        }
+        jaarData = jaarCache[jaar];
+      } catch (e) {
+        jaarData = null;
+        jaarLeeg(true);
+        return;
+      }
+      jaarLeeg(false);
+      renderJaar();
+    }
+
+    function renderJaar() {
+      if (!jaarData || !cfg) return;
+      const sid = selectedSupplier;
+      const sup = getSupplier(sid);
+      const dagen = jaarData.dagen;           // [datum, gem, min, max, uren]
+      const labels = dagen.map(d => d[0]);
+      const gem = dagen.map(d => toConsumerCt(d[1], sid, d[0]));
+      const lo = dagen.map(d => toConsumerCt(d[2], sid, d[0]));
+      const hi = dagen.map(d => toConsumerCt(d[3], sid, d[0]));
+
+      // Jaargemiddelde gewogen naar het aantal uren per dag.
+      let som = 0, uren = 0;
+      dagen.forEach((d, i) => { som += gem[i] * d[4]; uren += d[4]; });
+      const jaarGem = som / uren;
+
+      let iMin = 0, iMax = 0;
+      gem.forEach((v, i) => { if (v < gem[iMin]) iMin = i; if (v > gem[iMax]) iMax = i; });
+
+      // Uren waarin de prijs mét belasting en opslag onder nul lag.
+      let negUren = 0;
+      Object.entries(jaarData.negatief || {}).forEach(([dag, prijzen]) => {
+        prijzen.forEach(p => { if (toConsumerCt(p, sid, dag) < 0) negUren++; });
+      });
+      const marktNeg = Object.values(jaarData.negatief || {}).reduce((a, p) => a + p.length, 0);
+
+      const chips = [
+        `<span class="day-chip">Gemiddeld <strong>${fmtCt(jaarGem)}</strong> per kWh</span>`,
+        `<span class="day-chip">Goedkoopste dag <strong>${datumKort(labels[iMin])}</strong> (${fmtCt(gem[iMin])})</span>`,
+        `<span class="day-chip">Duurste dag <strong>${datumKort(labels[iMax])}</strong> (${fmtCt(gem[iMax])})</span>`,
+      ];
+      if (negUren > 0) {
+        chips.push(`<span class="day-chip neg-chip">⚡ ${negUren} uur onder 0 ct, met belasting</span>`);
+      } else if (marktNeg > 0) {
+        chips.push(`<span class="day-chip">${marktNeg} uur beursprijs onder 0</span>`);
+      }
+      document.getElementById('jv-chips').innerHTML = chips.join('');
+
+      // Uitleg: waarmee is gerekend.
+      const jaar = jaarData.jaar;
+      const t = taxFor(`${jaar}-01-01`);
+      const markupIncl = (Number(sup.markup_per_kwh) || 0) * t.btw * 100;
+      const naam = sid === 'average' ? 'aanbieders' : sup.name;
+      const belasting = t.ode
+        ? `de energiebelasting en de opslag duurzame energie van ${jaar}: samen ${nlNum((t.eb + t.ode) * t.btw * 100, 2)} cent per kWh met btw`
+        : `de energiebelasting van ${jaar}: ${nlNum(t.eb * t.btw * 100, 2)} cent per kWh met btw`;
+      const delen = [
+        `<p>Gerekend met de opslag die ${naam} nu ${sid === 'average' ? 'gemiddeld vragen' : 'vraagt'} (${nlNum(markupIncl, 2)} cent per kWh met btw) en ${belasting}. Die opslag was in ${jaar} misschien anders. Vaste kosten per maand zitten er niet in.</p>`,
+      ];
+      if (jaar === 2022) {
+        delen.push('<p>Van 1 juli tot 1 januari 2023 was de btw op energie tijdelijk 9% in plaats van 21%. Daarom zakt de lijn op 1 juli een stukje.</p>');
+      }
+      if (jaar === 2023) {
+        delen.push('<p>In 2023 gold het prijsplafond: tot 2.900 kWh per jaar betaalde je hoogstens 40 cent per kWh. De lijn toont de prijs zonder plafond.</p>');
+      }
+      delen.push(`<p>Alle cijfers per maand staan op de pagina <a href="/historisch/${jaar}">stroomprijzen ${jaar}</a>.</p>`);
+      document.getElementById('jv-uitleg').innerHTML = delen.join('');
+
+      // Grafiek: daggemiddelde als lijn, goedkoopste tot duurste uur als vlak.
+      const lijn = cssVar('--c-brand', '#0f6cbd');
+      const tekst = cssVar('--c-text-mute', '#5d6f80');
+      const rand = cssVar('--c-border', '#e1e7ee');
+      const nul = cssVar('--c-border-strong', '#c3cede');
+      const rustig = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const smal = document.documentElement.clientWidth < 520;
+
+      const kruisdraad = {
+        id: 'jvKruisdraad',
+        afterDatasetsDraw(chart) {
+          const a = chart.tooltip && chart.tooltip.getActiveElements();
+          if (!a || !a.length) return;
+          const x = a[0].element.x;
+          const { top, bottom } = chart.chartArea;
+          const c = chart.ctx;
+          c.save();
+          c.strokeStyle = tekst;
+          c.globalAlpha = 0.5;
+          c.lineWidth = 1;
+          c.beginPath(); c.moveTo(x, top); c.lineTo(x, bottom); c.stroke();
+          c.restore();
+        },
+      };
+
+      if (jaarChart) { jaarChart.destroy(); jaarChart = null; }
+      if (typeof Chart === 'undefined') { document.getElementById('jv-leeg').hidden = false; return; }
+      jaarChart = new Chart(document.getElementById('jv-chart'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Gemiddeld',
+              data: gem,
+              borderColor: lijn,
+              backgroundColor: lijn,
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              pointHitRadius: 6,
+              tension: 0.15,
+              fill: false,
+              order: 0,
+            },
+            {
+              label: 'Duurste uur',
+              data: hi,
+              borderWidth: 0,
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              backgroundColor: hexAlpha(lijn, 0.16),
+              fill: 2,
+              order: 1,
+            },
+            {
+              label: 'Goedkoopste uur',
+              data: lo,
+              borderWidth: 0,
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              fill: false,
+              order: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: rustig ? false : { duration: 300 },
+          interaction: { mode: 'index', intersect: false },
+          onClick: (evt, _els, chart) => {
+            const hit = chart.getElementsAtEventForMode(evt, 'index', { intersect: false }, false);
+            if (hit.length) openDag(labels[hit[0].index]);
+          },
+          onHover: (evt, els, chart) => {
+            chart.canvas.style.cursor = els.length ? 'pointer' : 'default';
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              displayColors: false,
+              callbacks: {
+                title: ctx => {
+                  const d = ctx[0].label;
+                  const wd = NL_DAYS_ABBR[(new Date(d + 'T12:00:00').getDay() + 6) % 7];
+                  return `${wd} ${datumKort(d)} ${d.slice(0, 4)}`;
+                },
+                label: ctx => `${ctx.dataset.label}: ${fmtCt(ctx.parsed.y)}`,
+                footer: () => sup.name,
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { color: rand },
+              ticks: {
+                autoSkip: false,
+                maxRotation: 0,
+                color: tekst,
+                font: { size: smal ? 10 : 11 },
+                callback: function (val, i) {
+                  const d = labels[i];
+                  if (!d || d.slice(8) !== '01') return null;
+                  const m = Number(d.slice(5, 7));
+                  if (smal && m % 2 === 0) return null;
+                  return MAAND_KORT[m - 1];
+                },
+              },
+            },
+            y: {
+              border: { display: false },
+              grid: {
+                color: c => (c.tick && c.tick.value === 0) ? nul : rand,
+                lineWidth: c => (c.tick && c.tick.value === 0) ? 1.5 : 1,
+              },
+              ticks: {
+                color: tekst,
+                font: { size: 11 },
+                maxTicksLimit: 7,
+                callback: v => nlNum(v, 0) + ' ct',
+              },
+            },
+          },
+        },
+        plugins: [kruisdraad],
+      });
+    }
+
+    // Klik op een dag in het jaarverloop: open die maand en dag in de kalender.
+    async function openDag(dateStr) {
+      const ym = dateStr.slice(0, 7);
+      if (ym < EARLIEST_MONTH || ym > nextMonth(todayYM())) return;
+      if (ym !== currentMonth || !archiveData) await loadMonth(ym);
+      selectDay(dateStr);
+      const doel = document.querySelector('.hist-calendar-section');
+      const rustig = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (doel) doel.scrollIntoView({ behavior: rustig ? 'auto' : 'smooth', block: 'start' });
     }
 
     // ── Start ──────────────────────────────────────────────────────────────

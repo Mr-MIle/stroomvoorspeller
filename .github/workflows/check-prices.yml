@@ -127,6 +127,15 @@ jobs:
         continue-on-error: true
         run: python scripts/generate_records.py
 
+      - name: Genereer jaaroverzicht
+        # public/data/jaar/YYYY.json (prijs per dag) voor het jaarverloop op
+        # /historisch, de jaarpagina's /historisch/YYYY en het BUILD:JAREN-blok in
+        # historisch.html. Draait na fetch_prices.py, zodat het lopende jaar de
+        # prijzen van deze run meeneemt. Afgeronde jaren blijven byte-identiek. Mag falen.
+        if: steps.check.outcome == 'success'
+        continue-on-error: true
+        run: python scripts/generate_jaaroverzicht.py
+
       - name: Commit en push als er iets veranderd is
         id: commit
         if: steps.check.outcome == 'success'
@@ -140,6 +149,7 @@ jobs:
           git add public/data/performance.json 2>/dev/null || true
           git add public/data/records.json 2>/dev/null || true
           git add public/data/archief/ 2>/dev/null || true
+          git add public/data/jaar/ public/historisch/ 2>/dev/null || true
           git add public/index.html public/morgen.html public/over/performance.html 2>/dev/null || true
           git add public/aanbieders.html public/historisch.html 2>/dev/null || true
           git add public/records.html 2>/dev/null || true

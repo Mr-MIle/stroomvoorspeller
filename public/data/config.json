@@ -1,7 +1,7 @@
 {
   "_comment": "Centrale configuratie. Alle bedragen zijn in EUR per kWh EXCL. btw, tenzij anders vermeld; de code past btw zelf toe via btw_factor. Drempels zijn in ct/kWh consumentenprijs incl. energiebelasting + btw + leverancieropslag. Per v9: suppliers bevatten ook weergavevelden (score, flags, app_text, wie_text, opzeg, let_op) voor de aanbieders-pagina. De homepage gebruikt alleen id/name/markup_per_kwh/fixed_per_month. Sinds 30 sep 2026 (v11): no_feedin_cost, groen, app_text, wie_text en score_caveat vervallen; zie aanbieders_page._note voor de nieuwe velden.",
-  "version": 11,
-  "updated": "2026-09-30",
+  "version": 12,
+  "updated": "2026-10-06",
   "taxes": {
     "energiebelasting_per_kwh": 0.0916,
     "btw_factor": 1.21,
@@ -9,6 +9,70 @@
     "_note": "Tarief 2026 voor verbruik tot 10.000 kWh per jaar, EXCL. btw. Incl. btw is dit €0,1108/kWh. Verifieer jaarlijks per 1 januari.",
     "vermindering_eb_per_jaar": 519.8,
     "_vermindering_note": "Vermindering energiebelasting 2026 per elektriciteitsaansluiting, EXCL. btw (€ 628,96 incl.). Bron: rijksoverheid.nl, Wat staat er op mijn energierekening? (geraadpleegd 30 sep 2026)."
+  },
+  "belasting_per_jaar": {
+    "_note": "Energiebelasting op stroom per jaar, eerste schijf (0-10.000 kWh), in EUR per kWh EXCL. btw. 'ode' = opslag duurzame energie- en klimaattransitie, een aparte heffing per kWh die tot en met 2022 bovenop de energiebelasting kwam en in 2023 daarin is opgegaan. Gebruikt door het jaarverloop en de maandkalender op /historisch en door scripts/generate_jaaroverzicht.py, zodat oude jaren met het tarief van dat jaar worden doorgerekend. Het actuele tarief voor de rest van de site staat in taxes. Per 1 januari een regel toevoegen.",
+    "bron": "belastingdienst.nl, Tabellen tarieven milieubelastingen (2015-2022) en Energiebelasting (2025-2026); energievergelijk.nl voor 2023-2024 (tweede bron). Geraadpleegd 6 okt 2026.",
+    "jaren": {
+      "2015": {
+        "eb": 0.1196,
+        "ode": 0.0036
+      },
+      "2016": {
+        "eb": 0.1007,
+        "ode": 0.0056
+      },
+      "2017": {
+        "eb": 0.1013,
+        "ode": 0.0074
+      },
+      "2018": {
+        "eb": 0.10458,
+        "ode": 0.0132
+      },
+      "2019": {
+        "eb": 0.09863,
+        "ode": 0.0189
+      },
+      "2020": {
+        "eb": 0.0977,
+        "ode": 0.0273
+      },
+      "2021": {
+        "eb": 0.09428,
+        "ode": 0.03
+      },
+      "2022": {
+        "eb": 0.03679,
+        "ode": 0.0305
+      },
+      "2023": {
+        "eb": 0.12599,
+        "ode": 0
+      },
+      "2024": {
+        "eb": 0.1088,
+        "ode": 0
+      },
+      "2025": {
+        "eb": 0.10154,
+        "ode": 0
+      },
+      "2026": {
+        "eb": 0.09161,
+        "ode": 0
+      }
+    },
+    "btw_factor": 1.21,
+    "btw_uitzonderingen": [
+      {
+        "van": "2022-07-01",
+        "tot": "2022-12-31",
+        "btw_factor": 1.09,
+        "_note": "Tijdelijk verlaagd btw-tarief op energie, 1 juli 2022 tot 1 januari 2023."
+      }
+    ],
+    "prijsplafond_2023": "In 2023 gold het prijsplafond: tot 2.900 kWh per jaar betaalde je hoogstens € 0,40 per kWh incl. btw. Het jaarverloop toont de prijs zonder plafond."
   },
   "thresholds_ct_kwh_inclusive": {
     "very_cheap": 14,

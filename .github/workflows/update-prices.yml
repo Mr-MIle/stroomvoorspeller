@@ -155,6 +155,12 @@ jobs:
         continue-on-error: true
         run: node build-batterij-effect.js
 
+      - name: Genereer jaaroverzicht
+        # Jaarverloop voor /historisch (public/data/jaar/), jaarpagina's
+        # /historisch/YYYY en het BUILD:JAREN-blok in historisch.html. Mag falen.
+        continue-on-error: true
+        run: python scripts/generate_jaaroverzicht.py
+
       - name: Commit en push als er iets veranderd is
         run: |
           git config user.name "stroomvoorspeller-bot"
@@ -169,6 +175,7 @@ jobs:
           git add public/aanbieders.html public/historisch.html 2>/dev/null || true
           git add data/forecast_archive/ 2>/dev/null || true
           git add public/data/archief/ 2>/dev/null || true
+          git add public/data/jaar/ public/historisch/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "auto: update prijzen + voorspelling $(date -u +%Y-%m-%dT%H:%MZ)"

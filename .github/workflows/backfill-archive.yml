@@ -42,11 +42,17 @@ jobs:
               --from "${{ github.event.inputs.from_date }}"
           fi
 
+      - name: Genereer jaaroverzicht
+        # Bijgevulde dagen ook in het jaarverloop en op de jaarpagina's. Mag falen.
+        continue-on-error: true
+        run: python scripts/generate_jaaroverzicht.py
+
       - name: Commit en push archief-bestanden
         run: |
           git config user.name "stroomvoorspeller-bot"
           git config user.email "bot@stroomvoorspeller.nl"
           git add public/data/archief/
+          git add public/data/jaar/ public/historisch/ public/historisch.html 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "backfill: archief ${{ github.event.inputs.from_date }} t/m ${{ github.event.inputs.to_date || 'gisteren' }}"
             git push
