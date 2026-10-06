@@ -42,6 +42,13 @@ jobs:
               --from "${{ github.event.inputs.from_date }}"
           fi
 
+      - name: Genereer maandpagina's
+        # Statische pagina per afgeronde maand: public/historisch/YYYY-MM.html
+        # (/historisch/2026-09). Vóór het jaaroverzicht, zodat de jaarpagina's
+        # naar nieuwe maanden linken. Alleen gewijzigde pagina's worden herschreven. Mag falen.
+        continue-on-error: true
+        run: python scripts/generate_historisch_pages.py
+
       - name: Genereer jaaroverzicht
         # Bijgevulde dagen ook in het jaarverloop en op de jaarpagina's. Mag falen.
         continue-on-error: true

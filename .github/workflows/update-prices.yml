@@ -155,6 +155,13 @@ jobs:
         continue-on-error: true
         run: node build-batterij-effect.js
 
+      - name: Genereer maandpagina's
+        # Statische pagina per afgeronde maand: public/historisch/YYYY-MM.html
+        # (/historisch/2026-09). Vóór het jaaroverzicht, zodat de jaarpagina's
+        # naar nieuwe maanden linken. Alleen gewijzigde pagina's worden herschreven. Mag falen.
+        continue-on-error: true
+        run: python scripts/generate_historisch_pages.py
+
       - name: Genereer jaaroverzicht
         # Jaarverloop voor /historisch (public/data/jaar/), jaarpagina's
         # /historisch/YYYY en het BUILD:JAREN-blok in historisch.html. Mag falen.

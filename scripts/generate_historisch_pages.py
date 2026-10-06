@@ -7,9 +7,12 @@ maakt daar /historisch/YYYY-MM van). Alleen volledige maanden; de lopende
 maand wordt overgeslagen. Bestanden worden alleen herschreven als de inhoud
 verandert, zodat git-diffs klein blijven.
 
-Alle bedragen op de pagina's zijn kale EPEX-marktprijzen in ct/kWh, zonder
-belasting en opslag. Bewust: belastingtarieven verschillen per jaar, dus een
-"incl. belasting"-bedrag over 2015-2026 zou niet kloppen.
+De tabel toont kale EPEX-marktprijzen in ct/kWh. Eén kerncijfer telt er
+opslag (gemiddelde aanbieder, nu) en belasting bij op, met het tarief van dat
+jaar uit config.json -> belasting_per_jaar; zelfde rekenregels en opmaak als de
+jaarpagina's van generate_jaaroverzicht.py. De footer komt letterlijk uit
+public/historisch.html. Draai dit script vóór generate_jaaroverzicht.py, zodat
+de jaarpagina's naar de maandpagina's kunnen linken.
 
 Gebruik:
     python scripts/generate_historisch_pages.py            # alles
@@ -26,6 +29,8 @@ from datetime import date, datetime
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from generate_jaaroverzicht import Belasting, belasting_zin, footer_uit, vul_a03  # noqa: E402
 ARCHIVE_DIR = PROJECT_ROOT / "public" / "data" / "archief"
 DEFAULT_OUT = PROJECT_ROOT / "public" / "historisch"
 SITE = "https://stroomvoorspeller.nl"
@@ -87,6 +92,7 @@ def month_stats(prices: list[dict]) -> dict:
             "min": min(dv),
             "max": max(dv),
             "neg": sum(1 for v in dv if v < 0),
+            "hours": len(dv),
         })
     return {
         "avg": sum(vals) / len(vals),
@@ -127,7 +133,18 @@ def vergelijk_zin(ym: str, avg: float, all_stats: dict[str, dict]) -> str:
     return "Het maandgemiddelde was " + " en ".join(parts) + "."
 
 
-def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, dict]) -> str:
+def met_belasting_ct(st: dict, bel: Belasting, opslag: float) -> float:
+    """Uurgewogen gemiddelde consumentenprijs (ct/kWh) over de dagen van de maand."""
+    som = n = 0.0
+    for r in st["days"]:
+        d = r["date"].isoformat()
+        som += bel.consument_ct(r["avg"], d, opslag) * r["hours"]
+        n += r["hours"]
+    return som / n
+
+
+def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, dict],
+               bel: Belasting, opslag_gem: float, footer_html: str) -> str:
     label = month_label(ym)
     label_cap = label[0].upper() + label[1:]
     y, m = (int(x) for x in ym.split("-"))
@@ -138,21 +155,22 @@ def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, di
     prev_ym = all_months[idx - 1] if idx > 0 else None
     next_ym = all_months[idx + 1] if idx + 1 < len(all_months) else None
 
-    titel = f"Stroomprijzen {label} — gemiddeld {nl(ct(st['avg']))} ct/kWh"
+    incl = met_belasting_ct(st, bel, opslag_gem)
+    titel = f"Stroomprijzen {label}: gemiddeld {nl(ct(st['avg']))} cent per kWh"
     if st["neg_hours"] > 0:
-        neg_zin = f"{st['neg_hours']} uur met negatieve prijzen"
+        neg_zin = f"{st['neg_hours']} uur onder nul"
     else:
-        neg_zin = "geen negatieve prijzen"
+        neg_zin = "geen uur onder nul"
     beschrijving = (
-        f"Stroomprijzen {label}: gemiddeld {nl(ct(st['avg']))} ct/kWh op de EPEX-groothandelsmarkt, "
-        f"{neg_zin}. Laagste uur {nl(ct(st['min']))} ct, hoogste {nl(ct(st['max']))} ct. "
+        f"Stroomprijzen {label}: gemiddeld {nl(ct(st['avg']))} cent per kWh op de stroombeurs, "
+        f"{nl(incl)} cent met belasting en opslag. {neg_zin[0].upper() + neg_zin[1:]}. "
         f"Alle dagen in één tabel.")
 
     vergelijk = vergelijk_zin(ym, st["avg"], all_stats)
 
     min_d = st["min_ts"]; max_d = st["max_ts"]
-    min_str = f"{min_d.day} {MAANDEN[min_d.month - 1]}, {min_d.strftime('%H:%M')}"
-    max_str = f"{max_d.day} {MAANDEN[max_d.month - 1]}, {max_d.strftime('%H:%M')}"
+    min_str = f"{min_d.day} {MAANDEN[min_d.month - 1]} {min_d.strftime('%H:%M')}"
+    max_str = f"{max_d.day} {MAANDEN[max_d.month - 1]} {max_d.strftime('%H:%M')}"
 
     rows = []
     for r in st["days"]:
@@ -167,7 +185,7 @@ def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, di
     nav_links = []
     if prev_ym:
         nav_links.append(f'<a class="maand-nav-link" href="/historisch/{prev_ym}">← {month_label(prev_ym)}</a>')
-    nav_links.append('<a class="maand-nav-link" href="/historisch">Alle maanden (interactief)</a>')
+    nav_links.append(f'<a class="maand-nav-link" href="/historisch/{y}">Heel {y}</a>')
     if next_ym:
         nav_links.append(f'<a class="maand-nav-link" href="/historisch/{next_ym}">{month_label(next_ym)} →</a>')
     maand_nav = "\n      ".join(nav_links)
@@ -216,7 +234,7 @@ def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, di
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>{titel} | Stroomvoorspeller.nl</title>
+  <title>{titel}</title>
   <meta name="description" content="{beschrijving}" />
   <meta name="theme-color" content="#0f6cbd" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -258,8 +276,11 @@ def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, di
     .maand-nav {{ display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; margin: 26px 0 8px; }}
     .maand-nav-link {{ font-weight: 600; }}
     .maand-uitleg {{ max-width: 720px; }}
+    .maand-breadcrumb {{ font-size: 0.85rem; color: var(--c-text-mute); margin: 0 0 8px; }}
+    .maand-breadcrumb a {{ color: var(--c-text-mute); }}
     @media (max-width: 640px) {{ .maand-kern {{ grid-template-columns: 1fr 1fr; }} }}
   </style>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -284,18 +305,19 @@ def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, di
   <main>
     <section class="maand-hero">
       <div class="container">
+        <p class="maand-breadcrumb"><a href="/historisch/{y}">← Stroomprijzen {y}</a></p>
         <h1>Stroomprijzen {label}</h1>
-        <p class="maand-sub">Kale marktprijzen (EPEX day-ahead) in ct/kWh, zonder belasting en opslag. Wat je zelf betaalt hangt af van je contract; op <a href="/">de actuele pagina</a> rekenen we belasting en opslag wel mee.</p>
+        <p class="maand-sub">Wat stroom in {label} kostte op de stroombeurs, per dag. De bedragen in de tabel zijn zonder belasting en zonder opslag van je leverancier.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container">
         <div class="maand-kern">
-          <div class="kern-item"><span class="kern-label">Gemiddeld</span><span class="kern-value">{nl(ct(st['avg']))} ct/kWh</span></div>
-          <div class="kern-item"><span class="kern-label">Laagste uur</span><span class="kern-value">{nl(ct(st['min']))} ct</span><span class="kern-detail">{min_str}</span></div>
-          <div class="kern-item"><span class="kern-label">Hoogste uur</span><span class="kern-value">{nl(ct(st['max']))} ct</span><span class="kern-detail">{max_str}</span></div>
-          <div class="kern-item"><span class="kern-label">Negatieve uren</span><span class="kern-value">{st['neg_hours']}</span><span class="kern-detail">kale markt onder 0</span></div>
+          <div class="kern-item"><span class="kern-label">Gemiddeld op de beurs</span><span class="kern-value">{nl(ct(st['avg']))} ct</span><span class="kern-detail">per kWh, zonder belasting</span></div>
+          <div class="kern-item"><span class="kern-label">Met belasting en opslag</span><span class="kern-value">{nl(incl)} ct</span><span class="kern-detail">per kWh, gemiddelde aanbieder</span></div>
+          <div class="kern-item"><span class="kern-label">Duurste uur</span><span class="kern-value">{nl(ct(st['max']))} ct</span><span class="kern-detail">beursprijs, {max_str} uur</span></div>
+          <div class="kern-item"><span class="kern-label">Uren onder nul</span><span class="kern-value">{st['neg_hours']}</span><span class="kern-detail">beursprijs, laagste {nl(ct(st['min']))} ct op {min_str}</span></div>
         </div>{vergelijk_html}
 
         <h2>Alle dagen van {label}</h2>
@@ -303,7 +325,7 @@ def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, di
         <div class="scroll-x">
           <table class="maand-tabel">
             <thead>
-              <tr><th>Dag</th><th>Gemiddeld (ct/kWh)</th><th>Laagste</th><th>Hoogste</th><th>Uren onder 0</th></tr>
+              <tr><th>Dag</th><th>Gemiddeld (ct/kWh)</th><th>Laagste uur</th><th>Duurste uur</th><th>Uren onder 0</th></tr>
             </thead>
             <tbody>
 {tabel}
@@ -316,40 +338,20 @@ def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, di
         </nav>
 
         <div class="maand-uitleg">
-          <h2>Over deze cijfers</h2>
-          <p>De prijzen komen van de EPEX day-ahead veiling, waar stroom voor elk uur van de volgende dag wordt verhandeld. Dit zijn de prijzen die je terugziet in een dynamisch energiecontract, vóórdat je leverancier er opslag, energiebelasting en btw bij optelt. Negatieve uren betekenen dat producenten betaalden om hun stroom kwijt te kunnen — hoe dat werkt lees je in <a href="/kennisbank/negatieve-stroomprijzen">ons artikel over negatieve stroomprijzen</a>.</p>
-          <p>Wil je een losse dag bekijken of maanden naast elkaar leggen? Dat kan op de <a href="/historisch">interactieve historisch-pagina</a>. Bron: <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E Transparency</a>.</p>
+          <h2>Wat je zelf betaalde</h2>
+          <p>Met een dynamisch contract betaal je de beursprijs van elk uur. Je leverancier telt daar een opslag bij op, en de overheid energiebelasting en btw. {belasting_zin(y, bel)}</p>
+          <p>Het blok "Met belasting en opslag" rekent met dat tarief en met de opslag die aanbieders nu vragen: gemiddeld {nl(opslag_gem * bel.btw_std * 100)} cent per kWh met btw. Vaste kosten per maand zitten er niet in.</p>
+          <p>Een uur onder nul betekent dat producenten betaalden om hun stroom kwijt te raken. Hoe dat werkt lees je in <a href="/kennisbank/negatieve-stroomprijzen">het artikel over negatieve stroomprijzen</a>. Een losse dag per uur bekijken, voor jouw aanbieder, kan op de <a href="/historisch">historisch-pagina</a>. Bron van de prijzen: <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E Transparency</a>.</p>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
-        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
-        <p class="footer-meta">Dagelijkse updates: <a href="https://x.com/stroomtarief" rel="noopener noreferrer">@stroomtarief op X ↗</a></p>
-        <p class="footer-meta">
-          <a href="/privacy">Privacy</a> ·
-          <a href="/cookies">Cookies</a> ·
-          <a href="/disclaimer">Disclaimer</a> ·
-          <a href="/over/voorspelling">Over de voorspelling</a> ·
-          <a href="/aanbieders">Aanbieders</a>
-        </p>
-      </div>
-      <div>
-        <p class="footer-meta">
-          Bron: <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E Transparency</a>
-        </p>
-        <p class="footer-meta-small">Hobby-project van één persoon.</p>
-      </div>
-    </div>
-  </footer>
+{footer_html}
 
-  <script src="/nav.js" defer></script>
+  <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "b0c666a71b274ee7b092122def7755e8"}}'></script>
-  <script defer src="/_vercel/insights/script.js"></script>
+  <script src="/nav.js" defer></script>
 </body>
 </html>
 """
@@ -373,6 +375,9 @@ def main() -> int:
         data = load_month(f)
         if data is None:
             continue
+        # Uren die ENTSO-E weglaat (A03) herstellen, net als op de jaarpagina's.
+        data["prices"] = [{"time": tt, "price": v} for tt, v in
+                          vul_a03([(p["time"], float(p["price"])) for p in data["prices"]])]
         if not is_complete(ym, data["prices"]):
             print(f"[skip] {ym}: onvolledig", file=sys.stderr)
             continue
@@ -387,10 +392,17 @@ def main() -> int:
     else:
         targets = all_months
 
+    pub = args.archive.parent.parent
+    cfg = json.loads((pub / "data" / "config.json").read_text(encoding="utf-8"))
+    bel = Belasting(cfg)
+    avg = next((s for s in cfg["suppliers"] if s["id"] == "average"), None)
+    opslag_gem = float(avg["markup_per_kwh"]) if avg else 0.0
+    footer = footer_uit((pub / "historisch.html").read_text(encoding="utf-8"))
+
     args.out.mkdir(parents=True, exist_ok=True)
     written = skipped = 0
     for ym in targets:
-        html = build_page(ym, all_stats[ym], all_months, all_stats)
+        html = build_page(ym, all_stats[ym], all_months, all_stats, bel, opslag_gem, footer)
         out_file = args.out / f"{ym}.html"
         if out_file.exists() and out_file.read_text(encoding="utf-8") == html:
             skipped += 1

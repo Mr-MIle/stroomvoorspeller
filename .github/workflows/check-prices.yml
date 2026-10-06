@@ -127,6 +127,14 @@ jobs:
         continue-on-error: true
         run: python scripts/generate_records.py
 
+      - name: Genereer maandpagina's
+        # Statische pagina per afgeronde maand: public/historisch/YYYY-MM.html
+        # (/historisch/2026-09). Vóór het jaaroverzicht, zodat de jaarpagina's
+        # naar nieuwe maanden linken. Alleen gewijzigde pagina's worden herschreven. Mag falen.
+        if: steps.check.outcome == 'success'
+        continue-on-error: true
+        run: python scripts/generate_historisch_pages.py
+
       - name: Genereer jaaroverzicht
         # public/data/jaar/YYYY.json (prijs per dag) voor het jaarverloop op
         # /historisch, de jaarpagina's /historisch/YYYY en het BUILD:JAREN-blok in

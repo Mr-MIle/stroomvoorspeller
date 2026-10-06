@@ -31,7 +31,8 @@ import json
 import re
 import sys
 from collections import defaultdict
-from datetime import date, datetime
+from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -41,6 +42,8 @@ MAANDEN = ["januari", "februari", "maart", "april", "mei", "juni",
            "juli", "augustus", "september", "oktober", "november", "december"]
 MAANDEN_KORT = ["jan", "feb", "mrt", "apr", "mei", "jun",
                 "jul", "aug", "sep", "okt", "nov", "dec"]
+
+AMS = ZoneInfo("Europe/Amsterdam")
 
 BLOK_START = "<!-- BUILD:JAREN:START -->"
 BLOK_EIND = "<!-- BUILD:JAREN:END -->"
@@ -102,6 +105,42 @@ class Belasting:
 
 # ── Data ──────────────────────────────────────────────────────────────────
 
+def vul_a03(punten: list[tuple[str, float]]) -> list[tuple[str, float]]:
+    """Herstel uren die ENTSO-E weglaat (curveType A03: een weggelaten uur heeft
+    dezelfde prijs als het uur ervoor). Het archief van vóór de A03-fix in
+    fetch_prices.py (24 juni 2026) mist die uren nog, vooral in vlakke stukken
+    rond 0 euro. Vult per kalenderdag de gaten tussen twee uren en de staart tot
+    23:00. Rekent in UTC en labelt in Amsterdamse tijd, zodat zomer- en
+    wintertijd kloppen. Is het archief compleet, dan verandert er niets."""
+    if not punten:
+        return punten
+    uur = timedelta(hours=1)
+    per_dag: dict[str, list[tuple[datetime, float]]] = defaultdict(list)
+    for t, v in punten:
+        per_dag[t[:10]].append((datetime.fromisoformat(t).astimezone(timezone.utc), v))
+    uit: list[tuple[str, float]] = []
+    for dag in sorted(per_dag):
+        rij = sorted(per_dag[dag])
+        # Op de dag van de wintertijd komt 02:00 twee keer voor; het archief bewaart
+        # er meestal maar één. Dat is geen A03-gat, dus een kloktijd die al in de dag
+        # staat vullen we niet nog eens.
+        al_er = {a.astimezone(AMS).hour for a, _ in rij}
+        for i, (a, va) in enumerate(rij):
+            uit.append((a.astimezone(AMS).isoformat(), va))
+            grens = rij[i + 1][0] if i + 1 < len(rij) else None
+            x = a + uur
+            while True:
+                if grens is not None and x >= grens:
+                    break
+                lokaal = x.astimezone(AMS)
+                if lokaal.date().isoformat() != dag:
+                    break
+                if lokaal.hour not in al_er:
+                    uit.append((lokaal.isoformat(), va))
+                x += uur
+    return uit
+
+
 def lees_archief(archief: Path) -> dict[int, list[tuple[str, float]]]:
     """{jaar: [(iso-tijd, EUR/MWh), ...]} gesorteerd, ontdubbeld op tijd."""
     per_jaar: dict[int, dict[str, float]] = defaultdict(dict)
@@ -118,7 +157,7 @@ def lees_archief(archief: Path) -> dict[int, list[tuple[str, float]]]:
             except (KeyError, TypeError, ValueError):
                 continue
             per_jaar[int(t[:4])][t] = v
-    return {j: sorted(d.items()) for j, d in sorted(per_jaar.items())}
+    return {j: vul_a03(sorted(d.items())) for j, d in sorted(per_jaar.items())}
 
 
 def jaar_data(jaar: int, punten: list[tuple[str, float]], vandaag: date) -> dict:
@@ -262,8 +301,22 @@ def vergelijk_zin(jd: dict, alle: dict[int, dict]) -> str:
     return s + ")."
 
 
+def dekking_zin(jd: dict) -> str:
+    """Eerlijk melden als het archief na vul_a03 nog uren mist."""
+    e = date.fromisoformat(jd["eerste_dag"])
+    l = date.fromisoformat(jd["laatste_dag"])
+    verwacht = ((l - e).days + 1) * 24
+    mist = verwacht - jd["jaar_cijfers"]["uren"]
+    if mist < 24:
+        return ""
+    return (f" Van deze periode ontbreken {mist} van de {verwacht} uurprijzen in ons archief "
+            f"({nl(mist / verwacht * 100)}%). Tellingen zoals het aantal uren onder nul "
+            f"kunnen daardoor iets lager uitvallen.")
+
+
 def bouw_pagina(jd: dict, alle: dict[int, dict], bel: Belasting,
-                opslag_gem: float, footer_html: str) -> str:
+                opslag_gem: float, footer_html: str,
+                maandpaginas: set[str] | None = None) -> str:
     j = jd["jaar"]
     jc = jd["jaar_cijfers"]
     url = f"{SITE}/historisch/{j}"
@@ -292,8 +345,11 @@ def bouw_pagina(jd: dict, alle: dict[int, dict], bel: Belasting,
     for m in jd["maanden"]:
         mi = int(m["maand"][5:]) - 1
         neg = str(m["uren_onder_0"]) if m["uren_onder_0"] else "—"
+        naam = MAANDEN[mi].capitalize()
+        if maandpaginas and m["maand"] in maandpaginas:
+            naam = f'<a href="/historisch/{m["maand"]}">{naam}</a>'
         rijen.append(
-            f"              <tr><td>{MAANDEN[mi].capitalize()}</td>"
+            f"              <tr><td>{naam}</td>"
             f"<td>{nl(m['gem'] / 10)}</td><td>{nl(m['min'] / 10)}</td>"
             f"<td>{nl(m['max'] / 10)}</td><td>{neg}</td></tr>")
     tabel = "\n".join(rijen)
@@ -466,7 +522,7 @@ def bouw_pagina(jd: dict, alle: dict[int, dict], bel: Belasting,
           <h2>Wat je zelf betaalde</h2>
           <p>Met een dynamisch contract betaal je de beursprijs van elk uur. Je leverancier telt daar een opslag bij op, en de overheid energiebelasting en btw. {belasting_zin(j, bel)}</p>
           <p>Het blok "Met belasting en opslag" rekent met dat tarief en met de opslag die aanbieders nu vragen: gemiddeld {nl(opslag_gem * bel.btw_std * 100)} cent per kWh met btw. Die opslag was in {j} misschien anders. Vaste kosten per maand en de korting op de energiebelasting per aansluiting zitten er niet in.</p>
-          <p>Wil je het verloop van {j} per dag zien, voor jouw aanbieder? Dat kan bij het <a href="/historisch?jaar={j}#jaarverloop">jaarverloop op de historisch-pagina</a>. Bron van de prijzen: <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E Transparency</a>.</p>
+          <p>Wil je het verloop van {j} per dag zien, voor jouw aanbieder? Dat kan bij het <a href="/historisch?jaar={j}#jaarverloop">jaarverloop op de historisch-pagina</a>. Bron van de prijzen: <a href="https://transparency.entsoe.eu" rel="noopener">ENTSO-E Transparency</a>.{dekking_zin(jd)}</p>
         </div>
       </div>
     </section>
@@ -528,10 +584,12 @@ def main() -> int:
 
     geschreven = 0
     jaar_dir = pub / "data" / "jaar"
+    # Maandpagina's (generate_historisch_pages.py) die al bestaan: link vanuit de tabel.
+    maandpaginas = {f.stem for f in (pub / "historisch").glob("????-??.html")}
     for j, jd in alle.items():
         s = json.dumps(jd, ensure_ascii=False, separators=(",", ":"))
         geschreven += schrijf_als_anders(jaar_dir / f"{j}.json", s + "\n")
-        html = bouw_pagina(jd, alle, bel, opslag_gem, footer)
+        html = bouw_pagina(jd, alle, bel, opslag_gem, footer, maandpaginas)
         geschreven += schrijf_als_anders(pub / "historisch" / f"{j}.html", html)
 
     index = {
