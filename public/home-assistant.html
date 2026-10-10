@@ -178,7 +178,7 @@
       <p><span class="ha-url">https://stroomvoorspeller.nl/data/ha.json</span></p>
       <p>
         Ik ververs het bestand een paar keer per dag. Twee momenten doen ertoe: kort na middernacht
-        schuift morgen door naar vandaag, en rond 14:00 komen de prijzen van morgen erbij. Het is een
+        schuift morgen door naar vandaag, en vanaf 14:10 komen de prijzen van morgen erbij. Het is een
         statisch bestand achter een CDN, dus je mag het gerust elke 30 minuten ophalen. De prijzen zelf
         veranderen niet meer zodra ze bekend zijn.
       </p>
@@ -389,7 +389,7 @@ action:
           <tr><td><code>today.negative_hours_market</code></td><td>Aantal uren met negatieve <em>marktprijs</em> ('gratis stroom')</td><td>1</td></tr>
           <tr><td><code>today.negative_hours_all_in</code></td><td>Aantal uren met negatieve <em>consumentenprijs</em> (incl. belasting)</td><td>0</td></tr>
           <tr><td><code>today.hours[].market</code> / <code>.all_in</code></td><td>Volledige uurlijst (24 stuks)</td><td>array</td></tr>
-          <tr><td><code>tomorrow.available</code></td><td>true zodra de prijzen van morgen bekend zijn (~14:00)</td><td>true / false</td></tr>
+          <tr><td><code>tomorrow.available</code></td><td>true zodra de prijzen van morgen bekend zijn (vanaf 14:10)</td><td>true / false</td></tr>
           <tr><td><code>tomorrow.cheapest.start</code></td><td>Goedkoopste uur morgen</td><td>2026-05-01T04:00:00+02:00</td></tr>
           <tr><td><code>forecast.days[].average_market_estimate</code></td><td>Verwacht daggemiddelde (indicatief)</td><td>0.0603</td></tr>
           <tr><td><code>forecast.days[].negative_probability</code></td><td>Ruwe kans op negatieve uren (0–1)</td><td>0.29</td></tr>
@@ -408,7 +408,7 @@ action:
       <div class="ha-warn">
         Het <code>forecast</code>-blok is een <strong>modelvoorspelling met onzekerheid</strong>, geen
         zekerheid. Bouw automatiseringen die op exacte prijzen rekenen daarom op <code>today</code> en —
-        na ongeveer 14:00 — <code>tomorrow</code>; dat zijn harde day-ahead prijzen. Gebruik
+        na ongeveer 14:10 — <code>tomorrow</code>; dat zijn harde day-ahead prijzen. Gebruik
         <code>forecast</code> alleen voor losse planning, bijvoorbeeld "wordt het later deze week
         goedkoper?". Lees meer op <a href="/over/voorspelling">Over de voorspelling</a>.
       </div>
