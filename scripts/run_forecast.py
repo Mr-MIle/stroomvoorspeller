@@ -723,8 +723,10 @@ def main() -> int:
         _forecast_mod.POINT_WEIGHT = V4_POINT_WEIGHT
         _forecast_mod.ENABLED_FACTORS = set(V4_FACTORS)
         globals()["MODEL_VERSION"] = "4.0"   # komt mee in forecast.json en het log
-        print(f"[info] Model v4 AAN (baseline v4, punten x{V4_POINT_WEIGHT}, "
-              f"factoren {sorted(V4_FACTORS)}, band 80%).", file=sys.stderr)
+        print(f"[info] Model v4 rekent mee als schaduw en terugval voor v5 "
+              f"(baseline v4, punten x{V4_POINT_WEIGHT}, factoren {sorted(V4_FACTORS)}, "
+              f"band 80%); welk model de voorspelling levert staat verderop "
+              f"('v5 gebruikt voor ... uren').", file=sys.stderr)
 
     now_ams     = amsterdam_now()
     today_start = now_ams.replace(hour=0, minute=0, second=0, microsecond=0)
