@@ -72,7 +72,7 @@
           "@id": "https://stroomvoorspeller.nl/#organization"
         },
         "datePublished": "2026-04-29",
-        "dateModified": "2026-10-03",
+        "dateModified": "2026-10-14",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/over/voorspelling",
@@ -105,7 +105,7 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Over de voorspelling</h1>
-    <p class="legal-meta">Modelversie 5.0 · Bijgewerkt: 3 oktober 2026</p>
+    <p class="legal-meta">Modelversie 5.1 · Bijgewerkt: 14 oktober 2026</p>
 
     <section>
       <h2>Kort samengevat</h2>
@@ -115,6 +115,8 @@
         boven de windparken in Nederland en Duitsland, hoeveel zon er valt, hoe koud het is, en wat
         gas kost. Uit ruim twee jaar data weet het model hoeveel elk van die dingen de prijs per uur
         verschuift. Hoe verder vooruit, hoe onzekerder het weer, en hoe kleiner die bijstelling.
+Een tweede rekenmodel kijkt naar dezelfde dingen in samenhang, en de voorspelling is het
+gemiddelde van de twee.
         Ook een goede voorspelling zit er geregeld een paar cent naast. Daarom tonen we altijd een
         onzekerheidsband.
       </p>
@@ -234,7 +236,28 @@
         voor winterse en zomerse schaarste zijn vervallen: kou, windstilte en weinig zon zitten nu
         rechtstreeks in de bijstelling.
       </p>
-      <p>Klik op de homepage in de voorspelgrafiek op een uur. Onder de grafiek zie je dan per onderdeel hoeveel cent het bijdraagt.</p>
+      <h3>Stap 4 — Een tweede rekenmodel kijkt mee</h3>
+<p>
+Stap 3 telt elk onderdeel los op. Zo werkt de markt niet altijd. Harde wind op een dag dat
+stroom duur is, drukt de prijs veel sterker dan dezelfde wind op een dag dat stroom al
+goedkoop is. Op 9 en 10 oktober 2026 waaide het hard, na vier weken waarin stroom gemiddeld
+16 cent kostte. De prijs zakte naar 9 en 5 cent. Versie 5.0 kwam niet lager dan 15 en 12 cent.
+</p>
+<p>
+Sinds versie 5.1 (14 oktober 2026) rekent daarom een tweede model mee. Het is een
+verzameling beslisbomen: duizenden ja/nee-vragen, zoals "waait het boven de 9 m/s én lag de
+prijs vorige week boven de 15 cent?". Het kijkt naar hetzelfde weer, maar ook naar de gasprijs
+zelf en naar de prijzen van de laatste dagen. Ook dit model leert elke week opnieuw van alle
+dagen sinds februari 2024.
+</p>
+<p class="legal-formula">
+voorspelling = ½ × uitkomst stap 3 + ½ × tweede model
+</p>
+<p>
+Op 9 en 10 oktober had versie 5.1 13,5 en 10,5 cent gezegd. Beter, maar nog steeds te hoog:
+zulke dagen blijven lastig.
+</p>
+<p>Klik op de homepage in de voorspelgrafiek op een uur. Onder de grafiek zie je dan per onderdeel hoeveel cent het bijdraagt. Het tweede model staat daar als <em>patroonmodel</em>: hoeveel het de uitkomst van stap 3 omhoog of omlaag haalt.</p>
     </section>
 
     <section>
@@ -336,7 +359,18 @@
       <h2>Hoe goed presteert het model?</h2>
       <p>
         Elke modelversie testen we eerst op het verleden, met de weersverwachting zoals die toen
-        was. Voor versie 5.0, juli 2024 tot en met september 2026, op de kale beursprijs:
+        was. Voor versie 5.1, januari 2025 tot en met 13 oktober 2026, op de kale beursprijs:
+</p>
+<ul>
+<li>
+<strong>Gemiddeld zat het model er 2,0 cent per kWh naast.</strong> Versie 5.0 kwam op
+dezelfde dagen op 2,1 cent. Een dag na de laatst bekende prijs is de fout 1,7 cent (was 1,85),
+zes dagen vooruit 2,2 cent (was 2,3). In de eerste twee weken van oktober 2026 zakte de fout
+van 3,2 naar 2,9 cent.
+</li>
+</ul>
+<p>
+Voor versie 5.0, juli 2024 tot en met september 2026:
       </p>
       <ul>
         <li>

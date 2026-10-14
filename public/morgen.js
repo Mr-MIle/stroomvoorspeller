@@ -764,7 +764,9 @@
         hrs++;
         (f.factors || []).forEach(fc => {
           // v5: alleen de weer- en marktfactoren vertellen iets over morgen
-          if (fc.name === "vergelijkbare dagen" || fc.name === "vaste correctie") return;
+          // v5.1: het patroonmodel is geen weer- of marktfactor met een eigen reden
+          if (fc.name === "vergelijkbare dagen" || fc.name === "vaste correctie" ||
+              fc.name === "patroonmodel") return;
           if (!factorAcc[fc.name]) factorAcc[fc.name] = { name: fc.name, pts: 0, reason: fc.reason };
           factorAcc[fc.name].pts += fc.points;
         });

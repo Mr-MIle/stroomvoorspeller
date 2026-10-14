@@ -43,9 +43,10 @@ MODEL_HISTORY = [
     {"version": "3.2", "date": "2026-07-05", "mae_eur_mwh": None,  "notes": "Zomerschaarste-regime + amplifier (windstille hitte, avondramp 18-22u)"},
     {"version": "4.0", "date": "2026-08-17", "mae_eur_mwh": None,  "notes": "Nieuwe niveauschatter (28d werkdag/weekend + trend), bodem op de oversupply-correctie, 7 factoren, band 80%"},
     {"version": "5.0", "date": "2026-10-03", "mae_eur_mwh": None,  "notes": "Weer op 9 windpunten en 5 zonpunten (NL+DE), vergelijkbare dagen, lineaire correctie per uur; backtest met verwacht weer 25,2 -> 21,1"},
+    {"version": "5.1", "date": "2026-10-14", "mae_eur_mwh": None,  "notes": "Patroonmodel (beslisbomen op weer, gas- en prijsniveau) telt voor de helft mee; backtest jan 2025 - okt 2026 21,0 -> 19,7"},
 ]
 
-CURRENT_MODEL_VERSION = "5.0"
+CURRENT_MODEL_VERSION = "5.1"
 
 # Evaluatievenster: afgelopen N dagen
 EVAL_WINDOW_DAYS = 30
@@ -137,12 +138,14 @@ def load_archive(prefix="forecast", directory=None):
                     dt = datetime.fromisoformat(hour_str.replace("Z", "+00:00"))
                     key = dt.strftime("%Y-%m-%dT%H:00:00Z")
                     v4 = entry.get("predicted_v4")
+                    v50 = entry.get("predicted_v50")
                     fc_dict[key] = {
                         "forecast": float(fc_val),
                         "band_low": float(band_low) if band_low is not None else None,
                         "band_high": float(band_high) if band_high is not None else None,
                         "model": str(entry.get("model") or snap_model),
                         "forecast_v4": float(v4) if v4 is not None else None,
+                        "forecast_v50": float(v50) if v50 is not None else None,
                     }
                 except ValueError:
                     pass
@@ -273,6 +276,7 @@ def compute_performance():
                 "signed_error": forecast - actual,
                 "model": fc_entry.get("model", ""),
                 "forecast_v4": fc_entry.get("forecast_v4"),
+                "forecast_v50": fc_entry.get("forecast_v50"),
                 "snap": snap_date,
                 "key": hour_str,
             })
@@ -515,6 +519,16 @@ def compute_performance():
             "mae_v4_eur_mwh": round(sum(abs(p["forecast_v4"] - p["actual"]) for p in sh) / len(sh), 2),
         }
 
+    # v5.1: zelfde uren, met en zonder patroonmodel.
+    sh50 = [p for p in pairs if p.get("forecast_v50") is not None]
+    shadow_v50 = None
+    if sh50:
+        shadow_v50 = {
+            "n_hours": len(sh50),
+            "mae_v51_eur_mwh": mae(sh50),
+            "mae_v50_eur_mwh": round(sum(abs(p["forecast_v50"] - p["actual"]) for p in sh50) / len(sh50), 2),
+        }
+
     # EpexPredictor (open source, ook achter dynamisch-tarief.nl) als meetlat:
     # dezelfde snapshotdag, hetzelfde doeluur, dezelfde werkelijke prijs.
     benchmark = None
@@ -576,6 +590,7 @@ def compute_performance():
         "daily_series": daily_series,
         "by_model": by_model,
         "shadow_v4": shadow_v4,
+        "shadow_v50": shadow_v50,
         "benchmark": benchmark,
         "naive_note": ("Naïef = mediaan van hetzelfde uur over de laatste 7 (weekend: 14) "
                        "dagen waarvan de prijs op het voorspelmoment bekend was."),

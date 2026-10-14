@@ -29,6 +29,13 @@ jobs:
         with:
           python-version: "3.12"
 
+      # v5.1: alleen het schatten van het patroonmodel heeft lightgbm nodig; de
+      # voorspelling zelf doorloopt de bomen in pure Python. Mislukt de installatie,
+      # dan schat het script alleen het lineaire model en blijven de oude bomen staan.
+      - name: Installeer lightgbm
+        continue-on-error: true
+        run: pip install numpy==2.1.3 lightgbm==4.5.0
+
       - name: Schat de gewichten
         run: python scripts/refit_model_v5.py
 
@@ -37,6 +44,7 @@ jobs:
           git config user.name "stroomvoorspeller-bot"
           git config user.email "bot@stroomvoorspeller.nl"
           git add public/data/model_v5.json
+          git add data/model_v5_gbm.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "Geen wijziging."
           else

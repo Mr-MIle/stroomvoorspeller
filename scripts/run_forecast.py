@@ -144,6 +144,12 @@ V4_NONLINEAR_FLOOR = -3.0
 # Kill-switch: terug op False, dan draait v4 ongewijzigd.
 ENABLE_MODEL_V5 = True
 V5_HISTORY_DAYS = 40
+# v5.1 (14 okt 2026, rapport 01-documenten/ab-model-v5-1-uitkomst.md): de helft van de
+# voorspelling komt uit een patroonmodel (beslisbomen, data/model_v5_gbm.json) op
+# dezelfde invoer plus gas- en prijsniveau. Backtest jan 2025 - okt 2026 met verwacht
+# weer: MAE 21,0 -> 19,7 EUR/MWh. Het lineaire model alleen (v5.0) rekent als schaduw
+# mee (veld predicted_v50). Kill-switch: False, dan draait v5.0 ongewijzigd.
+ENABLE_MODEL_V5_GBM = True
 
 # ---------------------------------------------------------------------------
 # Paden
@@ -154,6 +160,7 @@ FORECAST_FILE      = PROJECT_ROOT / "public" / "data" / "forecast.json"
 PREDICTION_LOG_FILE    = PROJECT_ROOT / "03-data" / "prediction_log.json"
 BIAS_CORRECTIONS_FILE  = PROJECT_ROOT / "03-data" / "bias_corrections.json"
 MODEL_V5_FILE          = PROJECT_ROOT / "public" / "data" / "model_v5.json"
+MODEL_V5_GBM_FILE      = PROJECT_ROOT / "data" / "model_v5_gbm.json"
 
 # Hoeveel dagen we prediction-log bewaren (voor bias-correctie en analog search)
 PREDICTION_LOG_MAX_DAYS = 90
@@ -370,6 +377,25 @@ def compute_ttf_ratio(ttf_series: dict) -> float:
 # ---------------------------------------------------------------------------
 # v5: invoer ophalen
 # ---------------------------------------------------------------------------
+
+def load_v5_gbm():
+    """Bomen van het patroonmodel (v5.1), of None: dan rekent v5.0 alleen."""
+    if _m5 is None or not ENABLE_MODEL_V5_GBM:
+        return None
+    try:
+        gbm = json.loads(MODEL_V5_GBM_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        print(f"[warn] v5.1: {MODEL_V5_GBM_FILE.name} niet bruikbaar ({exc}); "
+              f"alleen het lineaire model.", file=sys.stderr)
+        return None
+    if not _m5.gbm_usable(gbm):
+        print("[warn] v5.1: patroonmodel faalt de zelftest; alleen het lineaire model.",
+              file=sys.stderr)
+        return None
+    print(f"[info] v5.1: patroonmodel met {len(gbm['trees'])} bomen van "
+          f"{gbm.get('fitted_at')}.", file=sys.stderr)
+    return gbm
+
 
 def load_v5_inputs(history: list, now_ams: datetime):
     """
@@ -608,6 +634,8 @@ def log_predictions(forecasts: list, log_file: Path) -> None:
             "P_negative":     fc.get("P_negative"),
             # v5: wat v4 voor hetzelfde uur zei (schaduwmeting)
             "predicted_v4":   fc.get("predicted_v4"),
+            # v5.1: wat het lineaire model alleen (v5.0) zei
+            "predicted_v50":  fc.get("predicted_v50"),
             # Plausibility (v2.1)
             "plausibility_score": fc.get("event_plausibility_score"),
             "plausibility_label": fc.get("event_plausibility_label"),
@@ -774,7 +802,9 @@ def main() -> int:
     # v5: invoer eenmalig laden. Lukt dat niet, dan draait v4 ongewijzigd.
     v5_inputs = load_v5_inputs(history, now_ams)
     v5_gas = ttf_ratio - 1.0
+    v5_gbm = load_v5_gbm() if v5_inputs is not None else None
     v5_used = 0
+    v5_models: set = set()
 
     forecasts: list = []
     skipped = 0
@@ -842,7 +872,8 @@ def main() -> int:
                 k_eff = min(k5, cursor.date() - timedelta(days=1))
                 try:
                     v5_day = _m5.forecast_day(P5, idx5, fc_day, k_eff, cursor.date(),
-                                              v5_gas, coefs5)
+                                              v5_gas, coefs5, v5_gbm,
+                                              _m5.ttf_level_before(ttf_series, k_eff))
                 except Exception as exc:  # noqa: BLE001
                     print(f"[warn] v5 {day_key}: {exc}; v4 voor deze dag.", file=sys.stderr)
             else:
@@ -929,10 +960,14 @@ def main() -> int:
                     "uncertainty_pct": round(half5 / abs(pred5), 4) if abs(pred5) > 1e-6 else 1.0,
                     "total_points":    0,
                     "lead_days":       v5_day["lead"],
-                    "model":           _m5.MODEL_VERSION,
+                    "model":           v5_day["model"],
                     "factors":         _m5.explain_hour(v5_day, hour),
                 })
+                if hr5.get("gbm") is not None:
+                    # v5.1: wat het lineaire model alleen (v5.0) zei (schaduwmeting)
+                    fc_dict["predicted_v50"] = round(hr5["linear"], 2)
                 v5_used += 1
+                v5_models.add(v5_day["model"])
 
             # v2.1: EVENT_PLAUSIBILITY_LAYER
             # Wijzigt fc_dict["predicted"] NIET. Voegt plausibility-metadata toe.
@@ -976,7 +1011,7 @@ def main() -> int:
     print(f"[info] {len(forecasts)} voorspellingen gegenereerd; {skipped} overgeslagen.",
           file=sys.stderr)
     if v5_used:
-        globals()["MODEL_VERSION"] = _m5.MODEL_VERSION
+        globals()["MODEL_VERSION"] = max(v5_models)
         print(f"[info] v5 gebruikt voor {v5_used} van {len(forecasts)} uren.", file=sys.stderr)
 
     payload = {
@@ -995,6 +1030,7 @@ def main() -> int:
             "train_to":       v5_inputs[3].get("train_to"),
             "last_price_day": str(v5_inputs[2]),
             "hours_v5":       v5_used,
+            "gbm_fitted_at":  v5_gbm.get("fitted_at") if v5_gbm else None,
         }
     if not weather:
         payload["error"] = "Open-Meteo niet beschikbaar; geen voorspelling deze run."
