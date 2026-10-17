@@ -57,7 +57,7 @@
     var container = document.querySelector(".share-tip");
     var day = row.getAttribute("data-share-day") === "tomorrow" ? "tomorrow" : "today";
 
-    fetch("/data/ha.json", { cache: "no-store" })
+    fetch("/data/ha.json?v=" + Math.floor(Date.now() / 300000))
       .then(function (r) { if (!r.ok) throw new Error("ha.json HTTP " + r.status); return r.json(); })
       .then(function (data) {
         var block = data[day];

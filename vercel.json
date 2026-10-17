@@ -79,6 +79,15 @@
           "value": "public, max-age=300, stale-while-revalidate=900"
         }
       ]
+    },
+    {
+      "source": "/(styles.css|app.js|nav.js|partner.js)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, must-revalidate"
+        }
+      ]
     }
   ]
 }

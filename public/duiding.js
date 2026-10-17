@@ -85,7 +85,7 @@
   function mount() {
     var anchor = document.getElementById("morgen-summary-box");
     if (!anchor) return;
-    fetch(DATA_URL, { cache: "no-store" })
+    fetch(DATA_URL + "?v=" + Math.floor(Date.now() / 300000))
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
         if (!d || !d.kop) return;

@@ -346,6 +346,10 @@ def upsert(record: dict, tar: dict):
         "days": ordered,
     }
     OUT_FILE.write_text(json.dumps(doc, indent=1, ensure_ascii=False))
+    # Kleine samenvatting voor de homepage (zonder de dagreeks), zie index.html.
+    summary = {"generated_at": doc.get("generated_at"), "currency": doc.get("currency"),
+               "supplier": doc.get("supplier"), "totals": doc["totals"], "days_count": len(doc["days"])}
+    (ROOT / "public" / "data" / "arbitrage-summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False))
 
 
 def process_day(inv_id, sn, day, prices, tar, tz_hours):

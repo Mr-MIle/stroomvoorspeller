@@ -2213,10 +2213,12 @@
 
   loadInitialState();
 
+  // Versie per 5 minuten: browser en CDN cachen max 5 min, geen no-store meer.
+  const dataV = "?v=" + Math.floor(Date.now() / 300000);
   Promise.all([
-    fetch("data/config.json",  { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error("config HTTP " + r.status); return r.json(); }),
-    fetch("data/prices.json",  { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error("prices HTTP " + r.status); return r.json(); }),
-    fetch("data/forecast.json", { cache: "no-store" }).then((r) => r.ok ? r.json() : null).catch(() => null),
+    fetch("data/config.json" + dataV).then((r) => { if (!r.ok) throw new Error("config HTTP " + r.status); return r.json(); }),
+    fetch("data/prices.json" + dataV).then((r) => { if (!r.ok) throw new Error("prices HTTP " + r.status); return r.json(); }),
+    fetch("data/forecast.json" + dataV).then((r) => r.ok ? r.json() : null).catch(() => null),
   ])
     .then(([config, payload, forecastPayload]) => {
       state.config          = config;

@@ -200,19 +200,6 @@
       </div>
     </section>
 
-    <!-- Aannames-popup: hoort bij de info-knop in het instellingenpaneel -->
-    <dialog id="assumptions-dialog" class="info-dialog" aria-labelledby="assumptions-title">
-      <div class="info-dialog-inner">
-        <h2 class="info-dialog-title" id="assumptions-title">Aannames in de berekening</h2>
-        <ul class="info-dialog-list">
-          <li>Energiebelasting <span data-field="config-year">—</span>: <span data-field="config-energiebelasting">—</span></li>
-          <li>BTW: <span data-field="config-btw">—</span></li>
-          <li>De all-in formule: (EPEX + opslag + energiebelasting) × btw</li>
-        </ul>
-        <p class="info-dialog-note">De opslag (inkoopvergoeding) wordt bij de kale EPEX-prijs opgeteld. Bedragen zijn <strong>excl. btw</strong>; in je leverancier-app staat het soms incl. btw. Tarieven zijn schattingen die jaarlijks worden bijgewerkt — controleer altijd je eigen jaaroverzicht voor exacte cijfers.</p>
-        <button type="button" class="info-dialog-close">Sluiten</button>
-      </div>
-    </dialog>
 
     <!-- Hero-verdict: morgen- of nu-samenvatting bovenaan — vervangt de oude tomorrow-tip banner (#58) -->
     <section id="hero-verdict" class="hero-verdict" hidden aria-live="polite" role="status">
@@ -591,16 +578,16 @@
     </style>
     <script>
       (function () {
-        fetch("/data/arbitrage.json", { cache: "no-store" })
+        fetch("/data/arbitrage-summary.json?v=" + Math.floor(Date.now() / 300000))
           .then((r) => (r.ok ? r.json() : null))
           .then((doc) => {
-            if (!doc || !doc.totals || !(doc.days || []).length) return;
+            if (!doc || !doc.totals || !doc.days_count) return;
             const t = doc.totals;
             const eur = (x) => "\u20ac\u00a0" + (x ?? 0).toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             document.getElementById("bp-total").textContent = eur(t.saving_eur);
-            document.getElementById("bp-days").textContent = (t.days || doc.days.length) + " dagen gemeten";
+            document.getElementById("bp-days").textContent = (t.days || doc.days_count) + " dagen gemeten";
             document.getElementById("bp-gratis").textContent = Math.round(t.solar_charged_kwh ?? 0).toLocaleString("nl-NL") + " kWh";
-            const avg = (t.saving_eur ?? 0) / (t.days || doc.days.length);
+            const avg = (t.saving_eur ?? 0) / (t.days || doc.days_count);
             document.getElementById("bp-avg").textContent = eur(avg);
           })
           .catch(() => {});
@@ -718,5 +705,18 @@
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
   <script src="/nav.js" defer></script>
+    <!-- Aannames-popup: hoort bij de info-knop in het instellingenpaneel -->
+    <dialog id="assumptions-dialog" class="info-dialog" aria-labelledby="assumptions-title">
+      <div class="info-dialog-inner">
+        <h2 class="info-dialog-title" id="assumptions-title">Aannames in de berekening</h2>
+        <ul class="info-dialog-list">
+          <li>Energiebelasting <span data-field="config-year">—</span>: <span data-field="config-energiebelasting">—</span></li>
+          <li>BTW: <span data-field="config-btw">—</span></li>
+          <li>De all-in formule: (EPEX + opslag + energiebelasting) × btw</li>
+        </ul>
+        <p class="info-dialog-note">De opslag (inkoopvergoeding) wordt bij de kale EPEX-prijs opgeteld. Bedragen zijn <strong>excl. btw</strong>; in je leverancier-app staat het soms incl. btw. Tarieven zijn schattingen die jaarlijks worden bijgewerkt — controleer altijd je eigen jaaroverzicht voor exacte cijfers.</p>
+        <button type="button" class="info-dialog-close">Sluiten</button>
+      </div>
+    </dialog>
 </body>
 </html>

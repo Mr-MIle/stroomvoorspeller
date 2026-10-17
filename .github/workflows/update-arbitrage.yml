@@ -43,7 +43,7 @@ jobs:
         run: |
           git config user.name "stroomvoorspeller-bot"
           git config user.email "bot@stroomvoorspeller.nl"
-          git add public/data/arbitrage.json 2>/dev/null || true
+          git add public/data/arbitrage.json public/data/arbitrage-summary.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "Geen wijzigingen - niets te committen."
             exit 0
