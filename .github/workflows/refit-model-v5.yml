@@ -34,7 +34,9 @@ jobs:
       # dan schat het script alleen het lineaire model en blijven de oude bomen staan.
       - name: Installeer lightgbm
         continue-on-error: true
-        run: pip install numpy==2.1.3 lightgbm==4.5.0
+        # scikit-learn is nodig voor lightgbm.sklearn; zonder dat pakket faalt
+        # het schatten met LightGBMError.
+        run: pip install numpy==2.1.3 lightgbm==4.5.0 scikit-learn==1.5.2
 
       - name: Schat de gewichten
         run: python scripts/refit_model_v5.py
