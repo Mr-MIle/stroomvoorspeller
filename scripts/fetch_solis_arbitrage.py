@@ -14,9 +14,15 @@ Rekenmodel (met Emile vastgelegd):
     huisverbruik dat samenvalt met laden.
   - Laden uit net (22-06u) = consumentenprijs (zit ook in inkoop).
   - Ontladen naar huis = vermeden inkoop (waarde = consumentenprijs).
-  - Ontladen naar net (valt samen met net-export) = inkomsten tegen kale EPEX
-    (min eventuele terugleverkosten SOLIS_FEEDIN_COST, standaard 0).
+  - Ontladen naar net (valt samen met net-export) = inkomsten tegen de
+    terugleverprijs.
   consumentenprijs = (epex + opslag + energiebelasting) x btw.
+  terugleverprijs  = kale EPEX + teruglever-opslag van de aanbieder
+    (config.json teruglevering.opslag_per_kwh, negatief = kosten), en t/m 2026
+    + energiebelasting x btw (saldering: die betaal je over afname min
+    teruglevering; de stroom zelf wordt per uur verrekend). Min eventuele
+    extra terugleverkosten SOLIS_FEEDIN_COST, standaard 0.
+  Aanbieder per dag volgt SUPPLIER_SCHEDULE (Frank tot 17 okt 2026, daarna Tibber).
 
 Draait in een GitHub Action. Sleutels uit env SOLIS_KEY_ID / SOLIS_KEY_SECRET.
 
@@ -44,7 +50,10 @@ KEY_ID = os.environ["SOLIS_KEY_ID"].strip()
 KEY_SECRET = os.environ["SOLIS_KEY_SECRET"].strip().encode()
 BASE = os.environ.get("SOLIS_BASE", "https://www.soliscloud.com:13333").rstrip("/")
 
-SUPPLIER_ID = os.environ.get("SOLIS_SUPPLIER_ID", "frank")     # opslag uit config.json
+SUPPLIER_ID = os.environ.get("SOLIS_SUPPLIER_ID", "").strip()  # forceert één aanbieder
+# Aanbieder per periode (vanaf-datum, id in config.json); daarvoor geldt de eerste.
+SUPPLIER_SCHEDULE = [("2000-01-01", "frank"), ("2026-10-17", "tibber")]
+SALDERING_END = os.environ.get("SOLIS_SALDERING_END", "2027-01-01")  # eerste dag zonder
 FEEDIN_COST = float(os.environ.get("SOLIS_FEEDIN_COST", "0"))  # terugleverkosten EUR/kWh
 TIMEOUT = float(os.environ.get("SOLIS_TIMEOUT", "60"))         # seconden per HTTP-poging
 RETRIES = int(os.environ.get("SOLIS_RETRIES", "4"))            # pogingen per API-aanroep
@@ -177,21 +186,31 @@ def fetch_history_prices(start: str, end: str) -> dict:
     return {k: (sum(v) / len(v)) / 1000.0 for k, v in buckets.items()}
 
 
-def load_tariff():
+def supplier_for(day: str) -> str:
+    """Aanbieder-id die op deze dag (YYYY-MM-DD) leverde."""
+    if SUPPLIER_ID:
+        return SUPPLIER_ID
+    current = SUPPLIER_SCHEDULE[0][1]
+    for start, sid in SUPPLIER_SCHEDULE:
+        if day >= start:
+            current = sid
+    return current
+
+
+def load_tariff(day: str):
+    """Tarief voor één dag: aanbieder volgens het schema, saldering t/m 2026."""
+    sid = supplier_for(day)
     cfg = json.loads(CONFIG_FILE.read_text())
     t = cfg["taxes"]
-    markup = None
-    supplier_name = SUPPLIER_ID
-    for s in cfg.get("suppliers", []):
-        if s.get("id") == SUPPLIER_ID:
-            markup = s.get("markup_per_kwh")
-            supplier_name = s.get("name")
-            break
-    if markup is None:
-        raise RuntimeError(f"Aanbieder '{SUPPLIER_ID}' niet in config.json gevonden.")
+    sup = next((s for s in cfg.get("suppliers", []) if s.get("id") == sid), None)
+    if sup is None or sup.get("markup_per_kwh") is None:
+        raise RuntimeError(f"Aanbieder '{sid}' niet in config.json gevonden.")
     return {
-        "supplier": supplier_name,
-        "markup": markup,
+        "supplier_id": sid,
+        "supplier": sup.get("name", sid),
+        "markup": sup["markup_per_kwh"],
+        "feedin_markup": (sup.get("teruglevering") or {}).get("opslag_per_kwh", 0.0),
+        "saldering": day < SALDERING_END,
         "energiebelasting": t.get("energiebelasting_per_kwh", 0.0),
         "btw": t.get("btw_factor", 1.0),
     }
@@ -200,6 +219,14 @@ def load_tariff():
 def consumer_price(epex_kwh: float, tar: dict) -> float:
     """Consumentenprijs EUR/kWh = (epex + opslag + energiebelasting) * btw."""
     return (epex_kwh + tar["markup"] + tar["energiebelasting"]) * tar["btw"]
+
+
+def export_price(epex_kwh: float, tar: dict) -> float:
+    """Wat een teruggeleverde kWh oplevert (EUR/kWh), zie de docstring bovenaan."""
+    price = epex_kwh + tar["feedin_markup"] - FEEDIN_COST
+    if tar["saldering"]:
+        price += tar["energiebelasting"] * tar["btw"]
+    return price
 
 
 def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
@@ -239,10 +266,11 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
                 epex = prices.get(hour_key)
                 if epex is not None:
                     cons = consumer_price(epex, tar)
-                    export_price = epex - FEEDIN_COST
+                    exp_price = export_price(epex, tar)
                     # kosten = je echte netto-rekening: inkoop tegen consumentenprijs,
-                    # min ALLE teruglevering (batterij + losse zonnepanelen) tegen kale EPEX.
-                    cost_actual += dimp * cons - dsell * export_price
+                    # min ALLE teruglevering (batterij + losse zonnepanelen) tegen de
+                    # terugleverprijs (met saldering t/m 2026).
+                    cost_actual += dimp * cons - dsell * exp_price
                     cost_without += dload * cons
                     # batterij-teruglevering apart, voor de arbitrage-tegel: deel van de
                     # ontlading dat samenvalt met net-export. 's Avonds (geen zon) is net-
@@ -252,21 +280,22 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
                     battery_home += to_home
                     arbitrage_kwh += to_grid
                     battery_home_value += to_home * cons
-                    arbitrage_income += to_grid * export_price
+                    arbitrage_income += to_grid * exp_price
                     # laden splitsen: net-stroom boven het huisverbruik die samenvalt
-                    # met laden komt uit het net (kosten); de rest uit zon (gratis).
+                    # met laden komt uit het net (kosten); de rest uit zon (gratis op de
+                    # rekening, maar gemist als teruglevering: telt als laadkosten batterij).
                     gch = min(dch, max(0.0, dimp - dload))
                     grid_charged += gch
                     solar_charged += dch - gch
                     grid_charge_cost += gch * cons
-                    solar_charge_value += (dch - gch) * epex
+                    solar_charge_value += (dch - gch) * exp_price
                     energy_priced += flow
         prev = p
 
     coverage = (energy_priced / energy_total) if energy_total else 0.0
     saving = cost_without - cost_actual
     # Schatting: batterij-aandeel = wat de batterij verdiende door in tijd te schuiven
-    # (thuis vermeden inkoop + verkoop terug) min laadkosten (net + marktwaarde zon).
+    # (thuis vermeden inkoop + verkoop terug) min laadkosten (net + gemiste teruglevering zon).
     # Zon-aandeel = de rest van de besparing.
     battery_saving = battery_home_value + arbitrage_income - grid_charge_cost - solar_charge_value
     solar_saving = saving - battery_saving
@@ -280,6 +309,8 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
 
     return {
         "date": day,
+        "supplier": tar["supplier"],
+        "saldering": tar["saldering"],
         # vier tegels
         "consumption_kwh": r(consumption),
         "cost_actual_eur": r(cost_actual),
@@ -325,12 +356,14 @@ def upsert(record: dict, tar: dict):
     doc = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "currency": "EUR",
-        "supplier": tar["supplier"],
+        "supplier": ordered[-1].get("supplier", tar["supplier"]),
         "markup_per_kwh": tar["markup"],
         "method": ("Verbruik = homeLoad. Kosten actueel = inkoop x consumentenprijs - "
-                   "teruglevering x EPEX. Kosten zonder = verbruik x consumentenprijs. "
-                   "Laden uit zon = gratis; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen "
-                   "naar huis = vermeden inkoop; naar net = inkomsten tegen EPEX. Besparing geschat gesplitst in batterij (arbitrage) en zon."),
+                   "teruglevering x terugleverprijs. Kosten zonder = verbruik x consumentenprijs. "
+                   "Terugleverprijs = EPEX + teruglever-opslag aanbieder, t/m 2026 plus energiebelasting incl. btw (saldering). "
+                   "Laden uit zon = gemiste teruglevering; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen "
+                   "naar huis = vermeden inkoop; naar net = inkomsten tegen terugleverprijs. Besparing geschat gesplitst in batterij (arbitrage) en zon. "
+                   "Aanbieder per dag staat in days[].supplier."),
         "totals": {
             "days": len(ordered),
             "consumption_kwh": tot("consumption_kwh"),
@@ -352,8 +385,9 @@ def upsert(record: dict, tar: dict):
     (ROOT / "public" / "data" / "arbitrage-summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False))
 
 
-def process_day(inv_id, sn, day, prices, tar, tz_hours):
+def process_day(inv_id, sn, day, prices, tz_hours):
     """Verwerk één dag; schrijft weg en geeft het record terug (of None bij overslaan)."""
+    tar = load_tariff(day)
     resp = call("/v1/api/inverterDay",
                 {"id": inv_id, "sn": sn, "money": "EUR", "time": day, "timeZone": tz_hours})
     points = resp.get("data") or []
@@ -365,7 +399,7 @@ def process_day(inv_id, sn, day, prices, tar, tz_hours):
         print(f"[{day}] te weinig uurprijzen ({record['price_coverage']*100:.0f}%) - overgeslagen.", file=sys.stderr)
         return None
     upsert(record, tar)
-    print(f"[{day}] verbruik {record['consumption_kwh']} kWh | "
+    print(f"[{day}] {tar['supplier']}{' + saldering' if tar['saldering'] else ''} | verbruik {record['consumption_kwh']} kWh | "
           f"besparing EUR {record['saving_eur']} (batterij {record['battery_saving_eur']} / zon {record['solar_saving_eur']})")
     if not record["grid_data_ok"]:
         print(f"  LET OP {day}: net-tellers op 0 - kosten mogelijk onbetrouwbaar.", file=sys.stderr)
@@ -405,7 +439,6 @@ def main():
     args = [a.strip() for a in sys.argv[1:] if a.strip()]
 
     prices = load_prices()
-    tar = load_tariff()
     inv_id, sn = get_inverter()
 
     if len(args) >= 2:
@@ -425,13 +458,13 @@ def main():
         cur = start
         done = 0
         while cur <= end:
-            if process_day(inv_id, sn, cur.isoformat(), prices, tar, tz_hours):
+            if process_day(inv_id, sn, cur.isoformat(), prices, tz_hours):
                 done += 1
             cur += timedelta(days=1)
             time.sleep(2)  # rustig aan met de API
         print(f"Backfill klaar: {done} dagen weggeschreven ({start} t/m {end}).")
     elif args:
-        if not process_day(inv_id, sn, args[0], prices, tar, tz_hours):
+        if not process_day(inv_id, sn, args[0], prices, tz_hours):
             sys.exit(0)
     else:
         ams = now_utc + amsterdam_offset(now_utc)
@@ -443,7 +476,7 @@ def main():
         for i, day in enumerate(todo):
             if i:
                 time.sleep(2)
-            if process_day(inv_id, sn, day, prices, tar, tz_hours):
+            if process_day(inv_id, sn, day, prices, tz_hours):
                 written += 1
         if not written:
             sys.exit(0)
