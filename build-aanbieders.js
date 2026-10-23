@@ -18,6 +18,17 @@
  *   FAQ           vragen + FAQPage-JSON-LD
  *   ITEMLIST      ItemList-JSON-LD met alle aanbieders
  *
+ * Daarna hetzelfde voor public/kennisbank/dynamisch-contract-vergelijken.html
+ * (de vier grote namen, rekenblok uit public/vergelijk-vier.js):
+ *   VIER-KORT     kort antwoord met de bedragen
+ *   VIER-VERSCHIL uitkomstzin boven de tabel
+ *   VIER-RIJEN    tabelregels bij 3.500 kWh zonder zonnepanelen
+ *   VIER-DATA     JSON met de vier aanbieders voor het rekenblok
+ *   VIER-BRON     bronregel met controledatum
+ *   VIER-FAQ      antwoord op "goedkoopste aanbieder" (ook in de JSON-LD)
+ * De conclusies in het korte antwoord zijn tekst. Verandert de volgorde
+ * waar die tekst op leunt, dan geeft het script een waarschuwing.
+ *
  * Gebruik: node build-aanbieders.js   (na elke wijziging aan config.json of
  * aanbieders-render.js, vóór je pusht). Idempotent: twee keer draaien geeft
  * een byte-identiek bestand.
@@ -32,12 +43,12 @@ const R = require("./public/aanbieders-render.js");
 const CONFIG_PATH = path.join(__dirname, "public", "data", "config.json");
 const HTML_PATH = path.join(__dirname, "public", "aanbieders.html");
 
-function vervang(html, naam, inhoud) {
+function vervang(html, naam, inhoud, bestand) {
   const start = "<!-- BUILD:" + naam + ":START -->";
   const eind = "<!-- BUILD:" + naam + ":END -->";
   const i = html.indexOf(start), j = html.indexOf(eind);
   if (i === -1 || j === -1 || j < i) {
-    console.error("Marker BUILD:" + naam + " niet gevonden in aanbieders.html");
+    console.error("Marker BUILD:" + naam + " niet gevonden in " + (bestand || "aanbieders.html"));
     process.exit(1);
   }
   return html.slice(0, i + start.length) + inhoud + html.slice(j);
@@ -165,6 +176,89 @@ function build() {
 
   fs.writeFileSync(HTML_PATH, html, "utf8");
   console.log("aanbieders.html bijgewerkt: " + gesorteerd.length + " aanbieders, goedkoopst " + top3[0].name + " (" + kost(top3[0]) + " bij " + kwhTxt + ").");
+
+  buildArtikel(cfg, lijst);
+}
+
+// ── kennisbank: dynamisch-contract-vergelijken ─────────────────────────────
+const ARTIKEL_PATH = path.join(__dirname, "public", "kennisbank", "dynamisch-contract-vergelijken.html");
+// Volgorde en namen zoals in het artikel; Home Assistant zoals het artikel het beschrijft.
+const VIER = [
+  { id: "zonneplan", name: "Zonneplan", ha: "beperkt" },
+  { id: "tibber", name: "Tibber", ha: "officieel" },
+  { id: "frank", name: "Frank Energie", ha: "via community" },
+  { id: "anwb", name: "ANWB Energie", ha: "nee" },
+];
+
+function buildArtikel(cfg, lijst) {
+  const V = require("./public/vergelijk-vier.js");
+  const BESTAND = "dynamisch-contract-vergelijken.html";
+  const vier = VIER.map((v) => {
+    const s = cfg.suppliers.find((x) => x.id === v.id);
+    if (!s) { console.error("Aanbieder " + v.id + " ontbreekt in config.json"); process.exit(1); }
+    return { id: v.id, name: v.name, ha: v.ha, markup_per_kwh: s.markup_per_kwh, fixed_per_month: s.fixed_per_month,
+             teruglevering: s.teruglevering, verified: s.verified };
+  });
+  const by = (id) => vier.find((s) => s.id === id);
+  const kale = V.standaard();
+  const zon = Object.assign({}, kale, { zon: true });
+  const k = (s, c) => R.kosten(s, c).totaal;
+  const drie = ["zonneplan", "tibber", "frank"].map(by);
+  const drieK = drie.map((s) => k(s, kale));
+  const anwb = k(by("anwb"), kale);
+  const tib = k(by("tibber"), zon);
+  const vierVolg = V.gesorteerd(vier, kale);
+  const goedkoopsteVier = vierVolg[0];
+  const alle = R.sorteer(lijst, "kosten", kale);
+  const laagste = alle[0];
+  const eur = (v) => R.eur0(v);
+  const range = (a, b) => (Math.round(a) === Math.round(b) ? eur(a) : eur(Math.min(a, b)) + " tot " + eur(Math.max(a, b)));
+
+  // Controles op de tekst van het korte antwoord
+  const waarschuw = (t) => console.warn("LET OP (" + BESTAND + "): " + t + " Kijk de tekst van het korte antwoord na.");
+  if (Math.max(...drieK) > anwb) waarschuw("ANWB is zonder zonnepanelen niet meer de duurste van de vier.");
+  if (Math.max(...drieK) - Math.min(...drieK) > 5) waarschuw("Zonneplan, Tibber en Frank liggen zonder zonnepanelen meer dan € 5 uit elkaar.");
+  const zonVolg = V.gesorteerd(vier, zon).map((x) => x.s.id);
+  if (zonVolg.slice(0, 2).sort().join() !== "frank,zonneplan") waarschuw("Met zonnepanelen (2027) zijn Zonneplan en Frank niet meer de goedkoopste twee.");
+  if (zonVolg[3] !== "tibber") waarschuw("Met zonnepanelen (2027) is Tibber niet meer de duurste.");
+  if (VIER.some((v) => v.id === laagste.id)) waarschuw("De goedkoopste van alle aanbieders is nu een van de vier.");
+
+  const kort = "\n" +
+    '      <p class="kort-kop" id="kort-kop">Kort antwoord</p>\n' +
+    "      <ul>\n" +
+    "        <li><strong>Geen zonnepanelen:</strong> het maakt weinig uit. Zonneplan, Tibber en Frank zitten binnen " +
+    eur(Math.max(...drieK) - Math.min(...drieK)) + " per jaar van elkaar. ANWB is " + range(anwb - Math.max(...drieK), anwb - Math.min(...drieK)) + " duurder.</li>\n" +
+    "        <li><strong>Wel zonnepanelen:</strong> Zonneplan of Frank. Zij leggen iets bij voor elke kWh die je teruglevert, Tibber houdt er iets af. Bij " +
+    R.duizend(zon.terug) + " kWh teruglevering is Tibber vanaf 2027 " + range(tib - k(by("frank"), zon), tib - k(by("zonneplan"), zon)) + " per jaar duurder.</li>\n" +
+    "        <li><strong>Veel automatiseren</strong> (Home Assistant, auto, batterij): Tibber. Van de vier heeft alleen Tibber een officiële koppeling.</li>\n" +
+    "      </ul>\n" +
+    '      <p class="kort-voet">Alleen de laagste prijs? ' + R.esc(laagste.name) + " kost zonder zonnepanelen " + eur(k(laagste, kale)) + " per jaar, " +
+    eur(goedkoopsteVier.k.totaal - k(laagste, kale)) + " minder dan " + goedkoopsteVier.s.name + '. <a href="/aanbieders">Alle ' + lijst.length + " aanbieders</a></p>\n      ";
+
+  const oudste = vier.map((s) => s.verified).sort()[0];
+  const bron = "Per jaar = opslag plus vaste kosten, inclusief btw. Stroomprijs, belasting en netbeheer zijn bij alle vier gelijk. " +
+    "Bonussen voor teruglevering overdag (Frank 15%, Zonneplan 10%) zitten er niet in. Tarieven gecontroleerd op " + R.datumNL(oudste) +
+    ". Geen enkele aanbieder betaalt voor een plek op deze pagina.";
+
+  const faqTekst = "De stroomprijs per uur is bij alle dynamische aanbieders gelijk; het verschil zit in de opslag en de vaste kosten. Bij " +
+    R.duizend(kale.afname) + " kWh zonder zonnepanelen is van de " + lijst.length + " aanbieders die wij volgen " + laagste.name + " nu het goedkoopst, met " +
+    eur(k(laagste, kale)) + " per jaar. Van deze vier is " + vierVolg[0].s.name + " het goedkoopst (" + eur(vierVolg[0].k.totaal) + "), met " +
+    vierVolg[1].s.name + " (" + eur(vierVolg[1].k.totaal) + ") en " + vierVolg[2].s.name + " (" + eur(vierVolg[2].k.totaal) + ") er vlak achter. Heb je zonnepanelen, dan verandert de volgorde: vul je teruglevering in bovenaan deze pagina of op /aanbieders.";
+
+  let html = fs.readFileSync(ARTIKEL_PATH, "utf8");
+  html = vervang(html, "VIER-KORT", kort, BESTAND);
+  html = vervang(html, "VIER-VERSCHIL", V.verschilZin(vier, kale), BESTAND);
+  html = vervang(html, "VIER-RIJEN", "\n" + V.rijenHtml(vier, kale) + "\n      ", BESTAND);
+  const json = JSON.stringify(vier);
+  if (json.includes("</")) { console.error("De JSON voor " + BESTAND + " bevat '</' en zou het script-blok afbreken."); process.exit(1); }
+  html = vervang(html, "VIER-DATA", "\n  " + '<script type="application/json" id="vier-data">' + json + "</script>" + "\n  ", BESTAND);
+  html = vervang(html, "VIER-BRON", bron, BESTAND);
+  html = vervang(html, "VIER-FAQ", R.esc(faqTekst).replace("/aanbieders.", '<a href="/aanbieders">/aanbieders</a>.'), BESTAND);
+  const vraag = /("name": "Wat is de goedkoopste dynamische energieleverancier\?",\s*"acceptedAnswer": \{\s*"@type": "Answer",\s*"text": )"(?:[^"\\]|\\.)*"/;
+  if (!vraag.test(html)) { console.error("FAQ-vraag over de goedkoopste aanbieder niet gevonden in de JSON-LD van " + BESTAND); process.exit(1); }
+  html = html.replace(vraag, (m, kop) => kop + JSON.stringify(faqTekst));
+  fs.writeFileSync(ARTIKEL_PATH, html, "utf8");
+  console.log(BESTAND + " bijgewerkt: goedkoopst van de vier " + goedkoopsteVier.s.name + " (" + eur(goedkoopsteVier.k.totaal) + "), van alle " + laagste.name + " (" + eur(k(laagste, kale)) + ").");
 }
 
 build();

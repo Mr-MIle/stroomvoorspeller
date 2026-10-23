@@ -100,6 +100,65 @@
       margin: 0.9rem 0;
     }
     .keuze-block strong { display: block; margin-bottom: 0.25rem; }
+
+    /* Kort antwoord, rekenblok en tabel van de vier (vergelijk-vier.js) */
+    .kort {
+      border-left: 4px solid var(--c-brand);
+      background: var(--c-surface-soft);
+      border-radius: 0 0.6rem 0.6rem 0;
+      padding: 0.8rem 1.1rem 0.7rem;
+      margin: 1rem 0 1.75rem;
+    }
+    p.kort-kop { font-weight: 700; margin: 0 0 0.35rem; }
+    .kort ul { margin: 0; padding-left: 1.1rem; }
+    .kort li { margin: 0.3rem 0; line-height: 1.45; }
+    p.kort-voet { margin: 0.6rem 0 0; font-size: 0.88rem; color: var(--c-text-soft); }
+    .vier-reken {
+      display: grid;
+      gap: 0.6rem;
+      border: 1px solid var(--c-border);
+      border-radius: 0.6rem;
+      padding: 0.8rem 1rem;
+      margin: 0.75rem 0 1rem;
+      max-width: 480px;
+    }
+    .vier-reken[hidden], .vier-zonvelden[hidden] { display: none; }
+    .vier-zonvelden { display: grid; gap: 0.6rem; }
+    .vier-veld { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 0.93rem; }
+    .vier-veld span { font-weight: 400; white-space: nowrap; }
+    .vier-veld input { width: 6.5em; min-height: 44px; font-size: 1rem; padding: 0 0.5rem; text-align: right; }
+    .vier-chip { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; font-size: 0.93rem; cursor: pointer; }
+    .vier-chip input { width: 22px; height: 22px; margin: 0; }
+    .vier-jaar { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.1rem 1.1rem; font-size: 0.9rem; }
+    .vier-jaar legend { font-weight: 600; padding: 0; margin-bottom: 0.2rem; }
+    .vier-jaar label { display: flex; align-items: center; gap: 0.4rem; min-height: 44px; cursor: pointer; }
+    p.vier-hint { margin: 0; font-size: 0.82rem; color: var(--c-text-mute); }
+    p.vier-verschil { font-weight: 600; margin: 0 0 0.4rem; }
+    .vier { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 0.75rem; }
+    .vier th, .vier td { text-align: left; padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--c-border); vertical-align: top; }
+    .vier thead th { background: var(--c-brand-fill, #0f6cbd); color: #fff; font-weight: 600; }
+    .vier .vier-bedrag { text-align: right; white-space: nowrap; font-size: 1rem; }
+    .vier .vier-m { display: none; }
+    p.vier-bron { font-size: 0.82rem; color: var(--c-text-mute); }
+    .vier-knop {
+      display: inline-block;
+      padding: 0.65rem 1rem;
+      border-radius: 0.5rem;
+      background: var(--c-brand-fill, #0f6cbd);
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .vier-knop:hover, .vier-knop:focus-visible { color: #fff; text-decoration: underline; }
+    /* Op een telefoon wordt elke regel een kaartje: naam en bedrag boven, de rest klein eronder. */
+    @media (max-width: 640px) {
+      .vier thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+      .vier tr { display: grid; grid-template-columns: 1fr auto; padding: 0.55rem 0; border-bottom: 1px solid var(--c-border); }
+      .vier th, .vier td { border: 0; padding: 0; }
+      .vier th[scope=row] { font-size: 1rem; }
+      .vier .vier-sub { grid-column: 1 / -1; font-size: 0.82rem; color: var(--c-text-soft); }
+      .vier .vier-m { display: inline; }
+    }
   </style>
 
   <script type="application/ld+json">
@@ -146,7 +205,7 @@
         "headline": "Dynamisch energiecontract vergelijken 2026: Tibber, Frank Energie, ANWB of Zonneplan?",
         "description": "Tibber, Frank Energie, Zonneplan en ANWB naast elkaar: inkoopvergoeding, vaste kosten, teruglevering en app. Tarieven gecheckt op 29 september 2026.",
         "datePublished": "2026-05-25",
-        "dateModified": "2026-10-04",
+        "dateModified": "2026-10-23",
         "inLanguage": "nl-NL",
         "author": {
           "@type": "Organization",
@@ -173,7 +232,7 @@
             "name": "Wat is de goedkoopste dynamische energieleverancier?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "De stroomprijs zelf is bij alle dynamische aanbieders gelijk; het verschil zit in de opslag en de vaste kosten. Van deze vier is Zonneplan met € 145 per jaar bij 3.500 kWh het goedkoopst, met Tibber (€ 147) en Frank (€ 148) er vlak achter. Alle 25 aanbieders die wij volgen, staan met actuele tarieven op /aanbieders."
+              "text": "De stroomprijs per uur is bij alle dynamische aanbieders gelijk; het verschil zit in de opslag en de vaste kosten. Bij 3.500 kWh zonder zonnepanelen is van de 25 aanbieders die wij volgen Powerpeers nu het goedkoopst, met € 110 per jaar. Van deze vier is Zonneplan het goedkoopst (€ 145), met Tibber (€ 147) en Frank Energie (€ 148) er vlak achter. Heb je zonnepanelen, dan verandert de volgorde: vul je teruglevering in bovenaan deze pagina of op /aanbieders."
             }
           },
           {
@@ -238,85 +297,50 @@
   <main class="legal-page">
     <p class="legal-breadcrumb"><a href="/kennisbank">← terug naar de kennisbank</a></p>
     <h1>Dynamisch energiecontract vergelijken 2026: Tibber, Frank Energie, ANWB of Zonneplan?</h1>
-    <p class="legal-meta">25 mei 2026 · bijgewerkt 29 september 2026 · leestijd ~11 minuten</p>
+    <p class="legal-meta">25 mei 2026 · bijgewerkt 23 oktober 2026 · leestijd ~11 minuten</p>
 
-    <p>In april 2026 passeerde Nederland de grens van <strong>één miljoen dynamische energiecontracten</strong>, tien keer zoveel als drie jaar eerder. Het aantal aanbieders groeit mee: jeroen.nl telt er in september 2026 al 36. Op onze <a href="/aanbieders">aanbiederspagina</a> staan er 25 naast elkaar met hun actuele tarieven.</p>
-    <p>De vier waar het meest naar gezocht wordt, zijn <strong>Tibber</strong>, <strong>Frank Energie</strong>, <strong>Zonneplan</strong> en <strong>ANWB Energie</strong>. Het verschil in opslag en vaste kosten is tussen drie van de vier maar een paar euro per jaar. Grotere verschillen zitten in wat je krijgt of betaalt voor teruglevering, en in de app.</p>
+    <aside class="kort" aria-labelledby="kort-kop"><!-- BUILD:VIER-KORT:START -->
+      <p class="kort-kop" id="kort-kop">Kort antwoord</p>
+      <ul>
+        <li><strong>Geen zonnepanelen:</strong> het maakt weinig uit. Zonneplan, Tibber en Frank zitten binnen € 3 per jaar van elkaar. ANWB is € 17 tot € 20 duurder.</li>
+        <li><strong>Wel zonnepanelen:</strong> Zonneplan of Frank. Zij leggen iets bij voor elke kWh die je teruglevert, Tibber houdt er iets af. Bij 2.000 kWh teruglevering is Tibber vanaf 2027 € 85 tot € 91 per jaar duurder.</li>
+        <li><strong>Veel automatiseren</strong> (Home Assistant, auto, batterij): Tibber. Van de vier heeft alleen Tibber een officiële koppeling.</li>
+      </ul>
+      <p class="kort-voet">Alleen de laagste prijs? Powerpeers kost zonder zonnepanelen € 110 per jaar, € 35 minder dan Zonneplan. <a href="/aanbieders">Alle 25 aanbieders</a></p>
+      <!-- BUILD:VIER-KORT:END --></aside>
 
     <h2>De vier op een rij</h2>
 
-    <div class="table-wrap">
-      <table class="artikel-table">
+    <form class="vier-reken" id="vier-reken" hidden>
+      <label class="vier-veld" for="vier-afname">Stroom van het net <span><input id="vier-afname" type="number" inputmode="numeric" min="0" max="100000" step="100" value="3500"> kWh/jaar</span></label>
+      <label class="vier-chip"><input id="vier-zon" type="checkbox"> Ik heb zonnepanelen</label>
+      <div class="vier-zonvelden" id="vier-zonvelden" hidden>
+        <label class="vier-veld" for="vier-terug">Teruglevering <span><input id="vier-terug" type="number" inputmode="numeric" min="0" max="100000" step="100" value="2000"> kWh/jaar</span></label>
+        <fieldset class="vier-jaar">
+          <legend>Rekenen voor</legend>
+          <label><input type="radio" name="vier-jaar" value="2026"> 2026</label>
+          <label><input type="radio" name="vier-jaar" value="2027" checked> 2027, als de saldering is gestopt</label>
+        </fieldset>
+      </div>
+      <p class="vier-hint">Beide getallen staan op je jaarafrekening. Neem de "levering", zonder je teruglevering eraf te halen.</p>
+    </form>
+
+    <p class="vier-verschil" id="vier-verschil" aria-live="polite"><!-- BUILD:VIER-VERSCHIL:START -->Bij 3.500 kWh en geen zonnepanelen: Zonneplan is het goedkoopst, € 20 per jaar minder dan ANWB Energie.<!-- BUILD:VIER-VERSCHIL:END --></p>
+    <table class="vier">
       <thead>
-        <tr>
-          <th></th>
-          <th>Zonneplan</th>
-          <th>Tibber</th>
-          <th>Frank Energie</th>
-          <th>ANWB Energie</th>
-        </tr>
+        <tr><th scope="col">Aanbieder</th><th scope="col">Per jaar</th><th scope="col">Tarief</th><th scope="col">Teruglevering</th><th scope="col">Home Assistant</th></tr>
       </thead>
-      <tbody>
-        <tr>
-          <td class="col-label">Vaste kosten/maand</td>
-          <td>€&nbsp;6,25</td>
-          <td>€&nbsp;6,99</td>
-          <td>€&nbsp;7,00</td>
-          <td>€&nbsp;8,50</td>
-        </tr>
-        <tr>
-          <td class="col-label">Inkoopvergoeding</td>
-          <td>€&nbsp;0,0200/kWh</td>
-          <td>€&nbsp;0,0180/kWh</td>
-          <td>€&nbsp;0,0182/kWh</td>
-          <td>€&nbsp;0,0180/kWh</td>
-        </tr>
-        <tr>
-          <td class="col-label">Samen per jaar bij 3.500 kWh</td>
-          <td>€&nbsp;145</td>
-          <td>€&nbsp;147</td>
-          <td>€&nbsp;148</td>
-          <td>€&nbsp;165</td>
-        </tr>
-        <tr>
-          <td class="col-label">Teruglevering</td>
-          <td>+€&nbsp;0,02/kWh, plus 10% zonnebonus</td>
-          <td><span style="white-space:nowrap">−€&nbsp;0,0248</span>/kWh</td>
-          <td>+€&nbsp;0,0182/kWh, plus 15% bonus</td>
-          <td>kale uurprijs</td>
-        </tr>
-        <tr>
-          <td class="col-label">Met 2.000 kWh teruglevering, vanaf 2027</td>
-          <td>€&nbsp;105</td>
-          <td>€&nbsp;196</td>
-          <td>€&nbsp;111</td>
-          <td>€&nbsp;165</td>
-        </tr>
-        <tr>
-          <td class="col-label">App</td>
-          <td>★★★★</td>
-          <td>★★★★★</td>
-          <td>★★★</td>
-          <td>★★★</td>
-        </tr>
-        <tr>
-          <td class="col-label">Home Assistant</td>
-          <td>Beperkt</td>
-          <td>✓ Officieel</td>
-          <td>Community</td>
-          <td>✗</td>
-        </tr>
-        <tr>
-          <td class="col-label">Klanttevredenheid (keuze.nl)</td>
-          <td>9,6</td>
-          <td>8,9</td>
-          <td>8,6</td>
-          <td>niet in top 3</td>
-        </tr>
-      </tbody>
+      <tbody id="vier-rijen"><!-- BUILD:VIER-RIJEN:START -->
+<tr><th scope="row">Zonneplan</th><td class="vier-bedrag"><b>€ 145</b></td><td class="vier-sub">opslag 2,00 ct · vast € 6,25/mnd</td><td class="vier-sub"><span class="vier-m">teruglevering: </span>beurs + 2,00 ct</td><td class="vier-sub"><span class="vier-m">Home Assistant: </span>beperkt</td></tr>
+<tr><th scope="row">Tibber</th><td class="vier-bedrag"><b>€ 147</b></td><td class="vier-sub">opslag 1,80 ct · vast € 6,99/mnd</td><td class="vier-sub"><span class="vier-m">teruglevering: </span>beurs − 2,48 ct</td><td class="vier-sub"><span class="vier-m">Home Assistant: </span>officieel</td></tr>
+<tr><th scope="row">Frank Energie</th><td class="vier-bedrag"><b>€ 148</b></td><td class="vier-sub">opslag 1,82 ct · vast € 7,00/mnd</td><td class="vier-sub"><span class="vier-m">teruglevering: </span>beurs + 1,82 ct</td><td class="vier-sub"><span class="vier-m">Home Assistant: </span>via community</td></tr>
+<tr><th scope="row">ANWB Energie</th><td class="vier-bedrag"><b>€ 165</b></td><td class="vier-sub">opslag 1,80 ct · vast € 8,50/mnd</td><td class="vier-sub"><span class="vier-m">teruglevering: </span>beursprijs</td><td class="vier-sub"><span class="vier-m">Home Assistant: </span>nee</td></tr>
+      <!-- BUILD:VIER-RIJEN:END --></tbody>
     </table>
-    </div>
-    <p style="font-size:0.82rem;color:var(--c-text-mute);margin-top:-1rem;">Bedragen inclusief btw, gecheckt op 29 september 2026. "Samen per jaar" is de inkoopvergoeding plus de vaste kosten; de stroomprijs zelf is bij alle vier gelijk. Een plus bij teruglevering betekent dat je extra krijgt bovenop de uurprijs, een min dat je per kWh betaalt. Tibber houdt de 2,48 cent in 2026 alleen in over je jaaroverschot (wat je meer teruglevert dan je verbruikt); vanaf 2027, als de saldering stopt, over elke kWh. Daarom staat die rij op 2027. De bonussen van Zonneplan en Frank gelden alleen overdag en zitten niet in de jaarbedragen. Alle 25 aanbieders met actuele tarieven vind je op <a href="/aanbieders">/aanbieders</a>.</p>
+    <p class="vier-bron"><!-- BUILD:VIER-BRON:START -->Per jaar = opslag plus vaste kosten, inclusief btw. Stroomprijs, belasting en netbeheer zijn bij alle vier gelijk. Bonussen voor teruglevering overdag (Frank 15%, Zonneplan 10%) zitten er niet in. Tarieven gecontroleerd op 29 september 2026. Geen enkele aanbieder betaalt voor een plek op deze pagina.<!-- BUILD:VIER-BRON:END --></p>
+    <p><a class="vier-knop" href="/aanbieders">Bekijk alle aanbieders bij deze situatie →</a></p>
+
+    <p>In april 2026 passeerde Nederland de grens van <strong>één miljoen dynamische energiecontracten</strong>, tien keer zoveel als drie jaar eerder. jeroen.nl telt in september 2026 al 36 aanbieders. Op deze pagina staan de vier waar het meest naar gezocht wordt; de andere staan op de <a href="/aanbieders">aanbiederspagina</a>.</p>
 
     <h2>Waar let je op bij een dynamisch contract?</h2>
     <p>Bij een dynamisch contract betaal je altijd de actuele marktprijs, en die verschilt elk uur of zelfs elk kwartier. De aanbieder verdient zijn geld op twee manieren: een vaste maandelijkse bijdrage en een inkoopvergoeding per verbruikte kWh.</p>
@@ -463,7 +487,7 @@
     <p>Zonder zonnepanelen scheelt het in kosten ongeveer €&nbsp;2 per jaar en kies je op de app: Tibber heeft de beste koppeling met Home Assistant. Met zonnepanelen is Zonneplan goedkoper, omdat Zonneplan 2 cent per teruggeleverde kWh bijlegt en Tibber 2,48 cent inhoudt. Bij 2.000 kWh teruglevering scheelt dat in 2026 zo'n €&nbsp;40 per jaar en vanaf 2027, als de inhouding van Tibber over elke kWh telt, zo'n €&nbsp;90.</p>
 
     <h3>Wat is de goedkoopste dynamische energieleverancier?</h3>
-    <p>De stroomprijs zelf is bij alle dynamische aanbieders gelijk; het verschil zit in de opslag en de vaste kosten. Van deze vier is Zonneplan met €&nbsp;145 per jaar bij 3.500 kWh het goedkoopst, met Tibber (€&nbsp;147) en Frank (€&nbsp;148) er vlak achter. Alle 25 aanbieders die wij volgen, staan met actuele tarieven op <a href="/aanbieders">/aanbieders</a>.</p>
+    <p><!-- BUILD:VIER-FAQ:START -->De stroomprijs per uur is bij alle dynamische aanbieders gelijk; het verschil zit in de opslag en de vaste kosten. Bij 3.500 kWh zonder zonnepanelen is van de 25 aanbieders die wij volgen Powerpeers nu het goedkoopst, met € 110 per jaar. Van deze vier is Zonneplan het goedkoopst (€ 145), met Tibber (€ 147) en Frank Energie (€ 148) er vlak achter. Heb je zonnepanelen, dan verandert de volgorde: vul je teruglevering in bovenaan deze pagina of op <a href="/aanbieders">/aanbieders</a>.<!-- BUILD:VIER-FAQ:END --></p>
 
     <h3>Is een dynamisch contract altijd goedkoper dan een vast contract?</h3>
     <p>Gemiddeld wel: over 2023 tot 2025 betaalden dynamische contracten minder dan vaste tarieven. Bij extreme prijspieken, zoals in de winter van 2021/2022, kan een vast contract tijdelijk voordeliger zijn. Wie zijn verbruik kan verschuiven naar goedkope uren, haalt het meeste uit dynamisch. Reken het voor jouw situatie uit met de <a href="/dynamisch-berekenen">rekentool</a>.</p>
@@ -551,6 +575,11 @@
   </footer>
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <!-- BUILD:VIER-DATA:START -->
+  <script type="application/json" id="vier-data">[{"id":"zonneplan","name":"Zonneplan","ha":"beperkt","markup_per_kwh":0.016529,"fixed_per_month":5.16529,"teruglevering":{"opslag_per_kwh":0.02,"methode":"bijbetaling","bonus":{"naam":"Zonnebonus","pct":0.1,"venster":"zonsopkomst tot zonsondergang","max_kwh":7500,"geldt_voor_batterij":false,"eis":null},"uitleg":"Uurprijs plus €0,02. Batterij-teruglevering loopt onder aparte Powerplay-tarieven.","bron":"zonneplan.nl/energie/zonnepanelen (Zonnebonus-formule en batterij-uitzondering)","verified":"2026-09-21"},"verified":"2026-09-29"},{"id":"tibber","name":"Tibber","ha":"officieel","markup_per_kwh":0.014876,"fixed_per_month":5.77686,"teruglevering":{"opslag_per_kwh":-0.0248,"methode":"jaaroverschot","uitleg":"Tibber rekent sinds 1 januari 2026 een verkoopvergoeding op alle teruggeleverde stroom.","bron":"Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)","verified":"2026-09-21"},"verified":"2026-09-29"},{"id":"frank","name":"Frank Energie","ha":"via community","markup_per_kwh":0.015041,"fixed_per_month":5.78512,"teruglevering":{"opslag_per_kwh":0.0182,"methode":"bijbetaling","bonus":{"naam":"Terugleverbonus","pct":0.15,"venster":"zonsopkomst tot zonsondergang","max_kwh":null,"geldt_voor_batterij":false,"eis":"Slim Terugleveren aan, Frank mag je omvormer aansturen"},"uitleg":"Inkoopvergoeding van €0,0182 per teruggeleverde kWh, bovenop de uurprijs.","bron":"frankenergie.nl kennisbank terugleververgoeding + klantenservice-artikel bonusvoorwaarden","verified":"2026-09-21"},"verified":"2026-09-29"},{"id":"anwb","name":"ANWB Energie","ha":"nee","markup_per_kwh":0.014876,"fixed_per_month":7.02479,"teruglevering":{"opslag_per_kwh":0,"methode":"geen","uitleg":"Kale uurprijs, niets erbij en niets eraf.","bron":"Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)","verified":"2026-09-21"},"verified":"2026-09-29"}]</script>
+  <!-- BUILD:VIER-DATA:END -->
+  <script src="/aanbieders-render.js" defer></script>
+  <script src="/vergelijk-vier.js" defer></script>
   <script src="/nav.js" defer></script>
 </body>
 </html>
