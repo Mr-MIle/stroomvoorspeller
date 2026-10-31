@@ -55,6 +55,7 @@ SUPPLIER_ID = os.environ.get("SOLIS_SUPPLIER_ID", "").strip()  # forceert één 
 SUPPLIER_SCHEDULE = [("2000-01-01", "frank"), ("2026-10-17", "tibber")]
 SALDERING_END = os.environ.get("SOLIS_SALDERING_END", "2027-01-01")  # eerste dag zonder
 FEEDIN_COST = float(os.environ.get("SOLIS_FEEDIN_COST", "0"))  # terugleverkosten EUR/kWh
+BATTERY_KWH = float(os.environ.get("SOLIS_BATTERY_KWH", "25"))  # capaciteit bij 100% laadniveau
 TIMEOUT = float(os.environ.get("SOLIS_TIMEOUT", "60"))         # seconden per HTTP-poging
 RETRIES = int(os.environ.get("SOLIS_RETRIES", "4"))            # pogingen per API-aanroep
 CATCHUP_DAYS = int(os.environ.get("SOLIS_CATCHUP_DAYS", "5"))  # dagen terugkijken op gaten
@@ -234,11 +235,14 @@ def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -
 
     Voorraad (FIFO, met Emile vastgelegd):
       - Elke kWh die de batterij instroomt, krijgt een kostprijs op het laadmoment:
-        laden uit het net = consumentenprijs op dat moment; laden uit zon = 0.
+        laden uit het net = consumentenprijs op dat moment; laden uit zon = gemiste teruglevering.
       - Elke kWh die uitstroomt, gaat FIFO uit de voorraad en krijgt die kostprijs mee;
         de opbrengst is de prijs op het ontlaadmoment.
       - Gerealiseerde kosten = contante kosten - mutatie van de voorraadwaarde.
         Wat aan het eind nog in de batterij zit, is reserve: die telt niet mee in de totalen.
+      - De voorraad kan niet groter zijn dan wat er echt in zit (laadniveau x BATTERY_KWH).
+        Het teveel (laad- en omzetverlies, meetverschil) gaat FIFO uit de voorraad als
+        verlies; dat is gerealiseerd en telt als kosten van de batterij.
     lots_in: voorraad aan het begin van de dag, lijst van [kWh, kostprijs EUR/kWh].
     """
     pts = sorted(points, key=lambda p: int(p["dataTimestamp"]))
@@ -249,9 +253,8 @@ def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -
     discharged_cost = 0.0      # FIFO-kostprijs van wat deze dag ontladen is
     solar_inflow = 0.0         # gemiste teruglevering van zonnestroom die de batterij in ging
 
-    def take(kwh: float) -> float:
-        """Haal kwh uit de voorraad (FIFO); geef de kostprijs ervan terug."""
-        nonlocal unknown_kwh
+    def pop(kwh: float):
+        """Haal kwh uit de voorraad (FIFO); geef (kostprijs, niet gevonden kWh) terug."""
         cost = 0.0
         rest = kwh
         while rest > 1e-9 and lots:
@@ -263,6 +266,12 @@ def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -
                 lots.pop(0)
             else:
                 lots[0][0] = k - use
+        return cost, max(0.0, rest)
+
+    def take(kwh: float) -> float:
+        """Ontlaad kwh (FIFO); geef de kostprijs ervan terug."""
+        nonlocal unknown_kwh
+        cost, rest = pop(kwh)
         if rest > 1e-9:
             unknown_kwh += rest
         return cost
@@ -329,6 +338,17 @@ def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -
                     energy_priced += flow
         prev = p
 
+    soc_start = pts[0].get("batteryCapacitySoc")
+    soc_end = pts[-1].get("batteryCapacitySoc")
+
+    # voorraad begrenzen op wat er echt in de batterij zit; het teveel is verlies
+    loss_kwh = loss_cost = 0.0
+    if isinstance(soc_end, (int, float)) and soc_end > 0 and BATTERY_KWH > 0:
+        excess = sum(k for k, _ in lots) - BATTERY_KWH * soc_end / 100.0
+        if excess > 1e-6:
+            loss_cost, _ = pop(excess)
+            loss_kwh = excess
+
     inv_end = sum(k * c for k, c in lots)
     # gerealiseerd = alles wat de batterij/zon instroomde (net-kosten + gemiste teruglevering)
     # min de mutatie van de voorraad: wat nog in de batterij zit, is niet verdiend.
@@ -337,13 +357,10 @@ def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -
     coverage = (energy_priced / energy_total) if energy_total else 0.0
     saving = cost_without - realized_cost
     # Schatting: batterij-aandeel = opbrengst van ontladen (huis + net) min de FIFO-kostprijs
-    # van die kWh. Zon-aandeel = de rest van de besparing.
-    battery_saving = battery_home_value + arbitrage_income - discharged_cost
+    # van die kWh en min het verlies. Zon-aandeel = de rest van de besparing.
+    battery_saving = battery_home_value + arbitrage_income - discharged_cost - loss_cost
     solar_saving = saving - battery_saving
     grid_data_ok = not (import_kwh == 0 and export_kwh == 0 and (charged or discharged or consumption))
-
-    soc_start = pts[0].get("batteryCapacitySoc")
-    soc_end = pts[-1].get("batteryCapacitySoc")
 
     def r(x, n=2):
         return round(x, n)
@@ -366,6 +383,9 @@ def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -
         "reserve_kwh": r(reserve_kwh),
         "reserve_value_eur": r(inv_end),
         "unknown_kwh": r(unknown_kwh),
+        # verlies: voorraad boven het echte laadniveau, FIFO afgeboekt (gerealiseerd)
+        "loss_kwh": r(loss_kwh),
+        "loss_eur": r(loss_cost),
         # zon en laden
         "solar_charged_kwh": r(solar_charged),
         "grid_charged_kwh": r(grid_charged),
@@ -413,6 +433,7 @@ def upsert(record: dict, tar: dict):
                    "naar huis = vermeden inkoop; naar net = inkomsten tegen terugleverprijs. Besparing geschat gesplitst in batterij (arbitrage) en zon. "
                    "Voorraad FIFO: ontladen kWh krijgen de kostprijs van het laadmoment (net = consumentenprijs, zon = gemiste teruglevering). "
                    "Kosten en besparing zijn gerealiseerd; wat nog in de batterij zit staat als reserve buiten de totalen. "
+                   "De voorraad is begrensd op laadniveau x capaciteit; het teveel telt als verlies van de batterij. "
                    "Aanbieder per dag staat in days[].supplier."),
         "totals": {
             "days": len(ordered),
