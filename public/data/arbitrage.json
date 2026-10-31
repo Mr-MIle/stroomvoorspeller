@@ -1,17 +1,17 @@
 {
- "generated_at": "2026-10-31T08:12:17+00:00",
+ "generated_at": "2026-10-31T10:03:13+00:00",
  "currency": "EUR",
  "supplier": "Tibber",
  "markup_per_kwh": 0.014876,
- "method": "Verbruik = homeLoad. Kosten actueel = inkoop x consumentenprijs - teruglevering x terugleverprijs. Kosten zonder = verbruik x consumentenprijs. Terugleverprijs = EPEX + teruglever-opslag aanbieder, t/m 2026 plus energiebelasting incl. btw (saldering). Laden uit zon = gemiste teruglevering; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen naar huis = vermeden inkoop; naar net = inkomsten tegen terugleverprijs. Besparing geschat gesplitst in batterij (arbitrage) en zon. Aanbieder per dag staat in days[].supplier.",
+ "method": "Verbruik = homeLoad. Kosten actueel = inkoop x consumentenprijs - teruglevering x terugleverprijs. Kosten zonder = verbruik x consumentenprijs. Terugleverprijs = EPEX + teruglever-opslag aanbieder, t/m 2026 plus energiebelasting incl. btw (saldering). Laden uit zon = gemiste teruglevering; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen naar huis = vermeden inkoop; naar net = inkomsten tegen terugleverprijs. Besparing geschat gesplitst in batterij (arbitrage) en zon. Voorraad FIFO: ontladen kWh krijgen de kostprijs van het laadmoment (net = consumentenprijs, zon = gemiste teruglevering). Kosten en besparing zijn gerealiseerd; wat nog in de batterij zit staat als reserve buiten de totalen. Aanbieder per dag staat in days[].supplier.",
  "totals": {
   "days": 376,
   "consumption_kwh": 5871.1,
-  "cost_actual_eur": 1160.43,
+  "cost_actual_eur": 1160.42,
   "cost_without_eur": 1385.88,
   "saving_eur": 225.52,
-  "battery_saving_eur": 342.98,
-  "solar_saving_eur": -117.58,
+  "battery_saving_eur": 343.53,
+  "solar_saving_eur": -118.13,
   "battery_home_kwh": 2099.1,
   "arbitrage_income_eur": 537.27,
   "solar_charged_kwh": 1451.3
@@ -9798,18 +9798,22 @@
    "supplier": "Tibber",
    "saldering": true,
    "consumption_kwh": 13.0,
-   "cost_actual_eur": 6.66,
+   "cost_actual_eur": 6.65,
+   "cash_cost_eur": 7.21,
    "cost_without_eur": 6.25,
    "saving_eur": -0.4,
    "battery_home_kwh": 6.5,
    "battery_home_value_eur": 3.29,
    "arbitrage_kwh": 31.3,
    "arbitrage_income_eur": 12.29,
+   "reserve_kwh": 1.2,
+   "reserve_value_eur": 0.55,
+   "unknown_kwh": 0.3,
    "solar_charged_kwh": 1.7,
    "grid_charged_kwh": 37.0,
    "grid_charge_cost_eur": 15.04,
-   "battery_saving_eur": -0.01,
-   "solar_saving_eur": -0.39,
+   "battery_saving_eur": 0.54,
+   "solar_saving_eur": -0.94,
    "charged_kwh": 38.7,
    "discharged_kwh": 37.8,
    "import_kwh": 48.0,
@@ -9817,6 +9821,16 @@
    "battery_to_grid_kwh": 31.3,
    "soc_start_pct": 23,
    "soc_end_pct": 21,
+   "lots_end": [
+    [
+     0.5,
+     0.46096
+    ],
+    [
+     0.7,
+     0.46096
+    ]
+   ],
    "price_coverage": 1.0,
    "grid_data_ok": true,
    "n_points": 288
