@@ -229,17 +229,50 @@ def export_price(epex_kwh: float, tar: dict) -> float:
     return price
 
 
-def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
-    """Reken intervallen door; geeft het dag-record terug."""
+def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -> dict:
+    """Reken intervallen door; geeft het dag-record terug.
+
+    Voorraad (FIFO, met Emile vastgelegd):
+      - Elke kWh die de batterij instroomt, krijgt een kostprijs op het laadmoment:
+        laden uit het net = consumentenprijs op dat moment; laden uit zon = 0.
+      - Elke kWh die uitstroomt, gaat FIFO uit de voorraad en krijgt die kostprijs mee;
+        de opbrengst is de prijs op het ontlaadmoment.
+      - Gerealiseerde kosten = contante kosten - mutatie van de voorraadwaarde.
+        Wat aan het eind nog in de batterij zit, is reserve: die telt niet mee in de totalen.
+    lots_in: voorraad aan het begin van de dag, lijst van [kWh, kostprijs EUR/kWh].
+    """
     pts = sorted(points, key=lambda p: int(p["dataTimestamp"]))
+
+    lots = [[float(k), float(c)] for k, c in (lots_in or [])]
+    inv_start = sum(k * c for k, c in lots)
+    unknown_kwh = 0.0          # ontladen zonder bekende herkomst (begin van de reeks)
+    discharged_cost = 0.0      # FIFO-kostprijs van wat deze dag ontladen is
+    solar_inflow = 0.0         # gemiste teruglevering van zonnestroom die de batterij in ging
+
+    def take(kwh: float) -> float:
+        """Haal kwh uit de voorraad (FIFO); geef de kostprijs ervan terug."""
+        nonlocal unknown_kwh
+        cost = 0.0
+        rest = kwh
+        while rest > 1e-9 and lots:
+            k, c = lots[0]
+            use = min(k, rest)
+            cost += use * c
+            rest -= use
+            if use >= k - 1e-9:
+                lots.pop(0)
+            else:
+                lots[0][0] = k - use
+        if rest > 1e-9:
+            unknown_kwh += rest
+        return cost
 
     consumption = import_kwh = export_kwh = 0.0
     charged = discharged = 0.0
     solar_charged = grid_charged = 0.0
     battery_home = arbitrage_kwh = 0.0
-    cost_actual = cost_without = 0.0
+    cash_cost = cost_without = 0.0
     battery_home_value = arbitrage_income = grid_charge_cost = 0.0
-    solar_charge_value = 0.0
     energy_priced = energy_total = 0.0
 
     def d(cur, prv, key):
@@ -259,45 +292,53 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
             export_kwh += dsell
             consumption += dload
             flow = dch + ddis + dimp + dsell + dload
+            hour_key = p["timeStr"][:13].replace(" ", "T")
+            epex = prices.get(hour_key)
+            cons = consumer_price(epex, tar) if epex is not None else None
+            exp_price = export_price(epex, tar) if epex is not None else 0.0
+            # laden: net-stroom boven het huisverbruik die samenvalt met laden = net;
+            # de rest is zon (gratis).
+            gch = min(dch, max(0.0, dimp - dload))
+            # eerst ontladen (FIFO uit de voorraad), dan laden (nieuwe voorraad)
+            if ddis > 0:
+                discharged_cost += take(ddis)
+            if dch > 0:
+                if gch > 0:
+                    lots.append([gch, cons if cons is not None else 0.0])
+                if dch - gch > 1e-9:
+                    lots.append([dch - gch, exp_price])
+                    solar_inflow += (dch - gch) * exp_price
             if flow:
-                hour = int(p["timeStr"][11:13])
-                hour_key = p["timeStr"][:13].replace(" ", "T")
                 energy_total += flow
-                epex = prices.get(hour_key)
                 if epex is not None:
-                    cons = consumer_price(epex, tar)
-                    exp_price = export_price(epex, tar)
-                    # kosten = je echte netto-rekening: inkoop tegen consumentenprijs,
-                    # min ALLE teruglevering (batterij + losse zonnepanelen) tegen de
-                    # terugleverprijs (met saldering t/m 2026).
-                    cost_actual += dimp * cons - dsell * exp_price
+                    # contante kosten: inkoop tegen consumentenprijs, min ALLE teruglevering
+                    # (batterij + losse zonnepanelen) tegen de terugleverprijs.
+                    cash_cost += dimp * cons - dsell * exp_price
                     cost_without += dload * cons
-                    # batterij-teruglevering apart, voor de arbitrage-tegel: deel van de
-                    # ontlading dat samenvalt met net-export. 's Avonds (geen zon) is net-
-                    # export = batterij; begrensd op de ontlading.
+                    # batterij-ontlading: deel dat samenvalt met net-export = opbrengst
+                    # tegen EPEX; de rest vervangt inkoop (waarde = consumentenprijs).
                     to_grid = min(ddis, dsell)
                     to_home = ddis - to_grid
                     battery_home += to_home
                     arbitrage_kwh += to_grid
                     battery_home_value += to_home * cons
                     arbitrage_income += to_grid * exp_price
-                    # laden splitsen: net-stroom boven het huisverbruik die samenvalt
-                    # met laden komt uit het net (kosten); de rest uit zon (gratis op de
-                    # rekening, maar gemist als teruglevering: telt als laadkosten batterij).
-                    gch = min(dch, max(0.0, dimp - dload))
                     grid_charged += gch
                     solar_charged += dch - gch
                     grid_charge_cost += gch * cons
-                    solar_charge_value += (dch - gch) * exp_price
                     energy_priced += flow
         prev = p
 
+    inv_end = sum(k * c for k, c in lots)
+    # gerealiseerd = alles wat de batterij/zon instroomde (net-kosten + gemiste teruglevering)
+    # min de mutatie van de voorraad: wat nog in de batterij zit, is niet verdiend.
+    realized_cost = cash_cost + solar_inflow - (inv_end - inv_start)
+    reserve_kwh = sum(k for k, _ in lots)
     coverage = (energy_priced / energy_total) if energy_total else 0.0
-    saving = cost_without - cost_actual
-    # Schatting: batterij-aandeel = wat de batterij verdiende door in tijd te schuiven
-    # (thuis vermeden inkoop + verkoop terug) min laadkosten (net + gemiste teruglevering zon).
-    # Zon-aandeel = de rest van de besparing.
-    battery_saving = battery_home_value + arbitrage_income - grid_charge_cost - solar_charge_value
+    saving = cost_without - realized_cost
+    # Schatting: batterij-aandeel = opbrengst van ontladen (huis + net) min de FIFO-kostprijs
+    # van die kWh. Zon-aandeel = de rest van de besparing.
+    battery_saving = battery_home_value + arbitrage_income - discharged_cost
     solar_saving = saving - battery_saving
     grid_data_ok = not (import_kwh == 0 and export_kwh == 0 and (charged or discharged or consumption))
 
@@ -311,15 +352,20 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
         "date": day,
         "supplier": tar["supplier"],
         "saldering": tar["saldering"],
-        # vier tegels
+        # vier tegels (gerealiseerd)
         "consumption_kwh": r(consumption),
-        "cost_actual_eur": r(cost_actual),
+        "cost_actual_eur": r(realized_cost),
+        "cash_cost_eur": r(cash_cost + solar_inflow),
         "cost_without_eur": r(cost_without),
         "saving_eur": r(saving),
         "battery_home_kwh": r(battery_home),
         "battery_home_value_eur": r(battery_home_value),
         "arbitrage_kwh": r(arbitrage_kwh),
         "arbitrage_income_eur": r(arbitrage_income),
+        # reserve in de batterij aan het eind van de dag (niet gerealiseerd, buiten totalen)
+        "reserve_kwh": r(reserve_kwh),
+        "reserve_value_eur": r(inv_end),
+        "unknown_kwh": r(unknown_kwh),
         # zon en laden
         "solar_charged_kwh": r(solar_charged),
         "grid_charged_kwh": r(grid_charged),
@@ -334,6 +380,8 @@ def compute_day(points: list, prices: dict, tar: dict, day: str) -> dict:
         "battery_to_grid_kwh": r(arbitrage_kwh),
         "soc_start_pct": soc_start,
         "soc_end_pct": soc_end,
+        # voorraad aan het eind van de dag, nodig voor de FIFO-keten van de volgende dag
+        "lots_end": [[round(k, 4), round(c, 5)] for k, c in lots if k > 1e-6],
         # kwaliteit
         "price_coverage": round(coverage, 3),
         "grid_data_ok": grid_data_ok,
@@ -363,6 +411,8 @@ def upsert(record: dict, tar: dict):
                    "Terugleverprijs = EPEX + teruglever-opslag aanbieder, t/m 2026 plus energiebelasting incl. btw (saldering). "
                    "Laden uit zon = gemiste teruglevering; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen "
                    "naar huis = vermeden inkoop; naar net = inkomsten tegen terugleverprijs. Besparing geschat gesplitst in batterij (arbitrage) en zon. "
+                   "Voorraad FIFO: ontladen kWh krijgen de kostprijs van het laadmoment (net = consumentenprijs, zon = gemiste teruglevering). "
+                   "Kosten en besparing zijn gerealiseerd; wat nog in de batterij zit staat als reserve buiten de totalen. "
                    "Aanbieder per dag staat in days[].supplier."),
         "totals": {
             "days": len(ordered),
@@ -385,6 +435,21 @@ def upsert(record: dict, tar: dict):
     (ROOT / "public" / "data" / "arbitrage-summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False))
 
 
+def previous_lots(day: str):
+    """Voorraad aan het eind van de vorige dag (uit arbitrage.json); [] als die dag ontbreekt."""
+    prev = (datetime.fromisoformat(day) - timedelta(days=1)).date().isoformat()
+    if not OUT_FILE.exists():
+        return []
+    try:
+        doc = json.loads(OUT_FILE.read_text())
+    except (ValueError, OSError):
+        return []
+    for x in doc.get("days", []):
+        if x.get("date") == prev:
+            return x.get("lots_end") or []
+    return []
+
+
 def process_day(inv_id, sn, day, prices, tz_hours):
     """Verwerk één dag; schrijft weg en geeft het record terug (of None bij overslaan)."""
     tar = load_tariff(day)
@@ -394,7 +459,7 @@ def process_day(inv_id, sn, day, prices, tz_hours):
     if not points:
         print(f"[{day}] geen meetdata - overgeslagen.", file=sys.stderr)
         return None
-    record = compute_day(points, prices, tar, day)
+    record = compute_day(points, prices, tar, day, lots_in=previous_lots(day))
     if record["price_coverage"] < 0.5:
         print(f"[{day}] te weinig uurprijzen ({record['price_coverage']*100:.0f}%) - overgeslagen.", file=sys.stderr)
         return None

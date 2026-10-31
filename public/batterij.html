@@ -193,6 +193,7 @@
               <th>Batterij → huis</th>
               <th>Teruggeleverd</th>
               <th>Zon geladen</th>
+              <th>In batterij (reserve)</th>
             </tr>
           </thead>
           <tbody id="rows"></tbody>
@@ -204,8 +205,10 @@
 
     <section class="panel">
       <h2>Hoe ik reken</h2>
-      <p class="note">Ik vergelijk twee bedragen: wat ik nu aan het net betaal (inkoop min teruglevering) en wat ik zou betalen als alles van het net kwam, zonder batterij en zonnepanelen. Het verschil is mijn besparing.</p>
+      <p class="note">Ik vergelijk twee bedragen: wat ik nu aan het net betaal (inkoop min teruglevering) en wat ik zou betalen als alles van het net kwam, zonder batterij en zonnepanelen. Het verschil is mijn besparing. Alleen stroom die ik echt heb gebruikt of teruggeleverd, telt mee.</p>
       <p class="note">De batterij laadt op uit zon of 's nachts uit het net (tegen de volle prijs). Stroom die de batterij mijn huis in stuurt, hoef ik niet duur in te kopen. Stroom die hij in dure uren teruglevert, levert de marktprijs van dat uur op, plus of min de terugleververgoeding van mijn leverancier (Frank Energie tot 17 oktober 2026, daarna Tibber). Tot en met 2026 komt daar de energiebelasting bij, want die wordt gesaldeerd. Zonnestroom die in de batterij gaat, had ik ook kunnen terugleveren; die gemiste opbrengst reken ik als laadkosten.</p>
+      <p class="note">Stroom die de batterij in laadt, krijgt de prijs van het moment van laden: uit het net de consumentenprijs, uit zon de teruglevering die ik ervan mis. Stroom die eruit gaat, krijgt de prijs van het moment van ontladen. Ontladen gaat in volgorde van laden (eerst in, eerst uit).</p>
+      <p class="note">Wat aan het eind van de dag nog in de batterij zit, staat in de kolom "In batterij (reserve)" met de laadkosten. Dat is nog niet verdiend en telt dus niet mee in de totalen.</p>
       <p class="note">Kijk niet naar één dag. Eindigt de batterij voller dan hij begon, dan lijkt die dag duur, maar die stroom gebruik ik de volgende dag. </p>
       <p class="note">De verdeling tussen batterij en zon is een schatting. Deze omvormer meet mijn losse panelen (Zonneplan en Enphase) niet, dus ik leid de zonproductie af uit de rest. Op een zonnige middag zijn de prijzen laag en brengt losse zon-export weinig op. De batterij verdient zijn geld door die stroom te bewaren tot de dure avond.</p>
       <p class="note muted">De zonopbrengst zelf en de warmwaterboiler ziet deze omvormer niet. Die staan niet in deze cijfers, maar zitten wel in een lagere inkoop.</p>
@@ -302,6 +305,7 @@
         ["Batterij → huis", kwh(last.battery_home_kwh) + " <span class='muted'>(" + euro(last.battery_home_value_eur) + ")</span>"],
         ["Teruggeleverd", kwh(last.arbitrage_kwh) + " <span class='muted'>(" + euro(last.arbitrage_income_eur) + ")</span>"],
         ["Zon geladen", kwh(last.solar_charged_kwh)],
+        ["In batterij (reserve)", kwh(last.reserve_kwh) + " <span class='muted'>(" + euro(last.reserve_value_eur) + ", niet gerealiseerd)</span>"],
         ["Batterij begin → eind", (last.soc_start_pct ?? "?") + "% → " + (last.soc_end_pct ?? "?") + "%"],
       ].map(([l, v]) => '<div class="cell"><p class="l">' + l + '</p><p class="v">' + v + "</p></div>").join("");
       document.getElementById("latest-panel").hidden = false;
@@ -321,6 +325,7 @@
         + "<td>" + kwh(d.battery_home_kwh) + "</td>"
         + "<td>" + kwh(d.arbitrage_kwh) + "</td>"
         + "<td>" + kwh(d.solar_charged_kwh) + "</td>"
+        + "<td>" + kwh(d.reserve_kwh) + ' <span class="muted">(' + euro(d.reserve_value_eur) + ")</span></td>"
         + "</tr>";
       };
       document.getElementById("rows").innerHTML =
