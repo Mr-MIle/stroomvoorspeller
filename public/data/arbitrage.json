@@ -1,16 +1,16 @@
 {
- "generated_at": "2026-10-31T20:52:21+00:00",
+ "generated_at": "2026-10-31T22:38:45+00:00",
  "currency": "EUR",
  "supplier": "Tibber",
- "markup_per_kwh": 0.014876,
- "method": "Verbruik = homeLoad. Kosten actueel = inkoop x consumentenprijs - teruglevering x terugleverprijs. Kosten zonder = verbruik x consumentenprijs. Terugleverprijs = EPEX + teruglever-opslag aanbieder, t/m 2026 plus energiebelasting incl. btw (saldering). Laden uit zon = gemiste teruglevering; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen naar huis = vermeden inkoop; naar net = inkomsten tegen terugleverprijs. Besparing geschat gesplitst in batterij (arbitrage) en zon. Voorraad FIFO: ontladen kWh krijgen de kostprijs van het laadmoment (net = consumentenprijs, zon = gemiste teruglevering). Kosten en besparing zijn gerealiseerd; wat nog in de batterij zit staat als reserve buiten de totalen. Aanbieder per dag staat in days[].supplier.",
+ "markup_per_kwh": 0.015041,
+ "method": "Verbruik = homeLoad. Kosten actueel = inkoop x consumentenprijs - teruglevering x terugleverprijs. Kosten zonder = verbruik x consumentenprijs. Terugleverprijs = EPEX + teruglever-opslag aanbieder, t/m 2026 plus energiebelasting incl. btw (saldering). Laden uit zon = gemiste teruglevering; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen naar huis = vermeden inkoop; naar net = inkomsten tegen terugleverprijs. Besparing geschat gesplitst in batterij (arbitrage) en zon. Voorraad FIFO: ontladen kWh krijgen de kostprijs van het laadmoment (net = consumentenprijs, zon = gemiste teruglevering). Kosten en besparing zijn gerealiseerd; wat nog in de batterij zit staat als reserve buiten de totalen. De voorraad is begrensd op laadniveau x capaciteit; het teveel telt als verlies van de batterij. Aanbieder per dag staat in days[].supplier.",
  "totals": {
   "days": 382,
   "consumption_kwh": 5970.9,
-  "cost_actual_eur": 749.09,
+  "cost_actual_eur": 750.47,
   "cost_without_eur": 1411.29,
-  "saving_eur": 662.2,
-  "battery_saving_eur": 440.86,
+  "saving_eur": 660.83,
+  "battery_saving_eur": 439.45,
   "solar_saving_eur": 221.54,
   "battery_home_kwh": 2117.3,
   "arbitrage_income_eur": 834.29,
@@ -33,6 +33,8 @@
    "reserve_kwh": 0,
    "reserve_value_eur": 0,
    "unknown_kwh": 8.5,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.3,
    "grid_charged_kwh": 0.0,
    "grid_charge_cost_eur": 0.0,
@@ -66,6 +68,8 @@
    "reserve_kwh": 0.6,
    "reserve_value_eur": 0.13,
    "unknown_kwh": 2.9,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 4.9,
    "grid_charged_kwh": 2.7,
    "grid_charge_cost_eur": 0.64,
@@ -120,6 +124,8 @@
    "reserve_kwh": 0,
    "reserve_value_eur": 0,
    "unknown_kwh": 7.8,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 1.5,
    "grid_charged_kwh": 0.5,
    "grid_charge_cost_eur": 0.12,
@@ -153,6 +159,8 @@
    "reserve_kwh": 6.7,
    "reserve_value_eur": 1.33,
    "unknown_kwh": 3.8,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 6.1,
    "grid_charged_kwh": 4.0,
    "grid_charge_cost_eur": 0.86,
@@ -391,6 +399,8 @@
    "reserve_kwh": 8.1,
    "reserve_value_eur": 1.33,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 4.3,
    "grid_charged_kwh": 5.1,
    "grid_charge_cost_eur": 0.86,
@@ -633,6 +643,8 @@
    "reserve_kwh": 0,
    "reserve_value_eur": 0,
    "unknown_kwh": 0.2,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.3,
    "grid_charged_kwh": 1.4,
    "grid_charge_cost_eur": 0.3,
@@ -666,6 +678,8 @@
    "reserve_kwh": 1.9,
    "reserve_value_eur": 0.43,
    "unknown_kwh": 2.1,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.7,
    "grid_charged_kwh": 2.3,
    "grid_charge_cost_eur": 0.5,
@@ -724,6 +738,8 @@
    "reserve_kwh": 1.0,
    "reserve_value_eur": 0.21,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 4.2,
    "grid_charged_kwh": 9.3,
    "grid_charge_cost_eur": 2.09,
@@ -798,6 +814,8 @@
    "reserve_kwh": 0.5,
    "reserve_value_eur": 0.1,
    "unknown_kwh": 0.7,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.2,
    "grid_charged_kwh": 0.8,
    "grid_charge_cost_eur": 0.18,
@@ -848,6 +866,8 @@
    "reserve_kwh": 0,
    "reserve_value_eur": 0,
    "unknown_kwh": 1.1,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.9,
    "grid_charged_kwh": 2.6,
    "grid_charge_cost_eur": 0.42,
@@ -881,6 +901,8 @@
    "reserve_kwh": 0.2,
    "reserve_value_eur": 0.03,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.4,
    "grid_charged_kwh": 0.3,
    "grid_charge_cost_eur": 0.04,
@@ -923,6 +945,8 @@
    "reserve_kwh": 5.2,
    "reserve_value_eur": 0.68,
    "unknown_kwh": 0.2,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 3.4,
    "grid_charged_kwh": 5.7,
    "grid_charge_cost_eur": 0.74,
@@ -1117,6 +1141,8 @@
    "reserve_kwh": 4.7,
    "reserve_value_eur": 0.97,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 4.4,
    "grid_charged_kwh": 1.9,
    "grid_charge_cost_eur": 0.42,
@@ -1303,6 +1329,8 @@
    "reserve_kwh": 6.3,
    "reserve_value_eur": 1.16,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 3.8,
    "grid_charged_kwh": 10.1,
    "grid_charge_cost_eur": 1.51,
@@ -1518,21 +1546,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 46.3,
-   "cost_actual_eur": 11.27,
+   "cost_actual_eur": 11.34,
    "cash_cost_eur": 15.07,
    "cost_without_eur": 11.25,
-   "saving_eur": -0.02,
+   "saving_eur": -0.09,
    "battery_home_kwh": 3.5,
    "battery_home_value_eur": 0.91,
    "arbitrage_kwh": 4.5,
    "arbitrage_income_eur": 1.03,
-   "reserve_kwh": 23.6,
-   "reserve_value_eur": 4.96,
+   "reserve_kwh": 23.25,
+   "reserve_value_eur": 4.89,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.35,
+   "loss_eur": 0.07,
    "solar_charged_kwh": 1.1,
    "grid_charged_kwh": 24.2,
    "grid_charge_cost_eur": 5.07,
-   "battery_saving_eur": 0.44,
+   "battery_saving_eur": 0.37,
    "solar_saving_eur": -0.46,
    "charged_kwh": 25.3,
    "discharged_kwh": 8.0,
@@ -1543,7 +1573,7 @@
    "soc_end_pct": 93,
    "lots_end": [
     [
-     0.6,
+     0.25,
      0.19656
     ],
     [
@@ -1760,21 +1790,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 19.9,
-   "cost_actual_eur": 4.0,
+   "cost_actual_eur": 4.01,
    "cash_cost_eur": 0.08,
    "cost_without_eur": 4.25,
-   "saving_eur": 0.25,
+   "saving_eur": 0.24,
    "battery_home_kwh": 17.5,
    "battery_home_value_eur": 3.72,
    "arbitrage_kwh": 5.5,
    "arbitrage_income_eur": 1.19,
-   "reserve_kwh": 5.0,
-   "reserve_value_eur": 1.04,
+   "reserve_kwh": 4.65,
+   "reserve_value_eur": 0.96,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.9,
    "grid_charged_kwh": 1.5,
    "grid_charge_cost_eur": 0.32,
-   "battery_saving_eur": 0.09,
+   "battery_saving_eur": 0.08,
    "solar_saving_eur": 0.16,
    "charged_kwh": 4.4,
    "discharged_kwh": 23.0,
@@ -1785,11 +1817,7 @@
    "soc_end_pct": 28,
    "lots_end": [
     [
-     0.1,
-     0.23257
-    ],
-    [
-     0.3,
+     0.05,
      0.23257
     ],
     [
@@ -1974,21 +2002,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 11.2,
-   "cost_actual_eur": 2.84,
+   "cost_actual_eur": 2.83,
    "cash_cost_eur": 6.83,
    "cost_without_eur": 2.64,
-   "saving_eur": -0.2,
+   "saving_eur": -0.19,
    "battery_home_kwh": 3.3,
    "battery_home_value_eur": 0.79,
    "arbitrage_kwh": 2.2,
    "arbitrage_income_eur": 0.5,
-   "reserve_kwh": 23.9,
-   "reserve_value_eur": 5.03,
+   "reserve_kwh": 23.55,
+   "reserve_value_eur": 4.96,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.3,
    "grid_charged_kwh": 22.1,
    "grid_charge_cost_eur": 4.67,
-   "battery_saving_eur": 0.14,
+   "battery_saving_eur": 0.15,
    "solar_saving_eur": -0.34,
    "charged_kwh": 24.4,
    "discharged_kwh": 5.5,
@@ -1999,19 +2029,7 @@
    "soc_end_pct": 97,
    "lots_end": [
     [
-     0.1,
-     0.22205
-    ],
-    [
-     0.1,
-     0.20019
-    ],
-    [
-     0.1,
-     0.21513
-    ],
-    [
-     0.1,
+     0.05,
      0.20019
     ],
     [
@@ -2256,7 +2274,7 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 14.4,
-   "cost_actual_eur": 3.38,
+   "cost_actual_eur": 3.39,
    "cash_cost_eur": 3.22,
    "cost_without_eur": 2.7,
    "saving_eur": -0.69,
@@ -2264,9 +2282,11 @@
    "battery_home_value_eur": 0.86,
    "arbitrage_kwh": 3.3,
    "arbitrage_income_eur": 0.55,
-   "reserve_kwh": 23.8,
-   "reserve_value_eur": 4.87,
+   "reserve_kwh": 23.45,
+   "reserve_value_eur": 4.79,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.6,
    "grid_charged_kwh": 7.5,
    "grid_charge_cost_eur": 1.5,
@@ -2281,11 +2301,7 @@
    "soc_end_pct": 94,
    "lots_end": [
     [
-     0.2,
-     0.22174
-    ],
-    [
-     0.8,
+     0.65,
      0.22174
     ],
     [
@@ -2526,21 +2542,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 9.3,
-   "cost_actual_eur": 1.38,
+   "cost_actual_eur": 1.45,
    "cash_cost_eur": 1.49,
    "cost_without_eur": 2.17,
-   "saving_eur": 0.79,
+   "saving_eur": 0.73,
    "battery_home_kwh": 2.9,
    "battery_home_value_eur": 0.69,
    "arbitrage_kwh": 2.4,
    "arbitrage_income_eur": 0.54,
-   "reserve_kwh": 24.4,
-   "reserve_value_eur": 4.98,
+   "reserve_kwh": 23.75,
+   "reserve_value_eur": 4.84,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.3,
+   "loss_eur": 0.07,
    "solar_charged_kwh": 1.4,
    "grid_charged_kwh": 4.5,
    "grid_charge_cost_eur": 0.99,
-   "battery_saving_eur": 0.08,
+   "battery_saving_eur": 0.01,
    "solar_saving_eur": 0.71,
    "charged_kwh": 5.9,
    "discharged_kwh": 5.3,
@@ -2551,11 +2569,7 @@
    "soc_end_pct": 95,
    "lots_end": [
     [
-     0.3,
-     0.2174
-    ],
-    [
-     0.8,
+     0.45,
      0.2174
     ],
     [
@@ -2896,13 +2910,15 @@
    "battery_home_value_eur": 4.31,
    "arbitrage_kwh": 1.8,
    "arbitrage_income_eur": 0.37,
-   "reserve_kwh": 8.0,
-   "reserve_value_eur": 1.55,
+   "reserve_kwh": 7.35,
+   "reserve_value_eur": 1.41,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.5,
    "grid_charged_kwh": 3.7,
    "grid_charge_cost_eur": 0.62,
-   "battery_saving_eur": 0.53,
+   "battery_saving_eur": 0.54,
    "solar_saving_eur": -0.36,
    "charged_kwh": 4.2,
    "discharged_kwh": 20.6,
@@ -2913,23 +2929,7 @@
    "soc_end_pct": 34,
    "lots_end": [
     [
-     0.1,
-     0.19362
-    ],
-    [
-     0.1,
-     0.20718
-    ],
-    [
-     0.1,
-     0.19362
-    ],
-    [
-     0.2,
-     0.22368
-    ],
-    [
-     0.4,
+     0.25,
      0.22368
     ],
     [
@@ -3030,21 +3030,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 8.8,
-   "cost_actual_eur": 0.63,
+   "cost_actual_eur": 0.58,
    "cash_cost_eur": 1.22,
    "cost_without_eur": 2.03,
-   "saving_eur": 1.4,
+   "saving_eur": 1.45,
    "battery_home_kwh": 6.2,
    "battery_home_value_eur": 1.51,
    "arbitrage_kwh": 5.7,
    "arbitrage_income_eur": 1.33,
-   "reserve_kwh": 14.2,
-   "reserve_value_eur": 2.14,
+   "reserve_kwh": 13.55,
+   "reserve_value_eur": 2.05,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.2,
    "grid_charged_kwh": 15.9,
    "grid_charge_cost_eur": 2.25,
-   "battery_saving_eur": 0.76,
+   "battery_saving_eur": 0.81,
    "solar_saving_eur": 0.63,
    "charged_kwh": 18.1,
    "discharged_kwh": 11.9,
@@ -3055,11 +3057,7 @@
    "soc_end_pct": 62,
    "lots_end": [
     [
-     0.5,
-     0.13611
-    ],
-    [
-     0.6,
+     0.45,
      0.13611
     ],
     [
@@ -3224,17 +3222,19 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 11.2,
-   "cost_actual_eur": 1.77,
+   "cost_actual_eur": 1.78,
    "cash_cost_eur": 1.45,
    "cost_without_eur": 2.76,
-   "saving_eur": 0.99,
+   "saving_eur": 0.98,
    "battery_home_kwh": 5.2,
    "battery_home_value_eur": 1.33,
    "arbitrage_kwh": 4.1,
    "arbitrage_income_eur": 0.95,
-   "reserve_kwh": 9.4,
-   "reserve_value_eur": 1.82,
+   "reserve_kwh": 8.75,
+   "reserve_value_eur": 1.72,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 3.2,
    "grid_charged_kwh": 1.3,
    "grid_charge_cost_eur": 0.3,
@@ -3249,11 +3249,7 @@
    "soc_end_pct": 43,
    "lots_end": [
     [
-     0.6,
-     0.14575
-    ],
-    [
-     0.8,
+     0.75,
      0.14575
     ],
     [
@@ -3522,21 +3518,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 8.7,
-   "cost_actual_eur": 1.63,
+   "cost_actual_eur": 1.67,
    "cash_cost_eur": 1.22,
    "cost_without_eur": 2.24,
-   "saving_eur": 0.61,
+   "saving_eur": 0.57,
    "battery_home_kwh": 4.6,
    "battery_home_value_eur": 1.25,
    "arbitrage_kwh": 3.0,
    "arbitrage_income_eur": 0.71,
-   "reserve_kwh": 6.4,
-   "reserve_value_eur": 1.41,
+   "reserve_kwh": 5.75,
+   "reserve_value_eur": 1.28,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 3.1,
    "grid_charged_kwh": 1.5,
    "grid_charge_cost_eur": 0.35,
-   "battery_saving_eur": 0.54,
+   "battery_saving_eur": 0.5,
    "solar_saving_eur": 0.08,
    "charged_kwh": 4.6,
    "discharged_kwh": 7.6,
@@ -3547,31 +3545,7 @@
    "soc_end_pct": 32,
    "lots_end": [
     [
-     0.1,
-     0.19755
-    ],
-    [
-     0.1,
-     0.19755
-    ],
-    [
-     0.1,
-     0.21194
-    ],
-    [
-     0.1,
-     0.21194
-    ],
-    [
-     0.1,
-     0.21194
-    ],
-    [
-     0.1,
-     0.23093
-    ],
-    [
-     0.1,
+     0.05,
      0.21325
     ],
     [
@@ -3792,21 +3766,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 9.9,
-   "cost_actual_eur": 0.87,
+   "cost_actual_eur": 0.88,
    "cash_cost_eur": 3.47,
    "cost_without_eur": 2.7,
-   "saving_eur": 1.83,
+   "saving_eur": 1.82,
    "battery_home_kwh": 6.4,
    "battery_home_value_eur": 1.77,
    "arbitrage_kwh": 2.6,
    "arbitrage_income_eur": 0.68,
-   "reserve_kwh": 17.7,
-   "reserve_value_eur": 4.01,
+   "reserve_kwh": 17.05,
+   "reserve_value_eur": 3.87,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.0,
    "grid_charged_kwh": 18.3,
    "grid_charge_cost_eur": 4.17,
-   "battery_saving_eur": 0.44,
+   "battery_saving_eur": 0.43,
    "solar_saving_eur": 1.39,
    "charged_kwh": 20.3,
    "discharged_kwh": 9.0,
@@ -3817,11 +3793,7 @@
    "soc_end_pct": 75,
    "lots_end": [
     [
-     0.3,
-     0.22928
-    ],
-    [
-     0.8,
+     0.45,
      0.22928
     ],
     [
@@ -4022,9 +3994,11 @@
    "battery_home_value_eur": 1.92,
    "arbitrage_kwh": 4.8,
    "arbitrage_income_eur": 1.14,
-   "reserve_kwh": 9.8,
-   "reserve_value_eur": 2.21,
+   "reserve_kwh": 9.15,
+   "reserve_value_eur": 2.07,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 3.0,
    "grid_charged_kwh": 1.4,
    "grid_charge_cost_eur": 0.33,
@@ -4039,11 +4013,7 @@
    "soc_end_pct": 45,
    "lots_end": [
     [
-     0.1,
-     0.22679
-    ],
-    [
-     0.8,
+     0.25,
      0.22679
     ],
     [
@@ -4320,9 +4290,11 @@
    "battery_home_value_eur": 2.22,
    "arbitrage_kwh": 3.7,
    "arbitrage_income_eur": 0.86,
-   "reserve_kwh": 3.7,
-   "reserve_value_eur": 0.82,
+   "reserve_kwh": 3.05,
+   "reserve_value_eur": 0.67,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 4.5,
    "grid_charged_kwh": 1.9,
    "grid_charge_cost_eur": 0.45,
@@ -4337,31 +4309,7 @@
    "soc_end_pct": 21,
    "lots_end": [
     [
-     0.1,
-     0.21926
-    ],
-    [
-     0.1,
-     0.21926
-    ],
-    [
-     0.1,
-     0.23345
-    ],
-    [
-     0.1,
-     0.21533
-    ],
-    [
-     0.1,
-     0.23345
-    ],
-    [
-     0.1,
-     0.23345
-    ],
-    [
-     0.1,
+     0.05,
      0.21533
     ],
     [
@@ -4490,9 +4438,11 @@
    "battery_home_value_eur": 1.3,
    "arbitrage_kwh": 2.7,
    "arbitrage_income_eur": 0.65,
-   "reserve_kwh": 8.8,
-   "reserve_value_eur": 2.02,
+   "reserve_kwh": 8.15,
+   "reserve_value_eur": 1.87,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.4,
    "grid_charged_kwh": 10.2,
    "grid_charge_cost_eur": 2.34,
@@ -4507,11 +4457,7 @@
    "soc_end_pct": 39,
    "lots_end": [
     [
-     0.5,
-     0.22238
-    ],
-    [
-     0.5,
+     0.35,
      0.22238
     ],
     [
@@ -4688,21 +4634,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 9.9,
-   "cost_actual_eur": 2.2,
+   "cost_actual_eur": 2.24,
    "cash_cost_eur": 3.8,
    "cost_without_eur": 2.35,
-   "saving_eur": 0.14,
+   "saving_eur": 0.11,
    "battery_home_kwh": 5.5,
    "battery_home_value_eur": 1.34,
    "arbitrage_kwh": 3.1,
    "arbitrage_income_eur": 0.7,
-   "reserve_kwh": 17.1,
-   "reserve_value_eur": 3.61,
+   "reserve_kwh": 16.25,
+   "reserve_value_eur": 3.43,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.2,
+   "loss_eur": 0.04,
    "solar_charged_kwh": 1.8,
    "grid_charged_kwh": 15.1,
    "grid_charge_cost_eur": 3.19,
-   "battery_saving_eur": 0.07,
+   "battery_saving_eur": 0.03,
    "solar_saving_eur": 0.07,
    "charged_kwh": 16.9,
    "discharged_kwh": 8.6,
@@ -4713,19 +4661,7 @@
    "soc_end_pct": 65,
    "lots_end": [
     [
-     0.1,
-     0.23039
-    ],
-    [
-     0.1,
-     0.23039
-    ],
-    [
-     0.2,
-     0.21079
-    ],
-    [
-     0.6,
+     0.15,
      0.21079
     ],
     [
@@ -4926,9 +4862,11 @@
    "battery_home_value_eur": 1.62,
    "arbitrage_kwh": 4.4,
    "arbitrage_income_eur": 0.95,
-   "reserve_kwh": 22.0,
-   "reserve_value_eur": 4.37,
+   "reserve_kwh": 21.15,
+   "reserve_value_eur": 4.19,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.2,
    "grid_charged_kwh": 14.1,
    "grid_charge_cost_eur": 2.74,
@@ -4943,11 +4881,7 @@
    "soc_end_pct": 89,
    "lots_end": [
     [
-     0.5,
-     0.21037
-    ],
-    [
-     0.4,
+     0.05,
      0.21138
     ],
     [
@@ -5252,21 +5186,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 7.5,
-   "cost_actual_eur": 1.86,
+   "cost_actual_eur": 1.83,
    "cash_cost_eur": 0.65,
    "cost_without_eur": 1.7,
-   "saving_eur": -0.16,
+   "saving_eur": -0.14,
    "battery_home_kwh": 6.5,
    "battery_home_value_eur": 1.48,
    "arbitrage_kwh": 2.0,
    "arbitrage_income_eur": 0.42,
-   "reserve_kwh": 16.9,
-   "reserve_value_eur": 3.17,
+   "reserve_kwh": 16.05,
+   "reserve_value_eur": 3.01,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.9,
    "grid_charged_kwh": 2.5,
    "grid_charge_cost_eur": 0.35,
-   "battery_saving_eur": 0.17,
+   "battery_saving_eur": 0.19,
    "solar_saving_eur": -0.33,
    "charged_kwh": 3.4,
    "discharged_kwh": 8.5,
@@ -5277,15 +5213,7 @@
    "soc_end_pct": 73,
    "lots_end": [
     [
-     0.1,
-     0.18541
-    ],
-    [
-     0.7,
-     0.18541
-    ],
-    [
-     0.7,
+     0.65,
      0.18541
     ],
     [
@@ -5538,21 +5466,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 12.7,
-   "cost_actual_eur": 2.95,
+   "cost_actual_eur": 2.91,
    "cash_cost_eur": 1.0,
    "cost_without_eur": 3.08,
-   "saving_eur": 0.13,
+   "saving_eur": 0.17,
    "battery_home_kwh": 10.4,
    "battery_home_value_eur": 2.53,
    "arbitrage_kwh": 3.6,
    "arbitrage_income_eur": 0.8,
-   "reserve_kwh": 6.4,
-   "reserve_value_eur": 1.21,
+   "reserve_kwh": 5.55,
+   "reserve_value_eur": 1.1,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.2,
    "grid_charged_kwh": 3.3,
    "grid_charge_cost_eur": 0.71,
-   "battery_saving_eur": 0.62,
+   "battery_saving_eur": 0.67,
    "solar_saving_eur": -0.49,
    "charged_kwh": 3.5,
    "discharged_kwh": 14.0,
@@ -5563,23 +5493,7 @@
    "soc_end_pct": 34,
    "lots_end": [
     [
-     0.1,
-     0.13495
-    ],
-    [
-     0.2,
-     0.13495
-    ],
-    [
-     0.1,
-     0.13392
-    ],
-    [
-     0.3,
-     0.13495
-    ],
-    [
-     0.2,
+     0.05,
      0.13407
     ],
     [
@@ -5676,21 +5590,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 14.3,
-   "cost_actual_eur": 3.44,
+   "cost_actual_eur": 3.5,
    "cash_cost_eur": 3.98,
    "cost_without_eur": 3.35,
-   "saving_eur": -0.08,
+   "saving_eur": -0.14,
    "battery_home_kwh": 9.4,
    "battery_home_value_eur": 2.21,
    "arbitrage_kwh": 5.1,
    "arbitrage_income_eur": 1.13,
-   "reserve_kwh": 8.7,
-   "reserve_value_eur": 1.75,
+   "reserve_kwh": 7.85,
+   "reserve_value_eur": 1.58,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.7,
    "grid_charged_kwh": 16.1,
    "grid_charge_cost_eur": 3.25,
-   "battery_saving_eur": 0.5,
+   "battery_saving_eur": 0.44,
    "solar_saving_eur": -0.58,
    "charged_kwh": 16.8,
    "discharged_kwh": 14.5,
@@ -5701,11 +5617,7 @@
    "soc_end_pct": 46,
    "lots_end": [
     [
-     0.3,
-     0.20371
-    ],
-    [
-     0.7,
+     0.15,
      0.20371
     ],
     [
@@ -5778,21 +5690,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 10.6,
-   "cost_actual_eur": 2.69,
+   "cost_actual_eur": 2.72,
    "cash_cost_eur": 1.66,
    "cost_without_eur": 2.52,
-   "saving_eur": -0.17,
+   "saving_eur": -0.2,
    "battery_home_kwh": 7.1,
    "battery_home_value_eur": 1.69,
    "arbitrage_kwh": 4.0,
    "arbitrage_income_eur": 0.88,
-   "reserve_kwh": 3.0,
-   "reserve_value_eur": 0.72,
+   "reserve_kwh": 2.15,
+   "reserve_value_eur": 0.52,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.2,
    "grid_charged_kwh": 5.2,
    "grid_charge_cost_eur": 1.24,
-   "battery_saving_eur": 0.25,
+   "battery_saving_eur": 0.22,
    "solar_saving_eur": -0.42,
    "charged_kwh": 5.4,
    "discharged_kwh": 11.1,
@@ -5803,27 +5717,7 @@
    "soc_end_pct": 22,
    "lots_end": [
     [
-     0.1,
-     0.24093
-    ],
-    [
-     0.1,
-     0.24093
-    ],
-    [
-     0.2,
-     0.24093
-    ],
-    [
-     0.2,
-     0.24093
-    ],
-    [
-     0.2,
-     0.24093
-    ],
-    [
-     0.4,
+     0.35,
      0.24093
     ],
     [
@@ -5856,21 +5750,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 16.6,
-   "cost_actual_eur": 3.64,
+   "cost_actual_eur": 3.6,
    "cash_cost_eur": 5.42,
    "cost_without_eur": 3.97,
-   "saving_eur": 0.33,
+   "saving_eur": 0.37,
    "battery_home_kwh": 9.0,
    "battery_home_value_eur": 2.19,
    "arbitrage_kwh": 7.1,
    "arbitrage_income_eur": 1.58,
-   "reserve_kwh": 12.2,
-   "reserve_value_eur": 2.51,
+   "reserve_kwh": 11.35,
+   "reserve_value_eur": 2.34,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 5.3,
    "grid_charged_kwh": 20.0,
    "grid_charge_cost_eur": 4.05,
-   "battery_saving_eur": 0.43,
+   "battery_saving_eur": 0.46,
    "solar_saving_eur": -0.09,
    "charged_kwh": 25.3,
    "discharged_kwh": 16.1,
@@ -5881,11 +5777,7 @@
    "soc_end_pct": 55,
    "lots_end": [
     [
-     0.8,
-     0.19955
-    ],
-    [
-     0.7,
+     0.65,
      0.19955
     ],
     [
@@ -6146,7 +6038,7 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 9.5,
-   "cost_actual_eur": 2.26,
+   "cost_actual_eur": 2.27,
    "cash_cost_eur": 1.85,
    "cost_without_eur": 2.53,
    "saving_eur": 0.26,
@@ -6154,13 +6046,15 @@
    "battery_home_value_eur": 1.83,
    "arbitrage_kwh": 3.3,
    "arbitrage_income_eur": 0.83,
-   "reserve_kwh": 9.5,
-   "reserve_value_eur": 2.09,
+   "reserve_kwh": 8.65,
+   "reserve_value_eur": 1.91,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.4,
    "grid_charged_kwh": 5.2,
    "grid_charge_cost_eur": 1.17,
-   "battery_saving_eur": 0.55,
+   "battery_saving_eur": 0.54,
    "solar_saving_eur": -0.29,
    "charged_kwh": 7.6,
    "discharged_kwh": 10.3,
@@ -6171,31 +6065,7 @@
    "soc_end_pct": 44,
    "lots_end": [
     [
-     0.1,
-     0.21764
-    ],
-    [
-     0.1,
-     0.20226
-    ],
-    [
-     0.2,
-     0.20226
-    ],
-    [
-     0.1,
-     0.21764
-    ],
-    [
-     0.2,
-     0.20226
-    ],
-    [
-     0.1,
-     0.20226
-    ],
-    [
-     0.1,
+     0.05,
      0.21764
     ],
     [
@@ -6404,21 +6274,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 16.9,
-   "cost_actual_eur": 4.48,
+   "cost_actual_eur": 4.51,
    "cash_cost_eur": 2.79,
    "cost_without_eur": 4.26,
-   "saving_eur": -0.22,
+   "saving_eur": -0.25,
    "battery_home_kwh": 11.0,
    "battery_home_value_eur": 2.8,
    "arbitrage_kwh": 5.9,
    "arbitrage_income_eur": 1.37,
-   "reserve_kwh": 1.7,
-   "reserve_value_eur": 0.4,
+   "reserve_kwh": 0.85,
+   "reserve_value_eur": 0.2,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.6,
    "grid_charged_kwh": 8.5,
    "grid_charge_cost_eur": 2.0,
-   "battery_saving_eur": 0.35,
+   "battery_saving_eur": 0.33,
    "solar_saving_eur": -0.58,
    "charged_kwh": 9.1,
    "discharged_kwh": 16.9,
@@ -6429,15 +6301,7 @@
    "soc_end_pct": 21,
    "lots_end": [
     [
-     0.3,
-     0.23731
-    ],
-    [
-     0.3,
-     0.23731
-    ],
-    [
-     0.3,
+     0.05,
      0.23731
     ],
     [
@@ -6462,21 +6326,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 12.1,
-   "cost_actual_eur": 3.23,
+   "cost_actual_eur": 3.25,
    "cash_cost_eur": 3.09,
    "cost_without_eur": 3.38,
-   "saving_eur": 0.15,
+   "saving_eur": 0.13,
    "battery_home_kwh": 6.9,
    "battery_home_value_eur": 1.99,
    "arbitrage_kwh": 3.2,
    "arbitrage_income_eur": 0.86,
-   "reserve_kwh": 1.0,
-   "reserve_value_eur": 0.27,
+   "reserve_kwh": 0.15,
+   "reserve_value_eur": 0.04,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 1.7,
    "grid_charged_kwh": 7.7,
    "grid_charge_cost_eur": 1.83,
-   "battery_saving_eur": 0.48,
+   "battery_saving_eur": 0.45,
    "solar_saving_eur": -0.32,
    "charged_kwh": 9.4,
    "discharged_kwh": 10.1,
@@ -6487,39 +6353,7 @@
    "soc_end_pct": 21,
    "lots_end": [
     [
-     0.1,
-     0.25339
-    ],
-    [
-     0.1,
-     0.27951
-    ],
-    [
-     0.1,
-     0.25339
-    ],
-    [
-     0.1,
-     0.27951
-    ],
-    [
-     0.1,
-     0.25339
-    ],
-    [
-     0.1,
-     0.27587
-    ],
-    [
-     0.1,
-     0.25039
-    ],
-    [
-     0.1,
-     0.27587
-    ],
-    [
-     0.1,
+     0.05,
      0.27587
     ],
     [
@@ -6536,21 +6370,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 8.6,
-   "cost_actual_eur": -0.34,
+   "cost_actual_eur": -0.37,
    "cash_cost_eur": 1.75,
    "cost_without_eur": 2.58,
-   "saving_eur": 2.92,
+   "saving_eur": 2.94,
    "battery_home_kwh": 5.8,
    "battery_home_value_eur": 1.86,
    "arbitrage_kwh": 10.8,
    "arbitrage_income_eur": 3.73,
-   "reserve_kwh": 9.1,
-   "reserve_value_eur": 2.36,
+   "reserve_kwh": 8.25,
+   "reserve_value_eur": 2.16,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 3.6,
    "grid_charged_kwh": 21.1,
    "grid_charge_cost_eur": 5.06,
-   "battery_saving_eur": 1.64,
+   "battery_saving_eur": 1.66,
    "solar_saving_eur": 1.28,
    "charged_kwh": 24.7,
    "discharged_kwh": 16.6,
@@ -6561,11 +6397,7 @@
    "soc_end_pct": 41,
    "lots_end": [
     [
-     0.3,
-     0.23657
-    ],
-    [
-     0.7,
+     0.15,
      0.23657
     ],
     [
@@ -6742,21 +6574,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 10.6,
-   "cost_actual_eur": 3.07,
+   "cost_actual_eur": 3.06,
    "cash_cost_eur": 4.75,
    "cost_without_eur": 2.52,
-   "saving_eur": -0.55,
+   "saving_eur": -0.54,
    "battery_home_kwh": 6.9,
    "battery_home_value_eur": 1.64,
    "arbitrage_kwh": 4.2,
    "arbitrage_income_eur": 0.92,
-   "reserve_kwh": 18.4,
-   "reserve_value_eur": 4.04,
+   "reserve_kwh": 17.55,
+   "reserve_value_eur": 3.85,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 3.6,
    "grid_charged_kwh": 16.8,
    "grid_charge_cost_eur": 3.74,
-   "battery_saving_eur": -0.25,
+   "battery_saving_eur": -0.24,
    "solar_saving_eur": -0.3,
    "charged_kwh": 20.4,
    "discharged_kwh": 11.1,
@@ -6767,31 +6601,7 @@
    "soc_end_pct": 73,
    "lots_end": [
     [
-     0.2,
-     0.22755
-    ],
-    [
-     0.2,
-     0.22387
-    ],
-    [
-     0.1,
-     0.22387
-    ],
-    [
-     0.1,
-     0.22387
-    ],
-    [
-     0.1,
-     0.20741
-    ],
-    [
-     0.1,
-     0.22387
-    ],
-    [
-     0.1,
+     0.05,
      0.22387
     ],
     [
@@ -7047,14 +6857,16 @@
    "cost_actual_eur": 3.92,
    "cash_cost_eur": 4.0,
    "cost_without_eur": 3.37,
-   "saving_eur": -0.56,
+   "saving_eur": -0.55,
    "battery_home_kwh": 7.9,
    "battery_home_value_eur": 1.76,
    "arbitrage_kwh": 4.1,
    "arbitrage_income_eur": 0.85,
-   "reserve_kwh": 19.4,
-   "reserve_value_eur": 4.12,
+   "reserve_kwh": 18.55,
+   "reserve_value_eur": 3.93,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 1.0,
    "grid_charged_kwh": 12.0,
    "grid_charge_cost_eur": 2.52,
@@ -7069,11 +6881,7 @@
    "soc_end_pct": 76,
    "lots_end": [
     [
-     0.2,
-     0.22126
-    ],
-    [
-     0.7,
+     0.05,
      0.22126
     ],
     [
@@ -7430,21 +7238,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 10.5,
-   "cost_actual_eur": 2.12,
+   "cost_actual_eur": 2.11,
    "cash_cost_eur": 0.79,
    "cost_without_eur": 2.97,
-   "saving_eur": 0.85,
+   "saving_eur": 0.86,
    "battery_home_kwh": 7.3,
    "battery_home_value_eur": 2.13,
    "arbitrage_kwh": 5.9,
    "arbitrage_income_eur": 1.75,
-   "reserve_kwh": 12.6,
-   "reserve_value_eur": 2.79,
+   "reserve_kwh": 11.75,
+   "reserve_value_eur": 2.61,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 1.8,
    "grid_charged_kwh": 4.6,
    "grid_charge_cost_eur": 1.04,
-   "battery_saving_eur": 1.08,
+   "battery_saving_eur": 1.09,
    "solar_saving_eur": -0.23,
    "charged_kwh": 6.4,
    "discharged_kwh": 13.2,
@@ -7455,19 +7265,7 @@
    "soc_end_pct": 49,
    "lots_end": [
     [
-     0.2,
-     0.20877
-    ],
-    [
-     0.2,
-     0.20877
-    ],
-    [
-     0.2,
-     0.20877
-    ],
-    [
-     0.3,
+     0.05,
      0.20877
     ],
     [
@@ -7700,21 +7498,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 13.4,
-   "cost_actual_eur": 3.55,
+   "cost_actual_eur": 3.76,
    "cash_cost_eur": 4.16,
    "cost_without_eur": 4.55,
-   "saving_eur": 0.99,
+   "saving_eur": 0.79,
    "battery_home_kwh": 8.8,
    "battery_home_value_eur": 3.02,
    "arbitrage_kwh": 4.5,
    "arbitrage_income_eur": 1.4,
-   "reserve_kwh": 14.4,
-   "reserve_value_eur": 3.4,
+   "reserve_kwh": 12.75,
+   "reserve_value_eur": 3.02,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.8,
+   "loss_eur": 0.19,
    "solar_charged_kwh": 1.9,
    "grid_charged_kwh": 13.2,
    "grid_charge_cost_eur": 3.11,
-   "battery_saving_eur": 1.47,
+   "battery_saving_eur": 1.26,
    "solar_saving_eur": -0.48,
    "charged_kwh": 15.1,
    "discharged_kwh": 13.3,
@@ -7725,19 +7525,7 @@
    "soc_end_pct": 51,
    "lots_end": [
     [
-     0.4,
-     0.2332
-    ],
-    [
-     0.1,
-     0.21512
-    ],
-    [
-     0.8,
-     0.2332
-    ],
-    [
-     0.7,
+     0.35,
      0.2332
     ],
     [
@@ -7918,21 +7706,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 22.3,
-   "cost_actual_eur": 5.64,
+   "cost_actual_eur": 5.75,
    "cash_cost_eur": 4.2,
    "cost_without_eur": 8.8,
-   "saving_eur": 3.17,
+   "saving_eur": 3.06,
    "battery_home_kwh": 17.7,
    "battery_home_value_eur": 7.11,
    "arbitrage_kwh": 4.5,
    "arbitrage_income_eur": 1.56,
-   "reserve_kwh": 6.7,
-   "reserve_value_eur": 1.97,
+   "reserve_kwh": 5.05,
+   "reserve_value_eur": 1.47,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 4.2,
    "grid_charged_kwh": 10.3,
    "grid_charge_cost_eur": 2.64,
-   "battery_saving_eur": 3.42,
+   "battery_saving_eur": 3.31,
    "solar_saving_eur": -0.26,
    "charged_kwh": 14.5,
    "discharged_kwh": 22.2,
@@ -7943,67 +7733,7 @@
    "soc_end_pct": 23,
    "lots_end": [
     [
-     0.1,
-     0.31171
-    ],
-    [
-     0.1,
-     0.35007
-    ],
-    [
-     0.1,
-     0.31171
-    ],
-    [
-     0.1,
-     0.28925
-    ],
-    [
-     0.2,
-     0.28925
-    ],
-    [
-     0.1,
-     0.28925
-    ],
-    [
-     0.1,
-     0.32289
-    ],
-    [
-     0.1,
-     0.28925
-    ],
-    [
-     0.1,
-     0.28225
-    ],
-    [
-     0.1,
-     0.31442
-    ],
-    [
-     0.1,
-     0.28225
-    ],
-    [
-     0.1,
-     0.28225
-    ],
-    [
-     0.1,
-     0.31442
-    ],
-    [
-     0.1,
-     0.28225
-    ],
-    [
-     0.1,
-     0.31442
-    ],
-    [
-     0.2,
+     0.15,
      0.28225
     ],
     [
@@ -8192,21 +7922,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 11.9,
-   "cost_actual_eur": 3.6,
+   "cost_actual_eur": 3.45,
    "cash_cost_eur": 6.08,
    "cost_without_eur": 2.74,
-   "saving_eur": -0.86,
+   "saving_eur": -0.71,
    "battery_home_kwh": 5.8,
    "battery_home_value_eur": 1.37,
    "arbitrage_kwh": 3.0,
    "arbitrage_income_eur": 0.66,
-   "reserve_kwh": 21.8,
-   "reserve_value_eur": 4.44,
+   "reserve_kwh": 20.15,
+   "reserve_value_eur": 4.1,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.3,
    "grid_charged_kwh": 23.6,
    "grid_charge_cost_eur": 4.82,
-   "battery_saving_eur": -0.37,
+   "battery_saving_eur": -0.22,
    "solar_saving_eur": -0.49,
    "charged_kwh": 23.9,
    "discharged_kwh": 8.8,
@@ -8217,15 +7949,7 @@
    "soc_end_pct": 85,
    "lots_end": [
     [
-     0.4,
-     0.20789
-    ],
-    [
-     0.8,
-     0.20789
-    ],
-    [
-     0.7,
+     0.25,
      0.20789
     ],
     [
@@ -8354,21 +8078,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 13.5,
-   "cost_actual_eur": 3.44,
+   "cost_actual_eur": 3.46,
    "cash_cost_eur": 1.99,
    "cost_without_eur": 3.17,
-   "saving_eur": -0.27,
+   "saving_eur": -0.29,
    "battery_home_kwh": 8.2,
    "battery_home_value_eur": 1.91,
    "arbitrage_kwh": 6.0,
    "arbitrage_income_eur": 1.32,
-   "reserve_kwh": 15.1,
-   "reserve_value_eur": 3.0,
+   "reserve_kwh": 13.25,
+   "reserve_value_eur": 2.64,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.2,
+   "loss_eur": 0.04,
    "solar_charged_kwh": 0.7,
    "grid_charged_kwh": 6.8,
    "grid_charge_cost_eur": 1.37,
-   "battery_saving_eur": 0.28,
+   "battery_saving_eur": 0.25,
    "solar_saving_eur": -0.55,
    "charged_kwh": 7.5,
    "discharged_kwh": 14.2,
@@ -8379,15 +8105,7 @@
    "soc_end_pct": 53,
    "lots_end": [
     [
-     0.6,
-     0.19658
-    ],
-    [
-     0.8,
-     0.19658
-    ],
-    [
-     0.8,
+     0.35,
      0.19658
     ],
     [
@@ -8532,21 +8250,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 11.8,
-   "cost_actual_eur": 2.73,
+   "cost_actual_eur": 2.78,
    "cash_cost_eur": 0.69,
    "cost_without_eur": 2.79,
-   "saving_eur": 0.06,
+   "saving_eur": 0.01,
    "battery_home_kwh": 7.9,
    "battery_home_value_eur": 1.88,
    "arbitrage_kwh": 3.9,
    "arbitrage_income_eur": 0.85,
-   "reserve_kwh": 4.3,
-   "reserve_value_eur": 0.95,
+   "reserve_kwh": 2.45,
+   "reserve_value_eur": 0.54,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.3,
    "grid_charged_kwh": 0.7,
    "grid_charge_cost_eur": 0.16,
-   "battery_saving_eur": 0.46,
+   "battery_saving_eur": 0.41,
    "solar_saving_eur": -0.4,
    "charged_kwh": 1.0,
    "discharged_kwh": 11.8,
@@ -8557,31 +8277,7 @@
    "soc_end_pct": 21,
    "lots_end": [
     [
-     0.1,
-     0.22342
-    ],
-    [
-     0.1,
-     0.22342
-    ],
-    [
-     0.1,
-     0.20704
-    ],
-    [
-     0.1,
-     0.20572
-    ],
-    [
-     0.5,
-     0.22182
-    ],
-    [
-     0.8,
-     0.22182
-    ],
-    [
-     0.7,
+     0.55,
      0.22182
     ],
     [
@@ -8642,21 +8338,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 16.6,
-   "cost_actual_eur": 3.91,
+   "cost_actual_eur": 3.89,
    "cash_cost_eur": 5.14,
    "cost_without_eur": 3.94,
-   "saving_eur": 0.04,
+   "saving_eur": 0.06,
    "battery_home_kwh": 11.1,
    "battery_home_value_eur": 2.63,
    "arbitrage_kwh": 5.9,
    "arbitrage_income_eur": 1.31,
-   "reserve_kwh": 10.4,
-   "reserve_value_eur": 2.19,
+   "reserve_kwh": 8.55,
+   "reserve_value_eur": 1.8,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 4.9,
    "grid_charged_kwh": 18.2,
    "grid_charge_cost_eur": 3.8,
-   "battery_saving_eur": 0.36,
+   "battery_saving_eur": 0.38,
    "solar_saving_eur": -0.33,
    "charged_kwh": 23.1,
    "discharged_kwh": 17.0,
@@ -8667,15 +8365,7 @@
    "soc_end_pct": 44,
    "lots_end": [
     [
-     0.3,
-     0.20863
-    ],
-    [
-     0.8,
-     0.20863
-    ],
-    [
-     0.8,
+     0.05,
      0.20863
     ],
     [
@@ -8860,21 +8550,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 18.1,
-   "cost_actual_eur": 4.33,
+   "cost_actual_eur": 4.32,
    "cash_cost_eur": 4.7,
    "cost_without_eur": 4.18,
-   "saving_eur": -0.15,
+   "saving_eur": -0.14,
    "battery_home_kwh": 12.5,
    "battery_home_value_eur": 2.88,
    "arbitrage_kwh": 5.5,
    "arbitrage_income_eur": 1.2,
-   "reserve_kwh": 12.1,
-   "reserve_value_eur": 2.56,
+   "reserve_kwh": 10.25,
+   "reserve_value_eur": 2.19,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.8,
    "grid_charged_kwh": 18.9,
    "grid_charge_cost_eur": 3.94,
-   "battery_saving_eur": 0.35,
+   "battery_saving_eur": 0.36,
    "solar_saving_eur": -0.5,
    "charged_kwh": 19.7,
    "discharged_kwh": 18.0,
@@ -8885,15 +8577,7 @@
    "soc_end_pct": 48,
    "lots_end": [
     [
-     0.6,
-     0.20164
-    ],
-    [
-     0.8,
-     0.20164
-    ],
-    [
-     0.7,
+     0.25,
      0.20164
     ],
     [
@@ -8994,21 +8678,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 17.9,
-   "cost_actual_eur": 4.09,
+   "cost_actual_eur": 4.07,
    "cash_cost_eur": 2.58,
    "cost_without_eur": 4.28,
-   "saving_eur": 0.18,
+   "saving_eur": 0.21,
    "battery_home_kwh": 15.4,
    "battery_home_value_eur": 3.7,
    "arbitrage_kwh": 3.3,
    "arbitrage_income_eur": 0.73,
-   "reserve_kwh": 5.5,
-   "reserve_value_eur": 1.04,
+   "reserve_kwh": 3.65,
+   "reserve_value_eur": 0.7,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.2,
    "grid_charged_kwh": 11.9,
    "grid_charge_cost_eur": 2.25,
-   "battery_saving_eur": 0.62,
+   "battery_saving_eur": 0.64,
    "solar_saving_eur": -0.44,
    "charged_kwh": 12.1,
    "discharged_kwh": 18.7,
@@ -9019,19 +8705,7 @@
    "soc_end_pct": 21,
    "lots_end": [
     [
-     0.3,
-     0.18808
-    ],
-    [
-     0.8,
-     0.18808
-    ],
-    [
-     0.7,
-     0.18808
-    ],
-    [
-     0.3,
+     0.25,
      0.18808
     ],
     [
@@ -9064,21 +8738,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 11.0,
-   "cost_actual_eur": 2.61,
+   "cost_actual_eur": 2.69,
    "cash_cost_eur": 2.97,
    "cost_without_eur": 3.19,
-   "saving_eur": 0.58,
+   "saving_eur": 0.5,
    "battery_home_kwh": 7.6,
    "battery_home_value_eur": 2.25,
    "arbitrage_kwh": 6.0,
    "arbitrage_income_eur": 1.89,
-   "reserve_kwh": 6.1,
-   "reserve_value_eur": 1.4,
+   "reserve_kwh": 4.25,
+   "reserve_value_eur": 0.98,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.7,
    "grid_charged_kwh": 13.5,
    "grid_charge_cost_eur": 3.11,
-   "battery_saving_eur": 1.24,
+   "battery_saving_eur": 1.16,
    "solar_saving_eur": -0.66,
    "charged_kwh": 14.2,
    "discharged_kwh": 13.6,
@@ -9089,27 +8765,7 @@
    "soc_end_pct": 25,
    "lots_end": [
     [
-     0.6,
-     0.23291
-    ],
-    [
-     0.1,
-     0.21488
-    ],
-    [
-     0.7,
-     0.23291
-    ],
-    [
-     0.3,
-     0.23291
-    ],
-    [
-     0.1,
-     0.21488
-    ],
-    [
-     0.4,
+     0.35,
      0.23063
     ],
     [
@@ -9150,21 +8806,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 9.7,
-   "cost_actual_eur": 2.37,
+   "cost_actual_eur": 2.36,
    "cash_cost_eur": 2.33,
    "cost_without_eur": 2.41,
-   "saving_eur": 0.04,
+   "saving_eur": 0.05,
    "battery_home_kwh": 6.8,
    "battery_home_value_eur": 1.71,
    "arbitrage_kwh": 3.4,
    "arbitrage_income_eur": 0.77,
-   "reserve_kwh": 6.0,
-   "reserve_value_eur": 1.36,
+   "reserve_kwh": 4.15,
+   "reserve_value_eur": 0.94,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.0,
    "grid_charged_kwh": 8.1,
    "grid_charge_cost_eur": 1.83,
-   "battery_saving_eur": 0.16,
+   "battery_saving_eur": 0.18,
    "solar_saving_eur": -0.12,
    "charged_kwh": 10.1,
    "discharged_kwh": 10.2,
@@ -9175,15 +8833,7 @@
    "soc_end_pct": 24,
    "lots_end": [
     [
-     0.8,
-     0.22405
-    ],
-    [
-     0.8,
-     0.22405
-    ],
-    [
-     0.7,
+     0.45,
      0.22405
     ],
     [
@@ -9332,9 +8982,11 @@
    "battery_home_value_eur": 1.75,
    "arbitrage_kwh": 3.2,
    "arbitrage_income_eur": 0.82,
-   "reserve_kwh": 7.7,
-   "reserve_value_eur": 1.78,
+   "reserve_kwh": 5.85,
+   "reserve_value_eur": 1.36,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.6,
    "grid_charged_kwh": 10.6,
    "grid_charge_cost_eur": 2.44,
@@ -9349,35 +9001,7 @@
    "soc_end_pct": 32,
    "lots_end": [
     [
-     0.2,
-     0.22685
-    ],
-    [
-     0.2,
-     0.22685
-    ],
-    [
-     0.1,
-     0.20987
-    ],
-    [
-     0.3,
-     0.22685
-    ],
-    [
-     0.3,
-     0.22685
-    ],
-    [
-     0.3,
-     0.22685
-    ],
-    [
-     0.3,
-     0.22589
-    ],
-    [
-     0.3,
+     0.15,
      0.22589
     ],
     [
@@ -9466,21 +9090,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 12.6,
-   "cost_actual_eur": 3.53,
+   "cost_actual_eur": 3.81,
    "cash_cost_eur": 7.03,
    "cost_without_eur": 2.78,
-   "saving_eur": -0.74,
+   "saving_eur": -1.03,
    "battery_home_kwh": 8.1,
    "battery_home_value_eur": 1.81,
    "arbitrage_kwh": 3.3,
    "arbitrage_income_eur": 0.69,
-   "reserve_kwh": 26.0,
-   "reserve_value_eur": 5.29,
+   "reserve_kwh": 22.5,
+   "reserve_value_eur": 4.58,
    "unknown_kwh": 0.0,
+   "loss_kwh": 1.65,
+   "loss_eur": 0.33,
    "solar_charged_kwh": 1.4,
    "grid_charged_kwh": 28.3,
    "grid_charge_cost_eur": 5.76,
-   "battery_saving_eur": -0.02,
+   "battery_saving_eur": -0.31,
    "solar_saving_eur": -0.72,
    "charged_kwh": 29.7,
    "discharged_kwh": 11.4,
@@ -9491,23 +9117,7 @@
    "soc_end_pct": 90,
    "lots_end": [
     [
-     0.7,
-     0.20066
-    ],
-    [
-     0.8,
-     0.20066
-    ],
-    [
-     0.8,
-     0.20066
-    ],
-    [
-     0.8,
-     0.20066
-    ],
-    [
-     0.7,
+     0.3,
      0.20066
     ],
     [
@@ -9728,21 +9338,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 14.6,
-   "cost_actual_eur": 3.35,
+   "cost_actual_eur": 3.46,
    "cash_cost_eur": 2.82,
    "cost_without_eur": 3.22,
-   "saving_eur": -0.13,
+   "saving_eur": -0.23,
    "battery_home_kwh": 9.2,
    "battery_home_value_eur": 2.07,
    "arbitrage_kwh": 4.8,
    "arbitrage_income_eur": 1.01,
-   "reserve_kwh": 24.4,
-   "reserve_value_eur": 4.75,
+   "reserve_kwh": 20.5,
+   "reserve_value_eur": 3.94,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.4,
+   "loss_eur": 0.09,
    "solar_charged_kwh": 0.3,
    "grid_charged_kwh": 12.1,
    "grid_charge_cost_eur": 2.18,
-   "battery_saving_eur": 0.3,
+   "battery_saving_eur": 0.2,
    "solar_saving_eur": -0.43,
    "charged_kwh": 12.4,
    "discharged_kwh": 14.0,
@@ -9752,66 +9364,6 @@
    "soc_start_pct": 90,
    "soc_end_pct": 82,
    "lots_end": [
-    [
-     0.2,
-     0.18564
-    ],
-    [
-     0.5,
-     0.19753
-    ],
-    [
-     0.3,
-     0.20283
-    ],
-    [
-     0.2,
-     0.20283
-    ],
-    [
-     0.1,
-     0.19003
-    ],
-    [
-     0.2,
-     0.20283
-    ],
-    [
-     0.2,
-     0.20283
-    ],
-    [
-     0.1,
-     0.20283
-    ],
-    [
-     0.1,
-     0.19003
-    ],
-    [
-     0.1,
-     0.20033
-    ],
-    [
-     0.3,
-     0.2153
-    ],
-    [
-     0.5,
-     0.2153
-    ],
-    [
-     0.1,
-     0.20033
-    ],
-    [
-     0.5,
-     0.2153
-    ],
-    [
-     0.5,
-     0.2153
-    ],
     [
      0.5,
      0.21065
@@ -9954,21 +9506,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 9.4,
-   "cost_actual_eur": 2.26,
+   "cost_actual_eur": 2.27,
    "cash_cost_eur": 0.92,
    "cost_without_eur": 1.99,
-   "saving_eur": -0.27,
+   "saving_eur": -0.28,
    "battery_home_kwh": 6.9,
    "battery_home_value_eur": 1.5,
    "arbitrage_kwh": 2.5,
    "arbitrage_income_eur": 0.53,
-   "reserve_kwh": 19.4,
-   "reserve_value_eur": 3.41,
+   "reserve_kwh": 15.5,
+   "reserve_value_eur": 2.6,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.3,
    "grid_charged_kwh": 4.1,
    "grid_charge_cost_eur": 0.57,
-   "battery_saving_eur": 0.07,
+   "battery_saving_eur": 0.06,
    "solar_saving_eur": -0.34,
    "charged_kwh": 4.4,
    "discharged_kwh": 9.4,
@@ -9978,38 +9532,6 @@
    "soc_start_pct": 83,
    "soc_end_pct": 65,
    "lots_end": [
-    [
-     0.1,
-     0.21065
-    ],
-    [
-     0.7,
-     0.21065
-    ],
-    [
-     0.7,
-     0.21065
-    ],
-    [
-     0.7,
-     0.21065
-    ],
-    [
-     0.4,
-     0.21065
-    ],
-    [
-     0.1,
-     0.21697
-    ],
-    [
-     0.4,
-     0.20074
-    ],
-    [
-     0.8,
-     0.20074
-    ],
     [
      0.8,
      0.20074
@@ -10164,21 +9686,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 11.0,
-   "cost_actual_eur": 2.6,
+   "cost_actual_eur": 2.47,
    "cash_cost_eur": 3.27,
    "cost_without_eur": 2.51,
-   "saving_eur": -0.09,
+   "saving_eur": 0.04,
    "battery_home_kwh": 6.9,
    "battery_home_value_eur": 1.6,
    "arbitrage_kwh": 3.9,
    "arbitrage_income_eur": 0.84,
-   "reserve_kwh": 22.4,
-   "reserve_value_eur": 4.08,
+   "reserve_kwh": 18.5,
+   "reserve_value_eur": 3.4,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.8,
    "grid_charged_kwh": 13.0,
    "grid_charge_cost_eur": 2.57,
-   "battery_saving_eur": 0.38,
+   "battery_saving_eur": 0.51,
    "solar_saving_eur": -0.47,
    "charged_kwh": 13.8,
    "discharged_kwh": 10.8,
@@ -10189,27 +9713,7 @@
    "soc_end_pct": 78,
    "lots_end": [
     [
-     0.3,
-     0.17445
-    ],
-    [
-     0.8,
-     0.17445
-    ],
-    [
-     0.8,
-     0.17445
-    ],
-    [
-     0.8,
-     0.17445
-    ],
-    [
-     0.8,
-     0.17445
-    ],
-    [
-     0.6,
+     0.2,
      0.17445
     ],
     [
@@ -10446,21 +9950,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 24.1,
-   "cost_actual_eur": 5.0,
+   "cost_actual_eur": 4.98,
    "cash_cost_eur": 1.71,
    "cost_without_eur": 5.46,
-   "saving_eur": 0.45,
+   "saving_eur": 0.48,
    "battery_home_kwh": 15.3,
    "battery_home_value_eur": 3.44,
    "arbitrage_kwh": 6.2,
    "arbitrage_income_eur": 1.3,
-   "reserve_kwh": 4.6,
-   "reserve_value_eur": 0.79,
+   "reserve_kwh": 0.7,
+   "reserve_value_eur": 0.14,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.3,
    "grid_charged_kwh": 3.4,
    "grid_charge_cost_eur": 0.57,
-   "battery_saving_eur": 0.82,
+   "battery_saving_eur": 0.85,
    "solar_saving_eur": -0.37,
    "charged_kwh": 3.7,
    "discharged_kwh": 21.5,
@@ -10471,39 +9977,7 @@
    "soc_end_pct": 20,
    "lots_end": [
     [
-     0.1,
-     0.18737
-    ],
-    [
-     0.7,
-     0.18737
-    ],
-    [
-     0.1,
-     0.17725
-    ],
-    [
-     0.4,
-     0.16202
-    ],
-    [
-     0.7,
-     0.16202
-    ],
-    [
-     0.8,
-     0.16202
-    ],
-    [
-     0.7,
-     0.16202
-    ],
-    [
-     0.1,
-     0.1563
-    ],
-    [
-     0.6,
+     0.3,
      0.1657
     ],
     [
@@ -10532,21 +10006,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 22.7,
-   "cost_actual_eur": 5.35,
+   "cost_actual_eur": 5.53,
    "cash_cost_eur": 5.77,
    "cost_without_eur": 5.49,
-   "saving_eur": 0.14,
+   "saving_eur": -0.04,
    "battery_home_kwh": 12.0,
    "battery_home_value_eur": 2.94,
    "arbitrage_kwh": 3.9,
    "arbitrage_income_eur": 0.89,
-   "reserve_kwh": 5.6,
-   "reserve_value_eur": 1.21,
+   "reserve_kwh": 1.7,
+   "reserve_value_eur": 0.38,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 1.5,
    "grid_charged_kwh": 15.4,
    "grid_charge_cost_eur": 3.31,
-   "battery_saving_eur": 0.61,
+   "battery_saving_eur": 0.43,
    "solar_saving_eur": -0.47,
    "charged_kwh": 16.9,
    "discharged_kwh": 15.9,
@@ -10557,39 +10033,7 @@
    "soc_end_pct": 20,
    "lots_end": [
     [
-     0.7,
-     0.21359
-    ],
-    [
-     0.8,
-     0.21359
-    ],
-    [
-     0.8,
-     0.21359
-    ],
-    [
-     1.0,
-     0.21359
-    ],
-    [
      0.1,
-     0.21359
-    ],
-    [
-     0.1,
-     0.19892
-    ],
-    [
-     0.1,
-     0.21359
-    ],
-    [
-     0.2,
-     0.21359
-    ],
-    [
-     0.2,
      0.21359
     ],
     [
@@ -10662,21 +10106,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 11.5,
-   "cost_actual_eur": 3.16,
+   "cost_actual_eur": 3.23,
    "cash_cost_eur": 4.59,
    "cost_without_eur": 3.03,
-   "saving_eur": -0.14,
+   "saving_eur": -0.21,
    "battery_home_kwh": 7.7,
    "battery_home_value_eur": 2.05,
    "arbitrage_kwh": 3.5,
    "arbitrage_income_eur": 0.86,
-   "reserve_kwh": 11.5,
-   "reserve_value_eur": 2.64,
+   "reserve_kwh": 7.6,
+   "reserve_value_eur": 1.74,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.3,
    "grid_charged_kwh": 16.8,
    "grid_charge_cost_eur": 3.87,
-   "battery_saving_eur": 0.4,
+   "battery_saving_eur": 0.33,
    "solar_saving_eur": -0.54,
    "charged_kwh": 17.1,
    "discharged_kwh": 11.2,
@@ -10687,31 +10133,7 @@
    "soc_end_pct": 41,
    "lots_end": [
     [
-     0.1,
-     0.23213
-    ],
-    [
-     0.7,
-     0.23213
-    ],
-    [
-     0.7,
-     0.23213
-    ],
-    [
-     0.8,
-     0.23213
-    ],
-    [
-     0.7,
-     0.22926
-    ],
-    [
-     0.7,
-     0.22926
-    ],
-    [
-     0.7,
+     0.5,
      0.22926
     ],
     [
@@ -10776,21 +10198,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 7.3,
-   "cost_actual_eur": 1.8,
+   "cost_actual_eur": 1.79,
    "cash_cost_eur": 4.46,
    "cost_without_eur": 1.74,
-   "saving_eur": -0.06,
+   "saving_eur": -0.05,
    "battery_home_kwh": 5.1,
    "battery_home_value_eur": 1.24,
    "arbitrage_kwh": 1.0,
    "arbitrage_income_eur": 0.23,
-   "reserve_kwh": 23.4,
-   "reserve_value_eur": 5.31,
+   "reserve_kwh": 19.5,
+   "reserve_value_eur": 4.42,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 3.5,
    "grid_charged_kwh": 14.5,
    "grid_charge_cost_eur": 3.3,
-   "battery_saving_eur": 0.06,
+   "battery_saving_eur": 0.07,
    "solar_saving_eur": -0.12,
    "charged_kwh": 18.0,
    "discharged_kwh": 6.1,
@@ -10801,35 +10225,7 @@
    "soc_end_pct": 81,
    "lots_end": [
     [
-     0.5,
-     0.22926
-    ],
-    [
-     0.7,
-     0.22926
-    ],
-    [
-     0.1,
-     0.21187
-    ],
-    [
-     0.7,
-     0.22926
-    ],
-    [
-     0.7,
-     0.22926
-    ],
-    [
-     0.6,
-     0.22926
-    ],
-    [
-     0.1,
-     0.21187
-    ],
-    [
-     0.8,
+     0.3,
      0.22926
     ],
     [
@@ -11110,17 +10506,19 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 15.4,
-   "cost_actual_eur": 3.94,
+   "cost_actual_eur": 3.93,
    "cash_cost_eur": 0.26,
    "cost_without_eur": 3.6,
-   "saving_eur": -0.34,
+   "saving_eur": -0.33,
    "battery_home_kwh": 10.4,
    "battery_home_value_eur": 2.43,
    "arbitrage_kwh": 5.8,
    "arbitrage_income_eur": 1.26,
-   "reserve_kwh": 7.2,
-   "reserve_value_eur": 1.63,
+   "reserve_kwh": 3.3,
+   "reserve_value_eur": 0.74,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.0,
    "grid_charged_kwh": 0.0,
    "grid_charge_cost_eur": 0.0,
@@ -11134,110 +10532,6 @@
    "soc_start_pct": 81,
    "soc_end_pct": 21,
    "lots_end": [
-    [
-     0.5,
-     0.22559
-    ],
-    [
-     0.1,
-     0.20883
-    ],
-    [
-     0.4,
-     0.2276
-    ],
-    [
-     0.1,
-     0.22737
-    ],
-    [
-     0.1,
-     0.24802
-    ],
-    [
-     0.2,
-     0.22737
-    ],
-    [
-     0.2,
-     0.22737
-    ],
-    [
-     0.1,
-     0.24241
-    ],
-    [
-     0.1,
-     0.22274
-    ],
-    [
-     0.1,
-     0.22274
-    ],
-    [
-     0.1,
-     0.24241
-    ],
-    [
-     0.1,
-     0.22274
-    ],
-    [
-     0.2,
-     0.22274
-    ],
-    [
-     0.1,
-     0.23825
-    ],
-    [
-     0.1,
-     0.21929
-    ],
-    [
-     0.2,
-     0.21929
-    ],
-    [
-     0.1,
-     0.23825
-    ],
-    [
-     0.2,
-     0.21929
-    ],
-    [
-     0.1,
-     0.23825
-    ],
-    [
-     0.1,
-     0.21773
-    ],
-    [
-     0.1,
-     0.21773
-    ],
-    [
-     0.1,
-     0.23636
-    ],
-    [
-     0.1,
-     0.21773
-    ],
-    [
-     0.1,
-     0.21773
-    ],
-    [
-     0.2,
-     0.21773
-    ],
-    [
-     0.1,
-     0.23636
-    ],
     [
      0.1,
      0.23636
@@ -11332,21 +10626,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 12.0,
-   "cost_actual_eur": 3.14,
+   "cost_actual_eur": 3.06,
    "cash_cost_eur": 4.63,
    "cost_without_eur": 2.8,
-   "saving_eur": -0.33,
+   "saving_eur": -0.26,
    "battery_home_kwh": 7.9,
    "battery_home_value_eur": 1.86,
    "arbitrage_kwh": 4.0,
    "arbitrage_income_eur": 0.87,
-   "reserve_kwh": 14.9,
-   "reserve_value_eur": 3.12,
+   "reserve_kwh": 11.0,
+   "reserve_value_eur": 2.31,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 1.1,
    "grid_charged_kwh": 18.5,
    "grid_charge_cost_eur": 3.88,
-   "battery_saving_eur": 0.12,
+   "battery_saving_eur": 0.2,
    "solar_saving_eur": -0.46,
    "charged_kwh": 19.6,
    "discharged_kwh": 11.9,
@@ -11357,31 +10653,7 @@
    "soc_end_pct": 49,
    "lots_end": [
     [
-     0.6,
-     0.20768
-    ],
-    [
-     0.8,
-     0.20768
-    ],
-    [
      0.7,
-     0.20768
-    ],
-    [
-     0.1,
-     0.19403
-    ],
-    [
-     0.8,
-     0.20768
-    ],
-    [
-     0.8,
-     0.20768
-    ],
-    [
-     0.8,
      0.20768
     ],
     [
@@ -11486,21 +10758,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 12.3,
-   "cost_actual_eur": 2.97,
+   "cost_actual_eur": 3.01,
    "cash_cost_eur": 2.91,
    "cost_without_eur": 3.32,
-   "saving_eur": 0.35,
+   "saving_eur": 0.31,
    "battery_home_kwh": 8.6,
    "battery_home_value_eur": 2.33,
    "arbitrage_kwh": 3.6,
    "arbitrage_income_eur": 0.91,
-   "reserve_kwh": 13.7,
-   "reserve_value_eur": 3.06,
+   "reserve_kwh": 9.8,
+   "reserve_value_eur": 2.21,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 1.5,
    "grid_charged_kwh": 9.5,
    "grid_charge_cost_eur": 2.14,
-   "battery_saving_eur": 0.7,
+   "battery_saving_eur": 0.66,
    "solar_saving_eur": -0.35,
    "charged_kwh": 11.0,
    "discharged_kwh": 12.2,
@@ -11512,62 +10786,6 @@
    "lots_end": [
     [
      0.5,
-     0.21019
-    ],
-    [
-     0.8,
-     0.21019
-    ],
-    [
-     0.5,
-     0.21019
-    ],
-    [
-     0.1,
-     0.22081
-    ],
-    [
-     0.1,
-     0.22081
-    ],
-    [
-     0.1,
-     0.24009
-    ],
-    [
-     0.1,
-     0.22081
-    ],
-    [
-     0.1,
-     0.22081
-    ],
-    [
-     0.1,
-     0.22081
-    ],
-    [
-     0.1,
-     0.22081
-    ],
-    [
-     0.1,
-     0.25132
-    ],
-    [
-     0.1,
-     0.23009
-    ],
-    [
-     0.4,
-     0.22141
-    ],
-    [
-     0.6,
-     0.22141
-    ],
-    [
-     0.7,
      0.22141
     ],
     [
@@ -11756,21 +10974,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 14.0,
-   "cost_actual_eur": 3.71,
+   "cost_actual_eur": 3.75,
    "cash_cost_eur": 3.03,
    "cost_without_eur": 3.6,
-   "saving_eur": -0.11,
+   "saving_eur": -0.15,
    "battery_home_kwh": 9.7,
    "battery_home_value_eur": 2.5,
    "arbitrage_kwh": 4.5,
    "arbitrage_income_eur": 1.08,
-   "reserve_kwh": 10.4,
-   "reserve_value_eur": 2.38,
+   "reserve_kwh": 6.5,
+   "reserve_value_eur": 1.49,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.3,
    "grid_charged_kwh": 10.6,
    "grid_charge_cost_eur": 2.43,
-   "battery_saving_eur": 0.4,
+   "battery_saving_eur": 0.36,
    "solar_saving_eur": -0.5,
    "charged_kwh": 10.9,
    "discharged_kwh": 14.2,
@@ -11781,35 +11001,7 @@
    "soc_end_pct": 28,
    "lots_end": [
     [
-     0.6,
-     0.22885
-    ],
-    [
-     0.6,
-     0.22885
-    ],
-    [
-     0.5,
-     0.22885
-    ],
-    [
-     0.1,
-     0.21153
-    ],
-    [
-     0.6,
-     0.22885
-    ],
-    [
-     0.6,
-     0.22885
-    ],
-    [
-     0.6,
-     0.22885
-    ],
-    [
-     0.6,
+     0.3,
      0.22885
     ],
     [
@@ -11870,21 +11062,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 11.0,
-   "cost_actual_eur": 3.09,
+   "cost_actual_eur": 3.05,
    "cash_cost_eur": 5.41,
    "cost_without_eur": 2.4,
-   "saving_eur": -0.69,
+   "saving_eur": -0.65,
    "battery_home_kwh": 7.3,
    "battery_home_value_eur": 1.63,
    "arbitrage_kwh": 3.5,
    "arbitrage_income_eur": 0.74,
-   "reserve_kwh": 27.3,
-   "reserve_value_eur": 4.71,
+   "reserve_kwh": 22.5,
+   "reserve_value_eur": 3.85,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.9,
+   "loss_eur": 0.16,
    "solar_charged_kwh": 0.9,
    "grid_charged_kwh": 26.8,
    "grid_charge_cost_eur": 4.62,
-   "battery_saving_eur": -0.09,
+   "battery_saving_eur": -0.05,
    "solar_saving_eur": -0.6,
    "charged_kwh": 27.7,
    "discharged_kwh": 10.8,
@@ -11896,38 +11090,6 @@
    "lots_end": [
     [
      0.1,
-     0.18051
-    ],
-    [
-     0.7,
-     0.18051
-    ],
-    [
-     0.1,
-     0.17157
-    ],
-    [
-     0.8,
-     0.18051
-    ],
-    [
-     0.8,
-     0.18051
-    ],
-    [
-     0.8,
-     0.18051
-    ],
-    [
-     0.7,
-     0.17362
-    ],
-    [
-     0.1,
-     0.16588
-    ],
-    [
-     0.8,
      0.17362
     ],
     [
@@ -12103,18 +11265,20 @@
    "cost_actual_eur": 2.36,
    "cash_cost_eur": 0.87,
    "cost_without_eur": 2.67,
-   "saving_eur": 0.32,
+   "saving_eur": 0.31,
    "battery_home_kwh": 7.2,
    "battery_home_value_eur": 1.68,
    "arbitrage_kwh": 3.8,
    "arbitrage_income_eur": 0.84,
-   "reserve_kwh": 19.3,
-   "reserve_value_eur": 3.22,
+   "reserve_kwh": 14.5,
+   "reserve_value_eur": 2.36,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.6,
    "grid_charged_kwh": 2.4,
    "grid_charge_cost_eur": 0.35,
-   "battery_saving_eur": 0.6,
+   "battery_saving_eur": 0.59,
    "solar_saving_eur": -0.28,
    "charged_kwh": 3.0,
    "discharged_kwh": 11.0,
@@ -12126,34 +11290,6 @@
    "lots_end": [
     [
      0.3,
-     0.17362
-    ],
-    [
-     0.8,
-     0.17362
-    ],
-    [
-     0.8,
-     0.17362
-    ],
-    [
-     0.8,
-     0.18284
-    ],
-    [
-     0.8,
-     0.18284
-    ],
-    [
-     0.7,
-     0.18284
-    ],
-    [
-     0.1,
-     0.17351
-    ],
-    [
-     0.8,
      0.18284
     ],
     [
@@ -12350,21 +11486,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 14.7,
-   "cost_actual_eur": 3.14,
+   "cost_actual_eur": 3.02,
    "cash_cost_eur": 1.86,
    "cost_without_eur": 3.7,
-   "saving_eur": 0.56,
+   "saving_eur": 0.67,
    "battery_home_kwh": 9.5,
    "battery_home_value_eur": 2.39,
    "arbitrage_kwh": 5.4,
    "arbitrage_income_eur": 1.26,
-   "reserve_kwh": 10.0,
-   "reserve_value_eur": 1.94,
+   "reserve_kwh": 5.2,
+   "reserve_value_eur": 1.2,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.5,
    "grid_charged_kwh": 5.1,
    "grid_charge_cost_eur": 1.18,
-   "battery_saving_eur": 1.08,
+   "battery_saving_eur": 1.19,
    "solar_saving_eur": -0.52,
    "charged_kwh": 5.6,
    "discharged_kwh": 14.9,
@@ -12374,126 +11512,6 @@
    "soc_start_pct": 61,
    "soc_end_pct": 24,
    "lots_end": [
-    [
-     0.5,
-     0.15062
-    ],
-    [
-     0.3,
-     0.15062
-    ],
-    [
-     0.2,
-     0.15062
-    ],
-    [
-     0.1,
-     0.15062
-    ],
-    [
-     0.1,
-     0.14687
-    ],
-    [
-     0.2,
-     0.15062
-    ],
-    [
-     0.4,
-     0.13213
-    ],
-    [
-     0.2,
-     0.13213
-    ],
-    [
-     0.3,
-     0.13213
-    ],
-    [
-     0.1,
-     0.13213
-    ],
-    [
-     0.1,
-     0.13159
-    ],
-    [
-     0.2,
-     0.13213
-    ],
-    [
-     0.2,
-     0.13213
-    ],
-    [
-     0.1,
-     0.13213
-    ],
-    [
-     0.1,
-     0.13213
-    ],
-    [
-     0.1,
-     0.13213
-    ],
-    [
-     0.1,
-     0.13159
-    ],
-    [
-     0.1,
-     0.13213
-    ],
-    [
-     0.1,
-     0.1325
-    ],
-    [
-     0.1,
-     0.1325
-    ],
-    [
-     0.1,
-     0.1319
-    ],
-    [
-     0.1,
-     0.1325
-    ],
-    [
-     0.1,
-     0.1319
-    ],
-    [
-     0.1,
-     0.23091
-    ],
-    [
-     0.1,
-     0.21323
-    ],
-    [
-     0.1,
-     0.21323
-    ],
-    [
-     0.1,
-     0.23318
-    ],
-    [
-     0.1,
-     0.23318
-    ],
-    [
-     0.2,
-     0.23046
-    ],
-    [
-     0.2,
-     0.23046
-    ],
     [
      0.2,
      0.23046
@@ -12640,21 +11658,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 10.6,
-   "cost_actual_eur": 2.4,
+   "cost_actual_eur": 2.74,
    "cash_cost_eur": 3.86,
    "cost_without_eur": 2.47,
-   "saving_eur": 0.08,
+   "saving_eur": -0.26,
    "battery_home_kwh": 6.4,
    "battery_home_value_eur": 1.5,
    "arbitrage_kwh": 4.0,
    "arbitrage_income_eur": 0.87,
-   "reserve_kwh": 15.1,
-   "reserve_value_eur": 3.41,
+   "reserve_kwh": 10.3,
+   "reserve_value_eur": 2.32,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 1.4,
    "grid_charged_kwh": 14.1,
    "grid_charge_cost_eur": 3.19,
-   "battery_saving_eur": 0.33,
+   "battery_saving_eur": -0.01,
    "solar_saving_eur": -0.25,
    "charged_kwh": 15.5,
    "discharged_kwh": 10.4,
@@ -12665,31 +11685,7 @@
    "soc_end_pct": 42,
    "lots_end": [
     [
-     0.5,
-     0.22672
-    ],
-    [
-     0.8,
-     0.22672
-    ],
-    [
-     0.7,
-     0.22672
-    ],
-    [
-     0.8,
-     0.22672
-    ],
-    [
-     0.7,
-     0.22479
-    ],
-    [
-     0.8,
-     0.22479
-    ],
-    [
-     0.7,
+     0.2,
      0.22479
     ],
     [
@@ -12846,21 +11842,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 14.3,
-   "cost_actual_eur": 3.78,
+   "cost_actual_eur": 3.75,
    "cash_cost_eur": 3.47,
    "cost_without_eur": 3.41,
-   "saving_eur": -0.37,
+   "saving_eur": -0.34,
    "battery_home_kwh": 8.7,
    "battery_home_value_eur": 2.07,
    "arbitrage_kwh": 6.1,
    "arbitrage_income_eur": 1.36,
-   "reserve_kwh": 14.8,
-   "reserve_value_eur": 3.1,
+   "reserve_kwh": 9.75,
+   "reserve_value_eur": 2.04,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.25,
+   "loss_eur": 0.05,
    "solar_charged_kwh": 0.4,
    "grid_charged_kwh": 14.1,
    "grid_charge_cost_eur": 2.95,
-   "battery_saving_eur": 0.09,
+   "battery_saving_eur": 0.11,
    "solar_saving_eur": -0.46,
    "charged_kwh": 14.5,
    "discharged_kwh": 14.8,
@@ -12871,51 +11869,7 @@
    "soc_end_pct": 39,
    "lots_end": [
     [
-     0.1,
-     0.22187
-    ],
-    [
-     0.1,
-     0.22187
-    ],
-    [
-     0.1,
-     0.24137
-    ],
-    [
-     0.1,
-     0.19531
-    ],
-    [
-     0.3,
-     0.20922
-    ],
-    [
-     0.7,
-     0.20922
-    ],
-    [
-     0.8,
-     0.20922
-    ],
-    [
-     0.7,
-     0.20922
-    ],
-    [
-     0.8,
-     0.20922
-    ],
-    [
-     0.7,
-     0.20922
-    ],
-    [
-     0.1,
-     0.19531
-    ],
-    [
-     0.7,
+     0.15,
      0.20922
     ],
     [
@@ -13008,21 +11962,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 14.8,
-   "cost_actual_eur": 3.61,
+   "cost_actual_eur": 3.56,
    "cash_cost_eur": 3.57,
    "cost_without_eur": 3.36,
-   "saving_eur": -0.25,
+   "saving_eur": -0.2,
    "battery_home_kwh": 9.1,
    "battery_home_value_eur": 2.07,
    "arbitrage_kwh": 6.1,
    "arbitrage_income_eur": 1.29,
-   "reserve_kwh": 15.3,
-   "reserve_value_eur": 3.06,
+   "reserve_kwh": 10.25,
+   "reserve_value_eur": 2.04,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.4,
    "grid_charged_kwh": 15.3,
    "grid_charge_cost_eur": 3.06,
-   "battery_saving_eur": 0.19,
+   "battery_saving_eur": 0.23,
    "solar_saving_eur": -0.43,
    "charged_kwh": 15.7,
    "discharged_kwh": 15.2,
@@ -13033,47 +11989,7 @@
    "soc_end_pct": 45,
    "lots_end": [
     [
-     0.5,
-     0.20122
-    ],
-    [
-     0.6,
-     0.20122
-    ],
-    [
-     0.6,
-     0.20122
-    ],
-    [
-     0.5,
-     0.20122
-    ],
-    [
-     0.6,
-     0.20122
-    ],
-    [
-     0.5,
-     0.20122
-    ],
-    [
-     0.5,
-     0.20122
-    ],
-    [
-     0.1,
-     0.18869
-    ],
-    [
-     0.6,
-     0.20122
-    ],
-    [
-     0.5,
-     0.20122
-    ],
-    [
-     0.6,
+     0.55,
      0.20122
     ],
     [
@@ -13174,21 +12090,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 14.5,
-   "cost_actual_eur": 2.45,
+   "cost_actual_eur": 2.4,
    "cash_cost_eur": 2.88,
    "cost_without_eur": 3.13,
-   "saving_eur": 0.68,
+   "saving_eur": 0.73,
    "battery_home_kwh": 8.6,
    "battery_home_value_eur": 1.87,
    "arbitrage_kwh": 5.8,
    "arbitrage_income_eur": 1.17,
-   "reserve_kwh": 18.3,
-   "reserve_value_eur": 3.49,
+   "reserve_kwh": 13.25,
+   "reserve_value_eur": 2.52,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 1.8,
    "grid_charged_kwh": 15.6,
    "grid_charge_cost_eur": 2.96,
-   "battery_saving_eur": 0.17,
+   "battery_saving_eur": 0.22,
    "solar_saving_eur": 0.52,
    "charged_kwh": 17.4,
    "discharged_kwh": 14.4,
@@ -13199,59 +12117,7 @@
    "soc_end_pct": 60,
    "lots_end": [
     [
-     0.2,
-     0.19995
-    ],
-    [
-     0.2,
-     0.19995
-    ],
-    [
-     0.2,
-     0.19995
-    ],
-    [
-     0.1,
-     0.19995
-    ],
-    [
-     0.1,
-     0.19995
-    ],
-    [
-     0.1,
-     0.19995
-    ],
-    [
-     0.4,
-     0.18972
-    ],
-    [
-     0.6,
-     0.18972
-    ],
-    [
-     0.1,
-     0.17919
-    ],
-    [
-     0.8,
-     0.18972
-    ],
-    [
-     0.7,
-     0.18972
-    ],
-    [
-     0.8,
-     0.18972
-    ],
-    [
-     0.7,
-     0.18972
-    ],
-    [
-     0.8,
+     0.75,
      0.18972
     ],
     [
@@ -13444,21 +12310,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 7.9,
-   "cost_actual_eur": 1.55,
+   "cost_actual_eur": 1.56,
    "cash_cost_eur": 2.4,
    "cost_without_eur": 1.7,
-   "saving_eur": 0.15,
+   "saving_eur": 0.14,
    "battery_home_kwh": 4.9,
    "battery_home_value_eur": 1.08,
    "arbitrage_kwh": 3.0,
    "arbitrage_income_eur": 0.6,
-   "reserve_kwh": 23.2,
-   "reserve_value_eur": 4.34,
+   "reserve_kwh": 18.0,
+   "reserve_value_eur": 3.36,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.15,
+   "loss_eur": 0.03,
    "solar_charged_kwh": 5.2,
    "grid_charged_kwh": 7.6,
    "grid_charge_cost_eur": 1.43,
-   "battery_saving_eur": 0.17,
+   "battery_saving_eur": 0.16,
    "solar_saving_eur": -0.02,
    "charged_kwh": 12.8,
    "discharged_kwh": 7.9,
@@ -13469,47 +12337,7 @@
    "soc_end_pct": 72,
    "lots_end": [
     [
-     0.1,
-     0.17835
-    ],
-    [
-     0.7,
-     0.18871
-    ],
-    [
-     0.7,
-     0.18871
-    ],
-    [
-     0.7,
-     0.18871
-    ],
-    [
-     0.6,
-     0.18871
-    ],
-    [
-     0.1,
-     0.17835
-    ],
-    [
-     0.6,
-     0.18871
-    ],
-    [
-     0.6,
-     0.18871
-    ],
-    [
-     0.4,
-     0.18871
-    ],
-    [
-     0.5,
-     0.18871
-    ],
-    [
-     0.4,
+     0.2,
      0.18871
     ],
     [
@@ -13986,21 +12814,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 10.5,
-   "cost_actual_eur": 1.99,
+   "cost_actual_eur": 2.23,
    "cash_cost_eur": 2.05,
    "cost_without_eur": 2.66,
-   "saving_eur": 0.68,
+   "saving_eur": 0.44,
    "battery_home_kwh": 6.5,
    "battery_home_value_eur": 1.65,
    "arbitrage_kwh": 3.9,
    "arbitrage_income_eur": 0.9,
-   "reserve_kwh": 22.0,
-   "reserve_value_eur": 4.41,
+   "reserve_kwh": 15.5,
+   "reserve_value_eur": 3.19,
    "unknown_kwh": 0.0,
+   "loss_kwh": 1.3,
+   "loss_eur": 0.24,
    "solar_charged_kwh": 4.5,
    "grid_charged_kwh": 4.7,
    "grid_charge_cost_eur": 1.08,
-   "battery_saving_eur": 0.58,
+   "battery_saving_eur": 0.34,
    "solar_saving_eur": 0.1,
    "charged_kwh": 9.2,
    "discharged_kwh": 10.4,
@@ -14010,138 +12840,6 @@
    "soc_start_pct": 72,
    "soc_end_pct": 62,
    "lots_end": [
-    [
-     0.2,
-     0.18894
-    ],
-    [
-     0.3,
-     0.18894
-    ],
-    [
-     0.3,
-     0.18894
-    ],
-    [
-     0.3,
-     0.18894
-    ],
-    [
-     0.3,
-     0.18894
-    ],
-    [
-     0.3,
-     0.18894
-    ],
-    [
-     0.3,
-     0.18894
-    ],
-    [
-     0.3,
-     0.18894
-    ],
-    [
-     0.3,
-     0.18894
-    ],
-    [
-     0.3,
-     0.18894
-    ],
-    [
-     0.2,
-     0.18894
-    ],
-    [
-     0.2,
-     0.17854
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.1,
-     0.18718
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.2,
-     0.18718
-    ],
-    [
-     0.1,
-     0.18578
-    ],
-    [
-     0.1,
-     0.19278
-    ],
-    [
-     0.1,
-     0.19278
-    ],
-    [
-     0.1,
-     0.19278
-    ],
-    [
-     0.1,
-     0.19278
-    ],
-    [
-     0.1,
-     0.17962
-    ],
-    [
-     0.1,
-     0.17962
-    ],
-    [
-     0.1,
-     0.17962
-    ],
-    [
-     0.1,
-     0.17962
-    ],
     [
      0.1,
      0.19024
@@ -14648,21 +13346,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 26.4,
-   "cost_actual_eur": 6.27,
+   "cost_actual_eur": 6.51,
    "cash_cost_eur": 3.8,
    "cost_without_eur": 6.33,
-   "saving_eur": 0.06,
+   "saving_eur": -0.18,
    "battery_home_kwh": 13.1,
    "battery_home_value_eur": 3.15,
    "arbitrage_kwh": 8.6,
    "arbitrage_income_eur": 1.91,
-   "reserve_kwh": 8.6,
-   "reserve_value_eur": 1.94,
+   "reserve_kwh": 2.1,
+   "reserve_value_eur": 0.48,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 1.4,
    "grid_charged_kwh": 6.9,
    "grid_charge_cost_eur": 1.57,
-   "battery_saving_eur": 0.73,
+   "battery_saving_eur": 0.49,
    "solar_saving_eur": -0.66,
    "charged_kwh": 8.3,
    "discharged_kwh": 21.7,
@@ -14672,170 +13372,6 @@
    "soc_start_pct": 62,
    "soc_end_pct": 21,
    "lots_end": [
-    [
-     0.1,
-     0.23872
-    ],
-    [
-     0.1,
-     0.23431
-    ],
-    [
-     0.1,
-     0.25642
-    ],
-    [
-     0.1,
-     0.20991
-    ],
-    [
-     0.1,
-     0.22689
-    ],
-    [
-     0.1,
-     0.22689
-    ],
-    [
-     0.1,
-     0.22689
-    ],
-    [
-     0.2,
-     0.22689
-    ],
-    [
-     0.1,
-     0.20991
-    ],
-    [
-     0.1,
-     0.22689
-    ],
-    [
-     0.1,
-     0.22689
-    ],
-    [
-     0.1,
-     0.20991
-    ],
-    [
-     0.1,
-     0.22689
-    ],
-    [
-     0.1,
-     0.22689
-    ],
-    [
-     0.1,
-     0.22689
-    ],
-    [
-     0.1,
-     0.20991
-    ],
-    [
-     0.1,
-     0.22689
-    ],
-    [
-     0.2,
-     0.21066
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.1,
-     0.21066
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.1,
-     0.21066
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.2,
-     0.2278
-    ],
-    [
-     0.1,
-     0.21001
-    ],
-    [
-     0.2,
-     0.22539
-    ],
-    [
-     0.3,
-     0.22539
-    ],
-    [
-     0.2,
-     0.22539
-    ],
-    [
-     0.2,
-     0.22539
-    ],
-    [
-     0.2,
-     0.22539
-    ],
-    [
-     0.1,
-     0.20373
-    ],
-    [
-     0.3,
-     0.22742
-    ],
-    [
-     0.4,
-     0.22742
-    ],
-    [
-     0.1,
-     0.21034
-    ],
     [
      0.4,
      0.22742
@@ -14886,21 +13422,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 15.0,
-   "cost_actual_eur": 3.66,
+   "cost_actual_eur": 3.64,
    "cash_cost_eur": 4.71,
    "cost_without_eur": 3.74,
-   "saving_eur": 0.09,
+   "saving_eur": 0.1,
    "battery_home_kwh": 9.2,
    "battery_home_value_eur": 2.3,
    "arbitrage_kwh": 6.2,
    "arbitrage_income_eur": 1.42,
-   "reserve_kwh": 13.5,
-   "reserve_value_eur": 2.99,
+   "reserve_kwh": 7.0,
+   "reserve_value_eur": 1.55,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 3.7,
    "grid_charged_kwh": 16.6,
    "grid_charge_cost_eur": 3.73,
-   "battery_saving_eur": 0.26,
+   "battery_saving_eur": 0.27,
    "solar_saving_eur": -0.17,
    "charged_kwh": 20.3,
    "discharged_kwh": 15.4,
@@ -14911,51 +13449,7 @@
    "soc_end_pct": 41,
    "lots_end": [
     [
-     0.7,
-     0.2232
-    ],
-    [
-     0.8,
-     0.2232
-    ],
-    [
-     0.6,
-     0.2232
-    ],
-    [
-     0.2,
-     0.20686
-    ],
-    [
-     0.6,
-     0.2232
-    ],
-    [
-     0.5,
-     0.2232
-    ],
-    [
-     0.6,
-     0.2232
-    ],
-    [
-     0.6,
-     0.2232
-    ],
-    [
-     0.5,
-     0.2232
-    ],
-    [
-     0.6,
-     0.2241
-    ],
-    [
-     0.6,
-     0.2241
-    ],
-    [
-     0.5,
+     0.3,
      0.2241
     ],
     [
@@ -15152,21 +13646,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 11.7,
-   "cost_actual_eur": 3.11,
+   "cost_actual_eur": 3.14,
    "cash_cost_eur": 3.08,
    "cost_without_eur": 2.91,
-   "saving_eur": -0.2,
+   "saving_eur": -0.23,
    "battery_home_kwh": 8.4,
    "battery_home_value_eur": 2.08,
    "arbitrage_kwh": 3.9,
    "arbitrage_income_eur": 0.9,
-   "reserve_kwh": 13.0,
-   "reserve_value_eur": 2.96,
+   "reserve_kwh": 6.5,
+   "reserve_value_eur": 1.49,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 0.5,
    "grid_charged_kwh": 11.3,
    "grid_charge_cost_eur": 2.59,
-   "battery_saving_eur": 0.25,
+   "battery_saving_eur": 0.23,
    "solar_saving_eur": -0.45,
    "charged_kwh": 11.8,
    "discharged_kwh": 12.3,
@@ -15177,91 +13673,7 @@
    "soc_end_pct": 35,
    "lots_end": [
     [
-     0.1,
-     0.20906
-    ],
-    [
-     0.1,
-     0.22586
-    ],
-    [
-     0.1,
-     0.22586
-    ],
-    [
-     0.1,
-     0.20906
-    ],
-    [
-     0.1,
-     0.22587
-    ],
-    [
-     0.1,
-     0.20906
-    ],
-    [
-     0.1,
-     0.22587
-    ],
-    [
-     0.1,
-     0.20906
-    ],
-    [
-     0.1,
-     0.2147
-    ],
-    [
-     0.1,
-     0.23269
-    ],
-    [
-     0.1,
-     0.2147
-    ],
-    [
-     0.1,
-     0.22738
-    ],
-    [
-     0.1,
-     0.22849
-    ],
-    [
      0.3,
-     0.22849
-    ],
-    [
-     0.7,
-     0.22849
-    ],
-    [
-     0.7,
-     0.22849
-    ],
-    [
-     0.7,
-     0.22849
-    ],
-    [
-     0.1,
-     0.21123
-    ],
-    [
-     0.8,
-     0.22849
-    ],
-    [
-     0.7,
-     0.22849
-    ],
-    [
-     0.7,
-     0.22849
-    ],
-    [
-     0.8,
      0.22849
     ],
     [
@@ -15330,21 +13742,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 9.4,
-   "cost_actual_eur": 2.42,
+   "cost_actual_eur": 2.38,
    "cash_cost_eur": 4.05,
    "cost_without_eur": 2.28,
-   "saving_eur": -0.13,
+   "saving_eur": -0.1,
    "battery_home_kwh": 6.5,
    "battery_home_value_eur": 1.59,
    "arbitrage_kwh": 3.1,
    "arbitrage_income_eur": 0.7,
-   "reserve_kwh": 21.3,
-   "reserve_value_eur": 4.59,
+   "reserve_kwh": 14.8,
+   "reserve_value_eur": 3.15,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.6,
    "grid_charged_kwh": 15.3,
    "grid_charge_cost_eur": 3.27,
-   "battery_saving_eur": 0.1,
+   "battery_saving_eur": 0.14,
    "solar_saving_eur": -0.24,
    "charged_kwh": 17.9,
    "discharged_kwh": 9.6,
@@ -15355,67 +13769,7 @@
    "soc_end_pct": 63,
    "lots_end": [
     [
-     0.1,
-     0.21267
-    ],
-    [
-     0.7,
-     0.23024
-    ],
-    [
-     0.4,
-     0.23024
-    ],
-    [
-     0.5,
-     0.23024
-    ],
-    [
-     0.7,
-     0.23024
-    ],
-    [
-     0.7,
-     0.23024
-    ],
-    [
-     0.1,
-     0.23024
-    ],
-    [
-     0.1,
-     0.22463
-    ],
-    [
-     0.1,
-     0.22518
-    ],
-    [
-     0.1,
-     0.2132
-    ],
-    [
-     0.5,
-     0.2132
-    ],
-    [
-     0.7,
-     0.2132
-    ],
-    [
-     0.7,
-     0.2132
-    ],
-    [
-     0.6,
-     0.2132
-    ],
-    [
-     0.1,
-     0.19859
-    ],
-    [
-     0.7,
+     0.3,
      0.2132
     ],
     [
@@ -15632,21 +13986,23 @@
    "supplier": "Frank Energie",
    "saldering": true,
    "consumption_kwh": 10.7,
-   "cost_actual_eur": 2.62,
+   "cost_actual_eur": 2.56,
    "cash_cost_eur": 2.19,
    "cost_without_eur": 2.54,
-   "saving_eur": -0.08,
+   "saving_eur": -0.02,
    "battery_home_kwh": 7.0,
    "battery_home_value_eur": 1.66,
    "arbitrage_kwh": 3.7,
    "arbitrage_income_eur": 0.81,
-   "reserve_kwh": 19.3,
-   "reserve_value_eur": 4.16,
+   "reserve_kwh": 12.8,
+   "reserve_value_eur": 2.78,
    "unknown_kwh": 0.0,
+   "loss_kwh": 0.0,
+   "loss_eur": 0.0,
    "solar_charged_kwh": 2.4,
    "grid_charged_kwh": 6.3,
    "grid_charge_cost_eur": 1.4,
-   "battery_saving_eur": 0.14,
+   "battery_saving_eur": 0.2,
    "solar_saving_eur": -0.22,
    "charged_kwh": 8.7,
    "discharged_kwh": 10.7,
@@ -15657,51 +14013,7 @@
    "soc_end_pct": 53,
    "lots_end": [
     [
-     0.3,
-     0.2132
-    ],
-    [
-     0.7,
-     0.21234
-    ],
-    [
-     0.7,
-     0.21234
-    ],
-    [
-     0.8,
-     0.21234
-    ],
-    [
-     0.7,
-     0.21234
-    ],
-    [
-     0.7,
-     0.21234
-    ],
-    [
-     0.6,
-     0.21234
-    ],
-    [
      0.1,
-     0.19788
-    ],
-    [
-     0.6,
-     0.21234
-    ],
-    [
-     0.5,
-     0.21234
-    ],
-    [
-     0.5,
-     0.21234
-    ],
-    [
-     0.4,
      0.21234
     ],
     [
