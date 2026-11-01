@@ -411,7 +411,7 @@
       const best = moments[0];
       const bestCt = fmtNum(priceCents(best.avg, "inclusive"), 1);
       tipEl.innerHTML = `<strong>Beste moment morgen: ${fmtTime(best.startIso)}–${endTime(best.endIso)}</strong>
-        &nbsp;(${bestCt} ct/kWh)&nbsp;— ideaal voor wasmachine, droger, EV-laden of warmtepomp.`;
+        &nbsp;(${bestCt} ct/kWh)&nbsp;— het gunstigste moment voor wasmachine, droger, EV-laden of warmtepomp.`;
     }
   }
 
@@ -506,7 +506,7 @@
     if (bestM) {
       parts.push(`Het beste 2-uurs venster is van <strong>${fmtTime(bestM.startIso)} tot ${endTime(bestM.endIso)}</strong>
         (gem. ${fmtNum(priceCents(bestM.avg, "inclusive"), 1)} ct/kWh)
-        — ideaal voor EV laden, wasmachine of warmtepomp.`);
+        — het gunstigste moment voor EV laden, wasmachine of warmtepomp.`);
     }
 
     if (priceCents(peak.price, "inclusive") > 28) {
