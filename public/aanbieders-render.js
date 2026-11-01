@@ -35,7 +35,23 @@
     api:      { kort: "open API",      lang: "Officiële open API" }
   };
 
+  // Beeldmerken in /logos, opgehaald van de eigen site van de aanbieder
+  // (apple-touch-icon of favicon). Zonder bestand toont de lijst een letter.
+  var LOGO = {
+    anwb: "anwb.png", budget: "budget.png", coolblue: "coolblue.png", delta: "delta.ico", easy: "easy.ico",
+    eneco: "eneco.png", energiedirect: "energiedirect.png", energievanons: "energievanons.png",
+    energyzero: "energyzero.png", engie: "engie.svg", essent: "essent.png", frank: "frank.png",
+    greenchoice: "greenchoice.png", mega: "mega.png", nextenergy: "nextenergy.png", om: "om.jpg",
+    oxxio: "oxxio.png", powerpeers: "powerpeers.png", pure: "pure.png", tibber: "tibber.png",
+    vandebron: "vandebron.png", vattenfall: "vattenfall.ico", vrijopnaam: "vrijopnaam.png", zonneplan: "zonneplan.png"
+  };
+
   // ── opmaak ───────────────────────────────────────────────────────────
+  function logoHtml(s) {
+    if (LOGO[s.id]) return '<img class="aanb-logo" src="/logos/' + LOGO[s.id] + '" alt="" width="24" height="24" loading="lazy" decoding="async">';
+    return '<span class="aanb-logo aanb-logo-letter" aria-hidden="true">' + esc((s.name || "?").charAt(0).toUpperCase()) + "</span>";
+  }
+
   function esc(t) {
     return String(t == null ? "" : t)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -223,7 +239,7 @@
             (k.rekening != null ? ' data-rekening="' + Math.round(k.rekening) + '"' : "") + ">";
     h += '<div class="aanb-rij-kop">';
     h += '<button type="button" class="aanb-open" aria-expanded="' + (open ? "true" : "false") + '" aria-controls="det-' + id + '">';
-    h += '<span class="aanb-naam"><span class="aanb-nr">' + nr + '.</span> ' + esc(s.name) + "</span>";
+    h += '<span class="aanb-naam"><span class="aanb-nr">' + nr + '.</span> ' + logoHtml(s) + esc(s.name) + "</span>";
     h += '<span class="aanb-cellen">';
     h += '<span class="aanb-cel"><span class="aanb-lbl">opslag </span><b>' + ct(s.markup_per_kwh * f) + " ct</b>" + teken(herkomstVan(s, "opslag"), { lijst: true }) + "</span>";
     h += '<span class="aanb-cel"><span class="aanb-lbl">vast </span><b>' + (s.fixed_unconfirmed ? "≈ " : "") + eur2(s.fixed_per_month * f) + "</b>" + teken(herkomstVan(s, "vast"), { lijst: true }) + "</span>";
@@ -418,7 +434,7 @@
 
     var h = '<p class="vgl-samenvatting">' + zin + "</p>";
     h += '<table class="vgl-tabel"><thead><tr><th scope="col"><span class="sr">Eigenschap</span></th>';
-    sel.forEach(function (s) { h += '<th scope="col">' + esc(s.name) + "</th>"; });
+    sel.forEach(function (s) { h += '<th scope="col">' + logoHtml(s) + esc(s.name) + "</th>"; });
     h += "</tr></thead><tbody>";
     var laatste = "", getoond = 0;
     rijen.forEach(function (rw) {
