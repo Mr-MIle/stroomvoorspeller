@@ -1,8 +1,8 @@
 {
   "_comment": "Bron voor /ere-vergelijken. Tien inboekdienstverleners voor particulieren met een eigen laadpaal thuis. Netto per kWh wordt NIET hier opgeslagen maar berekend: ere_prijs x ere_per_kwh x (1 - commissie), met een bodem als de inboeker een garantie geeft. Zo blijft er een getal en een rekenregel, niet een overgeschreven claim. Werk dit bestand bij en draai daarna 'node build-ere.js'.",
   "versie": 1,
-  "bijgewerkt": "2026-10-14",
-  "volgende_controle": "2026-11-14",
+  "bijgewerkt": "2026-11-01",
+  "volgende_controle": "2026-12-01",
 
   "markt": {
     "ere_per_kwh": 0.33269,
@@ -49,7 +49,7 @@
   "aannames": {
     "kwh_per_jaar": 2000,
     "km_per_kwh": 6,
-    "toelichting": "2.000 kilowattuur thuisladen komt bij ongeveer 6 kilometer per kilowattuur neer op zo'n 12.000 kilometer per jaar. Vul je eigen aantal in en alles rekent mee."
+    "toelichting": "2.000 kilowattuur thuisladen komt bij ongeveer 6 kilometer per kilowattuur neer op zo'n 12.000 kilometer per jaar. Vul je eigen aantal in en alles rekent mee. Let op de grens die de NEa stelt: je mag niet meer kilowatturen laten inboeken dan je over het jaar netto van het net afneemt, dus afname min teruglevering."
   },
 
   "inboekers": [
@@ -59,12 +59,12 @@
       "url": "https://www.zeres.nl/",
       "commissie": 0.19,
       "commissie_tekst": "19% voor particulieren",
-      "commissie_detail": "Zakelijk 13%. Laad je thuis voor je werkgever, dan gaat er 5 procentpunt af.",
+      "commissie_detail": "Zakelijk 13%. Laad je thuis voor je werkgever, dan gaat er 5 procentpunt af. Bij elke verlenging gaat er 1 procentpunt af, tot 14 procent na vijf jaar.",
       "vaste_kosten": 0,
       "prijsmodel": "garantie",
       "garantie_per_kwh": 0.13,
       "uitbetaling": "per kwartaal",
-      "uitbetaling_detail": "Eerste uitbetaling op 6 juli 2026, een voorschot van 50 procent over het eerste kwartaal. Het eerste tot en met het derde kwartaal worden samen afgerekend na 25 oktober 2026, zodra het register dat toelaat.",
+      "uitbetaling_detail": "Eerste uitbetaling op 6 juli 2026, een voorschot van 50 procent over het eerste kwartaal. Het eerste tot en met het derde kwartaal worden samen afgerekend; Zeres verwacht dat medio november 2026 te doen, zodra het register het toelaat.",
       "contract": "Per kalenderjaar, geen abonnement en geen vaste kosten.",
       "eis_klant": null,
       "laadpalen": "Merkonafhankelijk met MID-meter. Handleidingen voor onder meer Easee, Alfen en Zaptec; ook handmatig doorgeven kan.",
@@ -72,10 +72,10 @@
       "uitbetaald": [
         { "periode": "2026-Q1", "netto_per_kwh": 0.122, "commissie_toen": 0.19, "bron": "https://energienerds.nl/index.php/2026/07/01/ere-inboeker-ervaringen" }
       ],
-      "sterk": "Noemt als enige een bedrag per kilowattuur voor heel 2026 en betaalt per kwartaal. Nu de ERE-prijs is gedaald levert dat meer op dan een lage commissie over een lagere marktprijs.",
-      "let_op": "Zeres noemt € 0,13 per kilowattuur voor Q1 tot en met Q3 2026, maar gebruikt het woord garantie of bodem er niet bij en schrijft zelf dat de complianceregels nog kunnen wijzigen. Wat er voor 2027 wordt afgesproken is niet bekend. Of het bedrag in de voorwaarden vastligt staat alleen in de algemene voorwaarden, en die zijn alleen als pdf te lezen.",
+      "sterk": "Noemt als enige een bedrag per kilowattuur, € 0,13 voor het eerste en tweede kwartaal van 2026, en betaalt per kwartaal. Nu de ERE-prijs is gedaald levert dat meer op dan een lage commissie over een lagere marktprijs.",
+      "let_op": "Dat bedrag van € 0,13 staat op de homepage en geldt daar voor het eerste en tweede kwartaal van 2026. De voorwaarden van 21 oktober 2026 noemen geen enkel bedrag per kilowattuur, en artikel 4.2 zegt dat Zeres geen opbrengst en geen ERE-prijs garandeert. De vraagbaak komt bovendien op 12 cent uit waar de homepage 13 cent noemt. Het is dus een aangekondigd bedrag, waar je Zeres contractueel niet aan kunt houden. Wat er voor 2027 geldt staat nergens.",
       "bron": "https://www.zeres.nl/",
-      "gecontroleerd": "2026-10-14"
+      "gecontroleerd": "2026-11-01"
     },
     {
       "id": "laadbeloning",
@@ -97,7 +97,7 @@
       "sterk": "Laagste commissie van de tien.",
       "let_op": "De 10 procent van Compleet koop je met een machtiging van drie jaar; bij één jaar is het 15 procent. Laadbeloning noemt zelf een gemiddelde van ongeveer 10 cent per kilowattuur, met een bandbreedte van 5 tot 30 cent, en heeft nog geen uitbetaling gemeld.",
       "bron": "https://laadbeloning.nl/",
-      "gecontroleerd": "2026-10-14"
+      "gecontroleerd": "2026-11-01"
     },
     {
       "id": "stekker",
@@ -119,7 +119,7 @@
       "sterk": "Rekent de omrekening voor: 0,33269 ERE per geladen kilowattuur. Daarnaast een vergoeding voor netcongestie van ongeveer 20 euro per jaar.",
       "let_op": "Stekker noemt zelf 13,6 cent netto per kilowattuur voor 2026. Dat cijfer hoort bij de hoge ERE-prijzen van het eerste halfjaar en is nog niet als uitbetaling bevestigd. Over het opstartjaar betaalt Stekker pas na afloop van 2026 uit.",
       "bron": "https://stekker.com/ere",
-      "gecontroleerd": "2026-10-14"
+      "gecontroleerd": "2026-11-01"
     },
     {
       "id": "joulo",
@@ -145,7 +145,7 @@
       "let_op": "De hoogste commissie van de vier goedkoopste aanbieders, tenzij je hem met verwijzingen omlaag brengt. Alle acht verkopen staan nog op uitbetaalstatus gepland.",
       "disclosure": "Ik ben hier zelf klant. In mijn ERE-artikel staat een verwijslink naar Joulo, en daar heb ik voordeel bij. Die link staat bewust niet op deze pagina en heeft geen invloed op de volgorde hieronder.",
       "bron": "https://joulo.nl/geld-verdienen-met-laadstation",
-      "gecontroleerd": "2026-10-14"
+      "gecontroleerd": "2026-11-01"
     },
     {
       "id": "laadloon",
@@ -153,7 +153,7 @@
       "url": "https://laadloon.nl/",
       "commissie": 0.20,
       "commissie_tekst": "20%",
-      "commissie_detail": null,
+      "commissie_detail": "20 procent inclusief btw, voor alle klanten gelijk. Geen abonnement en geen instapkosten.",
       "vaste_kosten": 0,
       "prijsmodel": "markt",
       "garantie_per_kwh": null,
@@ -170,7 +170,7 @@
       "sterk": "Twee kwartalen met een bevestigd bedrag, dicht bij wat Joulo haalde.",
       "let_op": "Laadloon publiceert twee overeengekomen verkopen, € 0,4680 en € 0,4750 per ERE, met een verwachte uitbetaling in november 2026 en maart 2027. Overeengekomen is niet uitbetaald.",
       "bron": "https://laadloon.nl/",
-      "gecontroleerd": "2026-10-14"
+      "gecontroleerd": "2026-11-01"
     },
     {
       "id": "zonneplan",
@@ -178,12 +178,12 @@
       "url": "https://www.zonneplan.nl/energie/ere-certificaten",
       "commissie": 0.20,
       "commissie_tekst": "20%",
-      "commissie_detail": "Die 20 procent is voor Zonneplan en Lekkerladen samen; Lekkerladen doet het inboeken.",
+      "commissie_detail": "Die 20 procent is voor de dienstverlening van Zonneplan en Lekkerladen samen.",
       "vaste_kosten": 0,
       "prijsmodel": "markt",
       "garantie_per_kwh": null,
       "uitbetaling": "per kwartaal of jaarlijks",
-      "uitbetaling_detail": "Je kiest zelf. Eerste uitbetaling in september 2026, met terugwerkende kracht vanaf 1 januari 2026.",
+      "uitbetaling_detail": "Je kiest zelf, en het gaat met terugwerkende kracht vanaf 1 januari 2026. De pagina meldt op 16 oktober 2026 nog dat de eerste uitbetaling in september volgt, zonder jaartal, dus of die is gedaan staat er niet.",
       "contract": "Per kalenderjaar, aanmelden via de Zonneplan-app.",
       "eis_klant": "Alleen voor klanten van Zonneplan Energie.",
       "laadpalen": "Meer dan 60 modellen met MID-meter, waaronder ABB, Alfen, Easee, EVBox, Mennekes, SolarEdge, Tesla, Wallbox en Zaptec.",
@@ -192,7 +192,7 @@
       "sterk": "Regelt het binnen een app die je als Zonneplan-klant toch al gebruikt, en je mag kiezen tussen kwartaal en jaar.",
       "let_op": "Zonneplan rekent zelf met een marktprijs van 7 tot 10 cent per kilowattuur en komt daarmee lager uit dan wat de rest belooft. Je moet er stroomklant zijn, dus vergelijk ook het energiecontract.",
       "bron": "https://www.zonneplan.nl/energie/ere-certificaten",
-      "gecontroleerd": "2026-10-14"
+      "gecontroleerd": "2026-11-01"
     },
     {
       "id": "50five",
@@ -212,9 +212,9 @@
       "klanten": null,
       "uitbetaald": [],
       "sterk": "Aanmelden werkt met terugwerkende kracht over 2026, particulier via de app.",
-      "let_op": "Hoogste commissie in het eerste jaar, en de korting koop je met een langere binding. 50five rekent op de eigen site met € 0,48 per ERE en 15 tot 16 cent bruto per kilowattuur. Dat ligt boven de € 0,4250 die in september werkelijk is gerealiseerd.",
+      "let_op": "Hoogste commissie in het eerste jaar, en de korting koop je met een langere binding. De prijs per ERE is sinds oktober 2026 van de site verdwenen: 50five rekent nu met ongeveer 10 cent netto per kilowattuur, bandbreedte 5 tot 30 cent. Dat is een stuk voorzichtiger dan de 15 tot 16 cent bruto die er eerder stond.",
       "bron": "https://50five.com/nl/nl/services/ere-registration",
-      "gecontroleerd": "2026-10-14"
+      "gecontroleerd": "2026-11-01"
     },
     {
       "id": "lekkerladen",
@@ -249,16 +249,16 @@
       "prijsmodel": "garantie",
       "garantie_per_kwh": 0.05,
       "uitbetaling": "jaarlijks",
-      "uitbetaling_detail": "Rond juni van het volgende jaar.",
+      "uitbetaling_detail": "Rond juni van het volgende jaar; de vraagbaak houdt het op het tweede kwartaal.",
       "contract": "Stop je binnen het jaar, dan krijg je over dat jaar niets.",
       "eis_klant": "Alleen met een Vattenfall stroomcontract én een Vattenfall Charging-abonnement.",
       "laadpalen": "Alleen de Autel MaxiCharger met MID-meter.",
       "klanten": null,
       "uitbetaald": [],
-      "sterk": "Gegarandeerd minimaal 5 cent per kilowattuur, en alles loopt via één partij die je al kent.",
-      "let_op": "De strengste voorwaarden van de tien: één laadpaalmerk, een abonnement, een stroomcontract, en je geld pas rond juni van het jaar erna. De garantie van 5 cent ligt ver onder wat de markt nu doet.",
+      "sterk": "Vattenfall verzekert minimaal 5 cent per kilowattuur in 2026, en alles loopt via één partij die je al kent. Slim laden levert daar 2,5 cent per kilowattuur bovenop.",
+      "let_op": "De strengste voorwaarden van de tien: één laadpaalmerk, een abonnement, een stroomcontract, en je geld pas rond juni van het jaar erna. Die 5 cent ligt ver onder wat de markt nu doet, en in de voorwaarden heet het “minimaal”, geen garantie.",
       "bron": "https://www.vattenfall.nl/klantenservice/thuislaadcashback/",
-      "gecontroleerd": "2026-10-14"
+      "gecontroleerd": "2026-11-01"
     },
     {
       "id": "eneco",
@@ -271,7 +271,7 @@
       "prijsmodel": "onbekend",
       "garantie_per_kwh": null,
       "uitbetaling": "onbekend",
-      "uitbetaling_detail": "Eneco rekent per jaar af, maar noemt geen datum.",
+      "uitbetaling_detail": "Eneco rekent per kalenderjaar af en verwacht medio april of mei 2027 daadwerkelijk uit te betalen, met terugwerkende kracht.",
       "contract": "Nog niet bekend.",
       "eis_klant": "Laadpunt dat bij Eneco eMobility in beheer is.",
       "laadpalen": "Vier modellen met MID-meter.",
@@ -280,11 +280,12 @@
       "sterk": "Leest je laadsessies automatisch uit, want het laadpunt hangt al aan hun systeem.",
       "let_op": "Eneco noemt tot ongeveer 10 cent per kilowattuur maar maakt de servicekosten niet bekend en wacht naar eigen zeggen nog op de laatste regelgeving. Zonder percentage valt er niets te vergelijken, dus deze staat onderaan.",
       "bron": "https://www.eneco-emobility.com/thuis/kennis-en-tips/verdien-geld-met-thuisladen",
-      "gecontroleerd": "2026-10-14"
+      "gecontroleerd": "2026-11-01"
     }
   ],
 
   "niet_opgenomen": [
+    { "naam": "LaadCash", "reden": "Noemt 9,5 procent, de laagste van de markt, maar alleen voor de eerste 200 deelnemers; daarna 13 procent. Heeft naar eigen zeggen nog geen ERE ingeboekt en nog niets uitbetaald." },
     { "naam": "Inboekdienst.nl", "reden": "Lage commissie van 12 procent, maar nog weinig te controleren over uitbetalingen." },
     { "naam": "Voltico, Earnergy, PowerD, Xolvere, Energieluitjes", "reden": "Kleine partijen zonder openbaar uitbetaalcijfer." },
     { "naam": "Den Hartog Charging, Groendus, Tap Electric", "reden": "Richten zich vooral op zakelijke laadpunten." },
