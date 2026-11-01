@@ -39,32 +39,40 @@ HANDLE = "@stroomtarief"
 
 # ---- Image ----
 IMG_W, IMG_H = 1200, 675
-# Brand bar: licht blauw + amber accent, passend bij het nieuwe logo
-COLOR_BAR_BG     = (238, 246, 251)   # licht sky-blue (logo achtergrond)
-COLOR_BAR_BORDER = (212, 233, 245)   # subtiele rand
-COLOR_BRAND_TEXT = (15,  45,  74)    # donker navy (logo tekst)
-COLOR_HANDLE     = (3,  105, 161)    # medium blauw
-COLOR_AMBER      = (245, 158, 11)    # amber (logo accent)
-# Achterwaartse compatibiliteit — intern nog gebruikt in chart-render
-COLOR_BRAND = (15, 108, 189)
-COLOR_TEXT = (33, 41, 56)
-COLOR_TEXT_SOFT = (96, 110, 128)
-COLOR_CHEAP = (47, 158, 68)
-COLOR_PRICEY = (201, 42, 42)
-COLOR_CARD_BG = (247, 250, 252)
-COLOR_CARD_BORDER = (222, 228, 235)
+# Huisstijl (logo G, nov 2026): inkt, zon, mint = goedkoop, koraal = duur.
+# Zie public/brand/ voor het logo zelf.
+COLOR_INKT       = (29, 43, 83)      # #1D2B53 merkbalk, tekst, prijslijn
+COLOR_ZON        = (255, 200, 61)    # #FFC83D bliksemlijn in het teken
+COLOR_MINT       = (43, 196, 138)    # #2BC48A groene stip, goedkoopste uur
+COLOR_KORAAL     = (255, 107, 91)    # #FF6B5B duurste uur
+COLOR_TLD        = (138, 147, 176)   # #8A93B0 ".nl" in het woordmerk
+COLOR_HANDLE     = (163, 170, 196)   # handle op de inktbalk
+COLOR_TEXT       = COLOR_INKT
+COLOR_TEXT_SOFT  = (94, 103, 135)    # #5E6787
+# Donkerdere tinten van mint/koraal voor cijfers op licht vlak (leesbaarheid)
+COLOR_CHEAP      = (29, 140, 99)     # #1D8C63
+COLOR_PRICEY     = (214, 69, 54)     # #D64536
+COLOR_CARD_BG    = (247, 245, 239)
+COLOR_CARD_BORDER = (228, 225, 216)
 
-# Lettertype-paden — eerste hit wint. DejaVu is pre-installed op Ubuntu CI.
+# Lettertypen: Manrope uit scripts/fonts (OFL), DejaVu als terugval.
+FONTS_DIR = Path(__file__).resolve().parent / "fonts"
 FONT_PATHS_BOLD = [
+    str(FONTS_DIR / "Manrope-ExtraBold.ttf"),
     "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     "DejaVuSans-Bold.ttf",
-    "/Library/Fonts/Arial Bold.ttf",
 ]
 FONT_PATHS_REGULAR = [
+    str(FONTS_DIR / "Manrope-Medium.ttf"),
     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     "DejaVuSans.ttf",
-    "/Library/Fonts/Arial.ttf",
 ]
+
+# Logo-teken in een 64x64-raster (gelijk aan public/brand/mark.svg)
+MARK_LINE = [(11, 43), (24, 23), (32, 36), (43, 16)]
+MARK_LINE_W = 6
+MARK_DOTS = [(46.2, 24.8, 2.1), (48.8, 32.2, 2.1)]
+MARK_GO = (52, 42, 5)
 
 NL_DAYS_LONG = {0: "maandag", 1: "dinsdag", 2: "woensdag", 3: "donderdag",
                 4: "vrijdag", 5: "zaterdag", 6: "zondag"}
@@ -164,13 +172,18 @@ def compose_tweet(summary: dict) -> str:
 
     return (
         f"⚡ Stroomprijs morgen ({date_str})\n\n"
-        f"Gem: {avg:.1f} ct/kWh\n"
-        f"Goedkoopst: {cheap['hour']:02d}u → {cheap['ct']:.1f} ct\n"
-        f"Duurst: {dear['hour']:02d}u → {dear['ct']:.1f} ct\n"
+        f"Gem: {fmt_ct(avg)} ct/kWh\n"
+        f"Goedkoopst: {cheap['hour']:02d}u → {fmt_ct(cheap['ct'])} ct\n"
+        f"Duurst: {dear['hour']:02d}u → {fmt_ct(dear['ct'])} ct\n"
         f"{insight}\n\n"
         f"→ stroomvoorspeller.nl/morgen\n\n"
         f"{tags}"
     )
+
+
+def fmt_ct(ct: float) -> str:
+    """Formateer ct-waarde in NL-notatie, bijv. '3,2' of '-12,5'."""
+    return f"{ct:.1f}".replace(".", ",")
 
 
 def _try_font(paths: list, size: int):
@@ -186,7 +199,16 @@ def _try_font(paths: list, size: int):
 def _render_chart(summary: dict) -> bytes:
     import matplotlib
     matplotlib.use("Agg")
+    import matplotlib.ticker
+    from matplotlib import font_manager
     from matplotlib.figure import Figure
+
+    rc = {"font.family": "DejaVu Sans"}
+    manrope = FONTS_DIR / "Manrope-Medium.ttf"
+    if manrope.exists():
+        font_manager.fontManager.addfont(str(manrope))
+        rc = {"font.family": font_manager.FontProperties(fname=str(manrope)).get_name(),
+              "font.weight": "medium"}
 
     rows = summary["rows"]
     hours = [r["hour"] for r in rows]
@@ -194,30 +216,57 @@ def _render_chart(summary: dict) -> bytes:
     cheap_h, cheap_c = summary["cheapest"]["hour"], summary["cheapest"]["ct"]
     dear_h, dear_c = summary["dearest"]["hour"], summary["dearest"]["ct"]
 
-    fig = Figure(figsize=(11, 3.6), dpi=100, facecolor="white")
-    ax = fig.add_subplot(111)
-    ax.plot(hours, cents, color="#0f6cbd", linewidth=2.5, zorder=3)
-    y_low = min(cents) - 2
-    ax.fill_between(hours, cents, y_low, color="#0f6cbd", alpha=0.10, zorder=2)
-    ax.scatter([cheap_h], [cheap_c], color="#2f9e44", s=110, zorder=5, edgecolor="white", linewidth=1.5)
-    ax.scatter([dear_h], [dear_c], color="#c92a2a", s=110, zorder=5, edgecolor="white", linewidth=1.5)
-    ax.axhline(y=summary["avg_ct"], color="#7c8a99", linestyle="--", linewidth=1.2, alpha=0.7, zorder=1)
-    ax.text(23.3, summary["avg_ct"], f" gem {summary['avg_ct']:.1f}", color="#7c8a99",
-            fontsize=10, va="center", ha="left")
+    with matplotlib.rc_context(rc):
+        fig = Figure(figsize=(11, 3.6), dpi=100, facecolor="white")
+        ax = fig.add_subplot(111)
+        ax.plot(hours, cents, color="#1D2B53", linewidth=2.8, zorder=3,
+                solid_capstyle="round", solid_joinstyle="round")
+        y_low = min(cents) - 2
+        ax.fill_between(hours, cents, y_low, color="#1D2B53", alpha=0.06, zorder=2)
+        ax.scatter([cheap_h], [cheap_c], color="#2BC48A", s=150, zorder=5, edgecolor="white", linewidth=2)
+        ax.scatter([dear_h], [dear_c], color="#FF6B5B", s=150, zorder=5, edgecolor="white", linewidth=2)
+        ax.axhline(y=summary["avg_ct"], color="#8A93B0", linestyle=(0, (2, 4)), linewidth=1.4, zorder=1)
+        ax.text(23.3, summary["avg_ct"], f" gem {fmt_ct(summary['avg_ct'])}", color="#5E6787",
+                fontsize=10, va="center", ha="left")
 
-    ax.set_xlim(-0.5, 23.5)
-    ax.set_xticks([0, 6, 12, 18, 23])
-    ax.set_xticklabels(["00:00", "06:00", "12:00", "18:00", "23:00"])
-    ax.tick_params(colors="#7c8a99", labelsize=11)
-    ax.set_ylabel("ct/kWh incl. btw", color="#7c8a99", fontsize=11)
-    ax.grid(True, alpha=0.18)
-    for s in ax.spines.values():
-        s.set_color("#dee4eb")
-    fig.tight_layout(pad=2)
+        ax.set_xlim(-0.5, 23.5)
+        ax.set_xticks([0, 6, 12, 18, 23])
+        ax.set_xticklabels(["00:00", "06:00", "12:00", "18:00", "23:00"])
+        ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(
+            lambda v, _: f"{v:.0f}" if v == int(v) else f"{v:.1f}".replace(".", ",")))
+        ax.tick_params(colors="#5E6787", labelsize=11, length=0)
+        ax.set_ylabel("ct/kWh incl. btw", color="#5E6787", fontsize=11)
+        ax.grid(True, axis="y", color="#E4E1D8", linewidth=0.8)
+        for name, s in ax.spines.items():
+            s.set_visible(name == "bottom")
+            s.set_color("#E4E1D8")
+        fig.tight_layout(pad=2)
 
-    buf = BytesIO()
-    fig.savefig(buf, format="png", facecolor="white", dpi=100, bbox_inches="tight")
+        buf = BytesIO()
+        fig.savefig(buf, format="png", facecolor="white", dpi=100, bbox_inches="tight")
     return buf.getvalue()
+
+
+def _draw_mark(size: int, bg=None):
+    """Teken het logo (lijn op donker) als RGBA-plaatje, 4x supersampled."""
+    from PIL import Image, ImageDraw
+
+    ss = 4
+    k = size * ss / 64
+    im = Image.new("RGBA", (size * ss, size * ss), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    if bg is not None:
+        d.rounded_rectangle([(0, 0), (size * ss - 1, size * ss - 1)], radius=int(16 * k), fill=bg)
+    pts = [(x * k, y * k) for x, y in MARK_LINE]
+    w = int(MARK_LINE_W * k)
+    d.line(pts, fill=COLOR_ZON, width=w, joint="curve")
+    for x, y in pts[:1] + pts[-1:]:
+        d.ellipse([(x - w / 2, y - w / 2), (x + w / 2, y + w / 2)], fill=COLOR_ZON)
+    for x, y, r in MARK_DOTS:
+        d.ellipse([((x - r) * k, (y - r) * k), ((x + r) * k, (y + r) * k)], fill=COLOR_ZON)
+    x, y, r = MARK_GO
+    d.ellipse([((x - r) * k, (y - r) * k), ((x + r) * k, (y + r) * k)], fill=COLOR_MINT)
+    return im.resize((size, size), Image.LANCZOS)
 
 
 def generate_image(summary: dict, output_path: Path) -> None:
@@ -226,42 +275,30 @@ def generate_image(summary: dict, output_path: Path) -> None:
     img = Image.new("RGB", (IMG_W, IMG_H), (255, 255, 255))
     draw = ImageDraw.Draw(img)
 
-    f_brand = _try_font(FONT_PATHS_BOLD, 34)
-    f_handle = _try_font(FONT_PATHS_REGULAR, 22)
+    f_brand = _try_font(FONT_PATHS_BOLD, 32)
+    f_handle = _try_font(FONT_PATHS_REGULAR, 21)
     f_title = _try_font(FONT_PATHS_BOLD, 30)
     f_card_label = _try_font(FONT_PATHS_REGULAR, 18)
-    f_card_value = _try_font(FONT_PATHS_BOLD, 30)
+    f_card_value = _try_font(FONT_PATHS_BOLD, 32)
     f_footer = _try_font(FONT_PATHS_REGULAR, 16)
 
-    # Top brand bar — lichte achtergrond passend bij het logo
-    draw.rectangle([(0, 0), (IMG_W, 72)], fill=COLOR_BAR_BG)
-    draw.rectangle([(0, 72), (IMG_W, 73)], fill=COLOR_BAR_BORDER)
-    # Amber accent-streep links
-    draw.rectangle([(0, 0), (6, 72)], fill=COLOR_AMBER)
-    # Logo-icoon: lichte cirkel met amber curve (vereenvoudigd)
-    cx, cy, cr = 46, 36, 26
-    draw.ellipse([(cx-cr, cy-cr), (cx+cr, cy+cr)], fill=(238, 246, 251), outline=(14, 165, 233), width=2)
-    # Amber prijscurve (4 segmenten)
-    pts = [(cx-20, cy+12), (cx-10, cy+5), (cx+2, cy-2), (cx+14, cy-10), (cx+22, cy-16)]
-    for i in range(len(pts)-1):
-        draw.line([pts[i], pts[i+1]], fill=COLOR_AMBER, width=3)
-    # Nu-punt
-    draw.ellipse([(cx+10, cy-13), (cx+18, cy-5)], fill=COLOR_AMBER)
-    draw.ellipse([(cx+12, cy-11), (cx+16, cy-7)], fill=(238, 246, 251))
-    # Badge rechtsonder icoon
-    draw.ellipse([(cx+12, cy+10), (cx+26, cy+24)], fill=COLOR_AMBER)
-    bx, by = cx+19, cy+17
-    draw.polygon([(bx+2, by-5), (bx-3, by+1), (bx+1, by+1), (bx-2, by+6), (bx+4, by), (bx, by)], fill=(255,255,255))
-    # Brand naam en handle
-    draw.text((82, 15), BRAND, fill=COLOR_BRAND_TEXT, font=f_brand)
-    handle_bbox = draw.textbbox((0, 0), HANDLE, font=f_handle)
-    handle_w = handle_bbox[2] - handle_bbox[0]
-    draw.text((IMG_W - 40 - handle_w, 24), HANDLE, fill=COLOR_HANDLE, font=f_handle)
+    # Merkbalk: inkt, met het teken (lijn op donker) en het woordmerk
+    bar_h = 76
+    draw.rectangle([(0, 0), (IMG_W, bar_h)], fill=COLOR_INKT)
+    mark = _draw_mark(52)
+    img.paste(mark, (34, (bar_h - 52) // 2), mask=mark)
+    name, tld = BRAND.split(".", 1)
+    x_name = 96
+    draw.text((x_name, bar_h // 2), name, fill=(255, 255, 255), font=f_brand, anchor="lm")
+    name_w = draw.textlength(name, font=f_brand)
+    draw.text((x_name + name_w, bar_h // 2), "." + tld, fill=COLOR_TLD, font=f_brand, anchor="lm")
+    handle_w = draw.textlength(HANDLE, font=f_handle)
+    draw.text((IMG_W - 40 - handle_w, bar_h // 2), HANDLE, fill=COLOR_HANDLE, font=f_handle, anchor="lm")
 
     # Title
     d = summary["date"]
-    title = f"Stroomprijzen morgen — {NL_DAYS_LONG[d.weekday()]} {d.day} {NL_MONTHS[d.month]}"
-    draw.text((40, 95), title, fill=COLOR_TEXT, font=f_title)
+    title = f"Stroomprijzen morgen, {NL_DAYS_LONG[d.weekday()]} {d.day} {NL_MONTHS[d.month]}"
+    draw.text((40, 98), title, fill=COLOR_TEXT, font=f_title)
 
     # Chart paste
     chart_png = _render_chart(summary)
@@ -280,18 +317,22 @@ def generate_image(summary: dict, output_path: Path) -> None:
     card_h = 100
     card_w = (IMG_W - 80 - 40) // 3  # 40px tussen kaarten
     cards = [
-        ("GEMIDDELDE", f"{summary['avg_ct']:.1f} ct", COLOR_TEXT),
-        (f"GOEDKOOPST {summary['cheapest']['hour']:02d}:00",
-         f"{summary['cheapest']['ct']:.1f} ct", COLOR_CHEAP),
-        (f"DUURST {summary['dearest']['hour']:02d}:00",
-         f"{summary['dearest']['ct']:.1f} ct", COLOR_PRICEY),
+        ("Gemiddelde", f"{fmt_ct(summary['avg_ct'])} ct", COLOR_TEXT, None),
+        (f"Goedkoopst {summary['cheapest']['hour']:02d}:00",
+         f"{fmt_ct(summary['cheapest']['ct'])} ct", COLOR_CHEAP, COLOR_MINT),
+        (f"Duurst {summary['dearest']['hour']:02d}:00",
+         f"{fmt_ct(summary['dearest']['ct'])} ct", COLOR_PRICEY, COLOR_KORAAL),
     ]
-    for i, (label, value, color) in enumerate(cards):
+    for i, (label, value, color, dot) in enumerate(cards):
         x = 40 + i * (card_w + 20)
-        draw.rectangle([(x, cards_y), (x + card_w, cards_y + card_h)],
-                       fill=COLOR_CARD_BG, outline=COLOR_CARD_BORDER, width=1)
-        draw.text((x + 18, cards_y + 16), label, fill=COLOR_TEXT_SOFT, font=f_card_label)
-        draw.text((x + 18, cards_y + 50), value, fill=color, font=f_card_value)
+        draw.rounded_rectangle([(x, cards_y), (x + card_w, cards_y + card_h)], radius=14,
+                               fill=COLOR_CARD_BG, outline=COLOR_CARD_BORDER, width=1)
+        lx = x + 20
+        if dot is not None:
+            draw.ellipse([(lx, cards_y + 23), (lx + 12, cards_y + 35)], fill=dot)
+            lx += 20
+        draw.text((lx, cards_y + 16), label, fill=COLOR_TEXT_SOFT, font=f_card_label)
+        draw.text((x + 20, cards_y + 48), value, fill=color, font=f_card_value)
 
     # Footer
     footer = "Day-ahead EPEX + energiebelasting + 21% btw, gem. leverancier. Bron: ENTSO-E."

@@ -119,10 +119,10 @@ def compose_negative_tweet(neg_rows: list) -> str:
     min_ct  = min(r["ct"] for r in neg_rows)
 
     text = (
-        "Stroom is negatief geprijsd -- ook na belasting.\n\n"
+        "Stroom is negatief geprijsd, ook na belasting.\n\n"
         + f"{start_h:02d}:00-{end_h:02d}:00 | Laagste all-in: {fmt_ct(min_ct)} ct/kWh\n\n"
         + "Nu aanzetten: wasmachine, vaatwasser, EV of batterij\n\n"
-        + f"-> {BRAND}\n\n"
+        + f"→ {BRAND}\n\n"
         + "#negatieveprijs #zonnepanelen #EVladen #dynamischcontract #stroomprijzen"
     )
     return text
@@ -147,11 +147,11 @@ def compose_peak_tweet(peak_rows: list, all_today: list) -> str:
         cheap_line = ""
 
     text = (
-        "Stroom is extreem duur -- ook na belasting.\n\n"
+        "Stroom is extreem duur, ook na belasting.\n\n"
         + f"{start_h:02d}:00-{end_h:02d}:00 | Piek all-in: {fmt_ct(max_ct)} ct/kWh\n\n"
         + f"{cheap_line}"
         + "Zet zware apparaten uit of verschuif ze.\n\n"
-        + f"-> {BRAND}\n\n"
+        + f"→ {BRAND}\n\n"
         + "#energieprijzen #stroomprijzen #dynamischcontract #energietips #slimstroom"
     )
     return text

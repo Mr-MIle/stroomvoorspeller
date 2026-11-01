@@ -110,6 +110,11 @@ def week_stats(vals: list[float]) -> dict | None:
     }
 
 
+def fmt_ct(ct: float) -> str:
+    """Formateer ct-waarde in NL-notatie, bijv. '3,2' of '-12,5'."""
+    return f"{ct:.1f}".replace(".", ",")
+
+
 def richting(deze_avg: float, vorige_avg: float) -> tuple[str, str]:
     """(label, emoji) op basis van procentueel verschil."""
     pct = (deze_avg - vorige_avg) / vorige_avg * 100
@@ -150,8 +155,8 @@ def compose_tweet(
     return (
         f"⚡ Energie weekoverzicht NL – week {week_nr}\n"
         f"\n"
-        f"Gem. stroomprijs: {avg:.1f} ct/kWh{vergelijking}\n"
-        f"Laagste uur: {low:.1f} ct  |  Hoogste: {high:.1f} ct\n"
+        f"Gem. stroomprijs: {fmt_ct(avg)} ct/kWh{vergelijking}\n"
+        f"Laagste uur: {fmt_ct(low)} ct  |  Hoogste: {fmt_ct(high)} ct\n"
         f"\n"
         f"{volgende_regel}\n"
         f"\n"
