@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Wat levert mijn thuisbatterij op? Dag voor dag</title>
   <meta name="description" content="Mijn eigen thuisbatterij, dag voor dag: hoeveel ik verbruik, wat het kost, hoeveel de batterij levert en wat ik verdien met terugleveren in dure uren." />
-  <meta name="theme-color" content="#0f6cbd" />
+  <meta name="theme-color" content="#1D2B53" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="canonical" href="https://stroomvoorspeller.nl/batterij" />
@@ -388,9 +388,9 @@
             datasets: [
               { type: "bar", label: weekly ? "Besparing per week" : "Besparing per dag",
                 data: buckets.map((g) => g.sum),
-                backgroundColor: "#2f9e44", borderRadius: 4, yAxisID: "y" },
-              { type: "line", label: "Totaal bespaard", data: cumData, borderColor: "#0f6cbd",
-                backgroundColor: "rgba(15,108,189,.1)", tension: .25, fill: true, yAxisID: "y" },
+                backgroundColor: "#1FA874", borderRadius: 4, yAxisID: "y" },
+              { type: "line", label: "Totaal bespaard", data: cumData, borderColor: "#5268b8",
+                backgroundColor: "rgba(29, 43, 83, .1)", tension: .25, fill: true, yAxisID: "y" },
             ],
           },
           options: {

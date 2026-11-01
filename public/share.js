@@ -204,8 +204,8 @@
       "border:1px solid var(--c-border);border-radius:var(--radius-sm,8px);background:var(--c-surface,#fff);" +
       "display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap}" +
       ".install-tip-tekst{flex:1 1 9rem;margin:0;font-size:0.9rem;color:var(--c-text-soft)}" +
-      ".install-tip-knop{flex:0 0 auto;min-height:44px;padding:0 0.9rem;border:1px solid var(--c-brand,#0f6cbd);" +
-      "border-radius:var(--radius-sm,8px);background:var(--c-brand-fill,#0f6cbd);color:#fff;font:inherit;" +
+      ".install-tip-knop{flex:0 0 auto;min-height:44px;padding:0 0.9rem;border:1px solid var(--c-brand,#1D2B53);" +
+      "border-radius:var(--radius-sm,8px);background:var(--c-brand-fill,#1D2B53);color:#fff;font:inherit;" +
       "font-size:0.9rem;font-weight:600;cursor:pointer}" +
       ".install-tip-knop:active{transform:scale(0.97)}" +
       ".install-tip-sluit{position:absolute;top:0;right:0;width:44px;height:44px;border:0;background:none;" +

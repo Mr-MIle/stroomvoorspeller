@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Historische stroomprijzen per uur en per jaar terugkijken</title>
   <meta name="description" content="Historische stroomprijzen per uur en per jaar, vanaf 2015. Kies je aanbieder en zie wat stroom per dag kostte, met de belasting van dat jaar." />
-  <meta name="theme-color" content="#0f6cbd" />
+  <meta name="theme-color" content="#1D2B53" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="canonical" href="https://stroomvoorspeller.nl/historisch" />
@@ -194,7 +194,7 @@
       border: 2px solid transparent;
     }
     .cal-day:hover { transform: scale(1.06); box-shadow: var(--shadow-md); }
-    .cal-day.selected { border-color: var(--c-brand); box-shadow: 0 0 0 2px rgba(15,108,189,0.25); }
+    .cal-day.selected { border-color: var(--c-brand); box-shadow: 0 0 0 2px rgba(29, 43, 83, 0.25); }
     .cal-day.empty { background: transparent; cursor: default; }
     .cal-day.empty:hover { transform: none; box-shadow: none; }
     .cal-day.hidden-neg { opacity: 0.15; pointer-events: none; }
@@ -576,21 +576,21 @@
     function getDayColor(avgCt) {
       const t = cfg.thresholds_ct_kwh_inclusive;
       if (avgCt < 0)           return { bg: 'var(--c-free-bg)',   text: 'var(--c-free)',   border: 'var(--c-free)' };
-      if (avgCt < t.very_cheap) return { bg: '#b2f2bb',            text: '#1a7a2e',         border: 'transparent' };
-      if (avgCt < t.cheap)      return { bg: '#d3f9d8',            text: '#2f9e44',         border: 'transparent' };
-      if (avgCt < t.pricey)     return { bg: 'var(--c-normal-bg)', text: 'var(--c-normal)', border: 'transparent' };
-      if (avgCt < t.very_pricey)return { bg: 'var(--c-pricey-bg)', text: 'var(--c-pricey)', border: 'transparent' };
-      return { bg: '#fcc', text: '#a00', border: 'transparent' };
+      if (avgCt < t.very_cheap) return { bg: 'var(--c-cheap-border)', text: 'var(--c-cheap-text)', border: 'transparent' };
+      if (avgCt < t.cheap)      return { bg: 'var(--c-cheap-bg)',  text: 'var(--c-cheap-link)', border: 'transparent' };
+      if (avgCt < t.pricey)     return { bg: 'var(--c-normal-bg)', text: 'var(--c-normal-text)', border: 'transparent' };
+      if (avgCt < t.very_pricey)return { bg: 'var(--c-pricey-bg)', text: 'var(--c-pricey-deep)', border: 'transparent' };
+      return { bg: 'var(--c-pricey-border)', text: 'var(--c-pricey-text)', border: 'transparent' };
     }
 
     function getBarColor(ct) {
       const t = cfg.thresholds_ct_kwh_inclusive;
       if (ct < 0)            return 'rgba(112,72,232,0.85)';
-      if (ct < t.very_cheap) return 'rgba(27,138,57,0.85)';
-      if (ct < t.cheap)      return 'rgba(47,158,68,0.75)';
-      if (ct < t.pricey)     return 'rgba(212,160,23,0.8)';
-      if (ct < t.very_pricey)return 'rgba(201,42,42,0.8)';
-      return 'rgba(160,0,0,0.9)';
+      if (ct < t.very_cheap) return 'rgba(22,115,82,0.85)';
+      if (ct < t.cheap)      return 'rgba(31,168,116,0.8)';
+      if (ct < t.pricey)     return 'rgba(255,200,61,0.9)';
+      if (ct < t.very_pricey)return 'rgba(242,86,74,0.85)';
+      return 'rgba(193,54,40,0.9)';
     }
 
     function fmtCt(ct) {
@@ -1098,7 +1098,7 @@
       document.getElementById('jv-uitleg').innerHTML = delen.join('');
 
       // Grafiek: daggemiddelde als lijn, goedkoopste tot duurste uur als vlak.
-      const lijn = cssVar('--c-brand', '#0f6cbd');
+      const lijn = cssVar('--c-brand', '#1D2B53');
       const tekst = cssVar('--c-text-mute', '#5d6f80');
       const rand = cssVar('--c-border', '#e1e7ee');
       const nul = cssVar('--c-border-strong', '#c3cede');

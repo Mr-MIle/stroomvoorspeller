@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Stroomprijs-widget voor je eigen website</title>
   <meta name="description" content="Zet de actuele stroomprijs op jouw website met één script-tag. Gratis, geen API-key, automatisch bijgewerkt. Ideaal voor energiebloggers en EV-communities." />
-  <meta name="theme-color" content="#0f6cbd" />
+  <meta name="theme-color" content="#1D2B53" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="canonical" href="https://stroomvoorspeller.nl/embed" />
 
@@ -116,8 +116,8 @@
     /* ── Embed-pagina stijlen ── */
 
     .embed-hero {
-      background: var(--surface-2, #f4f8ff);
-      border-bottom: 1px solid var(--border, #dde4ee);
+      background: var(--surface-2, #f3f5fb);
+      border-bottom: 1px solid var(--border, #e1e5ef);
       padding: 2rem 0 1.5rem;
       margin-bottom: 2.5rem;
     }
@@ -180,17 +180,17 @@
     .options-table th {
       text-align: left;
       padding: 0.5rem 0.7rem;
-      background: var(--surface-2, #f4f8ff);
-      border-bottom: 2px solid var(--border, #dde4ee);
+      background: var(--surface-2, #f3f5fb);
+      border-bottom: 2px solid var(--border, #e1e5ef);
       font-weight: 600;
     }
     .options-table td {
       padding: 0.5rem 0.7rem;
-      border-bottom: 1px solid var(--border, #dde4ee);
+      border-bottom: 1px solid var(--border, #e1e5ef);
       vertical-align: top;
     }
     .options-table code {
-      background: var(--surface-2, #f4f8ff);
+      background: var(--surface-2, #f3f5fb);
       padding: 0.1em 0.4em;
       border-radius: 3px;
       font-size: 0.8rem;
@@ -222,16 +222,16 @@
     .variant-tab {
       padding: 0.3rem 0.8rem;
       border-radius: 20px;
-      border: 1px solid var(--border, #dde4ee);
+      border: 1px solid var(--border, #e1e5ef);
       background: var(--surface, #fff);
       font-size: 0.8rem;
       cursor: pointer;
       transition: background .15s, border-color .15s;
     }
     .variant-tab:hover, .variant-tab.active {
-      background: var(--accent, #0f6cbd);
+      background: var(--accent, #1D2B53);
       color: #fff;
-      border-color: var(--accent, #0f6cbd);
+      border-color: var(--accent, #1D2B53);
     }
 
     /* Voordelen-grid */
@@ -243,9 +243,9 @@
     }
     .benefit-card {
       padding: 1rem;
-      background: var(--surface-2, #f4f8ff);
+      background: var(--surface-2, #f3f5fb);
       border-radius: 8px;
-      border: 1px solid var(--border, #dde4ee);
+      border: 1px solid var(--border, #e1e5ef);
     }
     .benefit-card .icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
     .benefit-card strong { display: block; margin-bottom: 0.2rem; font-size: 0.9rem; }
@@ -274,7 +274,7 @@
     .embed-section h2 {
       font-size: 1.15rem;
       padding-bottom: 0.4rem;
-      border-bottom: 1px solid var(--border, #dde4ee);
+      border-bottom: 1px solid var(--border, #e1e5ef);
       margin-bottom: 0.8rem;
     }
 
@@ -367,8 +367,8 @@
         <section class="embed-section">
           <h2>Stap 1 — Plak deze code in je pagina</h2>
           <p style="font-size:0.88rem;color:var(--text-muted,#555);margin-bottom:0.3rem;">
-            Zet de <code style="background:var(--surface-2,#f4f8ff);padding:.1em .4em;border-radius:3px">&lt;div&gt;</code> op de plek waar je de widget wilt.
-            Het <code style="background:var(--surface-2,#f4f8ff);padding:.1em .4em;border-radius:3px">&lt;script&gt;</code>-tag mag onderaan je pagina staan.
+            Zet de <code style="background:var(--surface-2,#f3f5fb);padding:.1em .4em;border-radius:3px">&lt;div&gt;</code> op de plek waar je de widget wilt.
+            Het <code style="background:var(--surface-2,#f3f5fb);padding:.1em .4em;border-radius:3px">&lt;script&gt;</code>-tag mag onderaan je pagina staan.
           </p>
           <div class="code-block" id="code-basic">
             <button class="copy-btn" onclick="copyCode('code-basic', this)">Kopieer</button>
@@ -385,7 +385,7 @@
         <section class="embed-section">
           <h2>Stap 2 — Aanpassen (optioneel)</h2>
           <p style="font-size:0.88rem;color:var(--text-muted,#555);margin-bottom:0.8rem;">
-            Voeg <code style="background:var(--surface-2,#f4f8ff);padding:.1em .4em;border-radius:3px">data-</code>-attributen toe aan de div voor extra opties:
+            Voeg <code style="background:var(--surface-2,#f3f5fb);padding:.1em .4em;border-radius:3px">data-</code>-attributen toe aan de div voor extra opties:
           </p>
 
           <div class="table-wrap">
@@ -453,21 +453,21 @@
         <section class="embed-section">
           <h2>Veelgestelde vragen</h2>
 
-          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#e1e5ef);border-radius:6px;padding:0.7rem 1rem;">
             <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Is de widget gratis?</summary>
             <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
               Ja, volledig gratis. Geen registratie, geen API-key, geen limieten. Wij vragen alleen dat je de "Bron: stroomvoorspeller.nl"-link zichtbaar laat staan.
             </p>
           </details>
 
-          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#e1e5ef);border-radius:6px;padding:0.7rem 1rem;">
             <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Hoe vaak wordt de prijs bijgewerkt?</summary>
             <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
               De data wordt elke 3 uur vernieuwd door onze server. De widget zelf haalt altijd de meest recente versie op bij het laden van je pagina.
             </p>
           </details>
 
-          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#e1e5ef);border-radius:6px;padding:0.7rem 1rem;">
             <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Welke prijs toont de widget?</summary>
             <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
               De officiële ENTSO-E day-ahead prijs voor het huidige uur, inclusief energiebelasting en btw.
@@ -475,21 +475,21 @@
             </p>
           </details>
 
-          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#e1e5ef);border-radius:6px;padding:0.7rem 1rem;">
             <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Werkt de widget op mijn site?</summary>
             <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
               De widget werkt op elke website die reguliere HTML ondersteunt: WordPress, Wix, Squarespace, statische sites, custom HTML. De enige vereiste is dat je browser JavaScript ingeschakeld heeft.
             </p>
           </details>
 
-          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+          <details style="margin-bottom:0.8rem;border:1px solid var(--border,#e1e5ef);border-radius:6px;padding:0.7rem 1rem;">
             <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Kan ik de widget aanpassen aan mijn huisstijl?</summary>
             <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
               De widget heeft zijn eigen scoped CSS zodat hij niet botst met je site-stijlen. Geavanceerde aanpassingen (eigen kleuren, lettertype) zijn mogelijk door de widget in een container met eigen CSS te zetten. Neem contact op via <a href="mailto:contactstroomvoorspeller@gmail.com">contactstroomvoorspeller@gmail.com</a> voor maatwerk.
             </p>
           </details>
 
-          <details style="margin-bottom:0;border:1px solid var(--border,#dde4ee);border-radius:6px;padding:0.7rem 1rem;">
+          <details style="margin-bottom:0;border:1px solid var(--border,#e1e5ef);border-radius:6px;padding:0.7rem 1rem;">
             <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;">Zijn er privacybezwaren?</summary>
             <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted,#555);">
               De widget doet twee GET-requests naar stroomvoorspeller.nl (voor prijsdata en instellingen). Er worden geen cookies geplaatst en geen persoonlijke gegevens verstuurd. Je hoeft de widget niet te melden in je cookieverklaring.
@@ -498,7 +498,7 @@
         </section>
 
         <!-- ── Backlink verzoek ── -->
-        <section class="embed-section" style="background:var(--surface-2,#f4f8ff);border:1px solid var(--border,#dde4ee);border-radius:10px;padding:1.2rem 1.4rem;">
+        <section class="embed-section" style="background:var(--surface-2,#f3f5fb);border:1px solid var(--border,#e1e5ef);border-radius:10px;padding:1.2rem 1.4rem;">
           <h2 style="border:none;padding:0;margin-bottom:0.5rem;">Vermeld ons ook even?</h2>
           <p style="font-size:0.88rem;color:var(--text-muted,#555);margin:0;">
             Wij zijn een onafhankelijk project zonder budget voor advertenties.
@@ -530,9 +530,9 @@
           ↑ Dit is de echte widget met live data.
         </p>
 
-        <div style="margin-top:1.5rem;padding:1rem;background:var(--surface-2,#f4f8ff);border-radius:8px;border:1px solid var(--border,#dde4ee);">
+        <div style="margin-top:1.5rem;padding:1rem;background:var(--surface-2,#f3f5fb);border-radius:8px;border:1px solid var(--border,#e1e5ef);">
           <p style="font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;">Probeer zelf:</p>
-          <select id="demo-supplier" style="width:100%;padding:0.4rem;border:1px solid var(--border,#dde4ee);border-radius:5px;font-size:0.82rem;margin-bottom:0.4rem;">
+          <select id="demo-supplier" style="width:100%;padding:0.4rem;border:1px solid var(--border,#e1e5ef);border-radius:5px;font-size:0.82rem;margin-bottom:0.4rem;">
             <option value="average">Gemiddelde (standaard)</option>
             <option value="tibber">Tibber</option>
             <option value="frank">Frank Energie</option>
@@ -542,7 +542,7 @@
             <option value="zonneplan">Zonneplan</option>
             <option value="easy">Easy Energy</option>
           </select>
-          <button onclick="reloadPreview()" style="width:100%;padding:0.4rem;background:var(--accent,#0f6cbd);color:#fff;border:none;border-radius:5px;font-size:0.82rem;cursor:pointer;">Ververs preview</button>
+          <button onclick="reloadPreview()" style="width:100%;padding:0.4rem;background:var(--accent,#1D2B53);color:#fff;border:none;border-radius:5px;font-size:0.82rem;cursor:pointer;">Ververs preview</button>
         </div>
       </div>
 

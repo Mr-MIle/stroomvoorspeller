@@ -7,7 +7,7 @@
  *
  * Verhoog VERSIE bij elke wijziging aan dit bestand of aan de schil hieronder.
  */
-var VERSIE = "v8";
+var VERSIE = "v9";
 var SCHIL_CACHE = "schil-" + VERSIE;
 var DATA_CACHE = "data-" + VERSIE;
 var PAGINA_CACHE = "paginas-" + VERSIE;
@@ -20,6 +20,8 @@ var SCHIL = [
   "/nav.js",
   "/share.js",
   "/favicon.svg",
+  "/fonts/manrope-700.woff2",
+  "/fonts/manrope-800.woff2",
   "/icon-192.png",
   "/icon-512.png",
   "/apple-touch-icon.png",
@@ -118,10 +120,10 @@ function offlinePagina() {
       "<!doctype html><html lang=nl><meta charset=utf-8>" +
       "<meta name=viewport content='width=device-width,initial-scale=1'>" +
       "<title>Geen verbinding</title>" +
-      "<body style=\"font:16px/1.5 system-ui,sans-serif;margin:0;padding:2rem;background:#f0f6fc;color:#16324f\">" +
+      "<body style=\"font:16px/1.5 system-ui,sans-serif;margin:0;padding:2rem;background:#f6f7fb;color:#1a2340\">" +
       "<h1 style=\"font-size:1.25rem\">Geen verbinding</h1>" +
       "<p>Stroomvoorspeller heeft geen internet en geen opgeslagen versie van deze pagina.</p>" +
-      "<p><a href=\"/\" style=\"color:#0f6cbd\">Naar de voorpagina</a></p>",
+      "<p><a href=\"/\" style=\"color:#1D2B53\">Naar de voorpagina</a></p>",
       { headers: { "Content-Type": "text/html; charset=utf-8" } }
     );
   });

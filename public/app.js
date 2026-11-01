@@ -60,8 +60,8 @@
   const donkerMQ = window.matchMedia("(prefers-color-scheme: dark)");
   const minderBewegingMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
   const CH = {
-    get tekst()  { return cssVar("--c-text-soft", "#4a5b6e"); },
-    get zwak()   { return cssVar("--c-text-mute", "#7c8a99"); },
+    get tekst()  { return cssVar("--c-text-soft", "#475174"); },
+    get zwak()   { return cssVar("--c-text-mute", "#5b6485"); },
     get raster() { return donkerMQ.matches ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.06)"; },
     get feest()  { return donkerMQ.matches ? "rgba(255,214,140,0.95)" : "rgba(110,70,0,0.90)"; },
     get feestEU(){ return donkerMQ.matches ? "rgba(255,196,128,0.95)" : "rgba(140,70,0,0.90)"; },
@@ -363,11 +363,11 @@
   function pointColor(eurMwh) {
     const c = classify(eurMwh);
     if (c === "negative")    return cssVar("--c-free", "#7048e8");
-    if (c === "very_cheap")  return cssVar("--c-cheap-link", "#1a7a31");
-    if (c === "cheap")       return cssVar("--c-cheap", "#2f9e44");
-    if (c === "very_pricey") return cssVar("--c-pricey-deep", "#9c1a1a");
-    if (c === "pricey")      return cssVar("--c-pricey", "#c92a2a");
-    return cssVar("--c-normal", "#d4a017");
+    if (c === "very_cheap")  return cssVar("--c-cheap-link", "#167352");
+    if (c === "cheap")       return cssVar("--c-cheap", "#1FA874");
+    if (c === "very_pricey") return cssVar("--c-pricey-deep", "#c13628");
+    if (c === "pricey")      return cssVar("--c-pricey", "#F2564A");
+    return cssVar("--c-normal", "#FFC83D");
   }
 
   // ---- Negatieve-prijs detectie ----
@@ -1306,7 +1306,7 @@
   };
 
   // Regime-kleuren en plausibility-configuratie
-  const REGIME_COLOR = { oversupply: "#f59e0b", schaarste: "#ef4444", normaal: "#0f6cbd" };
+  const REGIME_COLOR = { oversupply: "#f59e0b", schaarste: "#F2564A", normaal: "#5268b8" };
 
   const PLAUSIBILITY_BAND_COLOR = {
     HIGH:            "rgba(147,197,253,0.25)",
@@ -1401,11 +1401,11 @@
     const eff = effectiveThresholds(); // #13: cheap/pricey-grens beweegt mee met de dag
     return [
       { min: null,                            max: thToChart(0),                       color: "rgba(112,72,232,0.10)" },
-      { min: thToChart(0),                    max: thToChart(thr.very_cheap ?? 14),    color: "rgba(26,122,49,0.08)"  },
-      { min: thToChart(thr.very_cheap ?? 14), max: thToChart(eff.cheap),               color: "rgba(47,158,68,0.07)"  },
+      { min: thToChart(0),                    max: thToChart(thr.very_cheap ?? 14),    color: "rgba(22,115,82,0.08)"  },
+      { min: thToChart(thr.very_cheap ?? 14), max: thToChart(eff.cheap),               color: "rgba(31,168,116,0.07)"  },
       // normaal: geen kleur
-      { min: thToChart(eff.pricey),           max: thToChart(thr.very_pricey ?? 38),   color: "rgba(201,42,42,0.08)"  },
-      { min: thToChart(thr.very_pricey ?? 38), max: null,                              color: "rgba(156,26,26,0.10)"  },
+      { min: thToChart(eff.pricey),           max: thToChart(thr.very_pricey ?? 38),   color: "rgba(242,86,74,0.08)"  },
+      { min: thToChart(thr.very_pricey ?? 38), max: null,                              color: "rgba(193,54,40,0.10)"  },
     ];
   }
 
@@ -1421,7 +1421,7 @@
     const actualData = timeline.map((t) => t.kind === "actual" ? priceCents(t.price) : null);
     const actualColors = timeline.map((t, i) => {
       if (t.kind !== "actual") return "transparent";
-      return i === chartNowIdx ? cssVar("--c-brand", "#0f6cbd") : pointColor(t.price);
+      return i === chartNowIdx ? cssVar("--c-brand", "#1D2B53") : pointColor(t.price);
     });
     // In quarter-mode: kleinere punten (veel datapunten), grotere 'nu'-stip.
     const actualRadii = timeline.map((t, i) => {
@@ -1473,20 +1473,20 @@
             label: `ct/kWh (${modeLabel()})`,
             data: actualData,
             tension: 0.25,
-            borderColor: cssVar("--c-accent", "#2e75b6"),
+            borderColor: cssVar("--c-accent", "#4a5fa8"),
             borderWidth: isQuarter ? 1.5 : 2,
             pointBackgroundColor: actualColors,
             pointBorderColor: actualColors,
             pointRadius: actualRadii,
             pointHoverRadius: actualHoverRadii,
-            fill: { target: "origin", above: "rgba(46,117,182,0.08)" },
+            fill: { target: "origin", above: "rgba(82, 104, 184, 0.08)" },
             spanGaps: false,
           },
           ...(isQuarter ? [] : buildBandDatasets(timeline)),
           ...(isQuarter ? [] : [{
             label: "voorspelling",
             data: forecastPredicted,
-            borderColor: "rgba(46,117,182,0.5)",
+            borderColor: "rgba(82, 104, 184, 0.5)",
             borderDash: [4, 4],
             borderWidth: 2,
             tension: 0.25,
@@ -1976,7 +1976,7 @@
       wrap.style.cssText = "margin:6px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;line-height:1.8;";
       wrap.innerHTML =
         `<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--c-text-soft);">` +
-        `<span style="width:18px;border-top:2px dashed rgba(46,117,182,0.7);flex-shrink:0;"></span>` +
+        `<span style="width:18px;border-top:2px dashed rgba(82, 104, 184, 0.7);flex-shrink:0;"></span>` +
         `<strong>Voorspelde prijs</strong></span>` +
         `<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--c-text-soft);">` +
         `<span style="width:14px;height:10px;border-radius:2px;background:rgba(147,197,253,0.45);flex-shrink:0;"></span>` +

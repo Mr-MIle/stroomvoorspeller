@@ -126,11 +126,11 @@
 
   const CLASS_COLOR = {
     negative:   () => cssVar("--c-free", "#7048e8"),
-    very_cheap: () => cssVar("--c-cheap-link", "#1a7a31"),
-    cheap:      () => cssVar("--c-cheap", "#2f9e44"),
-    normal:     () => cssVar("--c-normal", "#d4a017"),
-    pricey:     () => cssVar("--c-pricey", "#c92a2a"),
-    very_pricey:() => cssVar("--c-pricey-deep", "#9c1a1a"),
+    very_cheap: () => cssVar("--c-cheap-link", "#167352"),
+    cheap:      () => cssVar("--c-cheap", "#1FA874"),
+    normal:     () => cssVar("--c-normal", "#FFC83D"),
+    pricey:     () => cssVar("--c-pricey", "#F2564A"),
+    very_pricey:() => cssVar("--c-pricey-deep", "#c13628"),
   };
   const CLASS_LABEL = {
     negative:   "Negatief / gratis",

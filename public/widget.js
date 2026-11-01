@@ -72,20 +72,20 @@
   // ── Kleuren per classificatie ─────────────────────────────────────────────
   var COLORS = {
     negative:   { bg: '#f0ebff', border: '#7048e8', text: '#4c2db5', dot: '#7048e8' },
-    very_cheap: { bg: '#e8f8ec', border: '#22c55e', text: '#15803d', dot: '#22c55e' },
-    cheap:      { bg: '#f0fdf4', border: '#86efac', text: '#15803d', dot: '#4ade80' },
-    normal:     { bg: '#f8f9fa', border: '#dee2e6', text: '#374151', dot: '#9ca3af' },
-    pricey:     { bg: '#fff8ed', border: '#fb923c', text: '#c2410c', dot: '#fb923c' },
-    very_pricey:{ bg: '#fff0f0', border: '#f87171', text: '#b91c1c', dot: '#f87171' },
+    very_cheap: { bg: '#e2f6ec', border: '#1FA874', text: '#0e5239', dot: '#1FA874' },
+    cheap:      { bg: '#f0faf5', border: '#9fe0c2', text: '#167352', dot: '#2BC48A' },
+    normal:     { bg: '#FFF3D6', border: '#ffe08f', text: '#6e4d00', dot: '#FFC83D' },
+    pricey:     { bg: '#fff5f3', border: '#ffbcb3', text: '#c13628', dot: '#FF6B5B' },
+    very_pricey:{ bg: '#ffece9', border: '#F2564A', text: '#8c2318', dot: '#F2564A' },
   };
 
   var COLORS_DARK = {
     negative:   { bg: '#2d1f55', border: '#7048e8', text: '#c4b5fd', dot: '#7048e8' },
-    very_cheap: { bg: '#14391f', border: '#22c55e', text: '#86efac', dot: '#22c55e' },
-    cheap:      { bg: '#052e16', border: '#4ade80', text: '#86efac', dot: '#4ade80' },
-    normal:     { bg: '#1f2937', border: '#4b5563', text: '#d1d5db', dot: '#6b7280' },
-    pricey:     { bg: '#431407', border: '#fb923c', text: '#fdba74', dot: '#fb923c' },
-    very_pricey:{ bg: '#450a0a', border: '#f87171', text: '#fca5a5', dot: '#f87171' },
+    very_cheap: { bg: '#10291f', border: '#2BC48A', text: '#b4efd5', dot: '#2BC48A' },
+    cheap:      { bg: '#0d2219', border: '#1f5640', text: '#5fdcab', dot: '#2BC48A' },
+    normal:     { bg: '#2b2412', border: '#5c4a1c', text: '#ffe3a0', dot: '#FFC83D' },
+    pricey:     { bg: '#2a1716', border: '#63302b', text: '#ff9a8f', dot: '#FF6B5B' },
+    very_pricey:{ bg: '#311a1a', border: '#FF6B5B', text: '#ffcdc6', dot: '#FF6B5B' },
   };
 
   // ── Helpers ───────────────────────────────────────────────────────────────
@@ -136,7 +136,7 @@
   function injectStyles() {
     if (document.getElementById('sv-widget-styles')) return;
     var css = [
-      '.sv-widget{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.4;border-radius:10px;border:1.5px solid #dee2e6;overflow:hidden;max-width:320px;box-shadow:0 1px 4px rgba(0,0,0,.07);}',
+      '.sv-widget{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.4;border-radius:10px;border:1.5px solid #e1e5ef;overflow:hidden;max-width:320px;box-shadow:0 1px 4px rgba(0,0,0,.07);}',
       '.sv-widget *{box-sizing:border-box;margin:0;padding:0;}',
       '.sv-widget a{color:inherit;text-decoration:none;}',
       '.sv-widget a:hover{text-decoration:underline;}',
@@ -162,7 +162,7 @@
       '.sv-toggle-btn{flex:1;padding:3px 7px;font-size:10px;font-weight:600;cursor:pointer;background:transparent;border:none;color:inherit;opacity:.5;transition:background .15s,opacity .15s;white-space:nowrap;}',
       '.sv-toggle-btn.sv-active{background:rgba(0,0,0,.08);opacity:1;}',
       /* dark */
-      '.sv-widget.sv-dark{border-color:#374151;}',
+      '.sv-widget.sv-dark{border-color:#2a3250;}',
       '.sv-widget.sv-dark .sv-header{border-bottom-color:rgba(255,255,255,.06);}',
       '.sv-widget.sv-dark .sv-divider{background:rgba(255,255,255,.06);}',
       '.sv-widget.sv-dark .sv-footer{border-top-color:rgba(255,255,255,.06);}',

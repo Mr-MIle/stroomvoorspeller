@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Thuisbatterij berekenen op echte uurprijzen</title>
 <meta name="description" content="Bereken op echte uurprijzen wat zonnepanelen en een thuisbatterij je opleveren, welke batterijgrootte het meeste bespaart en de terugverdientijd." />
-<meta name="theme-color" content="#0f6cbd" />
+<meta name="theme-color" content="#1D2B53" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="canonical" href="https://stroomvoorspeller.nl/batterij-berekenen" />
@@ -59,7 +59,7 @@ input[type=number],select{width:100%;padding:9px 11px;border:1px solid var(--c-b
 .seg{display:flex;border:1px solid var(--c-border);border-radius:var(--radius-sm);overflow:hidden}
 .seg button{flex:1;border:0;background:var(--c-surface);padding:9px 6px;font-family:inherit;font-size:.82rem;cursor:pointer;color:var(--c-text-soft);border-right:1px solid var(--c-border)}
 .seg button:last-child{border-right:0}
-.seg button.on{background:var(--c-brand-fill, #0f6cbd);color:#fff;font-weight:600}
+.seg button.on{background:var(--c-brand-fill, #1D2B53);color:#fff;font-weight:600}
 .adv-toggle{background:none;border:0;color:var(--c-brand);font-size:.82rem;cursor:pointer;padding:8px 0;min-height:40px;font-family:inherit;text-decoration:underline}
 .adv{display:none;margin-top:10px;padding-top:12px;border-top:1px dashed var(--c-border)}
 .adv.show{display:block}
@@ -85,7 +85,7 @@ h3{font-size:.95rem;margin:22px 0 6px}
 .modus-note{font-size:.8rem;color:var(--c-text-mute);margin-top:8px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips button{border:1px solid var(--c-border);background:var(--c-surface);border-radius:999px;padding:7px 14px;font-family:inherit;font-size:.85rem;cursor:pointer;color:var(--c-text-soft)}
-.chips button.on{background:var(--c-brand-fill, #0f6cbd);border-color:var(--c-brand-fill, #0f6cbd);color:#fff;font-weight:600}
+.chips button.on{background:var(--c-brand-fill, #1D2B53);border-color:var(--c-brand-fill, #1D2B53);color:#fff;font-weight:600}
 .res-kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 @media(max-width:480px){.res-kpis{grid-template-columns:1fr}}
 .res-kpi{background:var(--c-cheap-bg);border:1px solid var(--c-cheap-border);border-radius:var(--radius-sm);padding:13px 14px}
@@ -96,7 +96,7 @@ h3{font-size:.95rem;margin:22px 0 6px}
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
 @media(max-width:680px){.steps{grid-template-columns:1fr}}
 .step{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);padding:16px}
-.step .nr{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--c-brand-fill, #0f6cbd);color:#fff;font-weight:700;font-size:.85rem;margin-bottom:8px}
+.step .nr{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--c-brand-fill, #1D2B53);color:#fff;font-weight:700;font-size:.85rem;margin-bottom:8px}
 .step h3{margin:0 0 6px;font-size:.95rem}
 .step p{margin:0;font-size:.85rem;color:var(--c-text-soft)}
 .explain{margin-top:44px}
@@ -680,9 +680,9 @@ function drawChart(p){
   $('dagInfo').textContent=`Voorbeeld: ${d} ${MNAMES[p.m]} ${p.y}. Prijs in ct/kWh (incl. belasting), zonopwek en verbruik in kWh per uur.`;
   const labels=[...Array(24).keys()].map(h=>h+'u');
   const cfg={type:'line',data:{labels,datasets:[
-    {label:'Prijs (ct/kWh)',data:cp,yAxisID:'y1',borderColor:'#c92a2a',backgroundColor:'transparent',tension:.3,pointRadius:0,borderWidth:2},
-    {label:'Zonopwek (kWh)',data:solar,yAxisID:'y',borderColor:'#d4a017',backgroundColor:'rgba(212,160,23,.15)',fill:true,tension:.3,pointRadius:0,borderWidth:2},
-    {label:'Verbruik (kWh)',data:load,yAxisID:'y',borderColor:'#0f6cbd',backgroundColor:'transparent',tension:.3,pointRadius:0,borderWidth:2},
+    {label:'Prijs (ct/kWh)',data:cp,yAxisID:'y1',borderColor:'#F2564A',backgroundColor:'transparent',tension:.3,pointRadius:0,borderWidth:2},
+    {label:'Zonopwek (kWh)',data:solar,yAxisID:'y',borderColor:'#E9A800',backgroundColor:'rgba(255,200,61,.25)',fill:true,tension:.3,pointRadius:0,borderWidth:2},
+    {label:'Verbruik (kWh)',data:load,yAxisID:'y',borderColor:'#5268b8',backgroundColor:'transparent',tension:.3,pointRadius:0,borderWidth:2},
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
     plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}},
     scales:{y:{title:{display:true,text:'kWh/uur'},beginAtZero:true},
@@ -747,9 +747,9 @@ function renderResult(p){
   $('cumWrap').style.display='block';
   $('cumNote').innerHTML='Opgeteld bespaard door de batterij, jaar na jaar, met elk jaar 2% minder opbrengst door slijtage. De gestreepte lijn is de aanschafprijs: waar de balken erboven uitkomen, heb je de batterij terugverdiend.';
   const labels=[...Array(BAT_LIFESPAN).keys()].map(k=>'jr '+(k+1));
-  const colors=cum.map(c=> c>=price? '#1c7a37':'#9fd3ae');
+  const colors=cum.map(c=> c>=price? '#1FA874':'#9fe0c2');
   const cfg={type:'bar',data:{labels,datasets:[
-    {type:'line',label:'Aanschafprijs',data:Array(BAT_LIFESPAN).fill(Math.round(price)),borderColor:'#c9a227',borderDash:[6,4],pointRadius:0,borderWidth:2},
+    {type:'line',label:'Aanschafprijs',data:Array(BAT_LIFESPAN).fill(Math.round(price)),borderColor:'#E9A800',borderDash:[6,4],pointRadius:0,borderWidth:2},
     {label:'Bespaard (opgeteld)',data:cum.map(x=>Math.round(x)),backgroundColor:colors},
   ]},options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{labels:{boxWidth:12,font:{size:11}}},

@@ -7,55 +7,65 @@
 :root {
   color-scheme: light dark;
 
-  /* vlakken en tekst */
-  --c-bg: #f6f8fb;
+  /* huisstijl (logo, nov 2026): inkt, zon, mint, koraal, crème.
+     Gebruik in de CSS de rol-tokens hieronder, niet deze ruwe waarden. */
+  --c-ink: #1D2B53;
+  --c-sun: #FFC83D;
+  --c-mint: #2BC48A;
+  --c-coral: #FF6B5B;
+  --c-cream: #FFF3D6;
+
+  /* vlakken en tekst: neutraal met een zweem inkt */
+  --c-bg: #f6f7fb;
   --c-surface: #ffffff;
-  --c-surface-soft: #f4f8ff;
-  --c-surface-alt: #ecf1f6;
-  --c-surface-hover: #e3eef9;
-  --c-text: #18222e;
-  --c-text-soft: #4a5b6e;
-  --c-text-mute: #5d6f80;
-  --c-border: #e1e7ee;
-  --c-border-strong: #c3cede;
+  --c-surface-soft: #f3f5fb;
+  --c-surface-alt: #eceff7;
+  --c-surface-hover: #e3e8f5;
+  --c-text: #1a2340;
+  --c-text-soft: #475174;
+  --c-text-mute: #5b6485;
+  --c-border: #e1e5ef;
+  --c-border-strong: #c3c9dc;
 
   /* merk */
-  --c-brand: #0f6cbd;
-  --c-brand-deep: #0a4f8b;
-  --c-accent: #2e75b6;
-  --c-brand-fill: #0f6cbd;
-  --c-brand-fill-deep: #0a4f8b;
+  --c-brand: #1D2B53;
+  --c-brand-deep: #111a38;
+  --c-accent: #4a5fa8;
+  --c-brand-fill: #1D2B53;
+  --c-brand-fill-deep: #111a38;
+  --c-focus: rgba(29, 43, 83, 0.28);
 
   /* gratis / negatief */
   --c-free: #7048e8;
-  --c-free-bg: #f0ebff;
+  --c-free-bg: #f1ecff;
   --c-free-border: #c4b5fd;
   --c-free-text: #3b1d8a;
   --c-free-link: #5b21b6;
 
-  /* goedkoop */
-  --c-cheap: #2f9e44;
-  --c-cheap-bg: #e6f4ea;
-  --c-cheap-border: #86efac;
-  --c-cheap-text: #14532d;
-  --c-cheap-link: #117c39;
-  --c-cheap-fill: #2f9e44;
-  --c-cheap-fill-deep: #1a7a31;
+  /* goedkoop: mint. Vul iets dieper dan het logo, zodat stippen en
+     staven 3:1 halen op wit; tekst altijd in -link of -text. */
+  --c-cheap: #1FA874;
+  --c-cheap-bg: #e2f6ec;
+  --c-cheap-border: #9fe0c2;
+  --c-cheap-text: #0e5239;
+  --c-cheap-link: #167352;
+  --c-cheap-fill: #167352;
+  --c-cheap-fill-deep: #0f5a40;
 
-  /* normaal en waarschuwing */
-  --c-normal: #d4a017;
-  --c-normal-bg: #fff4d6;
-  --c-normal-border: #fde68a;
-  --c-normal-text: #7a5c00;
+  /* normaal: zon, met crème als vlak */
+  --c-normal: #FFC83D;
+  --c-normal-bg: #FFF3D6;
+  --c-normal-border: #ffe08f;
+  --c-normal-text: #6e4d00;
   --c-warn: #d97706;
-  --c-warn-text: #92400e;
+  --c-warn-text: #8a4300;
 
-  /* duur */
-  --c-pricey: #c92a2a;
-  --c-pricey-deep: #9c1a1a;
-  --c-pricey-bg: #fde8e8;
-  --c-pricey-border: #ffb3b3;
-  --c-pricey-text: #7f1d1d;
+  /* duur: koraal. Zelfde regel als goedkoop: tekst in -deep of -text. */
+  --c-pricey: #F2564A;
+  --c-pricey-deep: #c13628;
+  --c-pricey-bg: #ffece9;
+  --c-pricey-border: #ffbcb3;
+  --c-pricey-text: #8c2318;
 
   /* overig */
   --c-feedin: #a11b6b;
@@ -63,12 +73,13 @@
   --c-wa-bg: #e7f8ee;
 
   /* schaduwen en maten */
-  --shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.05);
-  --shadow-md: 0 4px 16px rgba(20, 30, 50, 0.08);
+  --shadow-sm: 0 1px 2px rgba(29, 43, 83, 0.06);
+  --shadow-md: 0 4px 16px rgba(29, 43, 83, 0.09);
   --radius: 14px;
   --radius-sm: 8px;
   --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Manrope", var(--font-sans);
 
   /* aliassen: oudere paginastijlen gebruiken deze namen */
   --surface: var(--c-surface);
@@ -79,6 +90,24 @@
   --color-primary: var(--c-brand);
   --color-bg-alt: var(--c-surface-soft);
 }
+
+/* Manrope (OFL, zie /fonts/OFL.txt) alleen voor koppen en het woordmerk */
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/manrope-700.woff2") format("woff2");
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/manrope-800.woff2") format("woff2");
+  font-weight: 800 900;
+  font-style: normal;
+  font-display: swap;
+}
+h1, h2, h3, .brand-name { font-family: var(--font-display); }
+.brand-name { font-weight: 800; letter-spacing: -0.01em; }
 * { box-sizing: border-box; }
 
 html, body {
@@ -153,13 +182,13 @@ a:hover { text-decoration: underline; }
   color: var(--c-brand-deep);
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
-  box-shadow: 0 1px 2px rgba(15, 108, 189, 0.08);
+  box-shadow: 0 1px 2px rgba(29, 43, 83, 0.08);
   max-width: 100%;
 }
 .settings-toggle:hover {
   background: var(--c-surface-hover);
   border-color: var(--c-brand-deep);
-  box-shadow: 0 2px 6px rgba(15, 108, 189, 0.15);
+  box-shadow: 0 2px 6px rgba(29, 43, 83, 0.15);
 }
 .settings-toggle[aria-expanded="true"] {
   background: var(--c-brand-fill);
@@ -250,7 +279,7 @@ a:hover { text-decoration: underline; }
 }
 .settings-select:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(15, 108, 189, 0.18);
+  box-shadow: 0 0 0 3px var(--c-focus);
 }
 .settings-current { margin: 0; font-size: 0.8rem; color: var(--c-text-mute); }
 .settings-side {
@@ -299,9 +328,9 @@ a:hover { text-decoration: underline; }
   max-width: 440px;
   width: calc(100% - 32px);
   color: var(--c-text);
-  box-shadow: 0 18px 50px rgba(20, 30, 50, 0.25);
+  box-shadow: 0 18px 50px rgba(17, 26, 56, 0.25);
 }
-.info-dialog::backdrop { background: rgba(20, 30, 50, 0.42); }
+.info-dialog::backdrop { background: rgba(17, 26, 56, 0.42); }
 .info-dialog-inner { padding: 20px 22px 18px; }
 .info-dialog-title { margin: 0 0 10px; font-size: 1.02rem; }
 .info-dialog-list {
@@ -476,7 +505,7 @@ a:hover { text-decoration: underline; }
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  border: 1px solid var(--c-border, #d8e0e8);
+  border: 1px solid var(--c-border, #e1e5ef);
   background: var(--c-surface, #fff);
   font-family: inherit;
   font-size: 0.85rem;
@@ -506,7 +535,7 @@ a:hover { text-decoration: underline; }
   margin: 10px 0 0;
   font-size: 0.82rem;
   line-height: 1.55;
-  color: var(--c-text-soft, #4b5563);
+  color: var(--c-text-soft, #475174);
 }
 .feedin-note[hidden] { display: none; }
 .feedin-note .feedin-note-dot {
@@ -811,7 +840,7 @@ a:hover { text-decoration: underline; }
 /* Profiel-actieregel onderaan een kaart (personalisatie) */
 .fh-action {
   margin-top: 8px;
-  background: rgba(15, 108, 189, 0.08);
+  background: rgba(29, 43, 83, 0.08);
   border-radius: 6px;
   padding: 5px 8px;
   font-size: 0.78rem;
@@ -873,7 +902,7 @@ a:hover { text-decoration: underline; }
   color: #fff;
 }
 .situation-chip:hover { border-color: var(--c-accent); }
-.situation-chip input:focus-visible ~ .situation-box { box-shadow: 0 0 0 3px rgba(15, 108, 189, 0.3); }
+.situation-chip input:focus-visible ~ .situation-box { box-shadow: 0 0 0 3px var(--c-focus); }
 .situation-chip.is-on,
 .situation-chip:has(input:checked) {
   background: var(--c-surface-soft);
@@ -1028,7 +1057,7 @@ a:hover { text-decoration: underline; }
   width: 28px; height: 28px;
   border-radius: 50%;
   background: var(--c-cheap-bg);
-  color: var(--c-cheap);
+  color: var(--c-cheap-link);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1570,7 +1599,7 @@ body.has-neg-alert .site-header { top: 56px; }
   letter-spacing: -0.02em;
 }
 .kb-hero-sub {
-  color: #a8c4dc;
+  color: #c3cbe6;
   font-size: 0.97rem;
   margin: 0 0 16px;
   line-height: 1.5;
@@ -1582,7 +1611,7 @@ body.has-neg-alert .site-header { top: 56px; }
 }
 .kb-hero-chip {
   background: rgba(255,255,255,0.12);
-  color: #d0e6f5;
+  color: #dfe4f5;
   font-size: 0.78rem;
   padding: 3px 10px;
   border-radius: 20px;
@@ -1614,7 +1643,7 @@ body.has-neg-alert .site-header { top: 56px; }
 .kb-filter-search:focus {
   outline: none;
   border-color: var(--c-brand);
-  box-shadow: 0 0 0 2px rgba(15,108,189,0.18);
+  box-shadow: 0 0 0 2px var(--c-focus);
 }
 .kb-filter-row {
   display: flex;
@@ -2026,8 +2055,8 @@ body.has-neg-alert .site-header { top: 56px; }
   color: var(--c-text-soft);
   min-height: 1.4em;
 }
-.morgen-compare.is-cheaper { color: var(--c-cheap); }
-.morgen-compare.is-pricier { color: var(--c-pricey); }
+.morgen-compare.is-cheaper { color: var(--c-cheap-link); }
+.morgen-compare.is-pricier { color: var(--c-pricey-deep); }
 
 /* Highlight cards */
 .morgen-highlights {
@@ -2062,7 +2091,7 @@ body.has-neg-alert .site-header { top: 56px; }
   color: var(--c-text);
   line-height: 1.1;
 }
-.morgen-hl-pricey { color: var(--c-pricey); }
+.morgen-hl-pricey { color: var(--c-pricey-deep); }
 .morgen-highlight.is-free .morgen-highlight-value { color: var(--c-free); }
 .morgen-highlight-sub {
   font-size: 0.78rem;
@@ -2223,10 +2252,10 @@ body.has-neg-alert .site-header { top: 56px; }
 }
 .cmp-arrow { font-size: 0.9rem; margin-left: 4px; font-weight: 700; }
 .cmp-better { color: var(--c-cheap-link); }
-.cmp-worse  { color: var(--c-pricey); }
+.cmp-worse  { color: var(--c-pricey-deep); }
 .cmp-neutral { color: var(--c-text-mute); }
 .cmp-diff-better { color: var(--c-cheap-link); font-weight: 600; }
-.cmp-diff-worse  { color: var(--c-pricey); font-weight: 600; }
+.cmp-diff-worse  { color: var(--c-pricey-deep); font-weight: 600; }
 
 /* ── Prijsanalyse als nieuwsbericht ── */
 .morgen-news-article {
@@ -2567,7 +2596,7 @@ body.has-neg-alert .site-header { top: 56px; }
 .share-btn.share-native:hover { background: var(--c-brand-fill); border-color: var(--c-brand-fill); color: #fff; }
 .share-btn[hidden] { display: none; }
 /* Kopieer-bevestiging */
-.share-btn.is-copied { background: var(--c-cheap-bg); border-color: var(--c-cheap); color: var(--c-cheap); }
+.share-btn.is-copied { background: var(--c-cheap-bg); border-color: var(--c-cheap); color: var(--c-cheap-link); }
 .share-copied-toast {
   position: absolute;
   bottom: calc(100% + 6px);
@@ -2616,7 +2645,7 @@ body.has-neg-alert .site-header { top: 56px; }
   background: var(--c-surface);
   border: 1px solid var(--c-border);
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(24, 34, 46, .12);
+  box-shadow: 0 8px 24px rgba(26, 35, 64, .12);
   padding: 6px;
   display: none;
   z-index: 50;
@@ -2670,8 +2699,8 @@ body.has-neg-alert .site-header { top: 56px; }
   background:
     linear-gradient(to right, var(--c-surface), rgba(255,255,255,0)) 0 0,
     linear-gradient(to left,  var(--c-surface), rgba(255,255,255,0)) 100% 0,
-    radial-gradient(farthest-side at 0 50%, rgba(24,34,46,.14), rgba(24,34,46,0)) 0 0,
-    radial-gradient(farthest-side at 100% 50%, rgba(24,34,46,.14), rgba(24,34,46,0)) 100% 0;
+    radial-gradient(farthest-side at 0 50%, rgba(26, 35, 64, .14), rgba(26, 35, 64, 0)) 0 0,
+    radial-gradient(farthest-side at 100% 50%, rgba(26, 35, 64, .14), rgba(26, 35, 64, 0)) 100% 0;
   background-repeat: no-repeat;
   background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
   background-attachment: local, local, scroll, scroll;
@@ -2695,7 +2724,7 @@ body.has-neg-alert .site-header { top: 56px; }
   border-radius: 50%;
   background: var(--c-surface);
   color: var(--c-brand-deep);
-  box-shadow: 0 4px 14px rgba(24,34,46,.16);
+  box-shadow: 0 4px 14px rgba(26, 35, 64, .16);
   font-size: 1.35rem;
   line-height: 1;
   cursor: pointer;
@@ -3105,6 +3134,16 @@ details[open] > .faq-q::before { transform: rotate(90deg); }
 /* Lange URL's, codefragmenten en bedragen met &nbsp; breken in plaats van
    de pagina op te rekken. Generiek, want de paginatypes gebruiken verschillende
    containerklassen (artikel-content, legal-page, aanbieder-meta, ...). */
+/* Links in lopende tekst: inkt ligt dicht bij de tekstkleur, dus een
+   onderstreping maakt ze herkenbaar (WCAG 1.4.1). */
+p a:not([class]), li a:not([class]), td a:not([class]) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+}
+p a:not([class]):hover, li a:not([class]):hover, td a:not([class]):hover { text-decoration-color: currentColor; }
+
 p a, li a, td a, p code, li code, .aanbieder-meta span {
   overflow-wrap: anywhere;
 }
@@ -3115,47 +3154,48 @@ p a, li a, td a, p code, li code, .aanbieder-meta span {
    ──────────────────────────────────────────────────────── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --c-bg: #0f141b;
-    --c-surface: #171d26;
-    --c-surface-soft: #1b2330;
-    --c-surface-alt: #222b38;
-    --c-surface-hover: #28323f;
-    --c-text: #e7edf4;
-    --c-text-soft: #b6c2d0;
-    --c-text-mute: #93a1b2;
-    --c-border: #2c3542;
-    --c-border-strong: #3e4a59;
-    --c-brand: #63aaf0;
-    --c-brand-deep: #93c6f7;
-    --c-accent: #7fb9ee;
+    --c-bg: #0e1325;
+    --c-surface: #161c32;
+    --c-surface-soft: #1a213a;
+    --c-surface-alt: #212944;
+    --c-surface-hover: #28314f;
+    --c-text: #e9ecf6;
+    --c-text-soft: #bac1d8;
+    --c-text-mute: #969fbb;
+    --c-border: #2a3250;
+    --c-border-strong: #3d4669;
+    --c-brand: #9db0f0;
+    --c-brand-deep: #c3cff7;
+    --c-accent: #8fa3e8;
+    --c-focus: rgba(157, 176, 240, 0.4);
     --c-free: #a78bfa;
     --c-free-bg: #241d3c;
     --c-free-border: #4b3d85;
     --c-free-text: #ddd2ff;
     --c-free-link: #c0aaff;
-    --c-cheap: #4ade80;
-    --c-cheap-bg: #132a1c;
-    --c-cheap-border: #2f5d3e;
-    --c-cheap-text: #b9f0cc;
-    --c-cheap-link: #6ee7a0;
-    --c-normal: #e3b341;
-    --c-normal-bg: #2b2413;
-    --c-normal-border: #5c4c20;
-    --c-normal-text: #f2dfae;
+    --c-cheap: #2BC48A;
+    --c-cheap-bg: #10291f;
+    --c-cheap-border: #1f5640;
+    --c-cheap-text: #b4efd5;
+    --c-cheap-link: #5fdcab;
+    --c-normal: #FFC83D;
+    --c-normal-bg: #2b2412;
+    --c-normal-border: #5c4a1c;
+    --c-normal-text: #ffe3a0;
     --c-warn: #e8973a;
     --c-warn-text: #f7c893;
-    --c-pricey: #f87171;
-    --c-pricey-deep: #fca5a5;
-    --c-pricey-bg: #2e1818;
-    --c-pricey-border: #5e2c2c;
-    --c-pricey-text: #ffcaca;
+    --c-pricey: #FF6B5B;
+    --c-pricey-deep: #ff9a8f;
+    --c-pricey-bg: #311a1a;
+    --c-pricey-border: #63302b;
+    --c-pricey-text: #ffcdc6;
     --c-feedin: #ef8ac4;
     --c-feedin-bg: #2a1722;
     --c-wa-bg: #14291d;
-    --c-brand-fill: #1d6cb0;
-    --c-brand-fill-deep: #15497a;
-    --c-cheap-fill: #1f7a37;
-    --c-cheap-fill-deep: #166129;
+    --c-brand-fill: #3b4f96;
+    --c-brand-fill-deep: #2c3c78;
+    --c-cheap-fill: #167352;
+    --c-cheap-fill-deep: #0f5a40;
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.55);

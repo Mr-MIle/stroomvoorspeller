@@ -417,7 +417,7 @@ def bouw_pagina(jd: dict, alle: dict[int, dict], bel: Belasting,
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>{titel}</title>
   <meta name="description" content="{beschrijving}" />
-  <meta name="theme-color" content="#0f6cbd" />
+  <meta name="theme-color" content="#1D2B53" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="canonical" href="{url}" />
 
