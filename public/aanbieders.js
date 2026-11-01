@@ -14,7 +14,7 @@
   var chips = { zon: $("c-zon"), ev: $("c-ev"), bat: $("c-bat"), api: $("c-api") };
   var filterEls = Array.prototype.slice.call(document.querySelectorAll("[data-filter]"));
   var jaarEl = $("rekenjaar");
-  var vbalk = $("aanb-vbalk"), vnamen = $("aanb-vbalk-namen"), vopen = $("vergelijk-open"), vwis = $("vergelijk-wis");
+  var vbalk = $("aanb-vbalk"), vnamen = $("aanb-vbalk-namen"), vopen = $("vergelijk-open"), vwis = $("vergelijk-wis"), vtitel = $("aanb-vbalk-titel");
   var vglDialog = $("vgl-dialog"), fltDialog = $("flt-dialog"), vglBody = $("vgl-body"), alleenV = $("alleen-verschillen");
 
   var aanbieders = [];
@@ -185,12 +185,34 @@
 
   // ── vergelijken ──
   function balk(melding) {
-    vbalk.hidden = state.gekozen.length === 0;
-    document.body.classList.toggle("heeft-vergelijk-bar", state.gekozen.length > 0);
-    vnamen.textContent = melding || state.gekozen.map(function (id) { return byId(id).name; }).join(" · ") +
-      (state.gekozen.length < 2 ? " · kies er nog één" : "");
-    vopen.disabled = state.gekozen.length < 2;
+    var n = state.gekozen.length;
+    vbalk.hidden = n === 0;
+    document.body.classList.toggle("heeft-vergelijk-bar", n > 0);
+    vtitel.textContent = melding || (n < 2 ? "Kies nog een aanbieder om te vergelijken" : "Klaar om te vergelijken (maximaal " + max() + ")");
+    vnamen.innerHTML = state.gekozen.map(function (id) {
+      var s = byId(id);
+      return '<span class="vbalk-chip">' + R.logoHtml(s) + '<span class="vbalk-chip-naam">' + R.esc(s.name) + "</span>" +
+             '<button type="button" class="vbalk-chip-weg" data-weg="' + R.esc(id) + '" aria-label="' + R.esc(s.name) + ' weghalen">×</button></span>';
+    }).join("") + (n < 2 ? '<span class="vbalk-chip-leeg">+ nog één</span>' : "");
+    vopen.disabled = n < 2;
+    vopen.textContent = n < 2 ? "Vergelijk" : "Vergelijk " + n + " →";
+    hoogteBalk();
   }
+  // De terug-naar-boven-knop en de onderrand van de pagina schuiven mee met de hoogte van de balk.
+  function hoogteBalk() {
+    if (!vbalk.hidden) document.body.style.setProperty("--vbalk-h", vbalk.offsetHeight + "px");
+  }
+  window.addEventListener("resize", hoogteBalk);
+  vnamen.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-weg]");
+    if (!b) return;
+    var i = state.gekozen.indexOf(b.getAttribute("data-weg"));
+    if (i !== -1) state.gekozen.splice(i, 1);
+    syncUrl(); balk(); render();
+    if (vglDialog.open) vergelijk();
+    var volgende = vnamen.querySelector("[data-weg]");
+    if (volgende) volgende.focus();
+  });
   function syncUrl() {
     try {
       var url = new URL(window.location.href);

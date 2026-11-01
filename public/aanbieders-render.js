@@ -464,7 +464,7 @@
     standaardSituatie: standaardSituatie, netAfname: netAfname, batEffect: batEffect, kiesScenario: kiesScenario, rekenbasis: rekenbasis, kosten: kosten, maandJaar: maandJaar,
     herkomstVan: herkomstVan, verouderd: verouderd, teken: teken, isVoorlopig: isVoorlopig,
     terugKort: terugKort, terugLang: terugLang, kenmerk: kenmerk,
-    regelHtml: regelHtml, lijstHtml: lijstHtml, sorteer: sorteer, filter: filter,
+    logoHtml: logoHtml, regelHtml: regelHtml, lijstHtml: lijstHtml, sorteer: sorteer, filter: filter,
     verschilTekst: verschilTekst, vergelijkHtml: vergelijkHtml
   };
 });

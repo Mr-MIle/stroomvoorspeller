@@ -161,10 +161,28 @@
     .aanbieders-footer-note { margin-top: 28px; font-size: 0.84rem; color: var(--c-text-mute); }
 
     /* vergelijkbalk */
-    .aanb-vbalk { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; background: var(--c-surface); border-top: 1px solid var(--c-border-strong); box-shadow: var(--shadow-md); padding: 8px 16px calc(8px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 8px; }
+    .aanb-vbalk { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; padding: 0 12px calc(12px + env(safe-area-inset-bottom)); pointer-events: none; animation: vbalk-in .25s ease-out; }
     .aanb-vbalk[hidden] { display: none; }
-    body.heeft-vergelijk-bar { padding-bottom: 4.4rem; }
-    .aanb-vbalk-namen { flex: 1; font-size: 0.88rem; color: var(--c-text-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .aanb-vbalk-in { pointer-events: auto; max-width: 928px; margin: 0 auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--c-surface); border: 2px solid var(--c-brand-fill); border-radius: var(--radius); box-shadow: 0 8px 28px rgba(15, 23, 42, 0.22); padding: 10px 12px; }
+    .aanb-vbalk-tekst { flex: 1 1 260px; min-width: 0; }
+    .aanb-vbalk-titel { display: block; font-size: 0.8rem; font-weight: 600; color: var(--c-text-soft); margin-bottom: 4px; }
+    .aanb-vbalk-namen { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.88rem; color: var(--c-text-soft); }
+    .vbalk-chip { display: inline-flex; align-items: center; gap: 2px; max-width: 100%; padding: 2px 2px 2px 6px; border: 1px solid var(--c-border-strong); border-radius: 999px; background: var(--c-surface-soft); color: var(--c-text); font-weight: 600; }
+    .vbalk-chip .aanb-logo { width: 20px; height: 20px; margin: 0 4px 0 0; vertical-align: 0; line-height: 20px; }
+    .vbalk-chip-naam { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .vbalk-chip-weg { all: unset; box-sizing: border-box; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--c-text-mute); cursor: pointer; font-size: 1.1rem; }
+    .vbalk-chip-weg:hover { background: var(--c-surface-hover); color: var(--c-text); }
+    .vbalk-chip-weg:focus-visible { outline: 3px solid var(--c-brand); }
+    .vbalk-chip-leeg { align-self: center; color: var(--c-text-mute); font-style: italic; }
+    .aanb-vbalk-knoppen { display: flex; gap: 8px; margin-left: auto; }
+    .aanb-vbalk .aanb-knop.primair { padding: 0 18px; }
+    @media (max-width: 640px) { .aanb-vbalk-in { gap: 8px; padding: 8px 10px; } .aanb-vbalk-knoppen { width: 100%; } .aanb-vbalk-knoppen .primair { flex: 1; } }
+    body.heeft-vergelijk-bar { padding-bottom: calc(var(--vbalk-h, 88px) + 12px); }
+    body.heeft-vergelijk-bar .to-top { bottom: calc(var(--vbalk-h, 88px) + 8px); }
+    @keyframes vbalk-in { from { transform: translateY(100%); opacity: 0; } to { transform: none; opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .aanb-vbalk { animation: none; } }
+    .aanb-vgl-tip { font-size: 0.86rem; color: var(--c-text-soft); margin: 10px 2px 8px; }
+    .kop-vgl { position: absolute; right: 2px; width: 48px; text-align: center; }
 
     /* dialogen (onderblad op mobiel) */
     .aanb-dialog { border: 0; padding: 0; width: 100%; max-width: 100vw; max-height: 100vh; margin: auto auto 0; border-radius: 14px 14px 0 0; background: var(--c-surface); color: var(--c-text); }
@@ -336,8 +354,9 @@
       <label class="aanb-btw"><input type="checkbox" id="btw" checked> incl. btw</label>
     </div>
 
+    <p class="aanb-vgl-tip">Zet aanbieders naast elkaar: vink rechts het vakje aan bij twee of drie aanbieders en kies onderin <strong>Vergelijk</strong>.</p>
     <div class="aanb-lijst" id="aanb-lijst">
-      <div class="aanb-koprij" aria-hidden="true"><span>Aanbieder</span><span class="r">Opslag</span><span class="r">Vast/mnd</span><span class="r" id="kop-terug">Teruglevering</span><span class="r">Score</span><span class="r">Per maand</span></div>
+      <div class="aanb-koprij" aria-hidden="true"><span>Aanbieder</span><span class="r">Opslag</span><span class="r">Vast/mnd</span><span class="r" id="kop-terug">Teruglevering</span><span class="r">Score</span><span class="r">Per maand</span><span class="kop-vgl">Vergelijk</span></div>
       <div id="aanbieder-grid">
       <!-- BUILD:CARDS:START -->
 <div class="aanb-rij" data-id="powerpeers" id="powerpeers" data-lev="104" data-rekening="675"><div class="aanb-rij-kop"><button type="button" class="aanb-open" aria-expanded="false" aria-controls="det-powerpeers"><span class="aanb-naam"><span class="aanb-nr">1.</span> <img class="aanb-logo" src="/logos/powerpeers.png" alt="" width="24" height="24" loading="lazy" decoding="async">Powerpeers</span><span class="aanb-cellen"><span class="aanb-cel"><span class="aanb-lbl">opslag </span><b>1,00 ct</b><span class="herk herk-tweede_bron" title="De aanbieder publiceert dit niet openbaar; overgenomen uit een andere bron."><span aria-hidden="true">◐</span><span class="sr"> (tweede bron)</span></span></span><span class="aanb-cel"><span class="aanb-lbl">vast </span><b>€ 6,26</b><span class="herk herk-tweede_bron" title="De aanbieder publiceert dit niet openbaar; overgenomen uit een andere bron."><span aria-hidden="true">◐</span><span class="sr"> (tweede bron)</span></span></span><span class="aanb-cel aanb-terug leeg"><span class="aanb-lbl">terug </span><b>beurs − 2,00 ct</b><span class="herk herk-aanname" title="Niet gevonden; we rekenen met een aangenomen waarde."><span aria-hidden="true">○</span><span class="sr"> (aanname)</span></span></span><span class="aanb-cel aanb-score"><span class="aanb-lbl">score </span>4,7</span></span><span class="aanb-bedrag">€ 56<small>per maand</small><small>€ 675 per jaar</small></span><span class="aanb-caret" aria-hidden="true">▾</span></button><label class="aanb-vgl"><input type="checkbox" class="vergelijk-check" data-id="powerpeers"><span class="aanb-vgl-vak" aria-hidden="true"></span><span class="sr">Vergelijk Powerpeers</span></label></div><div class="aanb-details" id="det-powerpeers" hidden><p class="aanb-omschr">Dochter van Vattenfall, sinds najaar 2025 gericht op dynamische contracten.</p><h3 class="aanb-kopje">Wat deze aanbieder rekent</h3><p class="aanb-som">Opslag 1,00 ct × 2.900 kWh = € 29 <span class="herk herk-tweede_bron" title="De aanbieder publiceert dit niet openbaar; overgenomen uit een andere bron."><span aria-hidden="true">◐</span><span class="sr"> (tweede bron)</span></span><br>Vaste kosten € 6,26 × 12 = € 75 <span class="herk herk-tweede_bron" title="De aanbieder publiceert dit niet openbaar; overgenomen uit een andere bron."><span aria-hidden="true">◐</span><span class="sr"> (tweede bron)</span></span><br><b>Samen € 104 per jaar</b>, inclusief btw over opslag en vaste kosten.</p><h3 class="aanb-kopje">Je hele stroomrekening (schatting)</h3><p class="aanb-som">Wat deze aanbieder rekent: € 104<br>Stroom tegen de beursprijs: € 399 (gemiddeld 13,77 ct × 2.900 kWh)<br>Energiebelasting: € 321 (11,08 ct × 2.900 kWh)<br>Netbeheer (gemiddeld van 6 netbeheerders): € 479 <span class="herk herk-tweede_bron" title="De aanbieder publiceert dit niet openbaar; overgenomen uit een andere bron."><span aria-hidden="true">◐</span><span class="sr"> (tweede bron)</span></span><br>Vermindering energiebelasting: − € 629<br><b>Samen € 675 per jaar, € 56 per maand.</b></p><p class="aanb-noot">Alleen stroom, zonder gas. Alles behalve het eerste bedrag is bij elke aanbieder gelijk. De beursprijs is een gemiddelde over november 2025 tot en met oktober 2026, gewogen naar het verbruik van een huis zonder zonnepanelen; je werkelijke prijs hangt af van wanneer je stroom gebruikt.</p><h3 class="aanb-kopje">Teruglevering</h3><p>Je krijgt de kale beursprijs min 2,00 ct per kWh. Dit bedrag maakt de aanbieder niet openbaar; we rekenen met een aanname. <span class="herk herk-aanname" title="Niet gevonden; we rekenen met een aangenomen waarde."><span aria-hidden="true">○</span><span class="sr"> (aanname)</span></span> <span class="bron">bron: powerpeers.nl/dynamische-energie/terugleverkosten-en-dynamische-energie</span></p><h3 class="aanb-kopje">Slim sturen</h3><ul class="aanb-kenmerken"><li><b>Stuurt je auto of laadpaal aan:</b> nog niet uitgezocht.</li><li><b>Stuurt je thuisbatterij aan:</b> nog niet uitgezocht.</li><li><b>Kwartierprijzen:</b> ja. Prijs per kwartier. <span class="bron"><span class="herk herk-tweede_bron" title="De aanbieder publiceert dit niet openbaar; overgenomen uit een andere bron."><span aria-hidden="true">◐</span><span class="sr"> (tweede bron)</span></span> bron: jeroen.nl/dynamische-energie/aanbieders (30 sep 2026)</span></li><li><b>Officiële open API:</b> nog niet uitgezocht.</li></ul><p class="aanb-noot">Home Assistant kan bij elke aanbieder sturen op de beursprijs, want die is overal gelijk. Zie <a href="/home-assistant">Home Assistant</a>.</p><h3 class="aanb-kopje">Contract en stroom</h3><p>Opzeggen: geen minimum, maandelijks opzegbaar. Gas: ja.<br>Stroometiket: 100% hernieuwbaar uit Nederland: 59% wind, 29% zon, 12% water. <span class="herk herk-tweede_bron" title="De aanbieder publiceert dit niet openbaar; overgenomen uit een andere bron."><span aria-hidden="true">◐</span><span class="sr"> (tweede bron)</span></span> <span class="bron">bron: jeroen.nl/dynamische-energie/aanbieders (30 sep 2026)</span></p><h3 class="aanb-kopje">Klantervaring</h3><p>4,7 van 5 op Trustpilot, 217 reviews, opgehaald 30 september 2026. Wij controleren deze reviews niet.</p><h3 class="aanb-kopje">Bron tarieven</h3><p>Opgave Emile, juni 2026; bedragen gecontroleerd 29 sep 2026 tegen jeroen.nl. Gecontroleerd op 29 september 2026.</p><p class="aanb-link"><a href="https://powerpeers.nl" target="_blank" rel="noopener">Naar de website van Powerpeers ↗</a></p></div></div>
@@ -667,9 +686,16 @@
     </div>
 
     <div class="aanb-vbalk" id="aanb-vbalk" hidden>
-      <span class="aanb-vbalk-namen" id="aanb-vbalk-namen" aria-live="polite"></span>
-      <button type="button" class="aanb-knop" id="vergelijk-wis">Wis</button>
-      <button type="button" class="aanb-knop primair" id="vergelijk-open" aria-haspopup="dialog" disabled>Vergelijk</button>
+      <div class="aanb-vbalk-in" role="region" aria-label="Aanbieders vergelijken">
+        <div class="aanb-vbalk-tekst">
+          <span class="aanb-vbalk-titel" id="aanb-vbalk-titel" aria-live="polite">Vergelijken</span>
+          <div class="aanb-vbalk-namen" id="aanb-vbalk-namen"></div>
+        </div>
+        <div class="aanb-vbalk-knoppen">
+          <button type="button" class="aanb-knop" id="vergelijk-wis">Wis</button>
+          <button type="button" class="aanb-knop primair" id="vergelijk-open" aria-haspopup="dialog" disabled>Vergelijk</button>
+        </div>
+      </div>
     </div>
 
     <dialog class="aanb-dialog" id="flt-dialog" aria-labelledby="flt-titel">
