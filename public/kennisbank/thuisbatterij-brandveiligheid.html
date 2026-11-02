@@ -27,6 +27,18 @@
   <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
 
   <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .kort { border-left: 4px solid var(--c-brand); background: var(--c-surface-soft); border-radius: 0 0.6rem 0.6rem 0; padding: 0.8rem 1.1rem 0.7rem; margin: 1rem 0 1.75rem; }
+    p.kort-kop { font-weight: 700; margin: 0 0 0.35rem; }
+    .kort ul { margin: 0; padding-left: 1.1rem; }
+    .kort li { margin: 0.3rem 0; line-height: 1.45; }
+    .artikel-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 1rem 0 0.5rem; }
+    .artikel-table th { background: var(--c-brand-fill, #1D2B53); color: #fff; text-align: left; padding: 0.55rem 0.75rem; font-weight: 600; }
+    .artikel-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border, #e1e5ef); vertical-align: top; }
+    .artikel-table tbody tr:nth-child(even) td { background: var(--c-surface-soft); }
+    .artikel-table .col-label { font-weight: 600; color: var(--c-brand-deep); }
+    @media (max-width: 480px) { .artikel-table { font-size: 0.82rem; } .artikel-table th, .artikel-table td { padding: 0.45rem 0.45rem; hyphens: auto; overflow-wrap: anywhere; } }
+  </style>
 
   <script type="application/ld+json">
   {
@@ -79,7 +91,7 @@
           "@id": "https://stroomvoorspeller.nl/#organization"
         },
         "datePublished": "2026-06-21",
-        "dateModified": "2026-09-29",
+        "dateModified": "2026-11-02",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/thuisbatterij-brandveiligheid"
@@ -92,7 +104,7 @@
             "name": "Hoe groot is het brandgevaar van een thuisbatterij?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Klein. In Nederland staan ruim 63.900 aangemelde thuisbatterijen (juli 2026), en het NIPV onderzocht er in 2026 drie incidenten mee. Twee daarvan ontstonden bij werk aan de installatie. Ontstaat er toch brand, dan is die heftig en lastig te blussen. Daarom draaien de regels om de juiste plek, een goede installatie en melden bij verzekeraar en netbeheerder."
+              "text": "Klein. In Nederland staan ruim 63.900 aangemelde thuisbatterijen (juli 2026). Het NIPV bekeek in 2026 acht incidenten, waarvan drie in Nederland; twee daarvan ontstonden bij werk aan de installatie. Ontstaat er toch brand, dan is die heftig en lastig te blussen. Daarom draaien de adviezen om de juiste plek, een rookmelder, een goede installatie en je verzekering."
             }
           },
           {
@@ -100,7 +112,7 @@
             "name": "Mag een thuisbatterij buiten staan?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Ja, als het model ervoor gemaakt is. Kijk naar minimaal IP65 voor een onbeschermde buitenplek, een werktemperatuur tot ongeveer −10 °C en een plek in de schaduw of onder een afdak. Veel batterijen laden niet onder 0 °C. Een vorstvrije schuur of garage is vaak beter."
+              "text": "Ja, als het model ervoor gemaakt is. Kijk naar minimaal IP65 voor een onbeschermde buitenplek, een werktemperatuur tot ongeveer −10 °C en een plek in de schaduw of onder een afdak. Bij vorst kan het laden tijdelijk stoppen. Een vorstvrije schuur is vaak beter."
             }
           },
           {
@@ -108,7 +120,15 @@
             "name": "Mag een thuisbatterij binnen staan?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Ja, op een onbrandbare ondergrond, met voldoende vrije ruimte en afstand tot brandbare materialen. Een garage, bijkeuken of technische ruimte op de begane grond heeft de voorkeur. Het NIPV raadt af om hem in een woon- of slaapkamer of een vluchtroute te zetten."
+              "text": "Ja. Heb je geen schuur, dan noemt de brandweer de garage of de zolder. Zet hem nooit in een vluchtroute of onder de trap, monteer hem op een onbrandbare ondergrond en hang een rookmelder in dezelfde ruimte."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Welke norm geldt voor een thuisbatterij?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Voor de aansluiting geldt NEN 1010, de norm voor elektrische installaties in huis. Voor de batterij zelf is IEC 62619 de veiligheidsnorm; vraag ernaar op de datasheet. PGS 37-1 is voor opslag boven 20 kWh en geldt niet voor particulieren. Een aparte wet voor thuisbatterijen bestaat niet."
             }
           },
           {
@@ -116,7 +136,7 @@
             "name": "Mag ik een thuisbatterij zelf installeren?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Een vaste batterij op de meterkast: nee, dat hoort een erkende installateur te doen volgens NEN 1010, met eigen groep en keuringsrapport. Doe je het zelf, dan riskeer je je verzekeringsdekking en de garantie. Een kleine plug-and-play-batterij is een ander verhaal, maar ook die moet je melden bij de netbeheerder."
+              "text": "Een vaste batterij op de meterkast: nee. Dat hoort een erkende installateur te doen volgens NEN 1010, met een eigen groep en een opleveringsrapport. Bij Interpolis is schade door de batterij anders niet verzekerd. Een stekkerbatterij steek je zelf in het stopcontact, maar meld die ook aan bij de netbeheerder."
             }
           },
           {
@@ -124,7 +144,7 @@
             "name": "Moet ik mijn thuisbatterij melden bij mijn verzekeraar?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Ja. Een thuisbatterij is een risicowijziging die je hoort te melden. Niet melden kan bij schade leiden tot weigering of korting van de uitkering, ook als de batterij niet de oorzaak was. Een vaste batterij valt meestal onder de opstalverzekering, bij huur onder de inboedelverzekering."
+              "text": "Dat verschilt per verzekeraar. Interpolis en Nationale-Nederlanden zeggen dat het niet nodig is, zolang de installatie aan hun eisen voldoet. Volgens het Verbond van Verzekeraars willen de meeste verzekeraars het wel weten. Staat er in je polis niets over, meld hem dan."
             }
           },
           {
@@ -132,7 +152,7 @@
             "name": "Is aanmelden bij de netbeheerder verplicht?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Ja, vanaf 0,8 kW vermogen, en dat geldt voor vrijwel elke thuisbatterij. Aanmelden is gratis en doe je in een paar minuten via energieleveren.nl, met je adres en de EAN-code van je aansluiting."
+              "text": "Ja. Wie een thuisbatterij laat installeren, moet die registreren via energieleveren.nl, met je adres en de EAN-code van je aansluiting. Aanmelden is gratis en kost een paar minuten."
             }
           }
         ]
@@ -164,118 +184,137 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/kennisbank">← terug naar de kennisbank</a></p>
     <h1>Thuisbatterij en brandgevaar: veilig plaatsen en verzekeren in 2026</h1>
-    <p class="legal-meta">21 juni 2026 · bijgewerkt 29 september 2026 · leestijd ~8 minuten</p>
+    <p class="legal-meta">21 juni 2026 · bijgewerkt 2 november 2026 · leestijd ~9 minuten</p>
 
-    <p>Een thuisbatterij koop je voor <a href="/kennisbank/thuisbatterij-kosten">het rendement</a>, maar je woont er wel mee onder één dak. De kans op brand is klein. Als het misgaat, is de brand wel heftig. Drie dingen moet je daarom vooraf regelen:</p>
-    <ol>
-      <li>De batterij staat op een veilige plek.</li>
-      <li>De installatie voldoet aan de norm.</li>
-      <li>Je verzekeraar en je netbeheerder weten ervan.</li>
-    </ol>
-    <p>Wie een van de drie overslaat, krijgt vooral gedoe als er onverhoopt iets misgaat.</p>
+    <p>Een thuisbatterij koop je voor <a href="/kennisbank/thuisbatterij-kosten">het rendement</a>, maar je woont er wel mee onder één dak. De kans op brand is klein. Gaat het toch mis, dan is de brand heftig en lastig te blussen. Met deze zeven punten zit je goed.</p>
+
+    <aside class="kort" aria-labelledby="kort-kop">
+      <p class="kort-kop" id="kort-kop">Checklist in één minuut</p>
+      <ul>
+        <li><strong>Plek:</strong> het liefst in de schuur, anders in de garage of op zolder. Nooit in een vluchtroute of onder de trap (brandweer).</li>
+        <li><strong>Ondergrond:</strong> iets wat niet brandt, zoals beton, steen of een onbrandbare plaat (brandweer).</li>
+        <li><strong>Rookmelder</strong> in dezelfde ruimte als de batterij (brandweer).</li>
+        <li><strong>Batterij:</strong> vraag naar de veiligheidsnorm IEC 62619 op de datasheet (brandweer).</li>
+        <li><strong>Installatie:</strong> door een erkende installateur, volgens NEN 1010. Bewaar het opleveringsrapport (Interpolis).</li>
+        <li><strong>Verzekering:</strong> lees je polis of bel je verzekeraar. Er is geen standaardregeling (Verbond van Verzekeraars).</li>
+        <li><strong>Netbeheerder:</strong> aanmelden via energieleveren.nl is verplicht (Netbeheer Nederland).</li>
+      </ul>
+    </aside>
 
     <section>
       <h2>Hoe groot is het brandgevaar van een thuisbatterij?</h2>
-      <p>Klein, maar niet nul. Eind juli 2026 stonden er ruim <strong>63.900 thuisbatterijen</strong> aangemeld bij de netbeheerders, en het echte aantal ligt volgens Energie Data Services Nederland waarschijnlijk twee keer zo hoog. Het Nederlands Instituut Publieke Veiligheid (NIPV) onderzocht in maart 2026 <strong>drie Nederlandse incidenten</strong> met een thuisbatterij:</p>
+      <p>Klein, maar niet nul. Eind juli 2026 stonden er ruim <strong>63.900 thuisbatterijen</strong> aangemeld bij de netbeheerders, en het echte aantal ligt volgens Energie Data Services Nederland waarschijnlijk twee keer zo hoog. Het Nederlands Instituut Publieke Veiligheid (NIPV) bekeek in maart 2026 acht incidenten in binnen- en buitenland. Drie daarvan waren in Nederland:</p>
       <ul>
         <li>Losser (2023): de oorzaak is niet achterhaald.</li>
         <li>Kollumerpomp (2025): een storing in de omvormer tijdens werkzaamheden.</li>
         <li>Zoetermeer (2025): er werd per ongeluk door de behuizing van de batterij geboord.</li>
       </ul>
+      <p>De meeste incidenten gebeurden in een garage of een andere ruimte in huis, en bijna altijd met rook en brand. Het NIPV wijst nog op iets wat je niet verwacht: de meterkast uitzetten is geen garantie dat de batterij spanningsloos is.</p>
       <p>In de ongevallenregistratie van Netbeheer Nederland over 2025 staat geen enkel ongeval met een vaste thuisbatterij. De accu-ongevallen daarin gaan over e-bikes, telefoons, gereedschap en voertuigen.</p>
-      <p>Daar staat tegenover dat een batterijbrand zich anders gedraagt dan een gewone brand. Een lithium-ion-batterij kan bij een defect, beschadiging of oververhitting in een kettingreactie raken, de zogenaamde &ldquo;thermal runaway&rdquo;. De cellen verhitten elkaar, de brand is intens en met water nauwelijks te blussen. Het NIPV schrijft ook dat de kans op een woningbrand kan toenemen als er een thuisbatterij in huis staat.</p>
-      <p>Daarom draait alle regelgeving om twee dingen: voorkomen dat het gebeurt, en de schade beperken als het tóch gebeurt. Een gecertificeerde batterij van een A-merk, vakkundig geïnstalleerd op de juiste plek, brengt het risico terug tot een niveau dat verzekeraars accepteren. Bij goedkope batterijen zonder papieren, zelf aangesloten op een bestaande groep, zijn ze een stuk strenger.</p>
+      <p>Een batterijbrand gedraagt zich anders dan een gewone brand. Een lithium-ion-batterij kan bij een defect, beschadiging of oververhitting in een kettingreactie raken, de zogenaamde &ldquo;thermal runaway&rdquo;. De cellen verhitten elkaar, de brand is intens en met water nauwelijks te blussen. Daarom gaan de adviezen hieronder over twee dingen: een brand voorkomen, en zorgen dat je hem op tijd merkt en het huis uit kunt.</p>
     </section>
 
     <section>
       <h2>Waar mag je een thuisbatterij plaatsen?</h2>
-      <p>De plek is de eerste vraag, en steeds vaker een harde voorwaarde van de verzekeraar.</p>
+      <p>De plek is de eerste vraag. De brandweer geeft er een duidelijke volgorde voor.</p>
 
-      <h3>Betonnen vloer of onbrandbare wand</h3>
-      <p>De standaard is een onbrandbare ondergrond: beton, steen of een onbrandbare wandplaat. Plaatsing op of tegen hout wordt sterk afgeraden, en een groeiend aantal verzekeraars dekt het dan niet meer. Hangt je batterij op een houten vloer of tegen een houten wand, controleer dan vóór aankoop of je polis dat accepteert.</p>
+      <h3>Schuur, garage of zolder</h3>
+      <p>Het meest brandveilig is een schuur: een brand blijft dan buiten het huis. Heb je geen schuur, dan noemt de brandweer de garage of de zolder. Zet de batterij nooit in je vluchtroute en niet onder de trap. Hang een werkende rookmelder in dezelfde ruimte, zodat je een brand op tijd merkt.</p>
+      <p>Op zolder moet je extra opletten. Het wordt er in de zomer warm, en de meeste batterijen werken tot ongeveer 45 °C. De vloer is vaak van hout, dus dan moet er een onbrandbare plaat tussen. De meterkast is meestal te krap: de warmte moet weg kunnen en een installateur moet erbij kunnen.</p>
 
-      <h3>Afstand en ruimte</h3>
-      <p>Houd de batterij op minimaal 50 centimeter van brandbare materialen, en plan ongeveer 60 centimeter vrije ruimte eromheen voor inspectie en onderhoud. Een batterij weggewerkt in een dichte kast achter spullen is geen goed idee: de warmte moet weg kunnen en een installateur moet erbij kunnen.</p>
-
-      <h3>Garage, bijkeuken of technische ruimte</h3>
-      <p>De voorkeursplek van vrijwel elke verzekeraar is een aparte ruimte op de begane grond met een betonnen vloer: de garage, bijkeuken of een technische ruimte. Daar is de ondergrond onbrandbaar, is er ventilatie, en staat de batterij niet in een woonruimte of vluchtroute. Het NIPV adviseert precies dat: een aparte ruimte, geen verblijfsruimte of vluchtroute.</p>
-      <p>Zolder en meterkast zijn juist ongunstig. Op zolder is het warm en de vloer vaak van hout; de meterkast is meestal te klein voor de vereiste vrije ruimte. Een hal of overloop die als vluchtroute dient, valt ook af. Hoe verder van hout, mensen en uitgangen, hoe beter.</p>
+      <h3>Onbrandbare ondergrond</h3>
+      <p>Monteer de batterij op of aan iets wat niet brandt: beton, steen of een onbrandbare plaat. Voor stekkerbatterijen geeft de brandweer nog een paar regels die voor een vaste batterij net zo logisch zijn. Niet onder meubels, niet bij de verwarming en niet in de volle zon. Kies een droge ruimte met ventilatie, die de brandweer makkelijk kan bereiken.</p>
+      <p>De brandweer en het Verbond van Verzekeraars noemen geen vaste afstand in centimeters. Houd de handleiding van je batterij aan: daar staat hoeveel ruimte de fabrikant eromheen wil.</p>
 
       <h3>Mag een thuisbatterij buiten staan?</h3>
-      <p>Ja, als het model ervoor gemaakt is. Kijk naar een beschermingsklasse van minimaal <strong>IP65</strong> voor een onbeschermde buitenplek; lager dan IP54 is ongeschikt. De meeste batterijen werken tussen ongeveer −10 °C en +45 °C, en veel modellen laden niet als het kouder is dan 0 °C. Zet hem in de schaduw of onder een afdak, niet direct tegen een schutting en zo'n 30 centimeter boven de grond. Een buitenopstelling kost al snel €300 tot €800 extra. Een vorstvrije schuur of garage is daarom vaak de betere keuze; Zonneplan raadt buiten plaatsen voor zijn eigen batterij zelfs af.</p>
+      <p>Ja, als het model ervoor gemaakt is. Frank Energie noemt minimaal beschermingsklasse <strong>IP65</strong> voor een onbeschermde buitenplek; lager dan IP54 is ongeschikt. De meeste batterijen werken tussen ongeveer −10 °C en +45 °C, en bij vorst kan het laden tijdelijk stoppen. Zet hem in de schaduw of onder een afdak, niet direct tegen een muur of schutting en minstens 30 centimeter boven de grond. Reken op €300 tot €800 extra voor een buitenopstelling. Een vorstvrije schuur is daarom vaak de betere keuze.</p>
     </section>
 
     <section>
-      <h2>Welke veiligheidseisen gelden voor de installatie?</h2>
-      <p>In Nederland is de <a href="https://www.nen.nl/elektrotechniek/installatievoorschriften/nen-1010-laagspanningsinstallaties" rel="noopener noreferrer" target="_blank">NEN 1010</a> leidend, de norm voor laagspanningsinstallaties. Een vaste thuisbatterij die op je meterkast wordt aangesloten, moet daaraan voldoen. Die norm bepaalt of je installatie legaal en verzekerbaar is.</p>
-      <p>In de praktijk betekent dat drie dingen. De batterij krijgt een <strong>eigen stroomgroep</strong> met een eigen aardlekautomaat; een zware batterij prik je nooit zomaar bij op een bestaande groep. Vlak naast de batterij en de omvormer komt een <strong>werkschakelaar</strong>: een stevige draaischakelaar waarmee de brandweer of een monteur het systeem in één handeling spanningsloos maakt. En de installatie wordt uitgevoerd door een <strong>erkende installateur</strong>, die het werk afsluit met een keuringsrapport.</p>
-      <p>Dat keuringsrapport is meer waard dan het lijkt. Het is je bewijs richting de verzekeraar dat alles volgens de norm is aangelegd, en enkele verzekeraars vragen er al om. Bewaar het samen met de certificaten van de batterij zelf. In België is het keuringsrapport inmiddels verplicht.</p>
-      <p>Over die certificaten: de A-merken die via officiële kanalen in Nederland worden verkocht, zoals Huawei, BYD, Sessy en Tesla, zijn getest op brandveiligheid en hebben hun papieren op orde. Bij een naamloze batterij uit een onbekende webshop is dat de vraag, en juist die papieren heeft je verzekeraar nodig.</p>
+      <h2>Welke regels en normen gelden?</h2>
+      <p>Een aparte wet voor thuisbatterijen bestaat niet. Wat geldt, is een mengsel van een installatienorm, een productnorm, de aanmeldplicht en de voorwaarden van je verzekeraar.</p>
+      <div class="artikel-table-wrap">
+        <table class="artikel-table">
+          <thead><tr><th scope="col">Regel</th><th scope="col">Waar gaat het over?</th><th scope="col">Moet het?</th></tr></thead>
+          <tbody>
+            <tr><td class="col-label">NEN 1010</td><td>De elektrische installatie in huis, dus ook hoe de batterij op je meterkast wordt aangesloten.</td><td>Ja, voor een vaste aansluiting. Interpolis dekt schade door de batterij alleen als de installatie eraan voldoet.</td></tr>
+            <tr><td class="col-label">IEC 62619</td><td>De veiligheid van de batterij zelf, met tests zoals kortsluiting en oververhitting.</td><td>Geen wet. De brandweer raadt aan ernaar te vragen. Interpolis eist het voor stekkerbatterijen.</td></tr>
+            <tr><td class="col-label">PGS 37-1</td><td>Brandveiligheid van grote opslag, boven 20 kWh.</td><td>Niet voor particulieren. Boven 20 kWh wel aanbevolen, en Interpolis eist het dan.</td></tr>
+            <tr><td class="col-label">Aanmelden</td><td>Je netbeheerder laten weten wat er achter je meter zit.</td><td>Ja, via energieleveren.nl.</td></tr>
+            <tr><td class="col-label">Je polis</td><td>Plek, installatie en papieren.</td><td>Verschilt per verzekeraar.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>In de praktijk betekent NEN 1010 dat de batterij een <strong>eigen groep</strong> krijgt in de meterkast en dat een <strong>erkende installateur</strong> het werk doet. Die sluit af met een opleveringsrapport. Bewaar dat goed: Interpolis vraagt om zo'n rapport van de installateur of van een onafhankelijke inspecteur. Een erkende installateur vind je op echteinstallateur.nl, waar de brandweer ook naar verwijst.</p>
+      <p>Vraag ook om een <strong>werkschakelaar</strong> vlak bij de batterij of de omvormer. Omdat de meterkast uitzetten de batterij niet altijd spanningsloos maakt (zie het NIPV hierboven), kan een monteur of de brandweer de batterij daarmee los van de rest van de installatie zetten.</p>
+      <p>Over de papieren: vraag vóór je koopt naar het IEC 62619-certificaat. Zit dat er niet bij, dan heb je bij schade weinig in handen. Dat risico loop je vooral bij naamloze batterijen uit een webshop.</p>
     </section>
 
     <section>
-      <h2>Thuisbatterij verzekeren: opstal of inboedel?</h2>
-      <p>Een vaste thuisbatterij is na installatie onderdeel van de woning. Voor de meeste woningeigenaren valt hij daarom onder de <strong>opstalverzekering</strong>. Ben je huurder, of zit je in een VvE waarbij het pand collectief is verzekerd, dan verzeker je de batterij meestal via je <strong>inboedelverzekering</strong>. Twijfel je, vraag het na: een verkeerde aanname betekent in het ergste geval geen dekking.</p>
-      <p>Belangrijker dan het hokje is dat je de batterij <strong>doorgeeft</strong> aan je verzekeraar. Een thuisbatterij is een wijziging van het risico, en die hoor je te melden. Doe je dat niet, dan kan de verzekeraar bij schade de uitkering weigeren of korten, ook als de brand niets met de batterij te maken had.</p>
-
-      <h3>Wat als je niet meldt of verkeerd plaatst?</h3>
-      <p>Dan loop je een dubbel risico. Bij schade kan de verzekeraar zich beroepen op de verkeerde plek (de houten vloer) of het ontbreken van een melding, en de claim afwijzen. Je zit dan met de schade én met de kosten van de batterij. Een keuringsrapport, de juiste plek en een nette melding zijn samen je bewijs dat je het goed hebt gedaan.</p>
+      <h2>Thuisbatterij verzekeren: wat zeggen de verzekeraars?</h2>
+      <p>Het Verbond van Verzekeraars waarschuwde in augustus 2026 dat een thuisbatterij niet zomaar verzekerd is. Er is geen standaardregeling: elke verzekeraar mag eigen eisen stellen aan de plek, de melding, het onderhoud en de papieren. Een batterij die vast aan de woning zit, valt meestal onder de <strong>opstalverzekering</strong>. Zo regelen drie grote verzekeraars het:</p>
+      <div class="artikel-table-wrap">
+        <table class="artikel-table">
+          <thead><tr><th scope="col">Verzekeraar</th><th scope="col">Valt onder</th><th scope="col">Melden?</th><th scope="col">Eisen</th></tr></thead>
+          <tbody>
+            <tr><td class="col-label">Interpolis</td><td>Vast aangesloten: woonhuisverzekering. Met stekker: inboedel.</td><td>Niet nodig als je aan de eisen voldoet.</td><td>NEN 1010 met opleveringsrapport; boven 20 kWh ook PGS 37-1. Stekkerbatterij: IEC 62619, boven 800 W op een eigen groep.</td></tr>
+            <tr><td class="col-label">Nationale-Nederlanden</td><td>Opstal, tot 20 kWh standaard meeverzekerd.</td><td>Niet nodig.</td><td>Niet genoemd op de site.</td></tr>
+            <tr><td class="col-label">Centraal Beheer</td><td>Opstal, standaard meeverzekerd.</td><td>Niet genoemd.</td><td>Niet genoemd op de site.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="legal-meta">Gelezen op de sites van de verzekeraars op 2 november 2026. In je polisvoorwaarden kan meer staan.</p>
+      <p>De belangrijkste regel in die tabel: bij Interpolis is schade die door de batterij ontstaat <strong>niet verzekerd</strong> als de installatie niet aan de eisen voldoet. Dan helpt alleen een installatie die aan de eisen voldoet.</p>
+      <p>Ben je huurder, of verzekert je VvE het gebouw? Vraag dan na onder welke polis de batterij valt. Staat er in je voorwaarden niets over thuisbatterijen, meld hem dan toch. Dat kost een telefoontje, en daarna weet je waar je aan toe bent.</p>
     </section>
 
     <section>
       <h2>De meldplicht bij de netbeheerder</h2>
-      <p>Los van de verzekering moet je de batterij aanmelden bij je netbeheerder: Liander, Stedin, Enexis of een van de regionale partijen. Dat is verplicht vanaf <strong>0,8 kW</strong> vermogen, en daar valt vrijwel elke thuisbatterij onder, ook de kleinere plug-and-play-systemen. Aanmelden doe je via <a href="https://www.energieleveren.nl" rel="noopener noreferrer" target="_blank">energieleveren.nl</a>, met je adres en de EAN-code van je aansluiting.</p>
+      <p>Los van de verzekering moet je de batterij aanmelden bij je netbeheerder: Liander, Stedin, Enexis of een van de regionale partijen. Netbeheer Nederland noemt dat verplicht voor iedereen die een thuisbatterij laat installeren. Aanmelden doe je via <a href="https://www.energieleveren.nl" rel="noopener noreferrer" target="_blank">energieleveren.nl</a>, met je adres en de EAN-code van je aansluiting. Meld een stekkerbatterij ook aan. Dat raadt Interpolis ook aan.</p>
       <p>Je netbeheerder weet dan wat er achter je meter zit. Dat telt bij storingen, bij werk aan het net en bij de planning van netuitbreiding. Aanmelden is gratis en kost een paar minuten.</p>
-    </section>
-
-    <section>
-      <h2>Checklist voordat je koopt</h2>
-      <ul>
-        <li>Kies een gecertificeerde batterij van een A-merk, mét de papieren erbij.</li>
-        <li>Bepaal de plek: betonnen vloer of onbrandbare wand, minimaal 50 cm van brandbare materialen, 60 cm vrije ruimte rondom.</li>
-        <li>Vermijd zolder, meterkast en vluchtroutes; kies bij voorkeur garage, bijkeuken of technische ruimte op de begane grond.</li>
-        <li>Buiten? Alleen met een model dat ervoor gemaakt is (minimaal IP65), in de schaduw en vorstvrij.</li>
-        <li>Laat installeren door een erkende installateur, op een eigen groep, met werkschakelaar en keuringsrapport.</li>
-        <li>Geef de batterij door aan je verzekeraar en controleer of de plaatsing onder je polis valt (opstal of inboedel).</li>
-        <li>Meld de batterij aan bij je netbeheerder via energieleveren.nl.</li>
-        <li>Bewaar certificaten en keuringsrapport op één plek.</li>
-      </ul>
     </section>
 
     <section>
       <h2>Veelgestelde vragen</h2>
 
       <h3>Hoe groot is het brandgevaar van een thuisbatterij?</h3>
-      <p>Klein. In Nederland staan ruim 63.900 aangemelde thuisbatterijen (juli 2026), en het NIPV onderzocht er in 2026 drie incidenten mee. Twee daarvan ontstonden bij werk aan de installatie. Ontstaat er toch brand, dan is die heftig en lastig te blussen. Daarom draaien de regels om de juiste plek, een goede installatie en melden bij verzekeraar en netbeheerder.</p>
+      <p>Klein. In Nederland staan ruim 63.900 aangemelde thuisbatterijen (juli 2026). Het NIPV bekeek in 2026 acht incidenten, waarvan drie in Nederland; twee daarvan ontstonden bij werk aan de installatie. Ontstaat er toch brand, dan is die heftig en lastig te blussen. Daarom draaien de adviezen om de juiste plek, een rookmelder, een goede installatie en je verzekering.</p>
 
       <h3>Mag een thuisbatterij buiten staan?</h3>
-      <p>Ja, als het model ervoor gemaakt is. Kijk naar minimaal IP65 voor een onbeschermde buitenplek, een werktemperatuur tot ongeveer −10 °C en een plek in de schaduw of onder een afdak. Veel batterijen laden niet onder 0 °C. Een vorstvrije schuur of garage is vaak beter.</p>
+      <p>Ja, als het model ervoor gemaakt is. Kijk naar minimaal IP65 voor een onbeschermde buitenplek, een werktemperatuur tot ongeveer −10 °C en een plek in de schaduw of onder een afdak. Bij vorst kan het laden tijdelijk stoppen. Een vorstvrije schuur is vaak beter.</p>
 
       <h3>Mag een thuisbatterij binnen staan?</h3>
-      <p>Ja, op een onbrandbare ondergrond, met voldoende vrije ruimte en afstand tot brandbare materialen. Een garage, bijkeuken of technische ruimte op de begane grond heeft de voorkeur. Het NIPV raadt af om hem in een woon- of slaapkamer of een vluchtroute te zetten.</p>
+      <p>Ja. Heb je geen schuur, dan noemt de brandweer de garage of de zolder. Zet hem nooit in een vluchtroute of onder de trap, monteer hem op een onbrandbare ondergrond en hang een rookmelder in dezelfde ruimte.</p>
+
+      <h3>Welke norm geldt voor een thuisbatterij?</h3>
+      <p>Voor de aansluiting geldt NEN 1010, de norm voor elektrische installaties in huis. Voor de batterij zelf is IEC 62619 de veiligheidsnorm; vraag ernaar op de datasheet. PGS 37-1 is voor opslag boven 20 kWh en geldt niet voor particulieren. Een aparte wet voor thuisbatterijen bestaat niet.</p>
 
       <h3>Mag ik een thuisbatterij zelf installeren?</h3>
-      <p>Een vaste batterij op de meterkast: nee, dat hoort een erkende installateur te doen volgens NEN 1010, met eigen groep en keuringsrapport. Doe je het zelf, dan riskeer je je verzekeringsdekking en de garantie. Een kleine plug-and-play-batterij is een ander verhaal, maar ook die moet je melden bij de netbeheerder.</p>
+      <p>Een vaste batterij op de meterkast: nee. Dat hoort een erkende installateur te doen volgens NEN 1010, met een eigen groep en een opleveringsrapport. Bij Interpolis is schade door de batterij anders niet verzekerd. Een stekkerbatterij steek je zelf in het stopcontact, maar meld die ook aan bij de netbeheerder.</p>
 
       <h3>Moet ik mijn thuisbatterij melden bij mijn verzekeraar?</h3>
-      <p>Ja. Een thuisbatterij is een risicowijziging die je hoort te melden. Niet melden kan bij schade leiden tot weigering of korting van de uitkering, ook als de batterij niet de oorzaak was. Een vaste batterij valt meestal onder de opstalverzekering, bij huur onder de inboedelverzekering.</p>
+      <p>Dat verschilt per verzekeraar. Interpolis en Nationale-Nederlanden zeggen dat het niet nodig is, zolang de installatie aan hun eisen voldoet. Volgens het Verbond van Verzekeraars willen de meeste verzekeraars het wel weten. Staat er in je polis niets over, meld hem dan.</p>
 
       <h3>Is aanmelden bij de netbeheerder verplicht?</h3>
-      <p>Ja, vanaf 0,8 kW vermogen, en dat geldt voor vrijwel elke thuisbatterij. Aanmelden is gratis en doe je in een paar minuten via energieleveren.nl, met je adres en de EAN-code van je aansluiting.</p>
+      <p>Ja. Wie een thuisbatterij laat installeren, moet die registreren via energieleveren.nl, met je adres en de EAN-code van je aansluiting. Aanmelden is gratis en kost een paar minuten.</p>
+
     </section>
 
     <section>
       <h2>Bronnen</h2>
       <ol class="legal-sources">
-        <li><a href="https://nipv.nl/wp-content/uploads/2026/03/20260326-NIPV-Rapport-Incidentbestrijding-Thuisbatterijen.pdf" rel="noopener noreferrer" target="_blank">NIPV — Incidentbestrijding lithium-ion thuisbatterijen (maart 2026)</a></li>
-        <li><a href="https://nipv.nl/wp-content/uploads/2025/05/20241210-NIPV-Samenvatting-Thuisbatterijen-en-brandveiligheid.pdf" rel="noopener noreferrer" target="_blank">NIPV — Thuisbatterijen en brandveiligheid (samenvatting)</a></li>
+        <li><a href="https://www.brandweer.nl/onderwerpen/een-veilige-thuisbatterij/" rel="noopener noreferrer" target="_blank">Brandweer Nederland — Een veilige thuisbatterij</a></li>
+        <li><a href="https://www.brandweer.nl/onderwerpen/plug-and-play-thuisbatterij/" rel="noopener noreferrer" target="_blank">Brandweer Nederland — Plug and play thuisbatterij</a></li>
+        <li><a href="https://nipv.nl/onderzoek/batterijen/incidentbestrijding-lithium-ion-thuisbatterijen/" rel="noopener noreferrer" target="_blank">NIPV — Incidentbestrijding lithium-ion thuisbatterijen (26 maart 2026)</a></li>
+        <li><a href="https://www.verzekeraars.nl/publicaties/actueel/verbond-waarschuwt-thuisbatterij-niet-zomaar-verzekerd" rel="noopener noreferrer" target="_blank">Verbond van Verzekeraars — Thuisbatterij niet zomaar verzekerd (20 augustus 2026)</a></li>
+        <li><a href="https://www.interpolis.nl/verzekeren/woonverzekering/thuisbatterij" rel="noopener noreferrer" target="_blank">Interpolis — Thuisbatterij verzekeren</a></li>
+        <li><a href="https://www.nn.nl/Particulier/Verzekeren/Woonverzekeringen.htm" rel="noopener noreferrer" target="_blank">Nationale-Nederlanden — Woonverzekeringen (vraag: is mijn thuisbatterij verzekerd?)</a></li>
+        <li><a href="https://www.centraalbeheer.nl/verzekeringen/opstalverzekering" rel="noopener noreferrer" target="_blank">Centraal Beheer — Opstalverzekering</a></li>
+        <li><a href="https://publicatiereeksgevaarlijkestoffen.nl/publicaties/online/pgs-37-1/2023/1-0-december-2023" rel="noopener noreferrer" target="_blank">PGS 37-1:2023 — Lithiumhoudende energiedragers: energieopslagsystemen (toepassingsbereik, § 1.2)</a></li>
         <li><a href="https://www.netbeheernederland.nl/sites/default/files/2026-07/e-ongevallen_achter_de_meter_2025_v1.0.pdf" rel="noopener noreferrer" target="_blank">Netbeheer Nederland — Elektriciteitsongevallen achter de meter 2025</a></li>
+        <li><a href="https://www.netbeheernederland.nl/artikelen/nieuws/meld-thuisbatterijen-aan-op-energieleverennl" rel="noopener noreferrer" target="_blank">Netbeheer Nederland — Meld thuisbatterijen aan op energieleveren.nl</a></li>
         <li><a href="https://www.zonneplan.nl/thuisbatterij/aantal-thuisbatterijen-nederland" rel="noopener noreferrer" target="_blank">Zonneplan — Aantal thuisbatterijen in Nederland (juli 2026)</a></li>
         <li><a href="https://www.frankenergie.nl/nl/kennisbank/thuisbatterij/thuisbatterij-buiten-plaatsen" rel="noopener noreferrer" target="_blank">Frank Energie — Thuisbatterij buiten plaatsen</a></li>
-        <li><a href="https://www.netbeheernederland.nl/artikelen/nieuws/meld-thuisbatterijen-aan-op-energieleverennl" rel="noopener noreferrer" target="_blank">Netbeheer Nederland — Meld thuisbatterijen aan op energieleveren.nl</a></li>
-        <li><a href="https://slimster.nl/thuisbatterij/veiligheid-thuisbatterij/" rel="noopener noreferrer" target="_blank">Slimster — Is een thuisbatterij veilig? Brandgevaar en veiligheidseisen</a></li>
-        <li><a href="https://slimster.nl/thuisbatterij/wetgeving-en-regels/" rel="noopener noreferrer" target="_blank">Slimster — Wetgeving thuisbatterij 2026: alle regels en verplichtingen</a></li>
-        <li><a href="https://www.ecohandel.nl/blogs/kennis/thuisbatterij-verzekering-opstal-inboedel-2026" rel="noopener noreferrer" target="_blank">EcoHandel.nl — Thuisbatterij verzekering 2026: opstal of inboedel?</a></li>
       </ol>
     </section>
 

@@ -245,7 +245,16 @@ function buildArtikel(cfg, lijst) {
     eur(k(laagste, kale)) + " per jaar. Van deze vier is " + vierVolg[0].s.name + " het goedkoopst (" + eur(vierVolg[0].k.totaal) + "), met " +
     vierVolg[1].s.name + " (" + eur(vierVolg[1].k.totaal) + ") en " + vierVolg[2].s.name + " (" + eur(vierVolg[2].k.totaal) + ") er vlak achter. Heb je zonnepanelen, dan verandert de volgorde: vul je teruglevering in bovenaan deze pagina of op /aanbieders.";
 
+  // ANWB Energie of Zonneplan: eigen sectie (GSC-punt 6a, nov 2026)
+  const az = anwbZonneplan(cfg, by, kale, zon, k, waarschuw);
+
   let html = fs.readFileSync(ARTIKEL_PATH, "utf8");
+  html = vervang(html, "VIER-AZ-KORT", az.kort, BESTAND);
+  html = vervang(html, "VIER-AZ-TABEL", az.tabel, BESTAND);
+  html = vervang(html, "VIER-AZ-FAQ", R.esc(az.faq), BESTAND);
+  const azVraag = /("name": "Wat is goedkoper, ANWB Energie of Zonneplan\?",\s*"acceptedAnswer": \{\s*"@type": "Answer",\s*"text": )"(?:[^"\\]|\\.)*"/;
+  if (!azVraag.test(html)) { console.error("FAQ-vraag over ANWB Energie of Zonneplan niet gevonden in de JSON-LD van " + BESTAND); process.exit(1); }
+  html = html.replace(azVraag, (m, kop) => kop + JSON.stringify(az.faq));
   html = vervang(html, "VIER-KORT", kort, BESTAND);
   html = vervang(html, "VIER-VERSCHIL", V.verschilZin(vier, kale), BESTAND);
   html = vervang(html, "VIER-RIJEN", "\n" + V.rijenHtml(vier, kale) + "\n      ", BESTAND);
@@ -259,6 +268,60 @@ function buildArtikel(cfg, lijst) {
   html = html.replace(vraag, (m, kop) => kop + JSON.stringify(faqTekst));
   fs.writeFileSync(ARTIKEL_PATH, html, "utf8");
   console.log(BESTAND + " bijgewerkt: goedkoopst van de vier " + goedkoopsteVier.s.name + " (" + eur(goedkoopsteVier.k.totaal) + "), van alle " + laagste.name + " (" + eur(k(laagste, kale)) + ").");
+}
+
+// Bedragen en tabel voor de sectie "ANWB Energie of Zonneplan?". De tekst eromheen
+// leunt op: Zonneplan goedkoper zonder panelen, ANWB lagere opslag, Zonneplan lagere
+// vaste kosten en een plus op teruglevering. Verandert dat, dan volgt een waarschuwing.
+function anwbZonneplan(cfg, by, kale, zon, k, waarschuw) {
+  const vol = (id) => cfg.suppliers.find((x) => x.id === id);
+  const a = by("anwb"), z = by("zonneplan"), A = vol("anwb"), Z = vol("zonneplan");
+  const aK = k(a, kale), zK = k(z, kale), aZon = k(a, zon), zZon = k(z, zon);
+  const vastVerschil = (a.fixed_per_month - z.fixed_per_month) * 12 * R.BTW;   // € per jaar, incl. btw
+  const opslagVerschil = (z.markup_per_kwh - a.markup_per_kwh) * R.BTW;      // € per kWh, incl. btw
+  if (zK >= aK) waarschuw("Zonneplan is zonder zonnepanelen niet meer goedkoper dan ANWB Energie.");
+  if (vastVerschil <= 0 || opslagVerschil <= 0) waarschuw("ANWB heeft niet meer de lagere opslag en Zonneplan niet meer de lagere vaste kosten.");
+  if (!(Z.teruglevering && Z.teruglevering.opslag_per_kwh > 0)) waarschuw("Zonneplan legt niets meer bij op teruglevering.");
+  // De lopende tekst noemt deze bedragen letterlijk; wijken ze af, dan de tekst nalopen.
+  const tekst = [[a.markup_per_kwh * R.BTW, 0.018], [z.markup_per_kwh * R.BTW, 0.02], [a.fixed_per_month * R.BTW, 8.5], [z.fixed_per_month * R.BTW, 6.25],
+    [Z.teruglevering && Z.teruglevering.opslag_per_kwh, 0.02], [Z.teruglevering && Z.teruglevering.bonus && Z.teruglevering.bonus.pct, 0.1]];
+  if (tekst.some(([echt, inTekst]) => Math.abs((echt || 0) - inTekst) > 0.0005)) waarschuw("Een tarief van ANWB of Zonneplan wijkt af van de bedragen in de sectie 'ANWB Energie of Zonneplan?'.");
+  const omslag = opslagVerschil > 0 ? Math.round(vastVerschil / opslagVerschil / 500) * 500 : 0;
+  const eur = (v) => R.eur0(v);
+  const ja = (s, sleutel) => {
+    const m = s.kenmerken && s.kenmerken[sleutel];
+    if (!m || m.status === "onbekend") return "onbekend";
+    if (m.status === "nee") return "nee";
+    return R.esc(m.hoe || "ja");
+  };
+  const bonus = Z.teruglevering && Z.teruglevering.bonus;
+  const terugZ = R.terugKort(Z) + (bonus ? ", plus " + Math.round(bonus.pct * 100) + "% Zonnebonus overdag (tot " + R.duizend(bonus.max_kwh) + " kWh)" : "");
+  const kwartier = (s) => (s.kenmerken && s.kenmerken.kwartier && s.kenmerken.kwartier.status === "ja" ? "per kwartier" : "per uur");
+  const score = (s) => (s.score ? String(s.score).replace(".", ",") + " (" + R.duizend(s.score_reviews) + " reviews)" : "onbekend");
+  const rij = (kop, x, y) => "        <tr><th scope=\"row\">" + kop + "</th><td>" + x + "</td><td>" + y + "</td></tr>";
+  const tabel = "\n" +
+    '    <table class="artikel-table az-tabel">\n' +
+    '      <thead><tr><th scope="col"></th><th scope="col">ANWB Energie</th><th scope="col">Zonneplan</th></tr></thead>\n' +
+    "      <tbody>\n" + [
+      rij("Per jaar, " + R.duizend(kale.afname) + " kWh, geen panelen", "<b>" + eur(aK) + "</b>", "<b>" + eur(zK) + "</b>"),
+      rij("Per jaar, met " + R.duizend(zon.terug) + " kWh teruglevering", "<b>" + eur(aZon) + "</b>", "<b>" + eur(zZon) + "</b>"),
+      rij("Opslag per kWh", R.ct(a.markup_per_kwh * R.BTW) + " ct", R.ct(z.markup_per_kwh * R.BTW) + " ct"),
+      rij("Vaste kosten", R.eur2(a.fixed_per_month * R.BTW) + " per maand", R.eur2(z.fixed_per_month * R.BTW) + " per maand"),
+      rij("Teruglevering", R.terugKort(A), terugZ),
+      rij("Prijs", kwartier(A), kwartier(Z)),
+      rij("Opzeggen", R.esc(A.opzeg || "onbekend"), R.esc(Z.opzeg || "onbekend")),
+      rij("Slim laden", ja(A, "ev"), ja(Z, "ev")),
+      rij("Thuisbatterij sturen", ja(A, "batterij"), ja(Z, "batterij")),
+      rij("Trustpilot", score(A), score(Z)),
+    ].join("\n") + "\n      </tbody>\n    </table>\n    ";
+  const kort = "Zonneplan is voor bijna iedereen goedkoper. Bij " + R.duizend(kale.afname) + " kWh per jaar zonder zonnepanelen betaal je bij Zonneplan " +
+    eur(zK) + " aan opslag en vaste kosten, bij ANWB Energie " + eur(aK) + ". Met " + R.duizend(zon.terug) + " kWh teruglevering wordt dat " +
+    eur(zZon) + " tegen " + eur(aZon) + ". ANWB wordt pas goedkoper als je meer dan ongeveer " + R.duizend(omslag) + " kWh per jaar van het net haalt.";
+  const faq = "Zonneplan, bij bijna elk verbruik. Bij " + R.duizend(kale.afname) + " kWh zonder zonnepanelen kost Zonneplan " + eur(zK) +
+    " per jaar aan opslag en vaste kosten en ANWB Energie " + eur(aK) + ". ANWB heeft een lagere opslag per kWh, maar hogere vaste kosten; dat haalt ANWB pas in boven ongeveer " +
+    R.duizend(omslag) + " kWh per jaar. Met zonnepanelen is het verschil groter, omdat Zonneplan " + String(Math.round(Z.teruglevering.opslag_per_kwh * 100)) + " cent per teruggeleverde kWh bijlegt en ANWB alleen de kale marktprijs geeft: bij " +
+    R.duizend(zon.terug) + " kWh teruglevering " + eur(aZon - zZon) + " per jaar, nog zonder de Zonnebonus.";
+  return { kort: kort, tabel: tabel, faq: faq };
 }
 
 build();

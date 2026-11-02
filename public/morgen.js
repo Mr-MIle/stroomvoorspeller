@@ -856,7 +856,7 @@
       },
       {
         q: "Wat is de verwachting voor de stroomprijs morgen?",
-        a: `De prijzen voor morgen staan meestal na 13:00 uur vast (in de zomertijd na 14:00 uur): dan publiceert de day-ahead markt de officiële uurprijzen. Voor morgen ligt het daggemiddelde rond ${avgCt} ct/kWh all-in, met het goedkoopste uur om ${cheapT} (${cheapCt} ct/kWh). Een voorspelling voor de dagen daarna vind je op de voorpagina.`,
+        a: `Voor morgen ligt het daggemiddelde rond ${avgCt} ct/kWh all-in, met het goedkoopste uur om ${cheapT} (${cheapCt} ct/kWh). Een voorspelling voor de dagen daarna vind je op de voorpagina.`,
       },
     ];
 
@@ -866,20 +866,8 @@
         <h3>${item.q}</h3>
         <p>${item.a}</p>
       </div>`).join(""));
-
-    // JSON-LD updaten
-    const ldScript = document.getElementById("faq-json-ld");
-    if (ldScript) {
-      ldScript.textContent = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": faqItems.map(item => ({
-          "@type": "Question",
-          "name": item.q,
-          "acceptedAnswer": { "@type": "Answer", "text": item.a },
-        })),
-      });
-    }
+    // Geen JSON-LD voor deze dagvragen: de FAQPage in de head bevat alleen de
+    // vaste vragen, zodat zichtbaar en schema altijd gelijk blijven.
   }
 
   // ---- Render: aanbieder-keuzelijst ----

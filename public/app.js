@@ -472,11 +472,8 @@
     // Minimaal 12 uren nodig — anders nog niet gepubliceerd
     if (tp.length < 12) {
       banner.setAttribute("hidden", "");
-      renderMorgenLink(false);
       return;
     }
-
-    renderMorgenLink(true);
 
     const tipTextEl = document.getElementById("tomorrow-tip-text");
     if (!tipTextEl) return;
@@ -538,18 +535,6 @@
     banner.setAttribute("hidden", "");
   }
 
-  // ---- Morgen-knop bij de grafiekkop ----
-  // Alleen zichtbaar als morgen-data beschikbaar is (≥12 uren).
-  function renderMorgenLink(hasTomorrowData) {
-    const btn = document.getElementById("morgen-link-btn");
-    if (!btn) return;
-    if (hasTomorrowData) {
-      btn.removeAttribute("hidden");
-    } else {
-      btn.setAttribute("hidden", "");
-    }
-  }
-
   // ---- Hero-verdict: morgen/nu-samenvatting bovenaan (#58) ----
   // Vervangt de voormalige tomorrow-tip banner — zelfde logica, zelfde kleurvarianten,
   // maar boven de now-card in plaats van tussen hero en grafiek.
@@ -579,8 +564,6 @@
       el.className = `hero-verdict hero-verdict--${variant}`;
       iconEl.textContent = icon;
     }
-
-    renderMorgenLink(tp.length >= 12);
 
     if (tp.length >= 12) {
       // ── Morgen-data beschikbaar ────────────────────────────────────────────────
