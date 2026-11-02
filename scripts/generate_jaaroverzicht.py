@@ -400,6 +400,7 @@ def bouw_pagina(jd: dict, alle: dict[int, dict], bel: Belasting,
                 "spatialCoverage": "Nederland",
                 "inLanguage": "nl-NL",
                 "isBasedOn": "https://transparency.entsoe.eu",
+                "license": "https://creativecommons.org/licenses/by/4.0/",
                 "creator": {"@type": "Organization", "name": "Stroomvoorspeller.nl", "url": SITE},
                 "distribution": [{
                     "@type": "DataDownload",

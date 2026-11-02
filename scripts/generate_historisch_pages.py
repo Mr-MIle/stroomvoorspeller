@@ -217,6 +217,7 @@ def build_page(ym: str, st: dict, all_months: list[str], all_stats: dict[str, di
                 "spatialCoverage": "Nederland",
                 "inLanguage": "nl-NL",
                 "isBasedOn": "https://transparency.entsoe.eu",
+                "license": "https://creativecommons.org/licenses/by/4.0/",
                 "creator": {"@type": "Organization", "name": "Stroomvoorspeller.nl", "url": SITE},
                 "distribution": [{
                     "@type": "DataDownload",
