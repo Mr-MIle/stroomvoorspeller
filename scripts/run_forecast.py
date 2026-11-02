@@ -37,6 +37,7 @@ Output-format (v2.1):
      "wind_ms": 7.5, "temp_c": 14.2, "P_negative": 0.0,
      "event_plausibility_score": 0.52, "event_plausibility_label": "NORMAL",
      "analog_sample_size": 7,
+     "actual": 26.10,   # alleen als de day-ahead prijs al bekend is
      "factors": [{"name": "zon", "points": -3, "reason": "..."}, ...]},
     ...
   ]
@@ -1015,6 +1016,15 @@ def main() -> int:
     if v5_used:
         globals()["MODEL_VERSION"] = max(v5_models)
         print(f"[info] v5 gebruikt voor {v5_used} van {len(forecasts)} uren.", file=sys.stderr)
+
+    # Uren waarvan de day-ahead prijs al bekend is (morgen, na de veiling van
+    # ~13:00) krijgen die prijs als "actual". "predicted" blijft de modeluitvoer:
+    # het prediction log en de prestatiemeting meten het model daartegen.
+    known = {e.get("time"): e.get("price") for e in history}
+    for fc_dict in forecasts:
+        price = known.get(fc_dict["time"])
+        if price is not None:
+            fc_dict["actual"] = round(float(price), 2)
 
     payload = {
         "generated_at":  datetime.now(timezone.utc).isoformat(),
