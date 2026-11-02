@@ -1,6 +1,6 @@
 name: Update prijzen (handmatig / fallback)
 
-# Aangestuurd door Pipedream (dagelijks om 14:01 CEST via workflow_dispatch).
+# Aangestuurd door Pipedream (dagelijks om 13:10 Amsterdamse tijd via workflow_dispatch).
 # Na het ophalen wordt gecontroleerd of morgen-prijzen aanwezig zijn; alleen als deze
 # run ze NIEUW toevoegt, wordt automatisch de dagelijkse tweet gestart (alleen bij
 # workflow_dispatch, niet bij push naar main om dubbele tweets te voorkomen).
@@ -12,7 +12,7 @@ name: Update prijzen (handmatig / fallback)
 #    kwartierprijzen soms uren later. Zonder deze run bleef de morgen-grafiek in
 #    kwartiermodus dan op uurprijzen staan (2 okt: om 12:10 UTC 24 van de 96
 #    kwartieren voor morgen).
-#  - dagelijks om 14:01 CEST via Pipedream (workflow_dispatch)
+#  - dagelijks om 13:10 Amsterdamse tijd via Pipedream (workflow_dispatch)
 #  - handmatig, via Run workflow in de GitHub UI
 on:
 #  push:

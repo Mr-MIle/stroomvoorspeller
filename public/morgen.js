@@ -212,8 +212,8 @@
       <div class="morgen-no-data container">
         <p class="morgen-no-data-icon" aria-hidden="true">⏳</p>
         <h2>Morgen-prijzen nog niet beschikbaar</h2>
-        <p>De day-ahead prijzen voor morgen worden elke dag rond <strong>13:00 uur</strong> (in de zomertijd 14:00)
-           gepubliceerd door ENTSO-E; deze pagina toont ze vanaf 14:10 uur. Kom dan terug voor het volledige overzicht.</p>
+        <p>De day-ahead prijzen voor morgen worden elke dag rond <strong>13:00 uur</strong>
+           gepubliceerd door ENTSO-E; deze pagina toont ze vanaf ongeveer 13:15 uur. Kom dan terug voor het volledige overzicht.</p>
         <p><a href="/">← Bekijk de huidige stroomprijzen voor vandaag</a></p>
       </div>`);
   }
