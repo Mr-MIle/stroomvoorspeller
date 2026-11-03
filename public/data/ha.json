@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-11-03T18:04:21+01:00",
+  "generated": "2026-11-04T00:24:30+01:00",
   "source": "stroomvoorspeller.nl",
   "docs": "https://stroomvoorspeller.nl/home-assistant",
   "license": "CC-BY 4.0",
@@ -17,149 +17,6 @@
     "year": 2026
   },
   "today": {
-    "date": "2026-11-03",
-    "complete": true,
-    "hours_count": 24,
-    "average_market": 0.25058,
-    "average_all_in": 0.43461,
-    "cheapest": {
-      "start": "2026-11-03T01:00:00+01:00",
-      "market": 0.20963,
-      "all_in": 0.38506
-    },
-    "most_expensive": {
-      "start": "2026-11-03T17:00:00+01:00",
-      "market": 0.31375,
-      "all_in": 0.51104
-    },
-    "negative_hours": 0,
-    "negative_hours_market": 0,
-    "negative_hours_all_in": 0,
-    "hours": [
-      {
-        "start": "2026-11-03T00:00:00+01:00",
-        "market": 0.21334,
-        "all_in": 0.38955
-      },
-      {
-        "start": "2026-11-03T01:00:00+01:00",
-        "market": 0.20963,
-        "all_in": 0.38506
-      },
-      {
-        "start": "2026-11-03T02:00:00+01:00",
-        "market": 0.216,
-        "all_in": 0.39277
-      },
-      {
-        "start": "2026-11-03T03:00:00+01:00",
-        "market": 0.22278,
-        "all_in": 0.40097
-      },
-      {
-        "start": "2026-11-03T04:00:00+01:00",
-        "market": 0.22369,
-        "all_in": 0.40207
-      },
-      {
-        "start": "2026-11-03T05:00:00+01:00",
-        "market": 0.22264,
-        "all_in": 0.4008
-      },
-      {
-        "start": "2026-11-03T06:00:00+01:00",
-        "market": 0.25619,
-        "all_in": 0.4414
-      },
-      {
-        "start": "2026-11-03T07:00:00+01:00",
-        "market": 0.29895,
-        "all_in": 0.49314
-      },
-      {
-        "start": "2026-11-03T08:00:00+01:00",
-        "market": 0.30234,
-        "all_in": 0.49724
-      },
-      {
-        "start": "2026-11-03T09:00:00+01:00",
-        "market": 0.27188,
-        "all_in": 0.46038
-      },
-      {
-        "start": "2026-11-03T10:00:00+01:00",
-        "market": 0.23361,
-        "all_in": 0.41407
-      },
-      {
-        "start": "2026-11-03T11:00:00+01:00",
-        "market": 0.22691,
-        "all_in": 0.40597
-      },
-      {
-        "start": "2026-11-03T12:00:00+01:00",
-        "market": 0.22204,
-        "all_in": 0.40007
-      },
-      {
-        "start": "2026-11-03T13:00:00+01:00",
-        "market": 0.22435,
-        "all_in": 0.40287
-      },
-      {
-        "start": "2026-11-03T14:00:00+01:00",
-        "market": 0.22774,
-        "all_in": 0.40697
-      },
-      {
-        "start": "2026-11-03T15:00:00+01:00",
-        "market": 0.25499,
-        "all_in": 0.43994
-      },
-      {
-        "start": "2026-11-03T16:00:00+01:00",
-        "market": 0.29339,
-        "all_in": 0.48641
-      },
-      {
-        "start": "2026-11-03T17:00:00+01:00",
-        "market": 0.31375,
-        "all_in": 0.51104
-      },
-      {
-        "start": "2026-11-03T18:00:00+01:00",
-        "market": 0.30707,
-        "all_in": 0.50296
-      },
-      {
-        "start": "2026-11-03T19:00:00+01:00",
-        "market": 0.30064,
-        "all_in": 0.49518
-      },
-      {
-        "start": "2026-11-03T20:00:00+01:00",
-        "market": 0.276,
-        "all_in": 0.46537
-      },
-      {
-        "start": "2026-11-03T21:00:00+01:00",
-        "market": 0.23905,
-        "all_in": 0.42066
-      },
-      {
-        "start": "2026-11-03T22:00:00+01:00",
-        "market": 0.22906,
-        "all_in": 0.40857
-      },
-      {
-        "start": "2026-11-03T23:00:00+01:00",
-        "market": 0.22793,
-        "all_in": 0.4072
-      }
-    ],
-    "available": true
-  },
-  "tomorrow": {
     "date": "2026-11-04",
     "complete": true,
     "hours_count": 24,
@@ -302,65 +159,69 @@
     ],
     "available": true
   },
+  "tomorrow": {
+    "date": "2026-11-05",
+    "available": false
+  },
   "forecast": {
     "available": true,
     "model_version": "5.1",
     "disclaimer": "Modelvoorspelling met onzekerheid — géén day-ahead feit. Gebruik dit niet voor automatiseringen die op exacte prijzen rekenen; gebruik daarvoor 'today' en (na ~14:00) 'tomorrow'.",
     "days": [
       {
-        "date": "2026-11-04",
-        "days_ahead": 1,
-        "average_market_estimate": 0.25741,
-        "lower": 0.19232,
-        "upper": 0.32249,
-        "negative_probability": 0.0
-      },
-      {
         "date": "2026-11-05",
-        "days_ahead": 2,
-        "average_market_estimate": 0.2487,
-        "lower": 0.18536,
-        "upper": 0.31204,
+        "days_ahead": 1,
+        "average_market_estimate": 0.24701,
+        "lower": 0.18401,
+        "upper": 0.31001,
         "negative_probability": 0.0
       },
       {
         "date": "2026-11-06",
-        "days_ahead": 3,
-        "average_market_estimate": 0.25265,
-        "lower": 0.18451,
-        "upper": 0.32079,
+        "days_ahead": 2,
+        "average_market_estimate": 0.24252,
+        "lower": 0.17654,
+        "upper": 0.30851,
         "negative_probability": 0.0
       },
       {
         "date": "2026-11-07",
-        "days_ahead": 4,
-        "average_market_estimate": 0.22493,
-        "lower": 0.15902,
-        "upper": 0.29084,
+        "days_ahead": 3,
+        "average_market_estimate": 0.22526,
+        "lower": 0.15927,
+        "upper": 0.29124,
         "negative_probability": 0.0
       },
       {
         "date": "2026-11-08",
-        "days_ahead": 5,
-        "average_market_estimate": 0.22126,
-        "lower": 0.15256,
-        "upper": 0.28996,
+        "days_ahead": 4,
+        "average_market_estimate": 0.21845,
+        "lower": 0.15042,
+        "upper": 0.28649,
         "negative_probability": 0.0
       },
       {
         "date": "2026-11-09",
-        "days_ahead": 6,
-        "average_market_estimate": 0.28831,
-        "lower": 0.19924,
-        "upper": 0.37739,
+        "days_ahead": 5,
+        "average_market_estimate": 0.28692,
+        "lower": 0.19819,
+        "upper": 0.37565,
         "negative_probability": 0.0
       },
       {
         "date": "2026-11-10",
+        "days_ahead": 6,
+        "average_market_estimate": 0.2565,
+        "lower": 0.17537,
+        "upper": 0.33762,
+        "negative_probability": 0.0
+      },
+      {
+        "date": "2026-11-11",
         "days_ahead": 7,
-        "average_market_estimate": 0.26104,
-        "lower": 0.17878,
-        "upper": 0.3433,
+        "average_market_estimate": 0.24941,
+        "lower": 0.17005,
+        "upper": 0.32876,
         "negative_probability": 0.0
       }
     ]
