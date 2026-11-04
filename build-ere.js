@@ -111,7 +111,7 @@ function kortHtml(d, v) {
 
 function badges(inb) {
   let b = "";
-  if (inb.garantie_per_kwh != null) b += '<span class="ere-badge badge-garantie">bodem ' + ct(inb.garantie_per_kwh) + "</span>";
+  if (inb.garantie_per_kwh != null) b += (inb.garantie_label ? '<span class="ere-badge badge-aangekondigd">' + esc(inb.garantie_label) + " " : '<span class="ere-badge badge-garantie">bodem ') + ct(inb.garantie_per_kwh) + "</span>";
   if (inb.uitbetaald && inb.uitbetaald.length) b += '<span class="ere-badge badge-betaald">uitbetaald</span>';
   if (inb.eis_klant) b += '<span class="ere-badge badge-klant">alleen klanten</span>';
   if (inb.disclosure) b += '<span class="ere-badge badge-mij">ik ben hier klant</span>';

@@ -134,6 +134,7 @@
     .ere-badges { display: inline-flex; gap: 5px; margin-left: 7px; flex-wrap: wrap; vertical-align: middle; }
     .ere-badge { font-size: 0.68rem; font-weight: 600; border-radius: 999px; padding: 2px 7px; white-space: nowrap; }
     .badge-garantie { background: var(--c-cheap-bg); color: var(--c-cheap-link); }
+    .badge-aangekondigd { background: var(--c-surface-soft); color: var(--c-text-soft); }
     .badge-betaald { background: var(--c-surface-soft); color: var(--c-brand-deep); }
     .badge-klant { background: var(--c-normal-bg); color: var(--c-normal-text); }
     .badge-mij { background: var(--c-free-bg); color: var(--c-free); }
@@ -199,7 +200,7 @@
     <div id="ere-lijst">
     <!-- BUILD:ERE:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->
       <div class="ere-rij" data-id="zeres">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-zeres"><span class="ere-naam">Zeres<span class="ere-badges"><span class="ere-badge badge-garantie">bodem 13,0 ct</span><span class="ere-badge badge-betaald">uitbetaald</span></span><span class="ere-sub">19% voor particulieren · per kwartaal</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>13,0 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 260</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
+        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-zeres"><span class="ere-naam">Zeres<span class="ere-badges"><span class="ere-badge badge-aangekondigd">aangekondigd 13,0 ct</span><span class="ere-badge badge-betaald">uitbetaald</span></span><span class="ere-sub">19% voor particulieren · per kwartaal</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>13,0 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 260</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
         <div class="ere-details" id="ere-det-zeres" hidden><p class="ere-label">Servicekosten</p><p>19% voor particulieren Zakelijk 13%. Laad je thuis voor je werkgever, dan gaat er 5 procentpunt af. Bij elke verlenging gaat er 1 procentpunt af, tot 14 procent na vijf jaar.</p><p class="ere-label">Uitbetaling</p><p>Per kwartaal. Eerste uitbetaling op 6 juli 2026, een voorschot van 50 procent over het eerste kwartaal. Het eerste tot en met het derde kwartaal worden samen afgerekend; Zeres verwacht dat medio november 2026 te doen, zodra het register het toelaat.</p><p class="ere-label">Voorwaarden</p><p>Per kalenderjaar, geen abonnement en geen vaste kosten.</p><p class="ere-label">Laadpaal</p><p>Merkonafhankelijk met MID-meter. Handleidingen voor onder meer Easee, Alfen en Zaptec; ook handmatig doorgeven kan.</p><p class="ere-label">Werkelijk uitbetaald</p><p>2026-Q1: 12,2 ct</p><p class="ere-label">Sterk punt</p><p>Noemt als enige een bedrag per kilowattuur, € 0,13 voor het eerste en tweede kwartaal van 2026, en betaalt per kwartaal. Nu de ERE-prijs is gedaald levert dat meer op dan een lage commissie over een lagere marktprijs.</p><p class="ere-label">Let op</p><p>Dat bedrag van € 0,13 staat op de homepage en geldt daar voor het eerste en tweede kwartaal van 2026. De voorwaarden van 21 oktober 2026 noemen geen enkel bedrag per kilowattuur, en artikel 4.2 zegt dat Zeres geen opbrengst en geen ERE-prijs garandeert. De vraagbaak komt bovendien op 12 cent uit waar de homepage 13 cent noemt. Het is dus een aangekondigd bedrag, waar je Zeres contractueel niet aan kunt houden. Wat er voor 2027 geldt staat nergens.</p><p class="ere-bronregel">Gecontroleerd op 2026-11-01 &middot; <a href="https://www.zeres.nl/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.zeres.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div>
       </div>
       <div class="ere-rij" data-id="laadbeloning">
@@ -405,7 +406,7 @@
 
     function badges(inb) {
       var b = "";
-      if (inb.garantie_per_kwh != null) b += '<span class="ere-badge badge-garantie">bodem ' + ct(inb.garantie_per_kwh) + "</span>";
+      if (inb.garantie_per_kwh != null) b += (inb.garantie_label ? '<span class="ere-badge badge-aangekondigd">' + esc(inb.garantie_label) + " " : '<span class="ere-badge badge-garantie">bodem ') + ct(inb.garantie_per_kwh) + "</span>";
       if (inb.uitbetaald && inb.uitbetaald.length) b += '<span class="ere-badge badge-betaald">uitbetaald</span>';
       if (inb.eis_klant) b += '<span class="ere-badge badge-klant">alleen klanten</span>';
       if (inb.disclosure) b += '<span class="ere-badge badge-mij">ik ben hier klant</span>';
