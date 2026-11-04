@@ -7,6 +7,10 @@
  *   - de marktreeks (prijs per ERE per kwartaal) tussen de BUILD:MARKT-markers
  *   - de uitbetaaltabel tussen de BUILD:BETAALD-markers
  *   - de inboeker-regels tussen de BUILD:ERE-markers
+ *   - de standregel (ERE-prijs + datum) tussen de BUILD:STAND-markers
+ *   - het korte antwoord bovenaan tussen de BUILD:KORT-markers; het script
+ *     waarschuwt als nummer 1 of de laagste commissie niet meer past bij de
+ *     vaste zinnen in ere.json -> kort
  *
  * Waarom: de pagina rendert normaal met JavaScript (sorteren + filteren).
  * Zoekmachines en bezoekers zonder JS zien dan een lege pagina. Dit script
@@ -15,7 +19,7 @@
  * aannames.kwh_per_jaar. De JS rendert er bij het laden identiek overheen.
  *
  * LET OP: de opmaak hieronder moet gelijk blijven aan rijHtml() en
- * renderVast() in ere-vergelijken.html. Wijzig je daar iets, wijzig het hier
+ * renderVast(), standTekst() en kortHtml() in ere-vergelijken.html. Wijzig je daar iets, wijzig het hier
  * ook.
  *
  * Gebruik:  node build-ere.js
@@ -34,7 +38,9 @@ const HTML_PATH = path.join(__dirname, "public", "ere-vergelijken.html");
 const BLOKKEN = [
   ["MARKT", "<!-- BUILD:MARKT:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->", "<!-- BUILD:MARKT:END -->"],
   ["BETAALD", "<!-- BUILD:BETAALD:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->", "<!-- BUILD:BETAALD:END -->"],
-  ["ERE", "<!-- BUILD:ERE:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->", "<!-- BUILD:ERE:END -->"]
+  ["ERE", "<!-- BUILD:ERE:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->", "<!-- BUILD:ERE:END -->"],
+  ["STAND", "<!-- BUILD:STAND:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->", "<!-- BUILD:STAND:END -->"],
+  ["KORT", "<!-- BUILD:KORT:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->", "<!-- BUILD:KORT:END -->"]
 ];
 
 // ── opmaak-helpers (identiek aan de browser-render) ────────────────────────
@@ -62,6 +68,47 @@ function perJaar(d, inb, v) {
   return n == null ? null : n * v - (inb.vaste_kosten || 0);
 }
 
+const MAANDEN = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+function datumNL(iso) {
+  const p = String(iso).split("-");
+  return p.length === 3 ? parseInt(p[2], 10) + " " + MAANDEN[parseInt(p[1], 10) - 1] + " " + p[0] : String(iso);
+}
+function getal(v) { return String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+function namen(l) { return l.length < 2 ? l.join("") : l.slice(0, -1).join(", ") + " en " + l[l.length - 1]; }
+function subRegel(inb) { return (inb.commissie == null ? "servicekosten niet openbaar" : inb.commissie_tekst) + " · " + inb.uitbetaling; }
+
+function standTekst(d) {
+  const r = d.markt.reeks[d.markt.reeks.length - 1];
+  return "Gerekend met € " + komma(marktPrijs(d), 4) + " per ERE (" + esc(r.periode.replace("-", " ")) +
+    (r.verwacht ? ", verwacht" : ", verkocht") + "). Bijgewerkt op " + esc(datumNL(d.bijgewerkt)) + ".";
+}
+
+function kortStand(d, v) {
+  const met = d.inboekers.filter((i) => perJaar(d, i, v) != null)
+    .sort((a, b) => perJaar(d, b, v) - perJaar(d, a, v));
+  const metPct = d.inboekers.filter((i) => i.commissie != null);
+  const laag = metPct.reduce((m, i) => (i.commissie < m.commissie ? i : m), metPct[0]);
+  const betaald = d.inboekers.filter((i) => i.uitbetaald && i.uitbetaald.length);
+  const bedragen = [].concat.apply([], betaald.map((i) => i.uitbetaald.map((u) => u.netto_per_kwh)));
+  return { met: met, top: met[0], laatste: met[met.length - 1], laag: laag, betaald: betaald,
+    min: Math.min.apply(null, bedragen), max: Math.max.apply(null, bedragen) };
+}
+
+function kortHtml(d, v) {
+  const k = kortStand(d, v), vast = d.kort || {};
+  const noot = (sleutel, inb) => (vast[sleutel] && vast[sleutel].id === inb.id ? " " + esc(vast[sleutel].noot) : "");
+  let h = "<p><strong>Kort antwoord</strong> bij " + getal(v) + " kWh per jaar:</p><ul>";
+  h += "<li><strong>Hoogste bedrag:</strong> " + esc(k.top.naam) + ", " + eur0(perJaar(d, k.top, v)) + "." + noot("hoogste", k.top) + "</li>";
+  h += "<li><strong>Laagste servicekosten:</strong> " + esc(k.laag.naam) + ", " + Math.round(k.laag.commissie * 100) + " procent." + noot("laagste_commissie", k.laag) + "</li>";
+  if (k.betaald.length) {
+    h += "<li><strong>Al uitbetaald:</strong> " + esc(namen(k.betaald.map((i) => i.naam))) + ", netto " +
+      (k.min === k.max ? komma(k.min * 100, 1) : komma(k.min * 100, 1) + " tot " + komma(k.max * 100, 1)) + " cent per kWh.</li>";
+  }
+  h += "</ul><p>Tussen nummer 1 en nummer " + k.met.length + " zit <strong>" + eur0(perJaar(d, k.top, v) - perJaar(d, k.laatste, v)) +
+    "</strong> per jaar. Of je laadpaal meedoet, maakt meer uit. <a href=\"#ere-checks\">3 dingen om eerst te checken ↓</a></p>";
+  return h;
+}
+
 function badges(inb) {
   let b = "";
   if (inb.garantie_per_kwh != null) b += '<span class="ere-badge badge-garantie">bodem ' + ct(inb.garantie_per_kwh) + "</span>";
@@ -75,8 +122,7 @@ function rijHtml(d, inb, v) {
   const n = netto(d, inb), j = perJaar(d, inb, v);
   let h = '      <div class="ere-rij" data-id="' + esc(inb.id) + '">\n';
   h += '        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-' + esc(inb.id) + '">';
-  h += '<span class="ere-naam">' + esc(inb.naam) + badges(inb) + "</span>";
-  h += '<span class="ere-cel ere-commissie"><span class="ere-cel-label">servicekosten</span>' + (inb.commissie == null ? "–" : pct(inb.commissie)) + "</span>";
+  h += '<span class="ere-naam">' + esc(inb.naam) + badges(inb) + '<span class="ere-sub">' + esc(subRegel(inb)) + "</span></span>";
   h += '<span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>' + (n == null ? "–" : ct(n)) + "</span>";
   h += '<span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>' + (j == null ? "–" : eur0(j)) + "</strong></span>";
   h += '<span class="ere-caret" aria-hidden="true">▾</span></button>\n';
@@ -130,7 +176,9 @@ const lijst = data.inboekers.slice().sort((a, b) => {
 const inhoud = {
   MARKT: marktHtml(data),
   BETAALD: betaaldHtml(data),
-  ERE: lijst.map((i) => rijHtml(data, i, v)).join("\n")
+  ERE: lijst.map((i) => rijHtml(data, i, v)).join("\n"),
+  STAND: "        " + standTekst(data),
+  KORT: "        " + kortHtml(data, v)
 };
 
 let html = fs.readFileSync(HTML_PATH, "utf8");
@@ -147,6 +195,15 @@ fs.writeFileSync(HTML_PATH, html, "utf8");
 
 console.log("ere-vergelijken.html bijgewerkt: " + lijst.length + " inboekers, " +
   data.markt.reeks.length + " kwartalen, marktprijs € " + komma(marktPrijs(data), 4) + " per ERE.");
+const ks = kortStand(data, v), vk = data.kort || {};
+console.log("Kort antwoord: hoogste " + ks.top.naam + ", laagste commissie " + ks.laag.naam + ", verschil " +
+  eur0(perJaar(data, ks.top, v) - perJaar(data, ks.laatste, v)) + " per jaar.");
+if (!vk.hoogste || vk.hoogste.id !== ks.top.id)
+  console.warn("LET OP: nummer 1 is nu " + ks.top.naam + ", niet " + (vk.hoogste ? vk.hoogste.id : "?") +
+    ". De noot bij 'Hoogste bedrag' valt weg; zet kort.hoogste in ere.json opnieuw en lees het korte antwoord na.");
+if (!vk.laagste_commissie || vk.laagste_commissie.id !== ks.laag.id)
+  console.warn("LET OP: laagste commissie is nu " + ks.laag.naam + ", niet " + (vk.laagste_commissie ? vk.laagste_commissie.id : "?") +
+    ". De noot bij 'Laagste servicekosten' valt weg; zet kort.laagste_commissie in ere.json opnieuw en lees het korte antwoord na.");
 lijst.forEach((i) => {
   const j = perJaar(data, i, v);
   console.log("  " + i.naam.padEnd(28) + (j == null ? "onbekend" : eur0(j) + " / jaar"));
