@@ -1,5 +1,5 @@
 {
-  "_comment": "Bron voor /ere-vergelijken. Tien inboekdienstverleners voor particulieren met een eigen laadpaal thuis. Netto per kWh wordt NIET hier opgeslagen maar berekend: ere_prijs x ere_per_kwh x (1 - commissie), met een bodem als de inboeker een garantie geeft. Zo blijft er een getal en een rekenregel, niet een overgeschreven claim. Werk dit bestand bij en draai daarna 'node build-ere.js'.",
+  "_comment": "Bron voor /ere-vergelijken. Tien inboekdienstverleners voor particulieren met een eigen laadpaal thuis. Netto per kWh wordt NIET hier opgeslagen maar berekend: ere_prijs x ere_per_kwh x (1 - commissie), met een bodem als de inboeker een garantie geeft. Zo blijft er een getal en een rekenregel, niet een overgeschreven claim. Werk dit bestand bij en draai daarna 'node build-ere.js'. garantie_aard zegt hoe hard die bodem is: 'toegezegd' betekent dat de inboeker het bedrag onvoorwaardelijk belooft, 'aangekondigd' dat hij een bedrag noemt waar zijn voorwaarden hem niet aan binden. Dat bepaalt alleen het label op de badge, niet de rekensom.",
   "versie": 1,
   "bijgewerkt": "2026-11-01",
   "volgende_controle": "2026-12-01",
@@ -52,12 +52,6 @@
     "toelichting": "2.000 kilowattuur thuisladen komt bij ongeveer 6 kilometer per kilowattuur neer op zo'n 12.000 kilometer per jaar. Vul je eigen aantal in en alles rekent mee. Let op de grens die de NEa stelt: je mag niet meer kilowatturen laten inboeken dan je over het jaar netto van het net afneemt, dus afname min teruglevering."
   },
 
-  "kort": {
-    "_comment": "Vaste zinnen bij het korte antwoord bovenaan /ere-vergelijken. Een noot verschijnt alleen zolang id nog nummer 1 (hoogste) of de laagste commissie is; anders waarschuwt build-ere.js en moet de zin opnieuw bekeken worden.",
-    "hoogste": { "id": "zeres", "noot": "Dat rust op 13 cent per kWh die Zeres aankondigt, maar niet in de voorwaarden vastlegt." },
-    "laagste_commissie": { "id": "laadbeloning", "noot": "Alleen als je voor 3 jaar tekent; voor 1 jaar is het 15 procent." }
-  },
-
   "inboekers": [
     {
       "id": "zeres",
@@ -69,7 +63,7 @@
       "vaste_kosten": 0,
       "prijsmodel": "garantie",
       "garantie_per_kwh": 0.13,
-      "garantie_label": "aangekondigd",
+      "garantie_aard": "aangekondigd",
       "uitbetaling": "per kwartaal",
       "uitbetaling_detail": "Eerste uitbetaling op 6 juli 2026, een voorschot van 50 procent over het eerste kwartaal. Het eerste tot en met het derde kwartaal worden samen afgerekend; Zeres verwacht dat medio november 2026 te doen, zodra het register het toelaat.",
       "contract": "Per kalenderjaar, geen abonnement en geen vaste kosten.",
@@ -255,6 +249,7 @@
       "vaste_kosten": 0,
       "prijsmodel": "garantie",
       "garantie_per_kwh": 0.05,
+      "garantie_aard": "toegezegd",
       "uitbetaling": "jaarlijks",
       "uitbetaling_detail": "Rond juni van het volgende jaar; de vraagbaak houdt het op het tweede kwartaal.",
       "contract": "Stop je binnen het jaar, dan krijg je over dat jaar niets.",
