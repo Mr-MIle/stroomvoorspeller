@@ -182,6 +182,7 @@ jobs:
           git add public/aanbieders.html public/historisch.html 2>/dev/null || true
           git add data/forecast_archive/ 2>/dev/null || true
           git add public/data/archief/ 2>/dev/null || true
+          git add public/data/archief15/ 2>/dev/null || true
           git add public/data/jaar/ public/historisch/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
           if ! git diff --cached --quiet; then

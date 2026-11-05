@@ -59,6 +59,9 @@ OUTPUT_FILE = PROJECT_ROOT / "public" / "data" / "prices.json"
 
 # Archief-map voor maandelijkse historische prijzen
 ARCHIVE_DIR = PROJECT_ROOT / "public" / "data" / "archief"
+# Kwartierprijzen (sinds 1 okt 2025 rekent de day-ahead-markt per kwartier). Zelfde formaat als
+# archief/, eenmalig gevuld met scripts/backfill_archief15.mjs; daarna vult elke run aan.
+ARCHIVE15_DIR = PROJECT_ROOT / "public" / "data" / "archief15"
 
 # Config met belasting/opslag — gebruikt voor de 30-daagse referentieprijs (#63)
 CONFIG_FILE = PROJECT_ROOT / "public" / "data" / "config.json"
@@ -398,7 +401,7 @@ def generate_sample_prices_15m(now_ams: datetime) -> list[dict]:
     return prices
 
 
-def archive_prices(prices: list[dict]) -> None:
+def archive_prices(prices: list[dict], archive_dir: Path = ARCHIVE_DIR, extra: dict | None = None) -> None:
     """Sla uurprijzen op in maandelijkse archief-bestanden (append-only).
 
     Elk bestand in public/data/archief/ heeft de naam YYYY-MM.json en bevat
@@ -409,7 +412,7 @@ def archive_prices(prices: list[dict]) -> None:
 
     Wordt alleen aangeroepen bij echte ENTSO-E data (niet bij sample-data).
     """
-    ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+    archive_dir.mkdir(parents=True, exist_ok=True)
 
     # Groepeer binnenkomende prijzen per maand (op basis van de eerste 7 tekens van time)
     by_month: dict[str, list[dict]] = {}
@@ -418,7 +421,7 @@ def archive_prices(prices: list[dict]) -> None:
         by_month.setdefault(month_key, []).append(p)
 
     for month_key, new_entries in by_month.items():
-        archive_file = ARCHIVE_DIR / f"{month_key}.json"
+        archive_file = archive_dir / f"{month_key}.json"
 
         # Laad bestaand archief (als het er is)
         existing_times: set[str] = set()
@@ -448,6 +451,7 @@ def archive_prices(prices: list[dict]) -> None:
         payload = {
             "month": month_key,
             "updated_at": datetime.now(timezone.utc).isoformat(),
+            **(extra or {}),
             "prices": existing_prices,
         }
         archive_file.write_text(
@@ -550,6 +554,7 @@ def main() -> int:
     source = "sample"
     prices: list[dict] = []
     prices_15m: list[dict] = []
+    raw_15m: list[dict] = []  # alle ENTSO-E-kwartieren van deze run, voor archief15/
     has_pt15m = False
     error_msg = None
     fallback_source: str | None = None
@@ -563,6 +568,7 @@ def main() -> int:
             prices = aggregate_to_hourly(raw_prices)
             has_pt15m = before > len(prices)  # True als ENTSO-E PT15M leverde
             if has_pt15m:
+                raw_15m = [p for p in raw_prices if p.get("time") and p.get("price") is not None]
                 print(f"[ok] Geaggregeerd van {before} PT15M-punten naar {len(prices)} uurpunten.", file=sys.stderr)
                 # Sla ruwe kwartierdata op voor vandaag + morgen (voor de frontend-chart).
                 prices_15m = [
@@ -698,6 +704,12 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001
             # Archiveren mag de hoofdflow nooit breken.
             print(f"[warn] Archiveren mislukt (niet kritiek): {exc}", file=sys.stderr)
+    # Alleen echte ENTSO-E-kwartieren; aangevulde uurwaarden horen niet in archief15/.
+    if raw_15m and source == "entsoe":
+        try:
+            archive_prices(raw_15m, ARCHIVE15_DIR, {"interval_minutes": 15})
+        except Exception as exc:  # noqa: BLE001
+            print(f"[warn] Kwartierarchief mislukt (niet kritiek): {exc}", file=sys.stderr)
 
     if not prices:
         # Probeer de bestaande prices.json te bewaren als die echte ENTSO-E data bevat.
