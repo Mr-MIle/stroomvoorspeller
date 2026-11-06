@@ -17,11 +17,12 @@ Rekenmodel (met Emile vastgelegd):
   - Ontladen naar net (valt samen met net-export) = inkomsten tegen de
     terugleverprijs.
   consumentenprijs = (epex + opslag + energiebelasting) x btw.
-  terugleverprijs  = kale EPEX + teruglever-opslag van de aanbieder
-    (config.json teruglevering.opslag_per_kwh, negatief = kosten), en t/m 2026
-    + energiebelasting x btw (saldering: die betaal je over afname min
-    teruglevering; de stroom zelf wordt per uur verrekend). Min eventuele
-    extra terugleverkosten SOLIS_FEEDIN_COST, standaard 0.
+  terugleverprijs  = t/m 2026 (saldering): (EPEX + energiebelasting) x btw
+    + teruglever-opslag van de aanbieder; 0 bij methode 'jaaroverschot' (Tibber).
+    Vanaf 2027: kale EPEX + opslag. Gecontroleerd met de Tibber-factuur van
+    17-31 okt 2026. Grid Rewards (Tibber) uit grid-rewards.json, per factuur-
+    periode gelijk over de dagen verdeeld, tellen als batterij-opbrengst.
+    Min eventuele extra terugleverkosten SOLIS_FEEDIN_COST, standaard 0.
   Aanbieder per dag volgt SUPPLIER_SCHEDULE (Frank tot 17 okt 2026, daarna Tibber).
 
 Draait in een GitHub Action. Sleutels uit env SOLIS_KEY_ID / SOLIS_KEY_SECRET.
@@ -64,6 +65,7 @@ ROOT = Path(__file__).resolve().parents[1]          # .../02-code
 PRICES_FILE = ROOT / "public" / "data" / "prices.json"
 CONFIG_FILE = ROOT / "public" / "data" / "config.json"
 OUT_FILE = ROOT / "public" / "data" / "arbitrage.json"
+GRID_REWARDS_FILE = ROOT / "public" / "data" / "grid-rewards.json"
 
 
 # ----------------------------------------------------------------- API-helpers
@@ -211,10 +213,34 @@ def load_tariff(day: str):
         "supplier": sup.get("name", sid),
         "markup": sup["markup_per_kwh"],
         "feedin_markup": (sup.get("teruglevering") or {}).get("opslag_per_kwh", 0.0),
+        "feedin_method": (sup.get("teruglevering") or {}).get("methode", ""),
         "saldering": day < SALDERING_END,
         "energiebelasting": t.get("energiebelasting_per_kwh", 0.0),
         "btw": t.get("btw_factor", 1.0),
+        "grid_rewards": grid_rewards_for(day, t.get("btw_factor", 1.0)),
     }
+
+
+def grid_rewards_for(day: str, btw: float) -> float:
+    """Grid Rewards (Tibber) voor één dag, EUR incl. btw.
+
+    Tibber geeft het bedrag alleen per factuurperiode, niet per dag. GRID_REWARDS_FILE
+    bevat de bedragen excl. btw van de facturen; we verdelen ze gelijk over de dagen.
+    Btw telt mee: de factuur rekent 21% over het netto totaal, Grid Rewards inbegrepen.
+    Dagen zonder factuur krijgen 0 (dus pas na de volgende factuur + backfill gevuld).
+    """
+    if not GRID_REWARDS_FILE.exists():
+        return 0.0
+    try:
+        periods = json.loads(GRID_REWARDS_FILE.read_text()).get("periodes", [])
+    except (ValueError, OSError):
+        return 0.0
+    for p in periods:
+        start, end = p.get("van", ""), p.get("tot", "")
+        if start <= day <= end:
+            n = (datetime.fromisoformat(end) - datetime.fromisoformat(start)).days + 1
+            return float(p.get("eur_excl_btw", 0.0)) * btw / n
+    return 0.0
 
 
 def consumer_price(epex_kwh: float, tar: dict) -> float:
@@ -223,11 +249,20 @@ def consumer_price(epex_kwh: float, tar: dict) -> float:
 
 
 def export_price(epex_kwh: float, tar: dict) -> float:
-    """Wat een teruggeleverde kWh oplevert (EUR/kWh), zie de docstring bovenaan."""
-    price = epex_kwh + tar["feedin_markup"] - FEEDIN_COST
+    """Wat een teruggeleverde kWh oplevert (EUR/kWh), zie de docstring bovenaan.
+
+    Met saldering (t/m 2026) wordt teruglevering van de afname afgetrokken, dus komen
+    EPEX en energiebelasting allebei incl. btw terug (Tibber-factuur 17-31 okt 2026:
+    één btw-regel over het netto totaal). Een teruglever-opslag met methode
+    'jaaroverschot' (Tibber) geldt alleen voor een jaaroverschot; binnen saldering
+    heffen inkoop- en verkoopvergoeding elkaar op (zelfde factuur), dus 0.
+    """
+    markup = tar["feedin_markup"]
     if tar["saldering"]:
-        price += tar["energiebelasting"] * tar["btw"]
-    return price
+        if tar.get("feedin_method") == "jaaroverschot":
+            markup = 0.0
+        return (epex_kwh + tar["energiebelasting"]) * tar["btw"] + markup - FEEDIN_COST
+    return epex_kwh + markup - FEEDIN_COST
 
 
 def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -> dict:
@@ -350,6 +385,9 @@ def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -
             loss_kwh = excess
 
     inv_end = sum(k * c for k, c in lots)
+    # Grid Rewards: vergoeding van Tibber voor balanceren met de batterij (incl. btw)
+    grid_rewards = tar.get("grid_rewards", 0.0)
+    cash_cost -= grid_rewards
     # gerealiseerd = alles wat de batterij/zon instroomde (net-kosten + gemiste teruglevering)
     # min de mutatie van de voorraad: wat nog in de batterij zit, is niet verdiend.
     realized_cost = cash_cost + solar_inflow - (inv_end - inv_start)
@@ -358,7 +396,8 @@ def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -
     saving = cost_without - realized_cost
     # Schatting: batterij-aandeel = opbrengst van ontladen (huis + net) min de FIFO-kostprijs
     # van die kWh en min het verlies. Zon-aandeel = de rest van de besparing.
-    battery_saving = battery_home_value + arbitrage_income - discharged_cost - loss_cost
+    battery_saving = (battery_home_value + arbitrage_income + grid_rewards
+                      - discharged_cost - loss_cost)
     solar_saving = saving - battery_saving
     grid_data_ok = not (import_kwh == 0 and export_kwh == 0 and (charged or discharged or consumption))
 
@@ -379,6 +418,7 @@ def compute_day(points: list, prices: dict, tar: dict, day: str, lots_in=None) -
         "battery_home_value_eur": r(battery_home_value),
         "arbitrage_kwh": r(arbitrage_kwh),
         "arbitrage_income_eur": r(arbitrage_income),
+        "grid_rewards_eur": r(grid_rewards),
         # reserve in de batterij aan het eind van de dag (niet gerealiseerd, buiten totalen)
         "reserve_kwh": r(reserve_kwh),
         "reserve_value_eur": r(inv_end),
@@ -428,7 +468,9 @@ def upsert(record: dict, tar: dict):
         "markup_per_kwh": tar["markup"],
         "method": ("Verbruik = homeLoad. Kosten actueel = inkoop x consumentenprijs - "
                    "teruglevering x terugleverprijs. Kosten zonder = verbruik x consumentenprijs. "
-                   "Terugleverprijs = EPEX + teruglever-opslag aanbieder, t/m 2026 plus energiebelasting incl. btw (saldering). "
+                   "Terugleverprijs t/m 2026 (saldering) = (EPEX + energiebelasting) incl. btw + teruglever-opslag aanbieder "
+                   "(0 bij methode jaaroverschot); vanaf 2027 EPEX + opslag. "
+                   "Grid Rewards (grid-rewards.json, per factuurperiode gelijk verdeeld, incl. btw) tellen als batterij-opbrengst. "
                    "Laden uit zon = gemiste teruglevering; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen "
                    "naar huis = vermeden inkoop; naar net = inkomsten tegen terugleverprijs. Besparing geschat gesplitst in batterij (arbitrage) en zon. "
                    "Voorraad FIFO: ontladen kWh krijgen de kostprijs van het laadmoment (net = consumentenprijs, zon = gemiste teruglevering). "
@@ -445,6 +487,7 @@ def upsert(record: dict, tar: dict):
             "solar_saving_eur": tot("solar_saving_eur"),
             "battery_home_kwh": tot("battery_home_kwh"),
             "arbitrage_income_eur": tot("arbitrage_income_eur"),
+            "grid_rewards_eur": tot("grid_rewards_eur"),
             "solar_charged_kwh": tot("solar_charged_kwh"),
         },
         "days": ordered,

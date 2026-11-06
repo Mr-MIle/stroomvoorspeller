@@ -165,7 +165,7 @@
       <div class="kpi">
         <p class="label">Verdiend met terugleveren</p>
         <p class="value pos" id="kpi-arbitrage">–</p>
-        <p class="sub">in dure uren</p>
+        <p class="sub" id="kpi-arbitrage-sub">in dure uren</p>
       </div>
     </div>
 
@@ -207,7 +207,8 @@
     <section class="panel">
       <h2>Hoe ik reken</h2>
       <p class="note">Ik vergelijk twee bedragen: wat ik nu aan het net betaal (inkoop min teruglevering) en wat ik zou betalen als alles van het net kwam, zonder batterij en zonnepanelen. Het verschil is mijn besparing. Alleen stroom die ik echt heb gebruikt of teruggeleverd, telt mee.</p>
-      <p class="note">De batterij laadt op uit zon of 's nachts uit het net (tegen de volle prijs). Stroom die de batterij mijn huis in stuurt, hoef ik niet duur in te kopen. Stroom die hij in dure uren teruglevert, levert de marktprijs van dat uur op, plus of min de terugleververgoeding van mijn leverancier (Frank Energie tot 17 oktober 2026, daarna Tibber). Tot en met 2026 komt daar de energiebelasting bij, want die wordt gesaldeerd. Zonnestroom die in de batterij gaat, had ik ook kunnen terugleveren; die gemiste opbrengst reken ik als laadkosten.</p>
+      <p class="note">De batterij laadt op uit zon of 's nachts uit het net (tegen de volle prijs). Stroom die de batterij mijn huis in stuurt, hoef ik niet duur in te kopen. Stroom die hij in dure uren teruglevert, levert de marktprijs van dat uur op. Tot en met 2026 komt daar de energiebelasting bij en krijg ik over allebei btw terug, want teruglevering wordt van mijn afname afgetrokken (saldering). Mijn leverancier was tot 17 oktober 2026 Frank Energie, die per teruggeleverde kWh iets bijbetaalt. Daarna is het Tibber. Daar heffen de in- en verkoopvergoeding elkaar op, dat staat zo op de factuur. Zonnestroom die in de batterij gaat, had ik ook kunnen terugleveren; die gemiste opbrengst reken ik als laadkosten.</p>
+      <p class="note">Sinds de overstap naar Tibber op 17 oktober 2026 krijg ik ook Grid Rewards: geld voor het meehelpen balanceren van het net met mijn batterij. Hoe Tibber dat bedrag berekent, weet ik niet. Ik zie alleen het totaal per factuur. Dat verdeel ik gelijk over de dagen van die factuur en tel ik als opbrengst van de batterij. Per dag is het dus een gemiddelde, geen echte dagwaarde. Dagen waarvan de factuur er nog niet is, staan voorlopig zonder Grid Rewards.</p>
       <p class="note">Stroom die de batterij in laadt, krijgt de prijs van het moment van laden: uit het net de consumentenprijs, uit zon de teruglevering die ik ervan mis. Stroom die eruit gaat, krijgt de prijs van het moment van ontladen. Ontladen gaat in volgorde van laden (eerst in, eerst uit).</p>
       <p class="note">Wat aan het eind van de dag nog in de batterij zit, staat in de kolom "In batterij (reserve)" met de laadkosten. Dat is nog niet verdiend en telt dus niet mee in de totalen.</p>
       <p class="note">Bij laden en ontladen gaat altijd een beetje stroom verloren. Daarom tel ik nooit meer stroom in de batterij dan er volgens de batterij zelf in zit (hij kan 25 kWh bevatten). Wat verloren gaat, reken ik als kosten van de batterij.</p>
@@ -280,6 +281,10 @@
         (saving >= 0 ? "bespaard " : "duurder ") + euro(Math.abs(saving)) + "</span>";
       document.getElementById("kpi-battery").textContent = kwh(t.battery_home_kwh);
       document.getElementById("kpi-arbitrage").textContent = euro(t.arbitrage_income_eur);
+      if (t.grid_rewards_eur) {
+        document.getElementById("kpi-arbitrage-sub").textContent =
+          "in dure uren · plus " + euro(t.grid_rewards_eur) + " Grid Rewards";
+      }
       document.getElementById("kpis").hidden = false;
 
       // Zon-regel
@@ -306,6 +311,7 @@
         ["waarvan batterij / zon", "<span class='" + cls(last.battery_saving_eur ?? 0) + "'>" + euro(last.battery_saving_eur) + "</span> / <span class='" + cls(last.solar_saving_eur ?? 0) + "'>" + euro(last.solar_saving_eur) + "</span>"],
         ["Batterij → huis", kwh(last.battery_home_kwh) + " <span class='muted'>(" + euro(last.battery_home_value_eur) + ")</span>"],
         ["Teruggeleverd", kwh(last.arbitrage_kwh) + " <span class='muted'>(" + euro(last.arbitrage_income_eur) + ")</span>"],
+        ["Grid Rewards", last.grid_rewards_eur ? euro(last.grid_rewards_eur) : "<span class='muted'>nog niet op factuur</span>"],
         ["Zon geladen", kwh(last.solar_charged_kwh)],
         ["In batterij (reserve)", kwh(last.reserve_kwh) + " <span class='muted'>(" + euro(last.reserve_value_eur) + ", niet gerealiseerd)</span>"],
         ["Batterij begin → eind", (last.soc_start_pct ?? "?") + "% → " + (last.soc_end_pct ?? "?") + "%"],
