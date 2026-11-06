@@ -2147,15 +2147,20 @@ body.has-neg-alert .site-header { top: 56px; }
 }
 
 /* Apparaten-tips grid */
-/* Interesse-teller (interesse.js) */
-.interesse-box {
+/* Interesse-teller (interesse.js): compacte balk boven de grafiek op /morgen */
+.interesse-balk-wrap { margin: 1rem 0 0.4rem; }
+.interesse-balk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
   background: var(--c-surface-soft);
   border: 1px solid var(--c-border);
-  border-radius: var(--radius);
-  padding: 18px 20px;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
 }
-.interesse-box h2 { margin: 0 0 8px; font-size: 1.15rem; }
-.interesse-box p { margin: 0 0 12px; line-height: 1.5; }
+.interesse-vraag { margin: 0; flex: 1 1 280px; line-height: 1.45; }
+.interesse-noot { display: block; font-size: 0.85rem; color: var(--c-text-mute); }
 .interesse-knop {
   font: inherit;
   font-weight: 700;
@@ -2166,12 +2171,12 @@ body.has-neg-alert .site-header { top: 56px; }
   background: var(--c-brand-fill);
   color: #fff;
   cursor: pointer;
+  flex: 0 0 auto;
 }
 .interesse-knop:hover { background: var(--c-brand-fill-deep); }
 .interesse-knop:focus-visible { outline: 2px solid var(--c-brand); outline-offset: 2px; }
 .interesse-knop[hidden], .interesse-bedankt[hidden] { display: none; }
-.interesse-bedankt { font-weight: 700; }
-.interesse-box .interesse-noot { margin: 12px 0 0; font-size: 0.85rem; color: var(--c-text-mute); }
+.interesse-bedankt { margin: 0; font-weight: 700; flex: 1 1 100%; }
 
 .morgen-apparaten-tips { margin-top: 32px; }
 .morgen-apparaten-tips h3 { margin: 0 0 14px; font-size: 1rem; }
