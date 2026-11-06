@@ -333,6 +333,27 @@
       </div>
     </section>
 
+    <!-- ── Interesse-teller dagmail (backlog #99, stap 1) ── -->
+    <section class="morgen-section" aria-labelledby="interesse-dagmail-h2">
+      <div class="container">
+        <div class="interesse-box" data-interesse="dagmail">
+          <h2 id="interesse-dagmail-h2">Elke dag de prijzen van morgen in je mail?</h2>
+          <p>
+            Die mail bestaat nog niet. Ik wil eerst weten of je hem zou willen krijgen.
+            Je laat geen mailadres achter: ik tel alleen hoe vaak iemand op de knop drukt.
+          </p>
+          <button type="button" class="interesse-knop" data-interesse-knop>Ja, die wil ik</button>
+          <p class="interesse-bedankt" data-interesse-bedankt hidden role="status">
+            Dank je, je klik is geteld. Komt de mail er, dan lees je dat op deze pagina.
+          </p>
+          <p class="interesse-noot">
+            De telling loopt via GoatCounter, zonder cookies. Meer in de
+            <a href="/cookies">cookieverklaring</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
     <!-- ── Gemiddelde prijs per aanbieder morgen ── -->
     <section class="morgen-section">
       <div class="container">
@@ -486,5 +507,6 @@
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
   <script src="/nav.js" defer></script>
+  <script src="/interesse.js" defer></script>
 </body>
 </html>

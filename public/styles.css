@@ -2147,6 +2147,32 @@ body.has-neg-alert .site-header { top: 56px; }
 }
 
 /* Apparaten-tips grid */
+/* Interesse-teller (interesse.js) */
+.interesse-box {
+  background: var(--c-surface-soft);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+.interesse-box h2 { margin: 0 0 8px; font-size: 1.15rem; }
+.interesse-box p { margin: 0 0 12px; line-height: 1.5; }
+.interesse-knop {
+  font: inherit;
+  font-weight: 700;
+  min-height: 44px;
+  padding: 10px 20px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--c-brand-fill);
+  color: #fff;
+  cursor: pointer;
+}
+.interesse-knop:hover { background: var(--c-brand-fill-deep); }
+.interesse-knop:focus-visible { outline: 2px solid var(--c-brand); outline-offset: 2px; }
+.interesse-knop[hidden], .interesse-bedankt[hidden] { display: none; }
+.interesse-bedankt { font-weight: 700; }
+.interesse-box .interesse-noot { margin: 12px 0 0; font-size: 0.85rem; color: var(--c-text-mute); }
+
 .morgen-apparaten-tips { margin-top: 32px; }
 .morgen-apparaten-tips h3 { margin: 0 0 14px; font-size: 1rem; }
 .morgen-tips-grid {
