@@ -133,6 +133,9 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
   .sticky-res b{color:#fff}
   .sticky-res .go{font-weight:600;white-space:nowrap}
   .sticky-res.off{transform:translateY(110%)}
+  /* Naar-boven-knop (nav.js) boven de resultaatbalk laten zweven zolang die in beeld is */
+  .to-top{transition:opacity .2s ease,transform .2s ease,bottom .2s ease}
+  body.res-bar-on .to-top{bottom:calc(var(--res-h,62px) + 12px)}
   body{padding-bottom:70px}
 }
 </style>
@@ -1235,7 +1238,7 @@ async function init(){
   // mobiel: resultaatbalk onderaan zolang je in het formulier zit en het resultaat niet in beeld is
   if('IntersectionObserver' in window){
     const vis={form:false,res:false};
-    const io=new IntersectionObserver(es=>{ es.forEach(e=>{ vis[e.target.id==='form'?'form':'res']=e.isIntersecting; }); const off=!(vis.form&&!vis.res); $('stickyRes').classList.toggle('off',off); $('stickyRes').inert=off; });
+    const io=new IntersectionObserver(es=>{ es.forEach(e=>{ vis[e.target.id==='form'?'form':'res']=e.isIntersecting; }); const off=!(vis.form&&!vis.res); $('stickyRes').classList.toggle('off',off); $('stickyRes').inert=off; document.body.classList.toggle('res-bar-on',!off); if(!off) document.body.style.setProperty('--res-h',$('stickyRes').offsetHeight+'px'); });
     io.observe($('form')); io.observe($('resultCard'));
   }
   if($('capOther')&&![...document.querySelectorAll('#capChips button')].some(b=>b.dataset.c!=='other'&&Math.abs(+b.dataset.c-+v('batkwh'))<0.01)) $('capOther').style.display='block';
