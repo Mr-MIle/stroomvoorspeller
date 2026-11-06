@@ -95,10 +95,47 @@
       nav.appendChild(group);
     });
 
-    document.addEventListener("click", function () { closeOthers(null); });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") closeOthers(null);
+    var burger = initBurger(nav);
+
+    document.addEventListener("click", function (e) {
+      closeOthers(null);
+      if (burger && !nav.contains(e.target)) setBurger(nav, burger, false);
     });
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      closeOthers(null);
+      if (burger && nav.classList.contains("is-open")) {
+        setBurger(nav, burger, false);
+        burger.focus();
+      }
+    });
+  }
+
+  // Menuknop voor smal scherm. Op desktop verborgen (CSS); daar blijft het
+  // gewone menu met uitklapmenu's staan. Op mobiel klapt het menu als paneel
+  // open onder de kop, met de groepen als kopjes.
+  function initBurger(nav) {
+    var row = nav.parentNode;
+    if (!row || row.querySelector(".nav-burger")) return null;
+    if (!nav.id) nav.id = "hoofdmenu";
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "nav-burger";
+    b.setAttribute("aria-expanded", "false");
+    b.setAttribute("aria-controls", nav.id);
+    b.innerHTML = '<span class="nav-burger-icon" aria-hidden="true"></span><span class="nav-burger-label">Menu</span>';
+    b.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setBurger(nav, b, !nav.classList.contains("is-open"));
+    });
+    row.insertBefore(b, nav);
+    return b;
+  }
+
+  function setBurger(nav, b, open) {
+    nav.classList.toggle("is-open", open);
+    b.setAttribute("aria-expanded", open ? "true" : "false");
+    b.querySelector(".nav-burger-label").textContent = open ? "Sluiten" : "Menu";
   }
 
   function closeOthers(keep) {

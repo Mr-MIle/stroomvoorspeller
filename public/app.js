@@ -1429,6 +1429,9 @@
     // De weekdag/datum komt uit dayBandPlugin; de uur-as blijft daardoor rustig.
     const narrow = typeof window !== "undefined" && window.innerWidth < 640;
     const hStep = narrow ? 12 : 6;
+    // Weekgrafiek op smal scherm: 2 tijdlabels per dag × 7 dagen past niet in ~310 px
+    // (labels liepen over elkaar). De daglabels bovenin dragen dan de as alleen.
+    const hideHourTicks = narrow && !isQuarter && n > 72;
     const xTickCallback = isQuarter
       ? function (value, index) {
           const iso = timeline[index] && timeline[index].time;
@@ -1438,7 +1441,7 @@
         }
       : function (value, index) {
           const iso = timeline[index] && timeline[index].time;
-          if (!iso) return "";
+          if (!iso || hideHourTicks) return "";
           const d = new Date(iso);
           return (d.getMinutes() === 0 && d.getHours() % hStep === 0) ? fmtTime(iso) : "";
         };

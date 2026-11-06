@@ -3219,3 +3219,112 @@ p a, li a, td a, p code, li code, .aanbieder-meta span {
   }
   html { scroll-behavior: auto !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Mobiele ronde 6 november 2026 (bron: 04-notities/mobiel-analyse-2026-11-06.md)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Menuknop: alleen op smal scherm en alleen als nav.js draait */
+.nav-burger { display: none; }
+
+@media (max-width: 640px) {
+  /* iOS zoomt in op velden met tekst kleiner dan 16 px */
+  input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
+  select,
+  textarea { font-size: 16px !important; }
+
+  /* Ruimere tikvlakken: footerlinks en de scroll-pijl */
+  .site-footer .footer-meta a { display: inline-block; padding: 10px 2px; }
+  .scroll-nudge-arrow { padding: 10px 18px; }
+
+  /* Leveranciersknop: eigen regel, met het woord "leverancier" erbij */
+  .settings-toggle { order: 2; width: 100%; }
+  .settings-toggle-text { flex: 1 1 auto; }
+  .settings-toggle-prefix { display: inline; }
+  .settings-toggle-value { max-width: none; }
+
+  /* Menuknop rechts naast het logo */
+  .has-js .nav-burger {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    order: 1;
+    margin-left: auto;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--c-border);
+    border-radius: 999px;
+    background: var(--c-surface-soft);
+    color: var(--c-text);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .nav-burger-icon,
+  .nav-burger-icon::before,
+  .nav-burger-icon::after {
+    display: block;
+    width: 16px;
+    height: 2px;
+    border-radius: 1px;
+    background: currentColor;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .nav-burger-icon { position: relative; }
+  .nav-burger-icon::before,
+  .nav-burger-icon::after { content: ""; position: absolute; left: 0; }
+  .nav-burger-icon::before { top: -5px; }
+  .nav-burger-icon::after { top: 5px; }
+  .nav-burger[aria-expanded="true"] .nav-burger-icon { background: transparent; }
+  .nav-burger[aria-expanded="true"] .nav-burger-icon::before { transform: translateY(5px) rotate(45deg); }
+  .nav-burger[aria-expanded="true"] .nav-burger-icon::after { transform: translateY(-5px) rotate(-45deg); }
+
+  /* Menu dicht: weg. Open: paneel in twee kolommen onder de kop.
+     Kolom 1: Prijzen-groep, Aanbieders, Kennisbank. Kolom 2: Slim thuis.
+     (Volgt de volgorde van NAV in nav.js.) */
+  .has-js .primary-nav { display: none; }
+  .has-js .primary-nav.is-open {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: min-content;
+    align-items: start;
+    column-gap: 16px;
+    order: 3;
+    width: 100%;
+    overflow: visible;
+    padding: 4px 0 10px;
+    border-top: 1px solid var(--c-border);
+  }
+  .has-js .primary-nav.is-open > * { grid-column: 1; }
+  .has-js .primary-nav.is-open > .nav-group:last-child { grid-column: 2; grid-row: 1 / span 3; }
+  .has-js .primary-nav .nav-group { display: block; }
+  .has-js .primary-nav .nav-toggle {
+    display: block;
+    width: 100%;
+    text-align: left;
+    pointer-events: none;
+    padding: 12px 0 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--c-text-mute);
+  }
+  .has-js .primary-nav .nav-toggle .nav-caret { display: none; }
+  .has-js .primary-nav .nav-menu { display: block; }
+  .has-js .primary-nav .nav-menu a,
+  .has-js .primary-nav > a.nav-top {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0;
+    font-size: 0.98rem;
+    white-space: normal;
+  }
+  .has-js .primary-nav > a.nav-top { font-weight: 600; color: var(--c-text); }
+  .has-js .primary-nav > a.nav-top:first-of-type { margin-top: 6px; }
+}
+@media (max-width: 640px) {
+  .has-js .primary-nav.is-open a[aria-current="page"] { color: var(--c-brand); }
+}

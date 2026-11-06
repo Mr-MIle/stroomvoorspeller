@@ -177,11 +177,11 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
         </div>
         <div id="zonPan" style="margin-top:10px">
           <label for="panelen" class="sub-label">Aantal panelen <span class="hint">op het zuiden, ongeveer 350 kWh per paneel per jaar</span></label>
-          <input type="number" id="panelen" min="0" max="60" step="1" value="8" />
+          <input type="number" inputmode="numeric" id="panelen" min="0" max="60" step="1" value="8" />
         </div>
         <div id="zonKwh" style="display:none;margin-top:10px">
           <label for="opwek" class="sub-label">Opwek per jaar in kWh <span class="hint">staat in de app van je omvormer</span></label>
-          <input type="number" id="opwek" min="0" max="30000" step="50" value="2800" />
+          <input type="number" inputmode="numeric" id="opwek" min="0" max="30000" step="50" value="2800" />
         </div>
       </div>
 
@@ -195,8 +195,8 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
         </div>
         <div id="verbruikAfr" style="display:none;margin-top:10px">
           <div class="row2">
-            <div><label for="afname" class="sub-label">Afname <span class="hint">kWh</span></label><input type="number" id="afname" min="0" max="30000" step="50" value="2200" /></div>
-            <div><label for="terug" class="sub-label">Teruglevering <span class="hint">kWh</span></label><input type="number" id="terug" min="0" max="30000" step="50" value="2100" /></div>
+            <div><label for="afname" class="sub-label">Afname <span class="hint">kWh</span></label><input type="number" inputmode="numeric" id="afname" min="0" max="30000" step="50" value="2200" /></div>
+            <div><label for="terug" class="sub-label">Teruglevering <span class="hint">kWh</span></label><input type="number" inputmode="numeric" id="terug" min="0" max="30000" step="50" value="2100" /></div>
           </div>
           <p class="muted small-note">Neem de totalen over van je jaarafrekening (normaal plus dal). Heb je een warmtepomp, vul die dan hieronder in: wij halen hem eraf en tellen de zonnestroom die je zelf gebruikte er weer bij. <span id="afrUit"></span></p>
         </div>
@@ -208,7 +208,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
           <p class="small-note" id="p1Status" role="status" aria-live="polite"></p>
         </div>
         <div id="verbruikKwh" style="margin-top:10px">
-          <input type="number" id="verbruik" min="0" max="20000" step="50" value="2900" />
+          <input type="number" inputmode="numeric" id="verbruik" min="0" max="20000" step="50" value="2900" />
           <p class="muted" style="font-size:.78rem;margin:5px 0 0">Vul je bruto huishoudverbruik in: <b>exclusief</b> warmtepomp (die zet je hieronder apart aan) en <b>zonder</b> je zonnestroom-eigenverbruik eraf te halen. Heb je zonnepanelen met saldering? Dan staat op je meter het netto verbruik &#8211; tel je opgewekte en zelf gebruikte stroom er weer bij op.</p>
         </div>
         <div class="verbruik-vragen" id="verbruikVragen">
@@ -233,7 +233,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
         <select id="qHpOn"><option value="0" selected>Nee</option><option value="1">Ja</option></select>
         <div id="qHpKwhBox" style="display:none;margin-top:8px">
           <label for="qHpKwh" style="font-weight:600;font-size:.82rem">Verbruik warmtepomp <span class="hint">kWh per jaar, bovenop je verbruik hierboven</span></label>
-          <input type="number" id="qHpKwh" min="0" max="12000" step="100" value="3000" />
+          <input type="number" inputmode="numeric" id="qHpKwh" min="0" max="12000" step="100" value="3000" />
           <p class="muted" style="font-size:.78rem;margin:5px 0 0">Vuistregel: hybride warmtepomp ~1.500&#8211;2.500 kWh, volledige (all-electric) warmtepomp ~3.000&#8211;6.000 kWh per jaar.</p>
         </div>
       </div>
@@ -263,7 +263,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
 
         <div class="field">
           <label for="prijs">Wat kost deze batterij? <span class="hint">prijs voor de batterijgrootte hierboven, hiermee rekenen we de terugverdientijd</span></label>
-          <input type="number" id="prijs" min="0" max="30000" step="100" placeholder="bijv. 6000" />
+          <input type="number" inputmode="numeric" id="prijs" min="0" max="30000" step="100" placeholder="bijv. 6000" />
         </div>
 
         <div class="field">
