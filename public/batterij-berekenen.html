@@ -255,7 +255,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
           <div id="capOther" style="display:none;margin-top:8px">
             <input type="number" id="batkwh" min="0" max="100" step="0.5" value="10" aria-label="Batterij in kWh" />
           </div>
-          <p class="muted small-note" id="stekkerNote" style="display:none">Een stekkerbatterij steek je zelf in het stopcontact. We rekenen met 800 watt laad- en ontlaadvermogen en zonder terugleveren uit de batterij: zo werken de meeste stekkerbatterijen met een P1-meter. Meer in <a href="/kennisbank/stekker-thuisbatterij-vergelijken">stekkerbatterijen vergelijken</a>.</p>
+          <p class="muted small-note" id="stekkerNote" style="display:none">Een stekkerbatterij steek je zelf in het stopcontact. We rekenen met 800 watt laad- en ontlaadvermogen, 80% rendement heen en terug en zonder terugleveren uit de batterij: zo werken de meeste stekkerbatterijen met een P1-meter. Meer in <a href="/kennisbank/stekker-thuisbatterij-vergelijken">stekkerbatterijen vergelijken</a>.</p>
           <button type="button" class="adv-toggle" id="advBtn" style="margin-top:8px" aria-expanded="false" aria-controls="advBox">+ laadsnelheid instellen</button>
           <div class="adv" id="advBox">
             <label for="batkw" style="font-weight:600;font-size:.82rem">Laadsnelheid (kW)
@@ -367,7 +367,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
 
     <h2 id="hoe-we-rekenen">Hoe we rekenen</h2>
     <p>Per paneel rekenen we met ongeveer 350 kWh zonnestroom per jaar, gericht op het zuiden. Weet je je opwek, vul die dan zelf in. Laad je je eigen meterdata, dan rekenen we niet met gemiddelde patronen maar met jouw afname en teruglevering per kwartier; de rest van deze alinea geldt dan niet. Je verbruik volgt een gemiddeld dagpatroon; zet je een warmtepomp aan, dan komt dat verbruik er winterzwaar bovenop, precies wanneer je panelen weinig leveren. De batterij verliest wat stroom bij laden en ontladen (ruwweg 1 op de 10 kWh) en gebruikt 90% van zijn opgegeven capaciteit.</p>
-    <p>Voor stroom die je inkoopt betaal je de marktprijs plus belasting; voor teruglevering krijg je de kale marktprijs, minus de terugleverkosten van je leverancier. Sinds 1 oktober 2025 heeft de stroombeurs een prijs per kwartier; vanaf die maand rekenen we ook per kwartier. Daarvoor per uur. De batterij plant elke dag opnieuw, zoals een slimme besturing: met de prijzen van vandaag en morgenochtend, want die zijn vanaf ongeveer 13:15 bekend. Hij laadt nooit sneller dan zijn vermogen en nooit voller dan hij is. Bij &#8220;Gebalanceerd&#8221; laadt hij alleen uit het net als dat minstens 6 cent per kWh oplevert, om slijtage te sparen. Bij &#8220;Volop handelen&#8221; is dat 1 cent. Een stekkerbatterij rekenen we met 800 watt en zonder terugleveren uit de batterij. We rekenen zonder salderingsregeling; zolang die nog geldt (tot 2027) levert terugleveren iets meer op. De werkelijke opbrengst kan afwijken en aan deze uitkomsten kun je geen rechten ontlenen.</p>
+    <p>Voor stroom die je inkoopt betaal je de marktprijs plus belasting; voor teruglevering krijg je de kale marktprijs, minus de terugleverkosten van je leverancier. Sinds 1 oktober 2025 heeft de stroombeurs een prijs per kwartier; vanaf die maand rekenen we ook per kwartier. Daarvoor per uur. De batterij plant elke dag opnieuw, zoals een slimme besturing: met de prijzen van vandaag en morgenochtend, want die zijn vanaf ongeveer 13:15 bekend. Hij laadt nooit sneller dan zijn vermogen en nooit voller dan hij is. Bij &#8220;Gebalanceerd&#8221; laadt hij alleen uit het net als dat minstens 6 cent per kWh oplevert, om slijtage te sparen. Bij &#8220;Volop handelen&#8221; is dat 1 cent. Een stekkerbatterij rekenen we met 800 watt, zonder terugleveren uit de batterij en met 2 op de 10 kWh verlies bij laden en ontladen, want de kleine omvormer werkt minder efficiënt. We rekenen zonder salderingsregeling; zolang die nog geldt (tot 2027) levert terugleveren iets meer op. De werkelijke opbrengst kan afwijken en aan deze uitkomsten kun je geen rechten ontlenen.</p>
     <p>Wat we er bewust <b>niet</b> in stoppen: de zonnebonus van Frank, NextEnergy en Zonneplan. Die drie betalen een flinke opslag boven op de marktprijs &#8211; 15, 50 en 10 procent &#8211; maar alleen over stroom die rechtstreeks van je zonnepanelen komt. Over stroom die je batterij teruglevert krijg je hem niet; dat staat in hun eigen voorwaarden. Zou de tool die bonus toch meerekenen, dan zou hij je opbrengst bij precies die drie aanbieders te rooskleurig voorstellen. Hoe het per aanbieder zit staat in <a href="/kennisbank/teruglevertarief-vergelijken">teruglevertarief vergelijken</a>.</p>
 
     <h2 id="rekenvoorbeeld">Rekenvoorbeeld</h2>
@@ -376,7 +376,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
     <table class="bd ex">
       <thead><tr><th>Batterij</th><th class="num">Richtprijs</th><th class="num">Bespaart/jaar</th><th class="num">Terugverdientijd</th></tr></thead>
       <tbody id="exBody">
-      <tr><td>2,7 kWh stekker</td><td class="num">&#8364;1.195</td><td class="num">&#8364;183</td><td class="num">6,9 jaar</td></tr>
+      <tr><td>2,7 kWh stekker</td><td class="num">&#8364;1.195</td><td class="num">&#8364;167</td><td class="num">7,6 jaar</td></tr>
       <tr><td>5 kWh</td><td class="num">&#8364;4.000</td><td class="num">&#8364;260</td><td class="num">&gt; 15 jaar</td></tr>
       <tr><td>10 kWh</td><td class="num">&#8364;6.000</td><td class="num">&#8364;312</td><td class="num">&gt; 15 jaar</td></tr>
       <tr><td>15 kWh</td><td class="num">&#8364;8.000</td><td class="num">&#8364;338</td><td class="num">&gt; 15 jaar</td></tr>
@@ -481,6 +481,9 @@ const MODUS_TXT={
  max:"De batterij benut elk voordeel: laden als stroom goedkoop is, gebruiken of terugleveren als het duur is. Meeste opbrengst, maar ook de meeste laadbeurten en dus meer slijtage."
 };
 const STEKKER_KWH=2.7, STEKKER_KW=0.8, STEKKER_PRIJS=1195;   // stekkerbatterij: klein, 800 watt, zonder installateur
+// Rendement per richting. Een vaste batterij haalt rond 90% heen en terug. Een stekkerbatterij is AC-gekoppeld met
+// een kleine omvormer die vaak op laag vermogen draait; HomeWizard noemt zelf 70 tot 85%. We rekenen met 80%.
+const EFF_VAST=0.95, EFF_STEKKER=0.894;
 
 // ---------- voorbeeldprijzen (alleen als het archief niet laadt) ----------
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -591,21 +594,34 @@ const PLAN_H=36, SOC_STEPS=20;
 // 'Eigen stroom' laadt nooit uit het net en levert nooit vanuit de batterij terug.
 const WEAR={self:{grid:Infinity,exp:Infinity}, balanced:{grid:0.06,exp:0.005}, max:{grid:0.01,exp:0}};
 
+// Welk deel van het restverbruik in een tijdstap kan de batterij écht dekken? Het verbruik binnen een kwartier of
+// uur is niet vlak: een waterkoker of kookplaat trekt een paar minuten 2 kW, de rest van de tijd loopt alleen de
+// basislast. De batterij volgt de meter en levert per moment hooguit zijn vermogen. Aanname: de helft van het
+// gemiddelde is vaste basislast, de andere helft komt in pieken (exponentieel verdeeld). Bij 5 kW merk je daar
+// vrijwel niets van, bij 800 watt in de avondpiek wel.
+function coverable(lRem,pwr,dt){
+  if(!(lRem>0)) return 0;
+  const m=lRem/dt, b=0.5*m, k=0.5*m;
+  if(pwr>=b+12*k) return lRem;
+  const c= pwr<=b? pwr : b+k*(1-Math.exp(-(pwr-b)/k));
+  return Math.min(lRem,c*dt);
+}
 // Eén tijdstap afrekenen bij een verandering van de batterij-inhoud dS (opgeslagen kWh, + = laden).
-function hourFlows(s,l,dS,cp,tb,ce,de){
-  const d=Math.min(s,l), sRem=s-d, lRem=l-d;
+// lc = deel van het restverbruik dat de batterij kan dekken (zie coverable); standaard alles.
+function hourFlows(s,l,dS,cp,tb,ce,de,lc){
+  const d=Math.min(s,l), sRem=s-d, lRem=l-d, lCap= lc==null? lRem : Math.min(lRem,lc);
   let imp=lRem, expK=sRem, sold=0, batL=0, fromGrid=0;
   if(dS>0){ const inp=dS/ce, fs=Math.min(inp,sRem); fromGrid=inp-fs; expK=sRem-fs; imp=lRem+fromGrid; }
-  else if(dS<0){ const out=-dS*de; batL=Math.min(out,lRem); sold=out-batL; imp=lRem-batL; }
+  else if(dS<0){ const out=-dS*de; batL=Math.min(out,lCap); sold=out-batL; imp=lRem-batL; }
   return {cost:imp*cp-expK*tb-sold*tb, imp,expK,sold,batL,fromGrid,solL:d};
 }
 // Alleen de plan-kosten van een stap (zelfde regels als hourFlows plus slijtagedrempel, zonder object).
-function planCost(s,l,dS,cp,tb,ce,de,wg,we){
+function planCost(s,l,dS,cp,tb,ce,de,wg,we,lc){
   const d=s<l?s:l, sRem=s-d, lRem=l-d;
   if(dS>0){ const inp=dS/ce, fs=inp<sRem?inp:sRem, fg=inp-fs;
     if(fg>1e-9){ if(wg===Infinity) return Infinity; return (lRem+fg)*cp-(sRem-fs)*tb+fg*wg; }
     return lRem*cp-(sRem-fs)*tb; }
-  if(dS<0){ const out=-dS*de, bl=out<lRem?out:lRem, so=out-bl;
+  if(dS<0){ const lCap=lc<lRem?lc:lRem, out=-dS*de, bl=out<lCap?out:lCap, so=out-bl;
     if(so>1e-9){ if(we===Infinity) return Infinity; return (lRem-bl)*cp-sRem*tb-so*tb+so*we; }
     return (lRem-bl)*cp-sRem*tb; }
   return lRem*cp-sRem*tb;
@@ -618,14 +634,15 @@ function planDay(cpA,tbA,solarA,loadA,bat,mode,socIn){
   const V=new Float64Array((H+1)*(N+1));
   const val=(t,x)=>{ if(!N) return V[t]; const u=Math.max(0,Math.min(N,x/st)), i=Math.min(N-1,Math.floor(u)), w=u-i; return V[t*(N+1)+i]*(1-w)+V[t*(N+1)+i+1]*w; };
   const wg=wear.grid, we= bat.noExport? Infinity : wear.exp;
+  const lcA=new Float64Array(H); for(let t=0;t<H;t++){ const s=solarA[t], l=loadA[t]; lcA[t]=coverable(l-(s<l?s:l),pwr,dt); }
   // beste keuze in stap t bij inhoud x: elk rasterpunt binnen bereik, plus 'laad precies het
   // zonne-overschot', 'dek precies het restverbruik' en 'niets doen'
   const best=(t,x,forPlan)=>{
-    const s=solarA[t], l=loadA[t], d=s<l?s:l, cp=cpA[t], tb=tbA[t];
+    const s=solarA[t], l=loadA[t], d=s<l?s:l, cp=cpA[t], tb=tbA[t], lc=lcA[t];
     const lo=Math.max(-x,-maxDn), hi=Math.min(cap-x,maxUp);
     let bc=Infinity, bdS=0;
-    const tryDS=dS=>{ if(dS<lo-1e-9||dS>hi+1e-9) return; const c=planCost(s,l,dS,cp,tb,ce,de,wg,we)+val(t+1,x+dS); if(c<bc-1e-12){bc=c;bdS=dS;} };
-    tryDS(0); tryDS(Math.min(hi,(s-d)*ce)); tryDS(Math.max(lo,-(l-d)/de));
+    const tryDS=dS=>{ if(dS<lo-1e-9||dS>hi+1e-9) return; const c=planCost(s,l,dS,cp,tb,ce,de,wg,we,lc)+val(t+1,x+dS); if(c<bc-1e-12){bc=c;bdS=dS;} };
+    tryDS(0); tryDS(Math.min(hi,(s-d)*ce)); tryDS(Math.max(lo,-lc/de));
     if(N){ const jLo=Math.ceil((x+lo)/st-1e-9), jHi=Math.floor((x+hi)/st+1e-9); for(let j=jLo;j<=jHi;j++) tryDS(j*st-x); }
     return forPlan? bc : bdS;
   };
@@ -635,7 +652,7 @@ function planDay(cpA,tbA,solarA,loadA,bat,mode,socIn){
   const r={solToLoad:0,batToLoad:0,expKwh:0,soldKwh:0,soldGridKwh:0,solarGen:0,charged:0,loadTot:0,impKwh:0,costWithout:0,costWith:0,solSave:0,batSave:0,expRev:0,soldRev:0};
   for(let t=0;t<Math.min(nExec,H);t++){
     const dS=best(t,x,false);
-    const f=hourFlows(solarA[t],loadA[t],dS,cpA[t],tbA[t],ce,de);
+    const f=hourFlows(solarA[t],loadA[t],dS,cpA[t],tbA[t],ce,de,lcA[t]);
     if(dS>0){ gridPool+=f.fromGrid*ce; r.charged+=dS; }
     else if(dS<0&&x>1e-9){ const frac=Math.min(1,gridPool/x); r.soldGridKwh+=f.sold*frac; gridPool-=(-dS)*frac; }
     x=Math.max(0,Math.min(cap,x+dS)); gridPool=Math.max(0,Math.min(gridPool,x));
@@ -807,10 +824,11 @@ function pwrFor(capKwh,p){
   return Math.max(0.01,capKwh*0.5);
 }
 let MONTHS=[];
+const effFor=c=> isStekker(c)? EFF_STEKKER : EFF_VAST;
 function yearSaving(p, capKwh){
-  const cap=capKwh*0.9, pwr=pwrFor(capKwh,p), noExport=isStekker(capKwh);
+  const cap=capKwh*0.9, pwr=pwrFor(capKwh,p), noExport=isStekker(capKwh), ce=effFor(capKwh), de=ce;
   let tot=0, days=0;
-  for(const o of (p.p1? p.p1.months : MONTHS)){ const a=simulateMonth(o.y,o.m,Object.assign({},p,{cap,pwr,noExport})); tot+=(a.costWithout-a.costWith); days+=a.days; }
+  for(const o of (p.p1? p.p1.months : MONTHS)){ const a=simulateMonth(o.y,o.m,Object.assign({},p,{cap,pwr,noExport,ce,de})); tot+=(a.costWithout-a.costWith); days+=a.days; }
   return p.p1? (days? tot*365/days : 0) : tot;   // meterdata: omgerekend naar een jaar
 }
 // memo: dezelfde jaarberekening wordt door resultaatpaneel én adviestabel gebruikt
@@ -911,7 +929,7 @@ function currentParams(){
   const [yy,mm]=v('maand').split('-').map(Number);
   const p={y:yy,m:mm,capKwh,pwrUser:pwrUser>0?pwrUser:0,ce:0.95,de:0.95,solarKwh:solarKwh(),base:baseKwh(),hp:hpKwh(),
     markup:sup.markup,tlv:sup.tlv,mode:state.mode,p1:usingP1()? state.p1 : null};
-  p.cap=capKwh*0.9; p.pwr=pwrFor(capKwh,p); p.noExport=isStekker(capKwh);
+  p.cap=capKwh*0.9; p.pwr=pwrFor(capKwh,p); p.noExport=isStekker(capKwh); p.ce=p.de=effFor(capKwh);
   return p;
 }
 
@@ -1092,16 +1110,15 @@ function renderAdvisor(p){
     if(ex){ if(hasPrice) ex.price=pr; ex.isUser=true; userRow=ex; }
     else { userRow={s:userKwh,batSave:yearSavingM(p,userKwh)-base0,price:batPrice(userKwh),isUser:true}; rows.push(userRow); rows.sort((a,b)=>a.s-b.s); }
   }
-  rows.forEach(r=>{ r.payback=paybackYears(r.price,r.batSave); r.perEur= r.price>0? r.batSave/r.price : 0; });
+  // netto = opgetelde besparing over de levensduur (met slijtage) min de aanschafprijs
+  rows.forEach(r=>{ r.payback=paybackYears(r.price,r.batSave); r.perEur= r.price>0? r.batSave/r.price : 0; r.net=breakEven(Math.max(0,r.batSave),BAT_LIFESPAN)-r.price; });
   const std=rows.filter(r=>r.std);
-  let rec=null, bestPb=std[0];
-  for(let i=0;i<std.length;i++){
-    const extra = i===0? std[i].batSave : std[i].batSave-std[i-1].batSave;
-    const stepCost = i===0? std[i].price : std[i].price-std[i-1].price;
-    // een stap groter loont als die extra investering zich binnen de levensduur terugverdient
-    if(isFinite(paybackYears(stepCost,extra)) && isFinite(std[i].payback)) rec=std[i].s;
-    if(std[i].perEur>bestPb.perEur) bestPb=std[i];
-  }
+  // Advies: de maat die over de levensduur netto het meeste overhoudt. Geen ladder van klein naar groot:
+  // een stekkerbatterij en een vaste batterij zijn alternatieven, niemand 'stapt op' van de een naar de ander.
+  const pick=list=>{ let b=null; for(const r of list) if(r.net>0&&isFinite(r.payback)&&(!b||r.net>b.net)) b=r; return b; };
+  const recRow=pick(std), vastRow=pick(std.filter(r=>!isStekker(r.s)));
+  const rec= recRow? recRow.s : null;
+  let bestPb=std[0]; for(const r of std) if(r.perEur>bestPb.perEur) bestPb=r;
   const mark = rec!=null? rec : bestPb.s;
   $('advBody').innerHTML=rows.map(r=>{
     const cls=[]; if(r.s===mark) cls.push('best'); if(r.isUser) cls.push('you');
@@ -1109,7 +1126,14 @@ function renderAdvisor(p){
     return `<tr class="${cls.join(' ')}"><td>${sizeTxt(r.s)}${tag}</td><td class="num">${eur(r.price)}</td><td class="num">${eur(r.batSave)}</td><td class="num">${r.batSave>0?fmtPb(r.payback,'jr'):'&#8211;'}</td></tr>`;
   }).join('');
   let recHtml;
-  if(rec!=null){ const rr=std.find(r=>r.s===rec); recHtml=`Een ${isStekker(rec)?'stekkerbatterij van <b>2,7 kWh</b>':'batterij van <b>'+nl(rec)+' kWh</b>'} is voor jou de beste balans: grotere stappen verdienen zich binnen de levensduur niet meer terug. Die bespaart ongeveer <b>${eur(rr.batSave)} per jaar</b>${p.p1?'':' bovenop je zonnepanelen'}.`; }
+  const netTxt=r=>eur(Math.floor(r.net/50)*50);
+  if(rec!=null&&isStekker(rec)){
+    recHtml=`Financieel houdt een <b>stekkerbatterij van 2,7 kWh</b> je over ${BAT_LIFESPAN} jaar het meeste over: ongeveer <b>${eur(recRow.batSave)} per jaar</b>${p.p1?'':' bovenop je zonnepanelen'}, netto zo&#8217;n ${netTxt(recRow)} na aftrek van de aanschaf. Dat komt vooral door de lage prijs.`
+      +`<br><span style="font-weight:400;font-size:.92em">Reken op de grenzen: hij laadt en levert hooguit 800 watt via het stopcontact, dus een waterkoker, oven of warmtepomp vangt hij maar voor een klein deel op. Hij levert niet terug aan het net en verliest meer bij laden en ontladen dan een vaste batterij. `
+      +(vastRow? `De beste vaste batterij voor jou is <b>${nl(vastRow.s)} kWh</b>: ~${eur(vastRow.batSave)} per jaar, netto zo&#8217;n ${netTxt(vastRow)}. Die dekt veel meer van je verbruik, maar kost meer dan hij extra oplevert.`
+                : `Een vaste batterij verdient zich bij jouw verbruik niet binnen ${BAT_LIFESPAN} jaar terug.`)+`</span>`;
+  }
+  else if(rec!=null){ recHtml=`Een batterij van <b>${nl(rec)} kWh</b> houdt je over ${BAT_LIFESPAN} jaar netto het meeste over: ongeveer <b>${eur(recRow.batSave)} per jaar</b>${p.p1?'':' bovenop je zonnepanelen'}, netto zo&#8217;n ${netTxt(recRow)} na aftrek van de aanschaf. Een grotere maat kost meer dan hij extra oplevert.`; }
   else if(bestPb.batSave>5){ recHtml=`Bij de huidige batterijprijzen verdient geen enkele maat zich binnen ~${BAT_LIFESPAN} jaar terug. Een batterij van ${sizeTxt(bestPb.s)} bespaart het meeste per euro (~${eur(bestPb.batSave)} per jaar), maar is financieel nog niet rond &#8211; nu interessanter voor onafhankelijkheid dan voor puur rendement.`; }
   else { recHtml='Met deze instellingen levert een batterij weinig extra op bovenop je zonnepanelen. Meer panelen of een hoger verbruik maken een batterij eerder rendabel.'; }
   if(hasPrice && userRow){
@@ -1117,7 +1141,7 @@ function renderAdvisor(p){
     recHtml += `<br><span style="font-weight:400;font-size:.92em">Jouw keuze: <b>${sizeTxt(userKwh)}</b> voor ${eur(pr)} &#8211; bespaart ~${eur(userRow.batSave)}/jaar, terugverdientijd ${yrs}.</span>`;
   }
   $('advRec').innerHTML=recHtml;
-  $('advNote').innerHTML=`&#8220;Bespaart per jaar&#8221; is wat de batterij <b>bovenop</b> alleen zonnepanelen oplevert, ${p.p1?'op jouw meterdata, omgerekend naar een jaar':'gemiddeld over 12 maanden'}. De stekkerbatterij rekenen we met 800 watt en zonder terugleveren uit de batterij. ${hasPrice?`Gerekend met jouw prijs (${eur(pr)} voor ${sizeTxt(userKwh)}); de andere maten schalen we in dezelfde verhouding tot de richtprijs mee.`:'Richtprijzen 2026 incl. installatie (0% btw met zon); vul je eigen prijs in bij &#8220;Wat kost deze batterij&#8221;.'}`;
+  $('advNote').innerHTML=`&#8220;Bespaart per jaar&#8221; is wat de batterij <b>bovenop</b> alleen zonnepanelen oplevert, ${p.p1?'op jouw meterdata, omgerekend naar een jaar':'gemiddeld over 12 maanden'}. De stekkerbatterij rekenen we met 800 watt, 80% rendement heen en terug (een vaste batterij 90%) en zonder terugleveren uit de batterij. ${hasPrice?`Gerekend met jouw prijs (${eur(pr)} voor ${sizeTxt(userKwh)}); de andere maten schalen we in dezelfde verhouding tot de richtprijs mee.`:'Richtprijzen 2026 incl. installatie (0% btw met zon); vul je eigen prijs in bij &#8220;Wat kost deze batterij&#8221;.'}`;
 }
 
 // ---------- meterdata inlezen ----------
