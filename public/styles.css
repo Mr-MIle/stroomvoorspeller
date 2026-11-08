@@ -1175,6 +1175,59 @@ a:hover { text-decoration: underline; }
 .kb-toc a { color: var(--c-text); text-decoration: none; }
 .kb-toc a:hover { color: var(--c-brand); text-decoration: underline; }
 .legal-page h2[id] { scroll-margin-top: 80px; }
+.kb-leerpad-extra {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  color: var(--c-text-soft);
+}
+/* Begrippenlijst */
+.kb-az {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 18px 0 4px;
+}
+.kb-az a {
+  display: inline-block;
+  min-width: 32px;
+  padding: 5px 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+  color: var(--c-brand);
+  text-decoration: none;
+}
+.kb-az a:hover { border-color: var(--c-brand); }
+.kb-begrippen { margin: 8px 0 0; }
+.kb-begrippen dt {
+  font-weight: 700;
+  color: var(--c-brand-deep);
+  font-size: 1.05rem;
+  margin: 22px 0 4px;
+  scroll-margin-top: 80px;
+}
+.kb-begrippen dt[data-letter] {
+  border-top: 1px solid var(--c-border);
+  padding-top: 18px;
+}
+.kb-begrippen dt[data-letter]::before {
+  content: attr(data-letter);
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--c-text-mute);
+  margin-bottom: 6px;
+}
+.kb-begrippen dt span[id] { position: relative; top: -80px; }
+.kb-begrippen dd {
+  margin: 0;
+  color: var(--c-text);
+  line-height: 1.7;
+}
+.kb-begrip-meer { color: var(--c-text-soft); font-size: 0.92rem; }
 .legal-page .kb-wegwijzer {
   border-left: 3px solid var(--c-brand);
   padding: 4px 0 4px 14px;
