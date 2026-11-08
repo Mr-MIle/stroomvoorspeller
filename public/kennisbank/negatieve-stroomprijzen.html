@@ -71,15 +71,19 @@
         "headline": "Negatieve stroomprijzen uitgelegd: wanneer kost terugleveren jou geld (en hoe voorkom je dat)?",
         "description": "Bij een negatieve stroomprijs betál je om stroom terug te leveren. In 2024 waren er al 458 negatieve uren. Hoe werkt het, en hoe bescherm jij je energierekening?",
         "author": {
-          "@type": "Organization",
-          "@id": "https://stroomvoorspeller.nl/#organization"
+          "@type": "Person",
+          "@id": "https://stroomvoorspeller.nl/#emile",
+          "name": "Emile",
+          "jobTitle": "Beheerder van stroomvoorspeller.nl",
+          "description": "AI- en energie-enthousiast, zelf klant op een dynamisch contract",
+          "worksFor": { "@id": "https://stroomvoorspeller.nl/#organization" }
         },
         "publisher": {
           "@type": "Organization",
           "@id": "https://stroomvoorspeller.nl/#organization"
         },
         "datePublished": "2026-05-07",
-        "dateModified": "2026-10-04",
+        "dateModified": "2026-11-08",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/negatieve-stroomprijzen"
@@ -124,7 +128,7 @@
             "name": "Hoe vaak komen negatieve stroomprijzen voor in Nederland?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Het aantal negatieve uren stijgt snel: 315 uur in 2023, 458 uur in 2024 (bijna 5% van alle uren) en 584 uur in 2025. De trend zet door naarmate er meer zonne- en windcapaciteit wordt aangesloten."
+              "text": "Het aantal negatieve uren stijgt snel: 310 uur in 2023, 448 uur in 2024 en 564 uur in 2025, ruim 6% van alle uren. De trend zet door naarmate er meer zonne- en windcapaciteit wordt aangesloten."
             }
           },
           {
@@ -164,12 +168,13 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/kennisbank">← terug naar de kennisbank</a></p>
     <h1>Negatieve stroomprijzen uitgelegd: wanneer kost terugleveren jou geld (en hoe voorkom je dat)?</h1>
-    <p class="legal-meta">7 mei 2026 · leestijd ~6 minuten</p>
+    <p class="legal-meta">7 mei 2026 · bijgewerkt 8 november 2026 · leestijd ~6 minuten</p>
+    <p class="kb-author">Geschreven door Emile, beheerder van stroomvoorspeller.nl, AI- en energie enthousiast en zelf klant op een dynamisch contract</p>
 
-    <p>In 2024 waren er 458 uur met een negatieve stroomprijs op de Europese elektriciteitsmarkt — bijna 5% van alle uren. Op zulke momenten betaal jij als zonnepaneelhouder met een dynamisch contract om stroom terug te leveren aan het net. Dat klinkt vreemd, maar het volgt uit een energiemarkt met steeds meer zonne- en windenergie. Let wel op: een negatieve kale prijs betekent meestal <strong>niet</strong> dat je geld terugkrijgt als je stroom gebruikt, want over elke kWh betaal je nog energiebelasting en btw.</p>
+    <p>In 2025 had de Nederlandse stroommarkt 564 uur met een negatieve prijs, ruim 6% van alle uren. Op zulke momenten betaal jij als zonnepaneelhouder met een dynamisch contract om stroom terug te leveren aan het net. Dat klinkt vreemd, maar het volgt uit een energiemarkt met steeds meer zonne- en windenergie. Let wel op: een negatieve kale prijs betekent meestal <strong>niet</strong> dat je geld terugkrijgt als je stroom gebruikt, want over elke kWh betaal je nog energiebelasting en btw.</p>
 
     <section>
-      <h2>Wat zijn negatieve stroomprijzen?</h2>
+      <h2 id="wat-zijn-negatieve-stroomprijzen">Wat zijn negatieve stroomprijzen?</h2>
       <p>De prijs van stroom wordt voor een groot deel bepaald op de zogeheten <strong>day-ahead markt</strong> — een Europese veiling waarbij energieleveranciers en grote afnemers elke dag voor de komende dag per uur een prijs afspreken. Die prijs wordt gepubliceerd door ENTSO-E en EPEX Spot, en is de basis voor wat jij als klant met een dynamisch contract betaalt.</p>
       <p>Normaal gesproken is die prijs positief: producenten willen betaald worden voor de stroom die ze leveren. Maar soms draait dat om.</p>
 
@@ -178,17 +183,31 @@
     </section>
 
     <section>
-      <h2>Hoe vaak komen negatieve prijzen voor?</h2>
-      <p>Negatieve uren komen steeds vaker voor. In Nederland en de bredere Europese markt:</p>
-      <ul>
-        <li><strong>2023:</strong> 315 uur met negatieve day-ahead prijs</li>
-        <li><strong>2024:</strong> 458 uur — bijna 5% van alle uren</li>
-        <li><strong>2025:</strong> 584 uur</li>
-        <li><strong>2026:</strong> de trend zet door naarmate er meer zonne- en windcapaciteit wordt aangesloten.</li>
-      </ul>
-      <p>Per maand terugkijken kan op onze jaaroverzichten. Op <a href="/historisch/2025">stroomprijzen 2025</a> zie je bijvoorbeeld dat mei en juni samen 272 van de 584 negatieve uren hadden.</p>
+      <h2 id="hoe-vaak-komen-negatieve-prijzen-voor">Hoe vaak komen negatieve prijzen voor?</h2>
+      <p>Steeds vaker. De tabel telt de uren met een negatieve kale stroomprijs in Nederland, uit onze eigen prijsdata (de day-ahead prijs per uur, zonder belasting en opslag). Van 2015 tot en met 2018 zat er nog geen enkel negatief uur bij. De tabel werkt zichzelf elke dag bij.</p>
+      <div class="static-table-wrap">
+        <table class="static-price-table" id="neg-uren-tabel">
+          <caption>Uren met een negatieve day-ahead prijs in Nederland, per jaar</caption>
+          <thead>
+            <tr><th scope="col">Jaar</th><th scope="col" class="num">Negatieve uren</th><th scope="col" class="num">Aandeel van het jaar</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>2019</td><td class="num">3</td><td class="num">0,0%</td></tr>
+            <tr><td>2020</td><td class="num">94</td><td class="num">1,1%</td></tr>
+            <tr><td>2021</td><td class="num">70</td><td class="num">0,8%</td></tr>
+            <tr><td>2022</td><td class="num">85</td><td class="num">1,0%</td></tr>
+            <tr><td>2023</td><td class="num">310</td><td class="num">3,6%</td></tr>
+            <tr><td>2024</td><td class="num">448</td><td class="num">5,1%</td></tr>
+            <tr><td>2025</td><td class="num">564</td><td class="num">6,5%</td></tr>
+            <tr><td>2026 (tot nu toe)</td><td class="num">396</td><td class="num">5,3%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>De uitschieters: <strong id="neg-rec-dag">19 negatieve uren op één dag</strong> (<span id="neg-rec-dag-wanneer">4 oktober 2025</span>), <strong id="neg-rec-reeks">20 uur achter elkaar</strong> (vanaf <span id="neg-rec-reeks-wanneer">4 oktober 2025</span>) en <strong id="neg-rec-maand">141 uur in één maand</strong> (<span id="neg-rec-maand-wanneer">mei 2025</span>). Alle records staan op de <a href="/records">recordpagina</a>.</p>
+      <p>Andere bronnen noemen soms iets andere aantallen. Dat hangt af van hoe ze tellen: per uur of per kwartier, alleen Nederland of heel Europa. Per maand terugkijken kan op de jaaroverzichten. Op <a href="/historisch/2025">stroomprijzen 2025</a> zie je bijvoorbeeld dat mei en juni samen 266 van de 564 negatieve uren hadden.</p>
+      <p class="legal-meta" id="neg-uren-stempel">Bron: ENTSO-E, eigen verwerking. Stand van 7 november 2026.</p>
 
-      <h2>Wanneer is de stroomprijs negatief?</h2>
+      <h2 id="wanneer-is-de-stroomprijs-negatief">Wanneer is de stroomprijs negatief?</h2>
       <p>Negatieve prijzen komen het vaakst voor op:</p>
       <ul>
         <li><strong>Zonnige weekenden in het voorjaar en de zomer</strong> — lage vraag (bedrijven dicht), hoge opwek (veel zon)</li>
@@ -199,7 +218,7 @@
     </section>
 
     <section>
-      <h2>Wat betekent een negatieve prijs voor jou?</h2>
+      <h2 id="wat-betekent-een-negatieve-prijs-voor-jou">Wat betekent een negatieve prijs voor jou?</h2>
       <p>Het hangt sterk af van jouw situatie.</p>
 
       <h3>Met saldering (tot en met 31 december 2026)</h3>
@@ -219,7 +238,7 @@
     </section>
 
     <section>
-      <h2>Hoe bescherm je jezelf tegen negatieve prijzen?</h2>
+      <h2 id="hoe-bescherm-je-jezelf-tegen-negatieve-prijzen">Hoe bescherm je jezelf tegen negatieve prijzen?</h2>
       <p>Er zijn drie praktische manieren.</p>
 
       <h3>1. Je omvormer automatisch uitzetten bij negatieve prijzen</h3>
@@ -242,7 +261,7 @@
     </section>
 
     <section>
-      <h2>Hoe gebruik je stroomvoorspeller.nl om negatieve uren te spotten?</h2>
+      <h2 id="hoe-gebruik-je-stroomvoorspeller-nl-om-negatieve-uren-te-spo">Hoe gebruik je stroomvoorspeller.nl om negatieve uren te spotten?</h2>
       <p>Op <a href="/">stroomvoorspeller.nl</a> worden de day-ahead prijzen voor de komende 24 uur weergegeven in een overzichtelijke grafiek. Negatieve uren zijn direct zichtbaar doordat de balk onder de nullijn valt.</p>
       <p>De prijzen worden elke dag rond <strong>13:00 uur</strong> gepubliceerd voor de volgende dag — dat is het moment waarop EPEX Spot de veilingresultaten bekendmaakt. Je kan ook ons <a href="https://x.com/stroomtarief" rel="noopener noreferrer" target="_blank">Twitter-kanaal</a> volgen zodat je een melding krijgt wanneer de prijzen negatief worden.</p>
       <p><strong>Praktische tip:</strong> Check de grafiek elke dag na het middaguur. Als je morgen negatieve uren verwacht, kun je:</p>
@@ -254,7 +273,7 @@
     </section>
 
     <section>
-      <h2>Veelgestelde vragen</h2>
+      <h2 id="veelgestelde-vragen">Veelgestelde vragen</h2>
 
       <h3>Kan een negatieve prijs ook gelden voor mijn gasaansluiting?</h3>
       <p>Nee. De negatieve-prijsverschijnselen spelen zich af op de stroommarkt. Gasprijzen werken anders en worden op een andere markt bepaald.</p>
@@ -269,7 +288,7 @@
       <p>Dat is verstandig als je een dynamisch contract hebt en geen batterij hebt. Bij saldering maakt het voor je jaarrekening geen verschil.</p>
 
       <h3>Hoe vaak komen negatieve stroomprijzen voor in Nederland?</h3>
-      <p>Het aantal negatieve uren stijgt snel: 315 uur in 2023, 458 uur in 2024 (bijna 5% van alle uren) en 584 uur in 2025. De trend zet door naarmate er meer zonne- en windcapaciteit wordt aangesloten.</p>
+      <p>Het aantal negatieve uren stijgt snel: 310 uur in 2023, 448 uur in 2024 en 564 uur in 2025, ruim 6% van alle uren. De trend zet door naarmate er meer zonne- en windcapaciteit wordt aangesloten.</p>
 
       <h3>Krijg ik geld toe als ik stroom verbruik bij een negatieve prijs?</h3>
       <p>Niet altijd. De marktprijs is dan negatief, maar over je verbruik betaal je nog energiebelasting en btw. Daardoor is afnemen vaak gratis of heel goedkoop, maar krijg je er meestal niet daadwerkelijk geld bij.</p>
@@ -330,6 +349,28 @@
       </div>
     </div>
   </footer>
+  <script>
+  // Tabel negatieve uren: ververs met de dagelijkse records.json (zelfde bron als /records).
+  (function(){
+    var t=document.getElementById('neg-uren-tabel'); if(!t||!window.fetch)return;
+    var M=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+    function dat(s){var p=s.slice(0,10).split('-');return (+p[2])+' '+M[p[1]-1]+' '+p[0];}
+    function mnd(s){var p=s.split('-');return M[p[1]-1]+' '+p[0];}
+    function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+    fetch('/data/records.json?nocache='+Date.now()).then(function(r){return r.json();}).then(function(r){
+      var jaren=r.negatieve_uren_per_jaar.filter(function(j){return j.jaar>=2019;});
+      var max=Math.max.apply(null,jaren.map(function(j){return j.jaar;}));
+      t.tBodies[0].innerHTML=jaren.map(function(j){
+        return '<tr><td>'+j.jaar+(j.jaar===max?' (tot nu toe)':'')+'</td><td class="num">'+j.negatieve_uren+'</td><td class="num">'+(j.negatieve_uren/j.gemeten_uren*100).toFixed(1).replace('.',',')+'%</td></tr>';
+      }).join('');
+      var d=r.meeste_negatieve_uren_op_een_dag,k=r.langste_reeks_negatieve_uren,m=r.meeste_negatieve_uren_in_een_maand;
+      if(d){set('neg-rec-dag',d.uren+' negatieve uren op één dag');set('neg-rec-dag-wanneer',dat(d.datum));}
+      if(k){set('neg-rec-reeks',k.uren+' uur achter elkaar');set('neg-rec-reeks-wanneer',dat(k.start));}
+      if(m){set('neg-rec-maand',m.uren+' uur in één maand');set('neg-rec-maand-wanneer',mnd(m.maand));}
+      set('neg-uren-stempel','Bron: ENTSO-E, eigen verwerking. Stand van '+dat(r.gegenereerd_op)+'.');
+    }).catch(function(){});
+  })();
+  </script>
   <script src="/nav.js" defer></script>
 </body>
 </html>

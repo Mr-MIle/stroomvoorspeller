@@ -1148,6 +1148,40 @@ a:hover { text-decoration: underline; }
   font-size: 0.9rem;
   margin: 0 0 16px;
 }
+.legal-page .kb-author {
+  color: var(--c-text-soft);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: -8px 0 18px;
+}
+/* Inhoudsopgave in kennisbankartikelen */
+.kb-toc {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px 10px;
+  margin: 20px 0 8px;
+}
+.legal-page .kb-toc-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--c-text-mute);
+  margin: 0 0 6px;
+}
+.legal-page .kb-toc ol { margin: 0; padding-left: 22px; }
+.legal-page .kb-toc li { font-size: 0.92rem; line-height: 1.45; margin: 4px 0; }
+.kb-toc a { color: var(--c-text); text-decoration: none; }
+.kb-toc a:hover { color: var(--c-brand); text-decoration: underline; }
+.legal-page h2[id] { scroll-margin-top: 80px; }
+.legal-page .kb-wegwijzer {
+  border-left: 3px solid var(--c-brand);
+  padding: 4px 0 4px 14px;
+  color: var(--c-text-soft);
+  font-size: 0.93rem;
+  line-height: 1.6;
+}
 .legal-breadcrumb {
   margin: 0 0 12px;
   font-size: 0.9rem;

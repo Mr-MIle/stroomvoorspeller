@@ -71,8 +71,12 @@
         "headline": "P1-poort uitlezen zonder abonnement: zo zie je je verbruik per seconde",
         "description": "Een P1-meter van € 35 tot € 50 leest je slimme meter elke seconde uit, zonder abonnement. HomeWizard, Powerbaas en Homey vergeleken, plus een gratis optie.",
         "author": {
-          "@type": "Organization",
-          "@id": "https://stroomvoorspeller.nl/#organization"
+          "@type": "Person",
+          "@id": "https://stroomvoorspeller.nl/#emile",
+          "name": "Emile",
+          "jobTitle": "Beheerder van stroomvoorspeller.nl",
+          "description": "AI- en energie-enthousiast, zelf klant op een dynamisch contract",
+          "worksFor": { "@id": "https://stroomvoorspeller.nl/#organization" }
         },
         "publisher": {
           "@type": "Organization",
@@ -172,17 +176,34 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/kennisbank">← terug naar de kennisbank</a></p>
     <h1>P1-poort uitlezen zonder abonnement: zo zie je je verbruik per seconde</h1>
-    <p class="legal-meta">13 mei 2026 · bijgewerkt 29 september 2026 · leestijd ~9 minuten</p>
+    <p class="legal-meta">13 mei 2026 · bijgewerkt 4 oktober 2026 · leestijd ~9 minuten</p>
+    <p class="kb-author">Geschreven door Emile, beheerder van stroomvoorspeller.nl, AI- en energie enthousiast en zelf klant op een dynamisch contract</p>
 
     <p>Je betaalt elk uur een andere stroomprijs. Weet je ook hoeveel je elk uur verbruikt? Je slimme meter weet dat wel, en via de P1-poort lees je het zelf uit, zonder abonnement. Een kleine wifi-dongle van €35 tot €50 laat je per seconde je verbruik, teruglevering en gasverbruik zien. Met een dynamisch energiecontract is dit de eerste stap om te besparen.</p>
+    <p class="kb-wegwijzer">Dit stuk helpt je een P1-uitlezer kiezen en aansluiten. Hangt de dongle er al, dan lees je in <a href="/kennisbank/p1-data-gebruiken">je P1-meter draait, en dan?</a> wat je met de cijfers doet.</p>
+
+    <nav class="kb-toc" aria-label="Inhoud van dit artikel">
+      <p class="kb-toc-title">In dit artikel</p>
+      <ol>
+        <li><a href="#welke-p1-meter-zonder-abonnement-kies-je">Welke P1-meter zonder abonnement kies je?</a></li>
+        <li><a href="#wat-is-de-p1-poort">Wat is de P1-poort?</a></li>
+        <li><a href="#welke-hardware-of-software-heb-je-nodig">Welke hardware of software heb je nodig?</a></li>
+        <li><a href="#hoe-sluit-je-een-p1-dongle-aan">Hoe sluit je een P1-dongle aan?</a></li>
+        <li><a href="#p1-real-time-data-uitlezen-zonder-abonnement">P1 real-time data uitlezen, zonder abonnement</a></li>
+        <li><a href="#wat-doe-je-met-die-data">Wat doe je met die data?</a></li>
+        <li><a href="#privacy-wie-ziet-jouw-p1-data">Privacy: wie ziet jouw P1-data?</a></li>
+        <li><a href="#conclusie">Conclusie</a></li>
+        <li><a href="#veelgestelde-vragen">Veelgestelde vragen</a></li>
+      </ol>
+    </nav>
 
     <section>
-      <h2>Welke P1-meter zonder abonnement kies je?</h2>
+      <h2 id="welke-p1-meter-zonder-abonnement-kies-je">Welke P1-meter zonder abonnement kies je?</h2>
       <p>Voor bijna iedereen is de <strong>HomeWizard P1 Meter</strong> (rond €35) de makkelijkste: insteken, app installeren, klaar. Live verbruik zien werkt zonder abonnement. Wil je apparaten direct laten schakelen zonder smarthome-systeem, neem dan de <strong>Powerbaas</strong> (~€49). Heb je al een Homey, dan ligt de <strong>Homey Energy Dongle</strong> (~€49) het meest voor de hand. Geen kastje willen kopen? <strong>SlimmemeterPortal.nl</strong> is gratis, maar laat alleen gisteren en eerder zien.</p>
     </section>
 
     <section>
-      <h2>Wat is de P1-poort?</h2>
+      <h2 id="wat-is-de-p1-poort">Wat is de P1-poort?</h2>
       <p>De P1-poort is een kleine aansluiting aan de zij- of voorkant van je slimme meter. Via die poort stuurt de meter continu gegevens over je verbruik en teruglevering: elke seconde een update, 24 uur per dag.</p>
       <p>Het protocol dat hierachter zit heet DSMR (Dutch Smart Meter Requirements). De versie op vrijwel alle meters die na 2019 zijn geplaatst, is DSMR 5.0. Die geeft:</p>
       <ul>
@@ -195,7 +216,7 @@
     </section>
 
     <section>
-      <h2>Welke hardware of software heb je nodig?</h2>
+      <h2 id="welke-hardware-of-software-heb-je-nodig">Welke hardware of software heb je nodig?</h2>
       <p>Er zijn drie dongles die ik zelf zou overwegen, en één optie zonder hardware. Elk past bij een ander soort gebruiker.</p>
 
       <h3>HomeWizard P1 Meter (~€35): de makkelijkste keuze</h3>
@@ -256,7 +277,7 @@
     </section>
 
     <section>
-      <h2>Hoe sluit je een P1-dongle aan?</h2>
+      <h2 id="hoe-sluit-je-een-p1-dongle-aan">Hoe sluit je een P1-dongle aan?</h2>
       <p>De installatie duurt bij alle drie de hardware-opties minder dan 5 minuten.</p>
       <p><strong>Stap 1:</strong> Open het klepje van de poort op je slimme meter. Daar zit de P1-poort, een zogenaamde RJ11-aansluiting die eruitziet als een brede telefoonplug. Steek de dongle erin. Bij DSMR 5.0 krijgt de dongle automatisch stroom via de poort; geen externe voeding nodig. Sommige dongles vereisen wel externe voeding. Dit is bijvoorbeeld mijn ervaring met de Homey Dongle.</p>
       <p><strong>Stap 2:</strong> Download de bijbehorende app (HomeWizard Energy, Powerbaas, of Homey) en volg de setup-wizard. De dongle maakt verbinding met je wifi-netwerk.</p>
@@ -264,14 +285,14 @@
     </section>
 
     <section>
-      <h2>P1 real-time data uitlezen, zonder abonnement</h2>
+      <h2 id="p1-real-time-data-uitlezen-zonder-abonnement">P1 real-time data uitlezen, zonder abonnement</h2>
       <p>Alle dongles hierboven lezen de meter elke seconde uit en tonen dat direct in een app of dashboard. Die real-time data blijft lokaal: de gegevens gaan van je meter naar de dongle en via je eigen wifi naar je telefoon. Een abonnement heb je daarvoor niet nodig: de basisfuncties van HomeWizard en Powerbaas zijn gratis, en een lokale API zit er standaard bij.</p>
       <p><strong>Geen wifi in de meterkast?</strong> Er zijn ook P1-dongles met een netwerkkabel in plaats van wifi. Die zijn vooral gemaakt voor Home Assistant en vragen wat meer instelwerk, maar hebben geen last van een zwak wifi-signaal.</p>
       <p>Goed om te weten: de P1-poort zit ook op de Vlaamse digitale meter. Dezelfde dongles werken daar zonder aanpassing.</p>
     </section>
 
     <section>
-      <h2>Wat doe je met die data?</h2>
+      <h2 id="wat-doe-je-met-die-data">Wat doe je met die data?</h2>
       <p>Je P1-data levert pas geld op als je er iets mee doet. Dit zijn de meest praktische toepassingen. Wil je het stap voor stap doorrekenen, lees dan <a href="/kennisbank/p1-data-gebruiken">wat je met je P1-data doet</a>: van je basislast opsporen tot je eigen gewogen kWh-prijs berekenen.</p>
       <p><strong>Verbruikspieken ontdekken.</strong> Welk apparaat verbruikt het meeste? De P1-meter toont precies wanneer het stroomverbruik omhoogschiet. Zo kom je erachter dat je wasdroger 2.000 watt trekt en je standby-apparaten samen 80 watt. Wat dat aan euro’s scheelt, hangt af van wat je daarna verandert; in <a href="/kennisbank/p1-data-gebruiken">het vervolgartikel</a> staat de rekensom.</p>
       <p><strong>Koppelen aan dag-ahead prijzen.</strong> Op <a href="/morgen">stroomvoorspeller.nl/morgen</a> zie je de uurprijzen voor morgen. Met je P1-data weet je hoeveel je op elk uur verbruikt. Die combinatie laat zien hoeveel je kunt besparen door de vaatwasser naar 14:00 te verschuiven in plaats van 18:00.</p>
@@ -280,21 +301,21 @@
     </section>
 
     <section>
-      <h2>Privacy: wie ziet jouw P1-data?</h2>
+      <h2 id="privacy-wie-ziet-jouw-p1-data">Privacy: wie ziet jouw P1-data?</h2>
       <p>Bij alle drie de hardware-dongles is de verbinding puur lokaal. De meter stuurt data naar de dongle, de dongle stuurt data naar jouw wifi-netwerk, en daar stopt het. Jouw netbeheerder of energieleverancier heeft geen toegang tot je P1-data.</p>
       <p>Let op: de HomeWizard- en Powerbaas-apps uploaden je data ook naar hun cloud als je de app gebruikt. Bij de Homey Energy Dongle verloopt alles via je eigen Homey (Bridge of Pro), ook lokaal als je Homey Self-Hosted gebruikt.</p>
       <p>SlimmemeterPortal.nl werkt via de data van je netbeheerder; die data deelt de netbeheerder al met het platform. Wil je maximale controle over je data, dan is een lokale P1-dongle de betere keuze.</p>
     </section>
 
     <section>
-      <h2>Conclusie</h2>
+      <h2 id="conclusie">Conclusie</h2>
       <p>De P1-poort is de snelste en goedkoopste manier om grip te krijgen op je energieverbruik, zeker met een dynamisch energiecontract. Voor €35 weet je voortaan per seconde hoeveel je verbruikt, en per uur wat je daarvoor betaalt.</p>
       <p>Heb je geen smarthome-systeem? Kies de <strong>HomeWizard</strong> voor de makkelijkste start. Wil je direct apparaten aansturen zonder extra hub? Dan is de <strong>Powerbaas</strong> slimmer. Zit je al in het Homey-ecosysteem? Dan past de <strong>Homey Energy Dongle</strong> daar direct bij. Wil je eerst kijken zonder investering? <strong>SlimmemeterPortal.nl</strong> geeft je een gratis kijkje via de netbeheerderdata.</p>
       <p>Wil je zien wat je P1-meter morgen te wachten staat aan uurprijzen? Bekijk de <a href="/morgen">actuele dag-ahead prijzen op stroomvoorspeller.nl</a> en plan je verbruik slim.</p>
     </section>
 
     <section>
-      <h2>Veelgestelde vragen</h2>
+      <h2 id="veelgestelde-vragen">Veelgestelde vragen</h2>
 
       <h3>Wat is de beste P1-meter zonder abonnement?</h3>
       <p>Voor een makkelijke start zonder smarthome: de HomeWizard P1 Meter (~€35). Live verbruik zien en de lokale koppeling werken zonder abonnement; Energy+ (€0,99 per maand) is optioneel. Wil je apparaten direct laten schakelen zonder extra hub: Powerbaas (~€49). Gebruik je al Homey: de Homey Energy Dongle (~€49). Zonder hardware kun je via SlimmemeterPortal.nl gratis vertraagde data inzien.</p>

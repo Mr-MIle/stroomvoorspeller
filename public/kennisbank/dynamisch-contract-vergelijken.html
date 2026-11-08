@@ -208,8 +208,12 @@
         "dateModified": "2026-11-02",
         "inLanguage": "nl-NL",
         "author": {
-          "@type": "Organization",
-          "@id": "https://stroomvoorspeller.nl/#organization"
+          "@type": "Person",
+          "@id": "https://stroomvoorspeller.nl/#emile",
+          "name": "Emile",
+          "jobTitle": "Beheerder van stroomvoorspeller.nl",
+          "description": "AI- en energie-enthousiast, zelf klant op een dynamisch contract",
+          "worksFor": { "@id": "https://stroomvoorspeller.nl/#organization" }
         },
         "publisher": {
           "@type": "Organization",
@@ -306,6 +310,7 @@
     <p class="legal-breadcrumb"><a href="/kennisbank">← terug naar de kennisbank</a></p>
     <h1>Dynamisch energiecontract vergelijken 2026: Tibber, Frank Energie, ANWB of Zonneplan?</h1>
     <p class="legal-meta">25 mei 2026 · bijgewerkt 2 november 2026 · leestijd ~11 minuten</p>
+    <p class="kb-author">Geschreven door Emile, beheerder van stroomvoorspeller.nl, AI- en energie enthousiast en zelf klant op een dynamisch contract</p>
 
     <aside class="kort" aria-labelledby="kort-kop"><!-- BUILD:VIER-KORT:START -->
       <p class="kort-kop" id="kort-kop">Kort antwoord</p>
@@ -317,7 +322,7 @@
       <p class="kort-voet">Alleen de laagste prijs? Powerpeers kost zonder zonnepanelen € 110 per jaar, € 35 minder dan Zonneplan. <a href="/aanbieders">Alle 25 aanbieders</a></p>
       <!-- BUILD:VIER-KORT:END --></aside>
 
-    <h2>De vier op een rij</h2>
+    <h2 id="de-vier-op-een-rij">De vier op een rij</h2>
 
     <form class="vier-reken" id="vier-reken" hidden>
       <label class="vier-veld" for="vier-afname">Stroom van het net <span><input id="vier-afname" type="number" inputmode="numeric" min="0" max="100000" step="100" value="3500"> kWh/jaar</span></label>
@@ -350,7 +355,7 @@
 
     <p>In april 2026 passeerde Nederland de grens van <strong>één miljoen dynamische energiecontracten</strong>, tien keer zoveel als drie jaar eerder. jeroen.nl telt in september 2026 al 36 aanbieders. Op deze pagina staan de vier waar het meest naar gezocht wordt; de andere staan op de <a href="/aanbieders">aanbiederspagina</a>.</p>
 
-    <h2>Waar let je op bij een dynamisch contract?</h2>
+    <h2 id="waar-let-je-op-bij-een-dynamisch-contract">Waar let je op bij een dynamisch contract?</h2>
     <p>Bij een dynamisch contract betaal je altijd de actuele marktprijs, en die verschilt elk uur of zelfs elk kwartier. De aanbieder verdient zijn geld op twee manieren: een vaste maandelijkse bijdrage en een inkoopvergoeding per verbruikte kWh.</p>
 
     <h3>Inkoopvergoeding: wat betaal je bovenop de uurprijs?</h3>
@@ -363,7 +368,7 @@
     <h3>App-kwaliteit en smart home-integratie</h3>
     <p>Met een dynamisch contract <em>moet</em> je weten wat de stroom de volgende dag kost. Een goede app toont de 24 uurprijzen van morgen zodra de EPEX-veiling rond 13:00 uur zijn resultaten publiceert, liefst met kleurcodering (groen = goedkoop, rood = duur). Ben je iemand die apparaten automatisch wil laten draaien via Home Assistant of Homey? Dan heb je een open koppeling (API) nodig, en die heeft niet elke aanbieder.</p>
 
-    <h2>De vier aanbieders per stuk</h2>
+    <h2 id="de-vier-aanbieders-per-stuk">De vier aanbieders per stuk</h2>
 
     <!-- Frank Energie -->
     <div class="aanbieder-block">
@@ -430,7 +435,7 @@
       <p><strong>Geschikt voor:</strong> Huishoudens met zonnepanelen die een vaste plus op teruglevering willen en alles in één app willen zien.</p>
     </div>
 
-    <h2>Onderling vergeleken</h2>
+    <h2 id="onderling-vergeleken">Onderling vergeleken</h2>
     <p>De bedragen hieronder gaan uit van 3.500 kWh verbruik per jaar en, met zonnepanelen, 2.000 kWh teruglevering. Het gaat alleen om wat de aanbieder rekent bovenop de uurprijs; de uurprijs zelf is overal gelijk. Bij Tibber maakt het jaartal uit: de inhouding op teruglevering geldt in 2026 alleen over je jaaroverschot, vanaf 2027 over elke kWh.</p>
 
     <h3>Tibber of Frank Energie?</h3>
@@ -483,7 +488,7 @@
     <p>Vastzitten doe je bij geen van beide: je kunt elke dag opzeggen, zonder boete. Op Trustpilot krijgt Zonneplan duidelijk betere cijfers dan ANWB Energie. Eén ding om te weten voor wie groene stroom belangrijk vindt: op het stroometiket van Zonneplan over 2025 staat 100% aardgas, omdat Zonneplan geen garanties van oorsprong koopt. Het etiket van ANWB Energie heb ik niet nagekeken.</p>
     <p><a href="/aanbieders?vergelijk=anwb,zonneplan">Zet ANWB Energie en Zonneplan naast elkaar bij jouw eigen verbruik →</a></p>
 
-    <h2>Wanneer kies je voor welke aanbieder?</h2>
+    <h2 id="wanneer-kies-je-voor-welke-aanbieder">Wanneer kies je voor welke aanbieder?</h2>
 
     <div class="keuze-block">
       <strong>Ik heb een elektrische auto, warmtepomp of thuisbatterij → kies Tibber</strong>
@@ -502,7 +507,7 @@
       De naam is vertrouwd en er is een callcenter. Daar staat tegenover dat je €&nbsp;17 tot €&nbsp;20 per jaar meer betaalt dan bij Frank of Zonneplan, en met zonnepanelen nog meer.
     </div>
 
-    <h2>Wat heb je nodig om over te stappen?</h2>
+    <h2 id="wat-heb-je-nodig-om-over-te-stappen">Wat heb je nodig om over te stappen?</h2>
     <p>Overstappen naar een dynamisch energiecontract is zo geregeld. Let op vier dingen:</p>
     <ol>
       <li><strong>Slimme meter.</strong> Een dynamisch contract vereist een slimme meter die je verbruik per kwartier uitleest. Heb je die nog niet? Je netbeheerder (Stedin, Liander of Enexis) plaatst hem <em>gratis</em> op aanvraag. Wacht op een installatieafspraak: gemiddeld 4–8 weken.</li>
@@ -515,7 +520,7 @@
       <strong>Tip:</strong> controleer vóór aanmelding of de aanbieder ook een app heeft die dag-ahead uurprijzen duidelijk toont. Zo kun je meteen beginnen met slim plannen. Op <a href="/">stroomvoorspeller.nl</a> zie je de actuele en voorspelde uurprijzen altijd gratis, ongeacht je leverancier.
     </div>
 
-    <h2>Veelgestelde vragen</h2>
+    <h2 id="veelgestelde-vragen">Veelgestelde vragen</h2>
 
     <h3>Wat is beter, Tibber of Zonneplan?</h3>
     <p>Zonder zonnepanelen scheelt het in kosten ongeveer €&nbsp;2 per jaar en kies je op de app: Tibber heeft de beste koppeling met Home Assistant. Met zonnepanelen is Zonneplan goedkoper, omdat Zonneplan 2 cent per teruggeleverde kWh bijlegt en Tibber 2,48 cent inhoudt. Bij 2.000 kWh teruglevering scheelt dat in 2026 zo'n €&nbsp;40 per jaar en vanaf 2027, als de inhouding van Tibber over elke kWh telt, zo'n €&nbsp;90.</p>
@@ -538,7 +543,7 @@
     <h3>Kan ik tussentijds opzeggen als ik wil overstappen?</h3>
     <p>Ja. Tibber, Frank Energie en Zonneplan zijn maandelijks opzegbaar zonder opzegboete. Bij ANWB Energie geldt een opzegtermijn van 30 dagen.</p>
 
-    <h2>Conclusie</h2>
+    <h2 id="conclusie">Conclusie</h2>
     <p>Welke aanbieder het beste past, hangt af van twee dingen: heb je zonnepanelen, en hoeveel wil je automatiseren?</p>
     <ul>
       <li><strong>Automatiseer je graag via Home Assistant of EV?</strong> → Tibber</li>
@@ -547,6 +552,21 @@
       <li><strong>Wil je een vertrouwde naam en een callcenter?</strong> → ANWB Energie, tegen €&nbsp;17 tot €&nbsp;20 per jaar extra</li>
     </ul>
     <p>Wat je ook kiest: een dynamisch contract begint pas echt te renderen als je weet wanneer stroom goedkoop en duur is. Bekijk de actuele en voorspelde uurprijzen op <a href="/">stroomvoorspeller.nl</a>, dan weet je elke dag op welke uren het loont om je apparaten aan te zetten.</p>
+
+    <nav class="kb-toc" aria-label="Inhoud van dit artikel">
+      <p class="kb-toc-title">In dit artikel</p>
+      <ol>
+        <li><a href="#de-vier-op-een-rij">De vier op een rij</a></li>
+        <li><a href="#waar-let-je-op-bij-een-dynamisch-contract">Waar let je op bij een dynamisch contract?</a></li>
+        <li><a href="#de-vier-aanbieders-per-stuk">De vier aanbieders per stuk</a></li>
+        <li><a href="#onderling-vergeleken">Onderling vergeleken</a></li>
+        <li><a href="#anwb-of-zonneplan">ANWB Energie of Zonneplan?</a></li>
+        <li><a href="#wanneer-kies-je-voor-welke-aanbieder">Wanneer kies je voor welke aanbieder?</a></li>
+        <li><a href="#wat-heb-je-nodig-om-over-te-stappen">Wat heb je nodig om over te stappen?</a></li>
+        <li><a href="#veelgestelde-vragen">Veelgestelde vragen</a></li>
+        <li><a href="#conclusie">Conclusie</a></li>
+      </ol>
+    </nav>
 
     <section class="kb-lees-ook">
       <p class="kb-lees-ook-label">Lees ook</p>
