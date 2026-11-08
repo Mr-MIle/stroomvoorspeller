@@ -666,6 +666,9 @@
     setText("now-epex", `Kale EPEX: ${fmtNum(priceCentsRaw(nu.price), 2)} ct/kWh`);
     const statusEl = document.querySelector(".status-value");
     if (statusEl) statusEl.textContent = statusLabel(cls);
+    // Prijs van nu doorgeven aan de mini-balk van nav.js (verschijnt bij omhoog vegen op mobiel).
+    window.svNu = { cents: fmtCents(nu.price, 1), status: classifyToCard(cls), label: statusLabel(cls) };
+    document.dispatchEvent(new CustomEvent("sv:nu", { detail: window.svNu }));
     // Het advies kijkt vooruit in hele uren (vanaf het lopende uur), maar vergelijkt
     // met de prijs die nu op de kaart staat.
     renderNowAdvice(prices, nowIdx, { time: hour.time, price: nu.price }, cls);
@@ -700,6 +703,14 @@
       new Date(new Date(isoEnd).getTime() + 3600000)
         .toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
 
+    // "over 7 uur" leest op een telefoon sneller dan alleen een kloktijd.
+    const overTijd = (iso) => {
+      const min = Math.round((new Date(iso).getTime() - Date.now()) / 60000);
+      if (min <= 0) return "";
+      if (min < 60) return `over ${min} min`;
+      return `over ${Math.round(min / 60)} uur`;
+    };
+
     let html = "";
     if (!isCheapNow) {
       // Wijs naar het eerstvolgende goedkopere 2-uurs venster van VANDAAG — niet morgen.
@@ -711,7 +722,10 @@
       const upcoming = findBestMoments(todayAhead, 0, 1, 2);
       if (upcoming.length && upcoming[0].avg < current.price) {
         const m = upcoming[0];
-        html = `Goedkoper rond ${fmtTime(m.startIso)}–${fmtEnd2(m.endIso)} · ${fmtCents(m.avg)} ct/kWh`;
+        const over = overTijd(m.startIso);
+        html = over
+          ? `<strong>${over.charAt(0).toUpperCase() + over.slice(1)} goedkoper</strong><br>${fmtTime(m.startIso)}–${fmtEnd2(m.endIso)} · ${fmtCents(m.avg)} ct/kWh`
+          : `Goedkoper rond ${fmtTime(m.startIso)}–${fmtEnd2(m.endIso)} · ${fmtCents(m.avg)} ct/kWh`;
       }
     } else {
       // Goedkoop nu: waarschuw alleen als er straks vandaag nog een duur uur aankomt.
@@ -722,12 +736,16 @@
         const peak = rest.reduce((a, b) => (a.price >= b.price ? a : b));
         const pc = classify(peak.price);
         if (pc === "pricey" || pc === "very_pricey") {
-          html = `Duurste moment straks: ${fmtTime(peak.time)} · ${fmtCents(peak.price)} ct/kWh`;
+          const over = overTijd(peak.time);
+          html = over
+            ? `<strong>${over.charAt(0).toUpperCase() + over.slice(1)} het duurst</strong><br>${fmtTime(peak.time)} · ${fmtCents(peak.price)} ct/kWh`
+            : `Duurste moment straks: ${fmtTime(peak.time)} · ${fmtCents(peak.price)} ct/kWh`;
         }
       }
     }
 
-    if (html) { nextEl.textContent = html; nextEl.hidden = false; }
+    // html bevat alleen eigen opmaak + geformatteerde tijden/getallen
+    if (html) { nextEl.innerHTML = html; nextEl.hidden = false; }
     else      { nextEl.hidden = true; }
   }
 

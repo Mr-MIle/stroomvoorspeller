@@ -3359,3 +3359,49 @@ p a, li a, td a, p code, li code, .aanbieder-meta span {
 @media (max-width: 640px) {
   .has-js .primary-nav.is-open a[aria-current="page"] { color: var(--c-brand); }
 }
+
+/* Mini-balk (nav.js initMiniBar): alleen mobiel, verschijnt bij omhoog vegen */
+.mini-bar { display: none; }
+@media (max-width: 640px) {
+  .mini-bar {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 90;
+    padding: 0 16px;
+    padding-top: env(safe-area-inset-top);
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+    transform: translateY(-110%);
+    visibility: hidden;
+    transition: transform 0.2s ease, visibility 0s linear 0.2s;
+  }
+  .mini-bar.is-visible {
+    transform: translateY(0);
+    visibility: visible;
+    transition: transform 0.2s ease, visibility 0s;
+  }
+  body.has-neg-alert .mini-bar { top: 84px; }
+  .mini-bar-row { display: flex; align-items: center; gap: 12px; min-height: 56px; }
+  .mini-bar-brand { display: flex; align-items: center; min-height: 44px; }
+  .mini-bar-brand img { display: block; width: 26px; height: 26px; }
+  .mini-bar-price {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    color: var(--c-text);
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+  .mini-bar-price[hidden] { display: none; }
+  .mini-bar-price b { font-size: 1.05rem; }
+  .mini-bar-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c-normal); flex-shrink: 0; }
+  .mini-bar-price[data-status="free"]   .mini-bar-dot { background: var(--c-free); }
+  .mini-bar-price[data-status="cheap"]  .mini-bar-dot { background: var(--c-cheap); }
+  .mini-bar-price[data-status="pricey"] .mini-bar-dot { background: var(--c-pricey); }
+  .has-js .mini-bar .primary-nav.is-open { border-top: 1px solid var(--c-border); max-height: calc(100vh - 80px); overflow-y: auto; }
+}

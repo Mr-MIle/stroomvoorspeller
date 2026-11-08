@@ -96,6 +96,7 @@
     });
 
     var burger = initBurger(nav);
+    initMiniBar(nav);
 
     document.addEventListener("click", function (e) {
       closeOthers(null);
@@ -130,6 +131,83 @@
     });
     row.insertBefore(b, nav);
     return b;
+  }
+
+  // Mini-balk (mobiel): verschijnt bovenin zodra je na flink scrollen weer
+  // omhoog veegt, en verdwijnt bij omlaag vegen. Los vast element, dus de
+  // pagina verspringt niet. Inhoud: logo, prijs van nu (alleen waar app.js
+  // die meldt via window.svNu / event "sv:nu") en een eigen menuknop met een
+  // kopie van het hoofdmenu.
+  function initMiniBar(nav) {
+    if (!nav || document.querySelector(".mini-bar")) return;
+    var header = document.querySelector(".site-header");
+    if (!header) return;
+
+    var bar = document.createElement("div");
+    bar.className = "mini-bar";
+    bar.setAttribute("aria-hidden", "true");
+    bar.innerHTML =
+      '<div class="mini-bar-row">' +
+        '<a class="mini-bar-brand" href="/" aria-label="stroomvoorspeller.nl, naar de homepage" tabindex="-1">' +
+          '<img src="/favicon.svg" alt="" width="26" height="26"></a>' +
+        '<a class="mini-bar-price" href="/#prijzen" hidden tabindex="-1"></a>' +
+        '<button type="button" class="nav-burger mini-bar-burger" aria-expanded="false" tabindex="-1">' +
+          '<span class="nav-burger-icon" aria-hidden="true"></span><span class="nav-burger-label">Menu</span></button>' +
+      '</div>';
+    var kopie = nav.cloneNode(true);
+    kopie.removeAttribute("id");
+    kopie.classList.remove("is-open");
+    kopie.setAttribute("aria-label", "hoofdmenu (balk)");
+    Array.prototype.forEach.call(kopie.querySelectorAll("[id]"), function (el) { el.removeAttribute("id"); });
+    Array.prototype.forEach.call(kopie.querySelectorAll("[aria-controls]"), function (el) { el.removeAttribute("aria-controls"); });
+    bar.appendChild(kopie);
+    document.body.appendChild(bar);
+
+    var knop = bar.querySelector(".mini-bar-burger");
+    var prijs = bar.querySelector(".mini-bar-price");
+    var focusbaar = bar.querySelectorAll("a, button");
+
+    knop.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setBurger(kopie, knop, !kopie.classList.contains("is-open"));
+    });
+    document.addEventListener("click", function (e) {
+      if (!bar.contains(e.target)) setBurger(kopie, knop, false);
+    });
+
+    function toonPrijs(nu) {
+      if (!nu || !nu.cents) return;
+      prijs.hidden = false;
+      prijs.dataset.status = nu.status || "normal";
+      prijs.innerHTML = '<span class="mini-bar-dot" aria-hidden="true"></span>' +
+        '<span><b>' + nu.cents + '</b> ct nu</span>';
+      prijs.setAttribute("aria-label", "Stroom nu " + nu.cents + " cent per kWh, " + (nu.label || ""));
+    }
+    toonPrijs(window.svNu);
+    document.addEventListener("sv:nu", function (e) { toonPrijs(e.detail); });
+
+    function zet(zichtbaar) {
+      if (bar.classList.contains("is-visible") === zichtbaar) return;
+      bar.classList.toggle("is-visible", zichtbaar);
+      bar.setAttribute("aria-hidden", zichtbaar ? "false" : "true");
+      Array.prototype.forEach.call(focusbaar, function (el) { el.tabIndex = zichtbaar ? 0 : -1; });
+      if (!zichtbaar) setBurger(kopie, knop, false);
+    }
+
+    var smal = window.matchMedia("(max-width: 640px)");
+    var vorige = window.pageYOffset, ticking = false;
+    function update() {
+      ticking = false;
+      var y = window.pageYOffset;
+      var grens = header.offsetTop + header.offsetHeight + 200;
+      if (!smal.matches || y < grens) zet(false);
+      else if (y < vorige - 8) zet(true);           // omhoog geveegd
+      else if (y > vorige + 8 && !kopie.classList.contains("is-open")) zet(false);
+      if (Math.abs(y - vorige) > 8) vorige = y;
+    }
+    window.addEventListener("scroll", function () {
+      if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
   }
 
   function setBurger(nav, b, open) {
