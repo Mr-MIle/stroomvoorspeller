@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Kennisbank — Stroomvoorspeller.nl</title>
+  <title>Dynamische energie uitgelegd — Kennisbank Stroomvoorspeller</title>
   <meta name="description" content="Uitleg, gidsen en achtergrondartikelen over dynamische energieprijzen, thuisbatterijen, zonnepanelen en slim stroomverbruik voor Nederlandse huishoudens." />
   <meta name="theme-color" content="#1D2B53" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="nl_NL" />
   <meta property="og:site_name" content="Stroomvoorspeller.nl" />
-  <meta property="og:title" content="Kennisbank — Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Dynamische energie uitgelegd — Kennisbank Stroomvoorspeller" />
   <meta property="og:description" content="Uitleg, gidsen en achtergrondartikelen over dynamische energieprijzen, thuisbatterijen en slim stroomverbruik." />
   <meta property="og:url" content="https://stroomvoorspeller.nl/kennisbank" />
   <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
@@ -20,7 +20,7 @@
   <meta property="og:image:height" content="630" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Kennisbank — Stroomvoorspeller.nl" />
+  <meta name="twitter:title" content="Dynamische energie uitgelegd — Kennisbank Stroomvoorspeller" />
   <meta name="twitter:description" content="Gidsen en uitleg over dynamische energieprijzen, thuisbatterijen en zonnepanelen." />
   <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
 
@@ -448,7 +448,7 @@
 
     <!-- ── Hero ─────────────────────────────────────── -->
     <section class="kb-hero">
-      <h1>⚡ Kennisbank</h1>
+      <h1>⚡ Kennisbank: dynamische energie uitgelegd</h1>
       <p class="kb-hero-sub">Uitleg, gidsen en achtergrond over dynamische energieprijzen en slim verbruik</p>
       <div class="kb-hero-chips">
         <span class="kb-hero-chip">57 artikelen</span>
@@ -456,6 +456,25 @@
         <span class="kb-hero-chip">Onafhankelijk</span>
       </div>
     </section>
+
+    <!-- ── Zoeken & filteren (JS vult dit aan; zonder JS blijft het verborgen) ── -->
+    <div class="kb-filter" id="kb-filter" hidden>
+      <input type="search" id="kb-search" class="kb-filter-search" placeholder="Zoek een onderwerp, bijvoorbeeld: batterij, salderen, warmtepomp…" aria-label="Zoek in de kennisbank">
+      <div class="kb-filter-row" role="group" aria-label="Filter op categorie">
+        <button class="kb-chip is-active" data-cat="alle" type="button" aria-pressed="true">Alles</button>
+        <button class="kb-chip" data-cat="cat-dynamisch" type="button" aria-pressed="false">⚡ Prijzen</button>
+        <button class="kb-chip" data-cat="cat-batterij" type="button" aria-pressed="false">🔋 Batterij</button>
+        <button class="kb-chip" data-cat="cat-zon" type="button" aria-pressed="false">☀️ Zonnepanelen</button>
+        <button class="kb-chip" data-cat="cat-slim" type="button" aria-pressed="false">💡 Slim besparen</button>
+        <button class="kb-chip" data-cat="cat-ev" type="button" aria-pressed="false">🚗 Elektrisch rijden</button>
+      </div>
+      <div class="kb-filter-row" role="group" aria-label="Filter op niveau">
+        <button class="kb-chip" data-level="begin" type="button" aria-pressed="false">Beginner</button>
+        <button class="kb-chip" data-level="mid" type="button" aria-pressed="false">Gemiddeld</button>
+        <button class="kb-chip" data-level="adv" type="button" aria-pressed="false">Gevorderd</button>
+      </div>
+    </div>
+    <p class="kb-filter-empty" id="kb-filter-empty" hidden>Geen artikelen gevonden. Probeer een andere zoekterm of <button type="button" id="kb-filter-reset" class="kb-filter-reset">wis de filters</button>.</p>
 
     <!-- ── Leerpad — handig voor eerstebezoek vanuit Google ── -->
     <div class="kb-leerpad">
@@ -500,25 +519,6 @@
       </div>
     </a>
 
-
-    <!-- ── Zoeken & filteren (JS vult dit aan; zonder JS blijft het verborgen) ── -->
-    <div class="kb-filter" id="kb-filter" hidden>
-      <input type="search" id="kb-search" class="kb-filter-search" placeholder="Zoek een onderwerp, bijvoorbeeld: batterij, salderen, warmtepomp…" aria-label="Zoek in de kennisbank">
-      <div class="kb-filter-row" role="group" aria-label="Filter op categorie">
-        <button class="kb-chip is-active" data-cat="alle" type="button" aria-pressed="true">Alles</button>
-        <button class="kb-chip" data-cat="cat-dynamisch" type="button" aria-pressed="false">⚡ Prijzen</button>
-        <button class="kb-chip" data-cat="cat-batterij" type="button" aria-pressed="false">🔋 Batterij</button>
-        <button class="kb-chip" data-cat="cat-zon" type="button" aria-pressed="false">☀️ Zonnepanelen</button>
-        <button class="kb-chip" data-cat="cat-slim" type="button" aria-pressed="false">💡 Slim besparen</button>
-        <button class="kb-chip" data-cat="cat-ev" type="button" aria-pressed="false">🚗 Elektrisch rijden</button>
-      </div>
-      <div class="kb-filter-row" role="group" aria-label="Filter op niveau">
-        <button class="kb-chip" data-level="begin" type="button" aria-pressed="false">Beginner</button>
-        <button class="kb-chip" data-level="mid" type="button" aria-pressed="false">Gemiddeld</button>
-        <button class="kb-chip" data-level="adv" type="button" aria-pressed="false">Gevorderd</button>
-      </div>
-    </div>
-    <p class="kb-filter-empty" id="kb-filter-empty" hidden>Geen artikelen gevonden. Probeer een andere zoekterm of <button type="button" id="kb-filter-reset" class="kb-filter-reset">wis de filters</button>.</p>
 
     <!-- ══════════════════════════════════════════════
          CATEGORIE 1 — Dynamisch contract & prijzen
@@ -1468,6 +1468,24 @@
         c.dataset.level=!lvl?'mid':lvl.className.indexOf('begin')>-1?'begin':lvl.className.indexOf('adv')>-1?'adv':'mid';
       });
     });
+    // Binnen een categorie: beginner eerst, dan gemiddeld, dan gevorderd (verder de volgorde uit de HTML).
+    // Zonder filter tonen we per categorie de eerste MAX kaarten, met een knop voor de rest.
+    var MAX=6, rank={begin:0,mid:1,adv:2};
+    cats.forEach(function(sec){
+      var grid=sec.querySelector('.kb-grid');
+      var cards=[].slice.call(grid.querySelectorAll('.kb-card'));
+      cards.forEach(function(c,i){c.dataset.i=i;});
+      cards.sort(function(a,b){return (rank[a.dataset.level]-rank[b.dataset.level])||(a.dataset.i-b.dataset.i);});
+      cards.forEach(function(c){grid.appendChild(c);});
+      if(cards.length>MAX){
+        var btn=document.createElement('button');
+        btn.type='button';btn.className='kb-cat-more';
+        btn.textContent='Toon alle '+cards.length+' artikelen';
+        btn.addEventListener('click',function(){sec.dataset.open='1';apply();});
+        grid.parentNode.insertBefore(btn,grid.nextSibling);
+        sec.moreBtn=btn;
+      }
+    });
     var activeCat='alle', activeLevel='';
     function apply(){
       var q=norm(search.value.trim());
@@ -1475,14 +1493,15 @@
       var total=0;
       cats.forEach(function(sec){
         var secId=sec.querySelector('.kb-cat-title').id;
-        var n=0;
+        var n=0, open=filtering||!!sec.dataset.open;
         [].forEach.call(sec.querySelectorAll('.kb-card'),function(c){
           var hit=(activeCat==='alle'||secId===activeCat)
             &&(!activeLevel||c.dataset.level===activeLevel)
             &&(!q||c.dataset.zoek.indexOf(q)>-1);
-          c.style.display=hit?'':'none';
+          c.style.display=hit&&(open||n<MAX)?'':'none';
           if(hit)n++;
         });
+        if(sec.moreBtn)sec.moreBtn.hidden=open;
         sec.style.display=n?'':'none';
         var cnt=sec.querySelector('.kb-cat-count');
         if(cnt)cnt.textContent=filtering?n+' van '+sec.dataset.count:sec.dataset.count;
@@ -1516,6 +1535,7 @@
       });
       apply();
     });
+    apply();
   })();
   </script>
   <script src="/nav.js" defer></script>

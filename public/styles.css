@@ -1691,6 +1691,22 @@ body.has-neg-alert .site-header { top: 56px; }
   text-decoration: underline;
   cursor: pointer;
 }
+.kb-cat-more {
+  display: block;
+  margin: 14px auto 0;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  color: var(--c-brand);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.kb-cat-more:hover { border-color: var(--c-brand); }
+.kb-cat-more[hidden] { display: none; }
 
 /* ── Leerpad-stepper ────────────────────────────────────── */
 .kb-leerpad {
@@ -2011,11 +2027,12 @@ body.has-neg-alert .site-header { top: 56px; }
 @media (max-width: 640px) {
   .kb-hero { padding: 18px 16px; }
   .kb-hero h1 { font-size: 1.45rem; }
-  .kb-leerpad-steps { flex-direction: column; gap: 8px; }
-  .kb-leerpad-arrow { transform: rotate(90deg); align-self: center; }
+  .kb-filter { padding: 12px 14px 14px; margin-bottom: 20px; }
+  .kb-leerpad-steps { flex-direction: column; gap: 6px; }
+  .kb-leerpad-arrow { display: none; }
   .kb-leerpad-step { min-width: 0; }
   .kb-featured { flex-direction: column; gap: 10px; padding: 14px 16px; }
-  .kb-featured-icon { font-size: 1.8rem; }
+  .kb-featured-icon, .kb-featured-desc { display: none; }
   .kb-grid { grid-template-columns: 1fr; }
   .kb-lees-ook-grid { grid-template-columns: 1fr; }
 }
