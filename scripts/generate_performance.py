@@ -44,9 +44,10 @@ MODEL_HISTORY = [
     {"version": "4.0", "date": "2026-08-17", "mae_eur_mwh": None,  "notes": "Nieuwe niveauschatter (28d werkdag/weekend + trend), bodem op de oversupply-correctie, 7 factoren, band 80%"},
     {"version": "5.0", "date": "2026-10-03", "mae_eur_mwh": None,  "notes": "Weer op 9 windpunten en 5 zonpunten (NL+DE), vergelijkbare dagen, lineaire correctie per uur; backtest met verwacht weer 25,2 -> 21,1"},
     {"version": "5.1", "date": "2026-10-14", "mae_eur_mwh": None,  "notes": "Patroonmodel (beslisbomen op weer, gas- en prijsniveau) telt voor de helft mee; backtest jan 2025 - okt 2026 21,0 -> 19,7"},
+    {"version": "5.2", "date": "2026-11-10", "mae_eur_mwh": None,  "notes": "Gas en schaarste: gaskosten en het tekort aan wind en zon per uur in beide rekenmodellen; lab sep 2025 - nov 2026 22,9 -> 22,6, duur gas + weinig wind/zon 38,8 -> 34,0"},
 ]
 
-CURRENT_MODEL_VERSION = "5.1"
+CURRENT_MODEL_VERSION = "5.2"
 
 # Evaluatievenster: afgelopen N dagen
 EVAL_WINDOW_DAYS = 30

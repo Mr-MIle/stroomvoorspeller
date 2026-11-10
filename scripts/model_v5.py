@@ -11,6 +11,16 @@ Opbouw van één voorspeld uur:
                    zaterdag/zondag, gasprijsverandering
     lineair    = basis + a(L) x correctie
     v5.1: voorspelling = 0,5 x lineair + 0,5 x patroonmodel
+    v5.2: gas en schaarste in beide delen (zie hieronder)
+
+v5.2 (10 nov 2026, 01-documenten/ab-gas-schaarste-uitkomst.md). Per uur een
+"tekort": het deel van de vraag dat wind en zon naar schatting niet dekken (NL+DE,
+grove vaste GW's). Bij tekort zet gas de prijs, met daarbovenop een opslag die
+meeschaalt met het prijsniveau. Extra kenmerken in het lineaire model:
+gaskostenverschil t.o.v. 28 dagen (2 x dTTF), datzelfde x tekort,
+tekort x (gaskosten - basis) met gaskosten = 2,5 x TTF + 30 (CO2), en tekort,
+tekort x basis, tekort x TTF. De bomen krijgen tekort en de gaskloof erbij.
+Lab sep 2025 - nov 2026: 22,91 -> 22,56; duur gas + weinig wind/zon 38,8 -> 34,0.
 
 L = aantal dagen tussen de laatst bekende prijsdag en de doeldag. a(L) loopt af van
 1,0 (dag 1-2) naar 0,6 (dag 6+): verder vooruit is de weersverwachting minder
@@ -44,8 +54,8 @@ from typing import Optional
 from forecast import dagtype, is_crossborder_feestdag
 from weather_points import (WIND_POINTS, SOLAR_POINTS, TEMP_POINTS, capacity_factor)
 
-MODEL_VERSION = "5.1"
-MODEL_VERSION_LINEAR = "5.0"   # versie als het patroonmodel ontbreekt
+MODEL_VERSION = "5.2"
+MODEL_VERSION_LINEAR = "5.2-lineair"   # versie als het patroonmodel ontbreekt
 
 REF_DAYS = 28            # referentievenster weer (zelfde lengte als de lange mediaan)
 LONG_DAYS = 28           # lange mediaan van de v4-baseline
@@ -69,14 +79,30 @@ FEATURES = [
     "gas",             # TTF nu / gemiddelde 30 dagen - 1
     "wind_uur_kw",     # kwadraat van wind_uur (wind werkt niet lineair)
     "stookgraad",      # max(0, 15 - temp) - zelfde voor de referentie
+    # v5.2: gas en schaarste
+    "gas_verschil",    # 2 x (TTF - gemiddelde TTF 28 dagen): gaskostenverschil in EUR/MWh stroom
+    "gas_verschil_tekort",   # idem x tekort
+    "tekort_gaskloof", # tekort x (gaskosten - basis)
+    "tekort",          # deel van de vraag dat wind en zon niet dekken (0..1)
+    "tekort_niveau",   # tekort x basis
+    "tekort_ttf",      # tekort x TTF
 ]
 GROUPS = [
     ("wind", [0, 1, 7]),
     ("zon", [2]),
     ("temperatuur", [3, 8]),
     ("dagtype", [4, 5]),
-    ("gas", [6]),
+    ("gas", [6, 9, 10]),
+    ("schaarste", [11, 12, 13, 14]),
 ]
+N_BASE_FEATURES = 9      # kenmerken 0-8 bestaan sinds v5.0
+
+# v5.2: tekort en gaskosten. Grove schatting voor NL+DE samen.
+WIND_GW = 85.0           # opgesteld windvermogen
+SOLAR_GW_PER_KWM2 = 104.0  # ~130 GW zon x 0,8 bij 1000 W/m2
+DEMAND_GW = 70.0         # gemiddelde vraag (weekend x 0,85)
+GAS_EFF_F = 2.5          # EUR/MWh stroom per EUR/MWh gas bij tekort (lager rendement)
+CO2_EUR = 30.0           # ~0,37 t/MWh x ~80 EUR/t
 
 # v5.1: patroonmodel. Aandeel in de voorspelling en de invoer per uur, in deze volgorde.
 GBM_MIX = 0.5
@@ -90,6 +116,7 @@ GBM_FEATURES = [
     "prijs_k_uur",         # prijs dag k, zelfde uur
     "b4", "analog", "basis",
     "ref_wind", "ref_zon_uur", "ref_temp",
+    "tekort", "gaskloof", "tekort_gaskloof",   # v5.2; gaskloof = gaskosten - basis
 ]
 # Instellingen van het schatten (refit_model_v5.py); backtest in het A/B-rapport.
 GBM_PARAMS = dict(objective="l1", n_estimators=600, learning_rate=0.03, num_leaves=31,
@@ -278,19 +305,55 @@ def analog_profile(P: dict, obs: dict, k: date, target: date,
 # Kenmerken en model
 # ---------------------------------------------------------------------------
 
-def hour_features(target: date, fc: dict, ref: dict, gas: float) -> list:
-    """24 kenmerkvectoren (zie FEATURES) voor een doeldag."""
+def tekort_profile(fc: dict, target: date) -> list:
+    """Per uur het deel van de vraag (NL+DE) dat wind en zon naar schatting niet dekken."""
+    d = DEMAND_GW * (0.85 if is_weekendish(target) else 1.0)
+    return [min(1.0, max(0.0, 1.0 - (WIND_GW * fc["w"][h]
+                                      + SOLAR_GW_PER_KWM2 * fc["s"][h] / 1000.0) / d))
+            for h in range(24)]
+
+
+def gas_costs(ttf_level: Optional[float]) -> Optional[float]:
+    """Marginale kosten van een gascentrale bij tekort, EUR/MWh stroom."""
+    return GAS_EFF_F * ttf_level + CO2_EUR if ttf_level is not None else None
+
+
+def ttf_mean_before(ttf: dict, k: date, n: int = REF_DAYS) -> Optional[float]:
+    """Gemiddelde TTF-slotkoers over de n dagen vóór k (minstens 5 koersen)."""
+    lo, hi = (k - timedelta(n)).isoformat(), k.isoformat()
+    vals = [v for d, v in ttf.items() if lo <= d < hi]
+    return sum(vals) / len(vals) if len(vals) >= 5 else None
+
+
+def hour_features(target: date, fc: dict, ref: dict, gas: float,
+                  ttf_level: Optional[float] = None, ttf28: Optional[float] = None,
+                  base: Optional[list] = None) -> list:
+    """24 kenmerkvectoren (zie FEATURES) voor een doeldag.
+
+    De v5.2-kenmerken (vanaf index N_BASE_FEATURES) zijn None als TTF-niveau,
+    TTF-gemiddelde of basis ontbreekt; forecast_day vult dan het trainingsgemiddelde
+    in (bijdrage 0) en refit slaat zulke rijen over."""
     w_mean = sum(fc["w"]) / 24
     t_mean = sum(fc["t"]) / 24
     wd = target.weekday()
     sat = 1.0 if wd == 5 else 0.0
     sun = 1.0 if (wd == 6 or dagtype(_dt(target)) == "feestdag") else 0.0
     hdd = max(0.0, 15 - t_mean) - max(0.0, 15 - ref["t"])
+    tk = tekort_profile(fc, target)
+    ok = ttf_level is not None and ttf28 is not None and base is not None
+    gd = 2.0 * (ttf_level - ttf28) if ok else None
+    gc = gas_costs(ttf_level)
     rows = []
     for h in range(24):
         dw = fc["w"][h] - ref["w"]
-        rows.append([dw, w_mean - ref["w"], fc["s"][h] - ref["s"][h], t_mean - ref["t"],
-                     sat, sun, gas, dw * dw, hdd])
+        row = [dw, w_mean - ref["w"], fc["s"][h] - ref["s"][h], t_mean - ref["t"],
+               sat, sun, gas, dw * dw, hdd]
+        t = tk[h]
+        if ok:
+            row += [gd, gd * t, t * (gc - base[h]), t, t * base[h], t * ttf_level]
+        else:
+            row += [None] * (len(FEATURES) - N_BASE_FEATURES)
+        rows.append(row)
     return rows
 
 
@@ -366,10 +429,13 @@ def gbm_features(P: dict, k: date, target: date, fc: dict, ref: dict, ttf_level:
     wm, sm, tm = sum(fc["w"]) / 24, sum(fc["s"]) / 24, sum(fc["t"]) / 24
     hdd = max(0.0, 15 - tm)
     lm = sum(last) / 24
+    tk = tekort_profile(fc, target)
+    gc = gas_costs(ttf_level)
     return [[float(h), float(L), float(wd), fd,
              fc["w"][h], wm, fc["ws"][h], fc["s"][h], sm, fc["t"][h], tm, hdd,
              ttf_level, m7, lm, last[h], b4[h], an[h], base[h],
-             ref["w"], ref["s"][h], ref["t"]] for h in range(24)]
+             ref["w"], ref["s"][h], ref["t"],
+             tk[h], gc - base[h], tk[h] * (gc - base[h])] for h in range(24)]
 
 
 def gbm_predict(gbm: dict, x: list) -> float:
@@ -415,12 +481,14 @@ def band_half(pred: float, L: int) -> float:
 
 def forecast_day(P: dict, obs: dict, fc_day: dict, k: date, target: date, gas: float,
                  coefs: Optional[dict], gbm: Optional[dict] = None,
-                 ttf_level: Optional[float] = None) -> Optional[dict]:
+                 ttf_level: Optional[float] = None,
+                 ttf28: Optional[float] = None) -> Optional[dict]:
     """
     Voorspelling voor één doeldag. P = prijzen t/m k, obs = waargenomen weerindices,
     fc_day = verwacht weer voor de doeldag {"w","s","t"}, coefs = model_v5.json,
     gbm = data/model_v5_gbm.json (al gecontroleerd met gbm_usable), ttf_level =
-    laatste TTF-slotkoers vóór k. Zonder gbm is pred het lineaire model (v5.0).
+    laatste TTF-slotkoers vóór k, ttf28 = gemiddelde TTF over 28 dagen vóór k
+    (ttf_mean_before). Zonder gbm is pred het lineaire model alleen.
     Return dict met per uur: base, b4, analog, delta, linear, gbm, pred, contrib-groepen.
     """
     L = (target - k).days
@@ -432,15 +500,22 @@ def forecast_day(P: dict, obs: dict, fc_day: dict, k: date, target: date, gas: f
     w_mean = sum(fc_day["w"]) / 24
     an = analog_profile(P, obs, k, target, s_mean, w_mean)
     base = [(1 - ANALOG_MIX) * b + ANALOG_MIX * a for b, a in zip(b4, an)] if an else list(b4)
-    X = hour_features(target, fc_day, ref, gas)
+    X = hour_features(target, fc_day, ref, gas, ttf_level, ttf28, base)
     G = (gbm_features(P, k, target, fc_day, ref, ttf_level, b4, an, base)
          if gbm and coefs else None)
     alpha = lead_alpha(L)
+    tk = tekort_profile(fc_day, target)
     hours = []
     for h in range(24):
         delta, contrib, groups = 0.0, [0.0] * len(FEATURES), {}
         if coefs:
-            delta, contrib = apply_hour(coefs["hours"][h], X[h])
+            mh = coefs["hours"][h]
+            # Ontbrekende v5.2-kenmerken krijgen het trainingsgemiddelde (bijdrage 0);
+            # een ouder gewichtenbestand (9 kenmerken) gebruikt alleen de eerste 9.
+            x = [mh["mu"][j] if (v is None and j < len(mh["mu"])) else v
+                 for j, v in enumerate(X[h][:len(mh["beta"])])]
+            delta, c = apply_hour(mh, x)
+            contrib = c + [0.0] * (len(FEATURES) - len(c))
             delta = max(-DELTA_CLIP, min(DELTA_CLIP, delta))
         linear = base[h] + alpha * delta
         pred, g_pred = linear, None
@@ -461,7 +536,8 @@ def forecast_day(P: dict, obs: dict, fc_day: dict, k: date, target: date, gas: f
             "target": target, "w_mean": w_mean, "s_mean": s_mean,
             "t_mean": sum(fc_day["t"]) / 24,
             "ws_mean": (sum(fc_day["ws"]) / 24) if fc_day.get("ws") else None,
-            "s_hour": list(fc_day["s"])}
+            "s_hour": list(fc_day["s"]), "tekort": tk,
+            "ttf": ttf_level, "ttf28": ttf28}
 
 
 # ---------------------------------------------------------------------------
@@ -506,6 +582,18 @@ def explain_hour(day: dict, h: int) -> list[dict]:
     else:
         dtxt = "werkdag"
     gtxt = f"gasprijs {'+' if day['gas'] >= 0 else ''}{round(day['gas'] * 100)}% t.o.v. de laatste 30 dagen"
+    if day.get("ttf") is not None:
+        gtxt = f"gasprijs {round(day['ttf'])} EUR/MWh, " + gtxt[len("gasprijs "):]
+    tk = day.get("tekort")
+    if tk is not None:
+        dekking = round(100 * (1 - tk[h]))
+        if dekking >= 100:
+            stxt = ("wind en zon dekken naar schatting de hele vraag in NL en DE; "
+                    "gascentrales zijn op dit uur nauwelijks nodig")
+        else:
+            stxt = (f"wind en zon dekken naar schatting {dekking}% van de vraag in NL en DE; "
+                    f"de rest komt vooral uit gascentrales, en hoe groter dat deel, "
+                    f"hoe hoger de prijs")
     analog = hr["base"] - hr["b4"]
     items = [
         ("vergelijkbare dagen", analog,
@@ -517,6 +605,8 @@ def explain_hour(day: dict, h: int) -> list[dict]:
         ("gas", g["gas"], gtxt),
         ("vaste correctie", g["vast"], "gemiddelde afwijking van de basisprijs in de training"),
     ]
+    if tk is not None and "schaarste" in g:
+        items.insert(6, ("schaarste", g["schaarste"], stxt))
     if "patroon" in g:
         items.append(("patroonmodel", g["patroon"],
                       "tweede rekenmodel dat wind, zon, gasprijs en recente prijzen samen "

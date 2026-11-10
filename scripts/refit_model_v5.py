@@ -78,9 +78,13 @@ def ttf_gas_by_day(ttf: dict):
 
 
 def build_rows(P: dict, idx_by_lead: dict, gas_fn, k_from: date, k_to: date,
-               ttf: dict | None = None):
+               ttf: dict | None = None, with_gbm: bool = True):
     """Trainingsrijen: per (k, L) 24 x (kenmerken, doel=werkelijk - basis).
-    Met ttf erbij ook de invoer van het patroonmodel (G) en de werkelijke prijs (actual)."""
+    Met with_gbm ook de invoer van het patroonmodel (G) en de werkelijke prijs (actual).
+
+    v5.2: de gas- en schaarstekenmerken hebben het TTF-niveau en het 28-dagen-
+    gemiddelde nodig. Rijen waar die ontbreken (vóór juni 2024) vallen af, net als
+    in het lab (01-documenten/ab-gas-schaarste-uitkomst.md)."""
     obs = idx_by_lead[0]
     rows = []
     k = k_from
@@ -89,6 +93,7 @@ def build_rows(P: dict, idx_by_lead: dict, gas_fn, k_from: date, k_to: date,
             ref = m5.reference(obs, k)
             g = gas_fn(k)
             lvl = m5.ttf_level_before(ttf, k) if ttf else None
+            t28 = m5.ttf_mean_before(ttf, k) if ttf else None
             for L in range(1, 7):
                 target = k + timedelta(L)
                 fc = idx_by_lead.get(min(L + 1, 7), {}).get(target)
@@ -100,10 +105,14 @@ def build_rows(P: dict, idx_by_lead: dict, gas_fn, k_from: date, k_to: date,
                 an = m5.analog_profile(P, obs, k, target, sum(fc["s"]) / 24, sum(fc["w"]) / 24)
                 base = ([(1 - m5.ANALOG_MIX) * b + m5.ANALOG_MIX * a for b, a in zip(b4, an)]
                         if an else b4)
-                X = m5.hour_features(target, fc, ref, g)
+                X = m5.hour_features(target, fc, ref, g, lvl, t28, base)
+                if X[0][-1] is None:
+                    continue
                 y = [P[target][h] - base[h] for h in range(24)]
                 G = (m5.gbm_features(P, k, target, fc, ref, lvl, b4, an, base)
-                     if ttf else None)
+                     if with_gbm else None)
+                if with_gbm and G is None:
+                    continue
                 rows.append({"k": k, "L": L, "target": target, "X": X, "y": y, "base": base,
                              "G": G, "actual": P[target]})
         k += timedelta(1)
@@ -223,7 +232,7 @@ def main() -> int:
     P = load_prices(date(2023, 12, 1))
     last_price_day = max(P)
     rows = build_rows(P, idx_by_lead, ttf_gas_by_day(ttf), TRAIN_FROM, last_price_day - timedelta(1),
-                      ttf=None if a.no_gbm else ttf)
+                      ttf=ttf, with_gbm=not a.no_gbm)
     if len(rows) < 500:
         print(f"[err] te weinig trainingsrijen ({len(rows)}); niets geschreven", file=sys.stderr)
         return 1

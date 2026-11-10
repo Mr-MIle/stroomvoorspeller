@@ -844,7 +844,8 @@ def main() -> int:
                 try:
                     v5_day = _m5.forecast_day(P5, idx5, fc_day, k_eff, cursor.date(),
                                               v5_gas, coefs5, v5_gbm,
-                                              _m5.ttf_level_before(ttf_series, k_eff))
+                                              _m5.ttf_level_before(ttf_series, k_eff),
+                                              _m5.ttf_mean_before(ttf_series, k_eff))
                 except Exception as exc:  # noqa: BLE001
                     print(f"[warn] v5 {day_key}: {exc}; v4 voor deze dag.", file=sys.stderr)
             else:
