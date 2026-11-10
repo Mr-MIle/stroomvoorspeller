@@ -5,7 +5,7 @@
  * uit het ENTSO-E-archief. Draait in de browser (window.DynModel) en in Node
  * (module.exports), zodat build-dynamisch.js exact hetzelfde rekent als de pagina.
  *
- * Profielen en constanten komen uit batterij-berekenen.html, zodat beide
+ * Profielen en constanten komen uit batterij-model.js (gebruikt door batterij-berekenen), zodat beide
  * pagina's dezelfde aannames gebruiken.
  */
 (function (root, factory) {
