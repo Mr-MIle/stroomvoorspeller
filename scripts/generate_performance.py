@@ -529,34 +529,41 @@ def compute_performance():
             "mae_v50_eur_mwh": round(sum(abs(p["forecast_v50"] - p["actual"]) for p in sh50) / len(sh50), 2),
         }
 
-    # EpexPredictor (open source, ook achter dynamisch-tarief.nl) als meetlat:
-    # dezelfde snapshotdag, hetzelfde doeluur, dezelfde werkelijke prijs.
-    benchmark = None
-    bench = {sd: fc for sd, fc in load_archive("epexpredictor", BENCHMARK_DIR)
-             if sd >= window_start}
-    if bench:
+    # Andere modellen als meetlat: dezelfde snapshotdag, hetzelfde doeluur,
+    # dezelfde werkelijke prijs. Alleen uren die beide modellen voorspelden tellen.
+    def compare_benchmark(prefix, naam):
+        bench = {sd: fc for sd, fc in load_archive(prefix, BENCHMARK_DIR)
+                 if sd >= window_start}
         bp = []
         for p in pairs:
             b = bench.get(p["snap"], {}).get(p["key"])
             if b is not None:
                 bp.append((p, b["forecast"]))
-        if bp:
-            per_h = []
-            for h in range(2, 8):
-                hp = [(p, b) for p, b in bp if p["horizon"] == h]
-                if hp:
-                    per_h.append({
-                        "horizon_days": h, "n_hours": len(hp),
-                        "mae_eigen_eur_mwh": round(sum(p["error"] for p, _ in hp) / len(hp), 2),
-                        "mae_epexpredictor_eur_mwh": round(sum(abs(b - p["actual"]) for p, b in hp) / len(hp), 2),
-                    })
-            benchmark = {
-                "naam": "EpexPredictor (github.com/b3nn0/EpexPredictor)",
-                "n_hours": len(bp),
-                "mae_eigen_eur_mwh": round(sum(p["error"] for p, _ in bp) / len(bp), 2),
-                "mae_epexpredictor_eur_mwh": round(sum(abs(b - p["actual"]) for p, b in bp) / len(bp), 2),
-                "by_horizon": per_h,
-            }
+        if not bp:
+            return None
+        col = f"mae_{prefix}_eur_mwh"
+        per_h = []
+        for h in range(2, 8):
+            hp = [(p, b) for p, b in bp if p["horizon"] == h]
+            if hp:
+                per_h.append({
+                    "horizon_days": h, "n_hours": len(hp),
+                    "mae_eigen_eur_mwh": round(sum(p["error"] for p, _ in hp) / len(hp), 2),
+                    col: round(sum(abs(b - p["actual"]) for p, b in hp) / len(hp), 2),
+                })
+        return {
+            "naam": naam,
+            "n_hours": len(bp),
+            "n_snapshots": len({p["snap"] for p, _ in bp}),
+            "mae_eigen_eur_mwh": round(sum(p["error"] for p, _ in bp) / len(bp), 2),
+            col: round(sum(abs(b - p["actual"]) for p, b in bp) / len(bp), 2),
+            "by_horizon": per_h,
+        }
+
+    # EpexPredictor (open source, ook achter dynamisch-tarief.nl).
+    benchmark = compare_benchmark("epexpredictor", "EpexPredictor (github.com/b3nn0/EpexPredictor)")
+    # WattWanneer (wattwanneer.nl), vastgelegd sinds 10 nov 2026.
+    benchmark_wattwanneer = compare_benchmark("wattwanneer", "WattWanneer (wattwanneer.nl)")
 
     # ---------------------------------------------------------------------------
     # Samenvoegen en schrijven
@@ -592,6 +599,7 @@ def compute_performance():
         "shadow_v4": shadow_v4,
         "shadow_v50": shadow_v50,
         "benchmark": benchmark,
+        "benchmark_wattwanneer": benchmark_wattwanneer,
         "naive_note": ("Naïef = mediaan van hetzelfde uur over de laatste 7 (weekend: 14) "
                        "dagen waarvan de prijs op het voorspelmoment bekend was."),
         "model_history": MODEL_HISTORY,
