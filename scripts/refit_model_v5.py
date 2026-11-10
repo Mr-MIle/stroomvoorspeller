@@ -105,6 +105,9 @@ def build_rows(P: dict, idx_by_lead: dict, gas_fn, k_from: date, k_to: date,
                 an = m5.analog_profile(P, obs, k, target, sum(fc["s"]) / 24, sum(fc["w"]) / 24)
                 base = ([(1 - m5.ANALOG_MIX) * b + m5.ANALOG_MIX * a for b, a in zip(b4, an)]
                         if an else b4)
+                # v5.3: gas-ankering, zelfde verschuiving als in forecast_day
+                anc = m5.gas_anchor(lvl, t28, m5.tekort_profile(fc, target))
+                base = [b + x for b, x in zip(base, anc)]
                 X = m5.hour_features(target, fc, ref, g, lvl, t28, base)
                 if X[0][-1] is None:
                     continue

@@ -54,8 +54,8 @@ from typing import Optional
 from forecast import dagtype, is_crossborder_feestdag
 from weather_points import (WIND_POINTS, SOLAR_POINTS, TEMP_POINTS, capacity_factor)
 
-MODEL_VERSION = "5.2"
-MODEL_VERSION_LINEAR = "5.2-lineair"   # versie als het patroonmodel ontbreekt
+MODEL_VERSION = "5.3"
+MODEL_VERSION_LINEAR = "5.3-lineair"   # versie als het patroonmodel ontbreekt
 
 REF_DAYS = 28            # referentievenster weer (zelfde lengte als de lange mediaan)
 LONG_DAYS = 28           # lange mediaan van de v4-baseline
@@ -103,6 +103,12 @@ SOLAR_GW_PER_KWM2 = 104.0  # ~130 GW zon x 0,8 bij 1000 W/m2
 DEMAND_GW = 70.0         # gemiddelde vraag (weekend x 0,85)
 GAS_EFF_F = 2.5          # EUR/MWh stroom per EUR/MWh gas bij tekort (lager rendement)
 CO2_EUR = 30.0           # ~0,37 t/MWh x ~80 EUR/t
+
+# v5.3: gas-ankering. De basis schuift per uur mee met het verschil tussen de TTF en
+# het 28-dagengemiddelde: GAS_ANCHOR x (TTF - TTF28) x (0,5 + tekort). Bij genoeg wind
+# en zon 0,75 EUR/MWh stroom per EUR/MWh gas, bij volledig tekort 2,25.
+# Lab: 01-documenten/ab-gas-ankering-uitkomst.md.
+GAS_ANCHOR = 1.5
 
 # v5.1: patroonmodel. Aandeel in de voorspelling en de invoer per uur, in deze volgorde.
 GBM_MIX = 0.5
@@ -318,6 +324,14 @@ def gas_costs(ttf_level: Optional[float]) -> Optional[float]:
     return GAS_EFF_F * ttf_level + CO2_EUR if ttf_level is not None else None
 
 
+def gas_anchor(ttf_level: Optional[float], ttf28: Optional[float], tk: list) -> list:
+    """v5.3: verschuiving van de basis per uur door gas (0 als TTF ontbreekt)."""
+    if ttf_level is None or ttf28 is None:
+        return [0.0] * 24
+    d = ttf_level - ttf28
+    return [GAS_ANCHOR * d * (0.5 + tk[h]) for h in range(24)]
+
+
 def ttf_mean_before(ttf: dict, k: date, n: int = REF_DAYS) -> Optional[float]:
     """Gemiddelde TTF-slotkoers over de n dagen vóór k (minstens 5 koersen)."""
     lo, hi = (k - timedelta(n)).isoformat(), k.isoformat()
@@ -500,11 +514,13 @@ def forecast_day(P: dict, obs: dict, fc_day: dict, k: date, target: date, gas: f
     w_mean = sum(fc_day["w"]) / 24
     an = analog_profile(P, obs, k, target, s_mean, w_mean)
     base = [(1 - ANALOG_MIX) * b + ANALOG_MIX * a for b, a in zip(b4, an)] if an else list(b4)
+    tk = tekort_profile(fc_day, target)
+    anchor = gas_anchor(ttf_level, ttf28, tk)
+    base = [b + x for b, x in zip(base, anchor)]
     X = hour_features(target, fc_day, ref, gas, ttf_level, ttf28, base)
     G = (gbm_features(P, k, target, fc_day, ref, ttf_level, b4, an, base)
          if gbm and coefs else None)
     alpha = lead_alpha(L)
-    tk = tekort_profile(fc_day, target)
     hours = []
     for h in range(24):
         delta, contrib, groups = 0.0, [0.0] * len(FEATURES), {}
@@ -528,7 +544,7 @@ def forecast_day(P: dict, obs: dict, fc_day: dict, k: date, target: date, gas: f
             groups["patroon"] = GBM_MIX * (g_pred - linear)
             pred = linear + groups["patroon"]
         hours.append({"hour": h, "b4": b4[h], "analog": an[h] if an else None,
-                      "base": base[h], "delta": alpha * delta, "linear": linear,
+                      "base": base[h], "anchor": anchor[h], "delta": alpha * delta, "linear": linear,
                       "gbm": g_pred, "pred": pred,
                       "groups": groups, "x": X[h], "lead": L})
     return {"lead": L, "alpha": alpha, "ref": ref, "hours": hours, "gas": gas,
@@ -594,7 +610,18 @@ def explain_hour(day: dict, h: int) -> list[dict]:
             stxt = (f"wind en zon dekken naar schatting {dekking}% van de vraag in NL en DE; "
                     f"de rest komt vooral uit gascentrales, en hoe groter dat deel, "
                     f"hoe hoger de prijs")
-    analog = hr["base"] - hr["b4"]
+    anchor = hr.get("anchor", 0.0)
+    analog = hr["base"] - hr["b4"] - anchor
+    if day.get("ttf") is not None and day.get("ttf28") is not None:
+        dg = day["ttf"] - day["ttf28"]
+        # v5.3: één vergelijking (28 dagen), dezelfde die de basis verschuift
+        if abs(dg) < 1:
+            gtxt = (f"gasprijs {round(day['ttf'])} EUR/MWh, ongeveer gelijk aan het gemiddelde "
+                    f"van de laatste 28 dagen")
+        else:
+            gtxt = (f"gasprijs {round(day['ttf'])} EUR/MWh, {_fmt(abs(dg))} "
+                    f"{'hoger' if dg > 0 else 'lager'} dan het gemiddelde van de laatste 28 dagen; "
+                    f"daarom ligt de basisprijs {'hoger' if dg > 0 else 'lager'}")
     items = [
         ("vergelijkbare dagen", analog,
          "gemiddelde van de 5 dagen uit de laatste 3 weken met het meest vergelijkbare weer"),
@@ -602,7 +629,7 @@ def explain_hour(day: dict, h: int) -> list[dict]:
         ("zon", g["zon"], ztxt),
         ("temperatuur", g["temperatuur"], ttxt),
         ("dagtype", g["dagtype"], dtxt),
-        ("gas", g["gas"], gtxt),
+        ("gas", g["gas"] + anchor, gtxt),
         ("vaste correctie", g["vast"], "gemiddelde afwijking van de basisprijs in de training"),
     ]
     if tk is not None and "schaarste" in g:

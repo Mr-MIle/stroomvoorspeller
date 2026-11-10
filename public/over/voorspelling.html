@@ -105,7 +105,7 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Over de voorspelling</h1>
-    <p class="legal-meta">Modelversie 5.2 · Bijgewerkt: 10 november 2026</p>
+    <p class="legal-meta">Modelversie 5.3 · Bijgewerkt: 10 november 2026</p>
 
     <section>
       <h2>Kort samengevat</h2>
@@ -253,7 +253,19 @@ gemiddelde van de twee.
       </p>
       <p>
         Het tekort is een grove schatting: ongeveer 85 GW windmolens en 130 GW zonnepanelen tegen een
-        vraag van ongeveer 70 GW. In de opbouw per uur staat het als <em>schaarste</em>.
+        vraag van ongeveer 70 GW. In de opbouw per uur staat het als <em>schaarste</em>. Een
+        nauwkeuriger schatting met de werkelijke vraag en productie uit ENTSO-E maakte de
+        voorspelling niet beter: het gaat erom óf er echt tekort is, niet om het exacte percentage.
+      </p>
+      <p>
+        <strong>Sinds versie 5.3 (10 november 2026)</strong> schuift de basisprijs mee met de gasprijs.
+        Ligt gas hoger dan het gemiddelde van de laatste 28 dagen, dan gaat de basis per uur omhoog:
+        bij genoeg wind en zon 0,75 euro per MWh stroom voor elke euro gas erboven, bij weinig wind
+        en zon tot 2,25 euro. Daalt gas, dan werkt het andersom. Zonder die stap liep het model na
+        een gassprong achter, omdat de basis uit prijzen van de afgelopen weken komt. In dezelfde
+        test zakte de fout op uren met stijgend gas en weinig wind en zon van 3,4 naar 3,2 cent per
+        kWh. Over alle uren is de winst klein (2,26 naar 2,25 cent), en als gas daalt is 5.3 iets
+        minder goed. In de opbouw per uur zit dit deel bij <em>gas</em>.
       </p>
       <h3>Stap 4 — Een tweede rekenmodel kijkt mee</h3>
 <p>
