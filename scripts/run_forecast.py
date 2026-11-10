@@ -320,42 +320,10 @@ def fetch_open_meteo_forecast(forecast_days: int = 7) -> tuple[dict, dict]:
 
 
 def fetch_yahoo_ttf(days_back: int = 35) -> dict:
-    """Haal dagelijkse TTF=F closes op. Return: {YYYY-MM-DD: close EUR/MWh}."""
-    end   = datetime.now(tz=timezone.utc)
-    start = end - timedelta(days=days_back)
-    params = {
-        "period1": int(start.timestamp()),
-        "period2": int(end.timestamp()),
-        "interval": "1d",
-        "events": "history",
-    }
-    url = f"{YAHOO_TTF}?{urllib.parse.urlencode(params)}"
-    req = urllib.request.Request(url, headers={
-        "User-Agent": "Mozilla/5.0 (compatible; stroomvoorspeller/0.1)",
-        "Accept": "application/json",
-    })
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-    except (urllib.error.URLError, urllib.error.HTTPError) as exc:
-        print(f"[warn] Yahoo TTF fout: {exc}", file=sys.stderr)
-        return {}
-
-    result = data.get("chart", {}).get("result", [])
-    if not result:
-        return {}
-    series     = result[0]
-    timestamps = series.get("timestamp", []) or []
-    quote      = series.get("indicators", {}).get("quote", [{}])[0]
-    closes     = quote.get("close", []) or []
-
-    out: dict = {}
-    for ts, close in zip(timestamps, closes):
-        if close is None:
-            continue
-        dt = datetime.fromtimestamp(ts, tz=timezone.utc)
-        out[dt.strftime("%Y-%m-%d")] = float(close)
-    return out
+    """Dagelijkse TTF-slotkoersen {YYYY-MM-DD: EUR/MWh}. Sinds nov 2026 via
+    ttf_prices (Yahoo-dagdata is kapot; uurdata + cache als terugval)."""
+    from ttf_prices import get_ttf
+    return get_ttf(days_back)
 
 
 def compute_ttf_ratio(ttf_series: dict) -> float:

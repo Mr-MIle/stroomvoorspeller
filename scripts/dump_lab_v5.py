@@ -77,22 +77,12 @@ def collect_weather(start: date, end: date) -> dict:
 
 
 def collect_ttf(start: date) -> dict:
-    out: dict = {}
-    p1 = int(datetime(start.year, start.month, start.day, tzinfo=timezone.utc).timestamp())
-    p2 = int(datetime.now(timezone.utc).timestamp())
-    q = {"period1": p1, "period2": p2, "interval": "1d", "events": "history"}
-    req = urllib.request.Request(f"{YAHOO_TTF}?{urllib.parse.urlencode(q)}", headers={
-        "User-Agent": "Mozilla/5.0 (compatible; stroomvoorspeller-lab/5.0)"})
-    try:
-        with urllib.request.urlopen(req, timeout=60) as r:
-            data = json.loads(r.read().decode("utf-8"))
-        res = data["chart"]["result"][0]
-        closes = res["indicators"]["quote"][0]["close"]
-        for ts, c in zip(res["timestamp"], closes):
-            if c is not None:
-                out[datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d")] = float(c)
-    except Exception as exc:  # noqa: BLE001
-        print(f"[warn] TTF mislukt: {exc}", file=sys.stderr)
+    """TTF per dag vanaf start: cache data/ttf_daily.json + Yahoo (zie ttf_prices).
+    Yahoo-uurdata gaat hooguit 730 dagen terug; ouder komt alleen uit de cache."""
+    import ttf_prices
+    days_back = (date.today() - start).days
+    out = {k: v for k, v in ttf_prices.get_ttf(days_back, update_cache=True).items()
+           if k >= start.isoformat()}
     print(f"[info] TTF: {len(out)} dagen", file=sys.stderr)
     return out
 

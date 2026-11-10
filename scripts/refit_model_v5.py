@@ -210,6 +210,14 @@ def main() -> int:
     if not weather.get("time") or not ttf:
         print("[err] weer of TTF ontbreekt; model_v5.json blijft ongewijzigd", file=sys.stderr)
         return 1
+    # Een te korte of verouderde TTF-reeks levert stilletjes een model zonder gas op
+    # (8 nov 2026: Yahoo gaf 1 dag, ridge zonder gas, bomen niet ververst). Dan liever
+    # niets schatten en de oude bestanden laten staan.
+    import ttf_prices
+    if not ttf_prices.usable(ttf, min_days=250):
+        print(f"[err] TTF-reeks te kort of verouderd ({len(ttf)} dagen, t/m {max(ttf)}); "
+              "model_v5.json blijft ongewijzigd", file=sys.stderr)
+        return 1
 
     idx_by_lead = {L: m5.daily_indices(weather, *lead_vars(L)) for L in range(0, 8)}
     P = load_prices(date(2023, 12, 1))
