@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T14:54:20Z",
+  "generated_at": "2026-11-10T19:30:59Z",
   "model_version": "5.1",
   "evaluation_window_days": 30,
   "window_days_actual": 30,
@@ -7,13 +7,13 @@
   "horizon_max_days": 7,
   "horizon_note": "Horizon 2 tot 7 dagen. Dag 1 telt hier niet mee: op het moment van de dagelijkse meting staan de prijzen van morgen al vast bij EPEX, dus dat zou geen voorspelling zijn. Zie d1_preauction voor de losse D+1-meting.",
   "d1_preauction": {
-    "n_hours": 720,
-    "n_days": 30,
+    "n_hours": 744,
+    "n_days": 31,
     "first_date": "2026-10-12",
-    "last_date": "2026-11-10",
-    "mae_eur_mwh": 45.76,
-    "mae_vs_naive_pct": -19.8,
-    "within_band_pct": 0.622
+    "last_date": "2026-11-11",
+    "mae_eur_mwh": 46.49,
+    "mae_vs_naive_pct": -18.6,
+    "within_band_pct": 0.614
   },
   "first_date": "2026-10-13",
   "last_date": "2026-11-11",
@@ -552,6 +552,7 @@
   "benchmark": {
     "naam": "EpexPredictor (github.com/b3nn0/EpexPredictor)",
     "n_hours": 3710,
+    "n_snapshots": 30,
     "mae_eigen_eur_mwh": 54.19,
     "mae_epexpredictor_eur_mwh": 42.03,
     "by_horizon": [
@@ -590,6 +591,33 @@
         "n_hours": 350,
         "mae_eigen_eur_mwh": 56.97,
         "mae_epexpredictor_eur_mwh": 45.91
+      }
+    ]
+  },
+  "benchmark_wattwanneer": {
+    "naam": "WattWanneer (wattwanneer.nl)",
+    "n_hours": 72,
+    "n_snapshots": 1,
+    "mae_eigen_eur_mwh": 68.72,
+    "mae_wattwanneer_eur_mwh": 67.92,
+    "by_horizon": [
+      {
+        "horizon_days": 2,
+        "n_hours": 24,
+        "mae_eigen_eur_mwh": 75.51,
+        "mae_wattwanneer_eur_mwh": 59.68
+      },
+      {
+        "horizon_days": 3,
+        "n_hours": 24,
+        "mae_eigen_eur_mwh": 76.26,
+        "mae_wattwanneer_eur_mwh": 80.87
+      },
+      {
+        "horizon_days": 4,
+        "n_hours": 24,
+        "mae_eigen_eur_mwh": 54.39,
+        "mae_wattwanneer_eur_mwh": 63.21
       }
     ]
   },
