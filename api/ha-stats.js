@@ -1,8 +1,7 @@
 // Leest de Home Assistant-telling uit (zie middleware.js).
 //
 // GET /api/ha-stats?token=...&dagen=30
-// Beveiligd met HA_STATS_TOKEN (Vercel-omgevingsvariabele). Leest met de
-// read-only Upstash-token.
+// Beveiligd met HA_STATS_TOKEN (Vercel-omgevingsvariabele).
 //
 // Per UTC-dag:
 //   installaties  unieke IP's met een HomeAssistant-user-agent (≈ installaties)
@@ -22,7 +21,9 @@ export default async function handler(req, res) {
   }
 
   const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_READ_ONLY_TOKEN || process.env.KV_REST_API_TOKEN;
+  // Geen read-only token: Redis telt PFCOUNT als schrijfcommando (het werkt
+  // de cache in de HyperLogLog bij), dus de read-only token weigert het.
+  const kvToken = process.env.KV_REST_API_TOKEN;
   if (!kvUrl || !kvToken) {
     res.status(500).json({ error: 'Upstash-variabelen ontbreken' });
     return;
