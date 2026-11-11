@@ -857,10 +857,6 @@
       "gas": true,
       "opzeg": "geen minimum, maandelijks opzegbaar",
       "omschrijving": "Grote leverancier. Vattenfall mag opslag en vaste kosten maximaal vier keer per jaar aanpassen en meldt dat vooraf.",
-      "nakijken": {
-        "veld": "teruglevering",
-        "tekst": "Vattenfall noemde op 29 september 2026 een verkoopvergoeding van € 0 per kWh. Het bedrag hieronder is nog niet opnieuw bevestigd."
-      },
       "kenmerken": {
         "ev": {
           "status": "ja",
@@ -892,11 +888,11 @@
         "gecontroleerd": "2026-09-30"
       },
       "teruglevering": {
-        "opslag_per_kwh": -0.0255,
-        "methode": "jaaroverschot",
-        "uitleg": "Verkoopvergoeding alleen over het jaaroverschot (waardesaldering per uur).",
-        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
-        "verified": "2026-09-21"
+        "opslag_per_kwh": 0,
+        "methode": "geen",
+        "uitleg": "Vattenfall rekent op FlexPrijs een verkoopvergoeding per kWh, maar die staat op dit moment op € 0. Vattenfall meldt dat dit kan wijzigen.",
+        "bron": "vattenfall.nl/energie/dynamisch-energiecontract/zonnepanelen (gelezen 11 nov 2026)",
+        "verified": "2026-11-11"
       }
     },
     {
@@ -1167,12 +1163,11 @@
         "gecontroleerd": "2026-09-30"
       },
       "teruglevering": {
-        "opslag_per_kwh": -0.02,
+        "opslag_per_kwh": -0.019,
         "methode": "jaaroverschot",
-        "uitleg": "Bedrag nog niet bevestigd bij ENGIE zelf; aanname gelijk aan het veldgemiddelde.",
-        "voorlopig": true,
-        "bron": "Zonneplan-vergelijking dynamische contracten (30 mrt 2026) + keuze.nl 'drie smaken' (19 jun 2026)",
-        "verified": "2026-09-21"
+        "uitleg": "ENGIE houdt 1,9 ct per kWh verkoopvergoeding in over het deel dat je meer teruglevert dan je verbruikt; binnen je verbruik krijg je die terug. Of het bedrag incl. of excl. btw is, staat er niet bij. Wat er vanaf 2027 gebeurt, meldt ENGIE nog niet.",
+        "bron": "engie.nl/energie/dynamisch-energiecontract/zonnepanelen (gelezen 11 nov 2026)",
+        "verified": "2026-11-11"
       }
     },
     {
@@ -1521,11 +1516,11 @@
       },
       "teruglevering": {
         "opslag_per_kwh": -0.02,
-        "methode": "per_kwh",
-        "uitleg": "Oxxio rekent geen terugleverkosten op dynamisch maar wel een verkoopvergoeding; bedrag niet gepubliceerd.",
+        "methode": "jaaroverschot",
+        "uitleg": "Oxxio rekent geen terugleverkosten op dynamisch, wel een verkoopvergoeding incl. btw: in 2026 over je jaaroverschot, vanaf 2027 over alle teruglevering. Het bedrag staat alleen in Mijn Oxxio en de app; hier een aanname.",
         "voorlopig": true,
-        "bron": "oxxio.nl dynamisch energiecontract en zonnepanelen",
-        "verified": "2026-09-21"
+        "bron": "oxxio.nl/klantenservice/terugleververgoeding (gelezen 11 nov 2026)",
+        "verified": "2026-11-11"
       }
     },
     {
