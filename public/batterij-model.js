@@ -14,7 +14,7 @@ function applyConfig(c){
   if(+t.energiebelasting_per_kwh>0) EB=+t.energiebelasting_per_kwh;
   if(+t.btw_factor>0) BTW=+t.btw_factor;
   if(t.year) TAX_YEAR=t.year;
-  const list=((c&&c.suppliers)||[]).filter(s=>s.id!=='custom'&&s.markup_per_kwh!=null).map(s=>{
+  const list=((c&&c.suppliers)||[]).filter(s=>s.id!=='custom'&&s.markup_per_kwh!=null&&s.zonnepanelen_dynamisch!==false).map(s=>{
     const tl=s.teruglevering||{};
     return {id:s.id,name:s.name,markup:+s.markup_per_kwh,tlv:-(+tl.opslag_per_kwh||0),tlvProv:!!tl.voorlopig};
   });

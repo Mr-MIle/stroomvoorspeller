@@ -440,7 +440,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
   <script src="/nav.js" defer></script>
   <script src="/tel.js" data-tool="batterij" defer></script>
-  <script src="/batterij-model.js?v=2"></script>
+  <script src="/batterij-model.js?v=3"></script>
   <script>
 // Het rekenmodel (prijzen, profielen, dagplanner, jaarberekening) staat in /batterij-model.js.
 
@@ -551,7 +551,7 @@ function poolInit(warm){
   if(POOL.length||typeof Worker==='undefined') return;
   const n=Math.max(1,Math.min(4,(navigator.hardwareConcurrency||2)-1));
   for(let i=0;i<n;i++){
-    let w; try{ w=new Worker('/batterij-model.js?v=2'); }catch(e){ break; }
+    let w; try{ w=new Worker('/batterij-model.js?v=3'); }catch(e){ break; }
     const done=(val,err)=>{ const j=w.busy; w.busy=null; if(j) (err==null? j.resolve(val) : j.reject(err)); poolPump(); };
     w.onmessage=e=>{ if(e.data.warm) return; done(e.data.val,e.data.err); };
     w.onerror=e=>{ e.preventDefault(); w.dead=true; done(null,'worker'); };

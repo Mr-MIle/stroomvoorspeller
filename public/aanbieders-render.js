@@ -175,12 +175,16 @@
   }
 
   // ── teruglevering ────────────────────────────────────────────────────
+  // Sommige aanbieders bieden met zonnepanelen geen dynamisch contract (config: zonnepanelen_dynamisch: false).
+  function zonUit(s) { return !!s && s.zonnepanelen_dynamisch === false; }
   function terugKort(s) {
+    if (zonUit(s)) return "geen dynamisch";
     var o = (s.teruglevering && s.teruglevering.opslag_per_kwh) || 0;
     if (!o) return "beursprijs";
     return "beurs " + (o > 0 ? "+ " : "− ") + ct(Math.abs(o)) + " ct";
   }
   function terugLang(s) {
+    if (zonUit(s)) return "Met zonnepanelen biedt " + esc(s.name) + " geen dynamisch contract, alleen variabel of vast.";
     var t = s.teruglevering;
     if (!t) return "Niet bekend.";
     var o = t.opslag_per_kwh || 0, r;
@@ -463,7 +467,7 @@
     esc: esc, duizend: duizend, eur0: eur0, eur2: eur2, ct: ct, datumNL: datumNL, dagenOud: dagenOud, bedragTekst: bedragTekst,
     standaardSituatie: standaardSituatie, netAfname: netAfname, batEffect: batEffect, kiesScenario: kiesScenario, rekenbasis: rekenbasis, kosten: kosten, maandJaar: maandJaar,
     herkomstVan: herkomstVan, verouderd: verouderd, teken: teken, isVoorlopig: isVoorlopig,
-    terugKort: terugKort, terugLang: terugLang, kenmerk: kenmerk,
+    terugKort: terugKort, terugLang: terugLang, zonUit: zonUit, kenmerk: kenmerk,
     logoHtml: logoHtml, regelHtml: regelHtml, lijstHtml: lijstHtml, sorteer: sorteer, filter: filter,
     verschilTekst: verschilTekst, vergelijkHtml: vergelijkHtml
   };

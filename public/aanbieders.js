@@ -147,7 +147,9 @@
     $("kop-terug").style.visibility = c.zon ? "visible" : "hidden";
 
     var f = actieveFilters();
-    var delen = R.filter(R.sorteer(aanbieders, sortEl.value, c), f);
+    var uit = c.zon ? aanbieders.filter(R.zonUit) : [];
+    var basis = uit.length ? aanbieders.filter(function (s) { return !R.zonUit(s); }) : aanbieders;
+    var delen = R.filter(R.sorteer(basis, sortEl.value, c), f);
     var opts = { open: state.open, gekozen: state.gekozen };
     var h = R.lijstHtml(delen.ja, c, opts);
     if (!delen.ja.length) h += '<p class="aanb-leeg">Geen aanbieder waarvan zeker is dat hij aan alle filters voldoet.</p>';
@@ -156,12 +158,14 @@
            '<button type="button" class="aanb-knop" id="toon-onbekend" aria-expanded="' + state.toonOnbekend + '">' + (state.toonOnbekend ? "Verberg" : "Toon") + "</button></div>";
       if (state.toonOnbekend) { opts.start = delen.ja.length; h += R.lijstHtml(delen.onbekend, c, opts); }
     }
+    if (uit.length) h += '<p class="aanb-leeg">Niet in deze lijst: ' + uit.map(function (s) { return R.esc(s.name); }).join(", ") +
+      (uit.length === 1 ? " biedt" : " bieden") + " met zonnepanelen geen dynamisch contract.</p>";
     grid.innerHTML = h;
 
-    verschilEl.innerHTML = R.verschilTekst(aanbieders, c);
+    verschilEl.innerHTML = R.verschilTekst(basis, c);
     $("flt-n").textContent = f.length ? "(" + f.length + ")" : "";
     var so = sortEl.options[sortEl.selectedIndex];
-    countEl.textContent = delen.ja.length + " van " + aanbieders.length + " aanbieders" + (f.length ? ", gefilterd" : "") +
+    countEl.textContent = delen.ja.length + " van " + basis.length + " aanbieders" + (f.length ? ", gefilterd" : "") +
       ". Volgorde: " + (so.getAttribute("data-lang") || so.text.toLowerCase()) + ". Geen enkele aanbieder betaalt voor een plek.";
     $("afname-hint").textContent = c.ev
       ? 'Beide staan op je jaarafrekening. Neem de "levering"; de auto telt er apart bij op.'

@@ -99,9 +99,10 @@ function build() {
   // SITUATIES
   const zon26 = Object.assign({}, c, { afname: 3500, zon: true, terug: 3000, jaar: 2026 });
   const zon27 = Object.assign({}, zon26, { jaar: 2027 });
-  const zTop26 = R.sorteer(lijst, "kosten", zon26).slice(0, 3);
-  const zTop27 = R.sorteer(lijst, "kosten", zon27).slice(0, 3);
-  const bonus = lijst.filter((s) => s.teruglevering && s.teruglevering.bonus);
+  const lijstZon = lijst.filter((s) => !R.zonUit(s));
+  const zTop26 = R.sorteer(lijstZon, "kosten", zon26).slice(0, 3);
+  const zTop27 = R.sorteer(lijstZon, "kosten", zon27).slice(0, 3);
+  const bonus = lijstZon.filter((s) => s.teruglevering && s.teruglevering.bonus);
   const met = (f) => lijst.filter((s) => R.kenmerk(s, f).status === "ja");
   const bat = met("batterij"), ev = met("ev"), kw = met("kwartier");
   const lijstjes = (arr, f) => "<ul>" + arr.map((s) => "<li><strong>" + R.esc(s.name) + "</strong>: " + R.esc(R.kenmerk(s, f).hoe || "ja") +
