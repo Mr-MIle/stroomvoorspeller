@@ -150,7 +150,7 @@ def compose_peak_tweet(peak_rows: list, all_today: list) -> str:
         "Stroom is extreem duur, ook na belasting.\n\n"
         + f"{start_h:02d}:00-{end_h:02d}:00 | Piek all-in: {fmt_ct(max_ct)} ct/kWh\n\n"
         + f"{cheap_line}"
-        + "Zet zware apparaten uit of verschuif ze.\n\n"
+        + "Wassen of EV laden? Wacht tot na de piek.\n\n"
         + f"→ {BRAND}\n\n"
         + "#energieprijzen #stroomprijzen #dynamischcontract #energietips #slimstroom"
     )
