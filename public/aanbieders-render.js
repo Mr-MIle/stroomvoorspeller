@@ -38,22 +38,18 @@
   // Beeldmerken in /logos, opgehaald van de eigen site van de aanbieder
   // (apple-touch-icon of favicon). Zonder bestand toont de lijst een letter.
   var LOGO = {
-    anwb: "anwb.png", budget: "budget.png", coolblue: "coolblue.png", delta: "delta.ico", easy: "easy.ico",
+    anwb: "anwb.png", budget: "budget.png", coolblue: "coolblue.png", delta: "delta.svg", easy: "easy.svg",
     eneco: "eneco.png", energiedirect: "energiedirect.png", energievanons: "energievanons.png",
     energyzero: "energyzero.png", engie: "engie.svg", essent: "essent.png", frank: "frank.png",
     greenchoice: "greenchoice.png", mega: "mega.png", nextenergy: "nextenergy.png", om: "om.jpg",
     oxxio: "oxxio.png", powerpeers: "powerpeers.png", pure: "pure.png", tibber: "tibber.png",
-    vandebron: "vandebron.png", vattenfall: "vattenfall.ico", vrijopnaam: "vrijopnaam.png", zonneplan: "zonneplan.png"
+    vandebron: "vandebron.png", vattenfall: "vattenfall.svg", vrijopnaam: "vrijopnaam.png", zonneplan: "zonneplan.png"
   };
-
-  // Beeldmerken die te klein zijn om groot te tonen (16 of 32 pixels); in een kaart blijven ze kleiner.
-  var LOGO_KLEIN = { delta: 1, easy: 1, vattenfall: 1 };
 
   // ── opmaak ───────────────────────────────────────────────────────────
   function logoHtml(s, maat) {
     maat = maat || 24;
-    var klein = maat > 32 && LOGO_KLEIN[s.id] ? " aanb-logo-klein" : "";
-    if (LOGO[s.id]) return '<img class="aanb-logo' + klein + '" src="/logos/' + LOGO[s.id] + '" alt="" width="' + maat + '" height="' + maat + '" loading="lazy" decoding="async">';
+    if (LOGO[s.id]) return '<img class="aanb-logo" src="/logos/' + LOGO[s.id] + '" alt="" width="' + maat + '" height="' + maat + '" loading="lazy" decoding="async">';
     return '<span class="aanb-logo aanb-logo-letter" aria-hidden="true">' + esc((s.name || "?").charAt(0).toUpperCase()) + "</span>";
   }
 
