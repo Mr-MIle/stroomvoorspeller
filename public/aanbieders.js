@@ -82,15 +82,29 @@
     return null;
   }
 
-  // ── situatie in één regel, opslaan en inklappen ──
+  // ── situatie als blokjes, opslaan en inklappen ──
+  // Elk blokje opent het formulier bij het bijbehorende veld.
+  var ICOON = {
+    afname: '<path d="M13 3 4 14h7l-1 7 9-11h-7l1-7z"/>',
+    net: '<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+    zon: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    ev: '<path d="M5 17h14v-5l-2-5H7l-2 5v5z"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/><path d="M5 12h14"/>',
+    bat: '<rect x="3" y="7" width="16" height="10" rx="2"/><path d="M22 11v2M7 10v4M11 10v4"/>',
+    api: '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M12 12l-2 3h4l-2 3"/>'
+  };
+  function blokje(veld, tekst, leeg) {
+    return '<button type="button" class="sit-blok' + (leeg ? " leeg" : "") + '" data-veld="' + veld + '">' +
+           '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+           ICOON[veld] + "</svg>" + tekst + "</button>";
+  }
   function samenvatting(c) {
-    var d = [R.duizend(c.afname) + " kWh van het net"];
-    if (c.netbeheerder) d.push(R.esc(c.netbeheerder));
-    if (c.zon) d.push("zonnepanelen, " + R.duizend(c.terug) + " kWh terug (" + (c.jaar === 2026 ? "2026" : "vanaf 2027") + ")");
-    if (c.ev) d.push("auto " + R.duizend(c.evKwh) + " kWh");
-    if (c.bat) d.push("batterij " + batKwhEl.value + " kWh" + (c.batNieuw ? ", nieuw" : ""));
-    if (c.api) d.push("Home Assistant / API");
-    return "<b>Jouw situatie:</b> " + d.join(" · ");
+    var h = blokje("afname", R.duizend(c.afname) + " kWh van het net");
+    h += c.netbeheerder ? blokje("net", R.esc(c.netbeheerder)) : blokje("net", "netbeheerder kiezen", true);
+    if (c.zon) h += blokje("zon", R.duizend(c.terug) + " kWh terug · " + (c.jaar === 2026 ? "2026" : "vanaf 2027"));
+    if (c.ev) h += blokje("ev", R.duizend(c.evKwh) + " kWh laden");
+    if (c.bat) h += blokje("bat", "batterij " + batKwhEl.value + " kWh" + (c.batNieuw ? ", nieuw" : ""));
+    if (c.api) h += blokje("api", "Home Assistant / API");
+    return h;
   }
   function bewaar() {
     var c = situatie();
@@ -111,12 +125,18 @@
     chips.zon.checked = !!s.zon; chips.ev.checked = !!s.ev; chips.bat.checked = !!s.bat; chips.api.checked = !!s.api;
     return true;
   }
-  function klap(dicht) {
+  function klap(dicht, focusEl) {
     sitForm.classList.toggle("dicht", dicht);
     $("sit-wijzig").setAttribute("aria-expanded", String(!dicht));
-    if (dicht) $("sit-wijzig").focus(); else velden.afname.focus();
+    if (dicht) $("sit-wijzig").focus(); else (focusEl || velden.afname).focus();
   }
   $("sit-wijzig").addEventListener("click", function () { klap(false); });
+  $("sit-tekst").addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest("[data-veld]") : null;
+    if (!b) return;
+    var doel = { afname: velden.afname, net: netEl, zon: velden.terug, ev: velden.evKwh, bat: batAlEl, api: chips.api }[b.getAttribute("data-veld")];
+    klap(false, doel);
+  });
   $("sit-klaar").addEventListener("click", function () { klap(true); });
 
   // ── uitleg-knopjes (?) bij de extra vragen ──
@@ -144,23 +164,22 @@
     var optTerug = $("opt-terug");
     optTerug.hidden = optTerug.disabled = !c.zon;
     if (!c.zon && sortEl.value === "terug") sortEl.value = "kosten";
-    $("kop-terug").style.visibility = c.zon ? "visible" : "hidden";
 
     var f = actieveFilters();
     var uit = c.zon ? aanbieders.filter(R.zonUit) : [];
     var basis = uit.length ? aanbieders.filter(function (s) { return !R.zonUit(s); }) : aanbieders;
     var delen = R.filter(R.sorteer(basis, sortEl.value, c), f);
     var opts = { open: state.open, gekozen: state.gekozen };
-    var h = R.lijstHtml(delen.ja, c, opts);
-    if (!delen.ja.length) h += '<p class="aanb-leeg">Geen aanbieder waarvan zeker is dat hij aan alle filters voldoet.</p>';
+    var na = "";
+    if (!delen.ja.length) na += '<p class="aanb-leeg">Geen aanbieder waarvan zeker is dat hij aan alle filters voldoet.</p>';
     if (delen.onbekend.length) {
-      h += '<div class="aanb-groep-kop"><span>Nog niet uitgezocht voor dit filter: ' + delen.onbekend.length + " aanbieders</span>" +
+      na += '<div class="aanb-groep-kop"><span>Nog niet uitgezocht voor dit filter: ' + delen.onbekend.length + " aanbieders</span>" +
            '<button type="button" class="aanb-knop" id="toon-onbekend" aria-expanded="' + state.toonOnbekend + '">' + (state.toonOnbekend ? "Verberg" : "Toon") + "</button></div>";
-      if (state.toonOnbekend) { opts.start = delen.ja.length; h += R.lijstHtml(delen.onbekend, c, opts); }
+      if (state.toonOnbekend) na += R.lijstHtml(delen.onbekend, c, { open: state.open, gekozen: state.gekozen, start: delen.ja.length });
     }
-    if (uit.length) h += '<p class="aanb-leeg">Niet in deze lijst: ' + uit.map(function (s) { return R.esc(s.name); }).join(", ") +
+    if (uit.length) na += '<p class="aanb-leeg">Niet in deze lijst: ' + uit.map(function (s) { return R.esc(s.name); }).join(", ") +
       (uit.length === 1 ? " biedt" : " bieden") + " met zonnepanelen geen dynamisch contract.</p>";
-    grid.innerHTML = h;
+    grid.innerHTML = R.lijstMetTopHtml(delen.ja, c, { sleutel: sortEl.value, open: opts.open, gekozen: opts.gekozen, na: na });
 
     verschilEl.innerHTML = R.verschilTekst(basis, c);
     $("flt-n").textContent = f.length ? "(" + f.length + ")" : "";
@@ -178,6 +197,16 @@
   grid.addEventListener("click", function (e) {
     var t = e.target;
     if (t.id === "toon-onbekend") { state.toonOnbekend = !state.toonOnbekend; render(); $("toon-onbekend").focus(); return; }
+    // Snelkoppeling onder een kaart: uitleg openen en naar dat deel springen.
+    var snel = t.closest ? t.closest(".aanb-snel a") : null;
+    if (snel) {
+      e.preventDefault();
+      state.open = snel.getAttribute("data-id");
+      render();
+      var doel = document.getElementById(snel.getAttribute("href").slice(1));
+      if (doel) { doel.setAttribute("tabindex", "-1"); doel.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); doel.focus({ preventScroll: true }); }
+      return;
+    }
     var knop = t.closest ? t.closest(".aanb-open") : null;
     if (!knop) return;
     var id = knop.closest(".aanb-rij").getAttribute("data-id");

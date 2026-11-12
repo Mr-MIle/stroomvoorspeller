@@ -80,7 +80,7 @@ function build() {
 
   // VERSCHIL en CARDS
   html = vervang(html, "VERSCHIL", R.verschilTekst(lijst, c));
-  html = vervang(html, "CARDS", "\n" + R.lijstHtml(gesorteerd, c, {}) + "\n      ");
+  html = vervang(html, "CARDS", "\n" + R.lijstMetTopHtml(gesorteerd, c, { sleutel: "kosten" }) + "\n      ");
 
   // SAMENVATTING
   const top3 = gesorteerd.slice(0, 3);

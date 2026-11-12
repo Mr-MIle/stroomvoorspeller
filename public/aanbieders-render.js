@@ -46,9 +46,14 @@
     vandebron: "vandebron.png", vattenfall: "vattenfall.ico", vrijopnaam: "vrijopnaam.png", zonneplan: "zonneplan.png"
   };
 
+  // Beeldmerken die te klein zijn om groot te tonen (16 of 32 pixels); in een kaart blijven ze kleiner.
+  var LOGO_KLEIN = { delta: 1, easy: 1, vattenfall: 1 };
+
   // ── opmaak ───────────────────────────────────────────────────────────
-  function logoHtml(s) {
-    if (LOGO[s.id]) return '<img class="aanb-logo" src="/logos/' + LOGO[s.id] + '" alt="" width="24" height="24" loading="lazy" decoding="async">';
+  function logoHtml(s, maat) {
+    maat = maat || 24;
+    var klein = maat > 32 && LOGO_KLEIN[s.id] ? " aanb-logo-klein" : "";
+    if (LOGO[s.id]) return '<img class="aanb-logo' + klein + '" src="/logos/' + LOGO[s.id] + '" alt="" width="' + maat + '" height="' + maat + '" loading="lazy" decoding="async">';
     return '<span class="aanb-logo aanb-logo-letter" aria-hidden="true">' + esc((s.name || "?").charAt(0).toUpperCase()) + "</span>";
   }
 
@@ -241,18 +246,28 @@
     var open = opts.open === s.id, gekozen = opts.gekozen && opts.gekozen.indexOf(s.id) !== -1;
     var h = '<div class="aanb-rij' + (open ? " open" : "") + '" data-id="' + id + '" id="' + id + '" data-lev="' + Math.round(k.totaal) + '"' +
             (k.rekening != null ? ' data-rekening="' + Math.round(k.rekening) + '"' : "") + ">";
+    var kaart = opts.kaart;
+    if (kaart) h = h.replace('class="aanb-rij', 'class="aanb-rij aanb-kaart' + (kaart.badge ? " met-badge" : ""));
+    if (kaart && kaart.badge) h += '<span class="aanb-badge">' + esc(kaart.badge) + "</span>";
     h += '<div class="aanb-rij-kop">';
     h += '<button type="button" class="aanb-open" aria-expanded="' + (open ? "true" : "false") + '" aria-controls="det-' + id + '">';
-    h += '<span class="aanb-naam"><span class="aanb-nr">' + nr + '.</span> ' + logoHtml(s) + esc(s.name) + "</span>";
+    if (kaart) {
+      h += '<span class="aanb-k-logo"><span class="aanb-k-nr">' + nr + "</span>" + logoHtml(s, 44) + "</span>";
+      h += '<span class="aanb-naam"><span class="sr">' + nr + ". </span>" + esc(s.name) + "</span>";
+    } else {
+      h += '<span class="aanb-naam"><span class="aanb-nr">' + nr + '.</span> ' + logoHtml(s, 32) + esc(s.name) + "</span>";
+    }
     h += '<span class="aanb-cellen">';
     h += '<span class="aanb-cel"><span class="aanb-lbl">opslag </span><b>' + ct(s.markup_per_kwh * f) + " ct</b>" + teken(herkomstVan(s, "opslag"), { lijst: true }) + "</span>";
     h += '<span class="aanb-cel"><span class="aanb-lbl">vast </span><b>' + (s.fixed_unconfirmed ? "≈ " : "") + eur2(s.fixed_per_month * f) + "</b>" + teken(herkomstVan(s, "vast"), { lijst: true }) + "</span>";
     h += '<span class="aanb-cel aanb-terug' + (c.zon ? "" : " leeg") + '"><span class="aanb-lbl">terug </span><b>' + terugKort(s) + "</b>" + teken(herkomstVan(s, "teruglevering"), { lijst: true }) + "</span>";
     h += '<span class="aanb-cel aanb-score"><span class="aanb-lbl">score </span>' + scoreTekst(s) + "</span>";
     h += "</span>";
+    var delta = kaart && kaart.delta ? '<small class="aanb-delta' + (kaart.deltaGoed ? " goed" : "") + '">' + kaart.delta + "</small>" : "";
     h += k.rekening != null
-      ? '<span class="aanb-bedrag">' + bedragTekst(k.rekening / 12) + "<small>per maand</small><small>" + bedragTekst(k.rekening) + " per jaar</small></span>"
-      : '<span class="aanb-bedrag">' + bedragTekst(k.totaal) + "<small>per jaar</small></span>";
+      ? '<span class="aanb-bedrag">' + (kaart ? '<small class="aanb-bedrag-kop">hele rekening</small>' : "") +
+        '<span class="aanb-bedrag-getal">' + bedragTekst(k.rekening / 12) + "</span><small>per maand</small><small>" + bedragTekst(k.rekening) + " per jaar</small>" + delta + "</span>"
+      : '<span class="aanb-bedrag"><span class="aanb-bedrag-getal">' + bedragTekst(k.totaal) + "</span><small>per jaar</small>" + delta + "</span>";
     var km = "";
     if (c.ev) km += kenmerkChip(s, "ev");
     if (c.bat) km += kenmerkChip(s, "batterij") + kenmerkChip(s, "kwartier");
@@ -263,6 +278,14 @@
     h += '<label class="aanb-vgl"><input type="checkbox" class="vergelijk-check" data-id="' + id + '"' + (gekozen ? " checked" : "") +
          '><span class="aanb-vgl-vak" aria-hidden="true"></span><span class="sr">Vergelijk ' + esc(s.name) + "</span></label>";
     h += "</div>";
+    if (kaart) {
+      // Snelkoppelingen naar de delen van de uitleg; werken ook zonder JavaScript (dan staat de uitleg al open).
+      var snel = [["som", "Rekensom"], ["sturen", "Slim sturen"], ["contract", "Contract"], ["score", "Klantervaring"]];
+      if (c.zon) snel.splice(1, 0, ["terug", "Teruglevering"]);
+      h += '<nav class="aanb-snel" aria-label="Details van ' + esc(s.name) + '">' + snel.map(function (p) {
+        return '<a href="#det-' + id + "-" + p[0] + '" data-id="' + id + '">' + p[1] + "</a>";
+      }).join("") + "</nav>";
+    }
     h += detailsHtml(s, c, k, open);
     h += "</div>";
     return h;
@@ -295,7 +318,7 @@
     if (s.let_op) h += '<p class="aanb-let">' + esc(s.let_op) + "</p>";
     if (s.omschrijving) h += '<p class="aanb-omschr">' + esc(s.omschrijving) + "</p>";
 
-    h += '<h3 class="aanb-kopje">Wat deze aanbieder rekent</h3><p class="aanb-som">';
+    h += '<h3 class="aanb-kopje" id="det-' + esc(s.id) + '-som">Wat deze aanbieder rekent</h3><p class="aanb-som">';
     var evDeel = c.ev ? Math.max(0, c.evKwh || 0) : 0, be = batEffect(c);
     if (evDeel || (be && be.afname)) {
       h += "Van het net: " + kwh(Math.max(0, c.afname || 0)) + " huis" + (evDeel ? " + " + kwh(evDeel) + " thuisladen" : "") +
@@ -317,18 +340,18 @@
     h += "<b>Samen " + bedragTekst(k.totaal) + " per jaar</b>, " + btw + " over opslag en vaste kosten.</p>";
     if (k.rekening != null) h += rekeningHtml(k, c);
 
-    h += '<h3 class="aanb-kopje">Teruglevering</h3><p>' + terugLang(s) + " " + teken(herkomstVan(s, "teruglevering")) +
+    h += '<h3 class="aanb-kopje" id="det-' + esc(s.id) + '-terug">Teruglevering</h3><p>' + terugLang(s) + " " + teken(herkomstVan(s, "teruglevering")) +
          (s.teruglevering && s.teruglevering.bron ? ' <span class="bron">bron: ' + esc(s.teruglevering.bron) + "</span>" : "") + "</p>";
 
-    h += '<h3 class="aanb-kopje">Slim sturen</h3><ul class="aanb-kenmerken">' +
+    h += '<h3 class="aanb-kopje" id="det-' + esc(s.id) + '-sturen">Slim sturen</h3><ul class="aanb-kenmerken">' +
          kenmerkZin(s, "ev") + kenmerkZin(s, "batterij") + kenmerkZin(s, "kwartier") + kenmerkZin(s, "api") + "</ul>";
     h += '<p class="aanb-noot">Home Assistant kan bij elke aanbieder sturen op de beursprijs, want die is overal gelijk. Zie <a href="/home-assistant">Home Assistant</a>.</p>';
 
     var et = s.stroometiket || { status: "onbekend" };
-    h += '<h3 class="aanb-kopje">Contract en stroom</h3><p>Opzeggen: ' + esc(s.opzeg || "onbekend") + ". Gas: " + (s.gas ? "ja" : "nee, alleen stroom") + ".<br>" +
+    h += '<h3 class="aanb-kopje" id="det-' + esc(s.id) + '-contract">Contract en stroom</h3><p>Opzeggen: ' + esc(s.opzeg || "onbekend") + ". Gas: " + (s.gas ? "ja" : "nee, alleen stroom") + ".<br>" +
          "Stroometiket: " + (et.status === "onbekend" ? "nog niet nagekeken." : esc(et.tekst) + ". " + teken(et.herkomst) + ' <span class="bron">bron: ' + esc(et.bron) + "</span>") + "</p>";
 
-    h += '<h3 class="aanb-kopje">Klantervaring</h3><p>' + scoreTekst(s, true) + ". Wij controleren deze reviews niet.</p>";
+    h += '<h3 class="aanb-kopje" id="det-' + esc(s.id) + '-score">Klantervaring</h3><p>' + scoreTekst(s, true) + ". Wij controleren deze reviews niet.</p>";
 
     h += '<h3 class="aanb-kopje">Bron tarieven</h3><p>' + esc(s.source || "onbekend") + ". Gecontroleerd op " + datumNL(s.verified) + ".</p>";
     h += '<p class="aanb-link"><a href="' + esc(s.website || "#") + '" target="_blank" rel="noopener">Naar de website van ' + esc(s.name) + " ↗</a></p>";
@@ -371,6 +394,44 @@
 
   function lijstHtml(lijst, c, opts) {
     return lijst.map(function (s, i) { return regelHtml(s, c, (opts && opts.start || 0) + i + 1, opts); }).join("\n");
+  }
+
+  // Wat het label op de eerste kaart zegt, per sortering. Op naam is er geen top 3.
+  var BADGE = { kosten: "Goedkoopst bij jouw situatie", opslag: "Laagste opslag", vast: "Laagste vaste kosten", terug: "Meeste voor teruglevering" };
+  var AANTAL_KAARTEN = 3;
+
+  // De hele lijst: de eerste drie als kaart, daaronder de rest als tabel met kopregel.
+  // opts: { sleutel (sortering), open, gekozen, na (html onder de laatste rij, binnen de tabel) }
+  function lijstMetTopHtml(lijst, c, opts) {
+    opts = opts || {};
+    var sleutel = opts.sleutel || "kosten";
+    var aantal = BADGE[sleutel] ? Math.min(AANTAL_KAARTEN, lijst.length) : 0;
+    var bedrag = function (s) { var k = kosten(s, c); return k.rekening != null ? k.rekening : k.totaal; };
+    var eerste = lijst.length ? bedrag(lijst[0]) : 0;
+    var h = "";
+    if (aantal) {
+      h += '<div class="aanb-top">';
+      for (var i = 0; i < aantal; i++) {
+        var kaart = {};
+        if (i === 0) kaart.badge = BADGE[sleutel];
+        if (sleutel === "kosten") {
+          if (i === 0 && lijst.length > 1) { kaart.delta = "laagste van " + lijst.length; kaart.deltaGoed = true; }
+          else if (i > 0) kaart.delta = eur0(bedrag(lijst[i]) - eerste) + " per jaar duurder dan nr. 1";
+        }
+        h += regelHtml(lijst[i], c, i + 1, { open: opts.open, gekozen: opts.gekozen, kaart: kaart }) + "\n";
+      }
+      h += "</div>";
+    }
+    var rest = lijst.slice(aantal);
+    if (rest.length || opts.na) {
+      h += '<div class="aanb-lijst' + (aantal ? " na-top" : "") + '">';
+      h += '<div class="aanb-koprij" aria-hidden="true"><span>Aanbieder</span><span class="r">Opslag</span><span class="r">Vast/mnd</span>' +
+           '<span class="r"' + (c.zon ? "" : ' style="visibility:hidden"') + ">Teruglevering</span><span class=\"r\">Score</span>" +
+           '<span class="r">' + (c.basis ? "Per maand" : "Per jaar") + '</span><span class="kop-vgl">Vergelijk</span></div>';
+      h += lijstHtml(rest, c, { open: opts.open, gekozen: opts.gekozen, start: aantal });
+      h += (opts.na || "") + "</div>";
+    }
+    return h;
   }
 
   function verschilTekst(lijst, c) {
@@ -468,7 +529,7 @@
     standaardSituatie: standaardSituatie, netAfname: netAfname, batEffect: batEffect, kiesScenario: kiesScenario, rekenbasis: rekenbasis, kosten: kosten, maandJaar: maandJaar,
     herkomstVan: herkomstVan, verouderd: verouderd, teken: teken, isVoorlopig: isVoorlopig,
     terugKort: terugKort, terugLang: terugLang, zonUit: zonUit, kenmerk: kenmerk,
-    logoHtml: logoHtml, regelHtml: regelHtml, lijstHtml: lijstHtml, sorteer: sorteer, filter: filter,
+    logoHtml: logoHtml, regelHtml: regelHtml, lijstHtml: lijstHtml, lijstMetTopHtml: lijstMetTopHtml, sorteer: sorteer, filter: filter,
     verschilTekst: verschilTekst, vergelijkHtml: vergelijkHtml
   };
 });
