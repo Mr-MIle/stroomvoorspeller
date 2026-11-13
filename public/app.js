@@ -184,28 +184,55 @@
     const clamp = (v) => Math.min(Math.max(v, fixedCheap), fixedPricey);
     return { cheap: clamp(p25), pricey: clamp(p75) };
   }
-  let effThrCache = null;
+  // ---- Nov 2026: labels t.o.v. het gemiddelde van de afgelopen 7 dagen ----
+  // Vaste drempels (22/28/38 ct) gaven bij een hoog prijsniveau bijna elk uur
+  // "extreem duur". Nu vergelijken we met het voortschrijdende 7-daagse gemiddelde
+  // (consumentenprijs incl. belasting, met de gekozen leverancier): binnen ±10% is
+  // "rond het gemiddelde", 10-30% en meer dan 30% erboven/eronder krijgen een eigen
+  // klasse. Negatief blijft absoluut. Te weinig historie of een gemiddelde onder
+  // 5 ct (verhouding zegt dan niets) valt terug op de vaste drempels.
+  const WEEK_BANDS = { veryCheap: 0.70, cheap: 0.90, pricey: 1.10, veryPricey: 1.30 };
+  let weekAvgCache = null;
+  function weekAverage() {
+    const all = state.prices || [];
+    const now = Date.now();
+    const hourKey = Math.floor(now / 3600000);
+    const key = state.supplierId + "|" + all.length + "|" + hourKey;
+    if (weekAvgCache && weekAvgCache.key === key) return weekAvgCache.value;
+    const from = now - 7 * 86400000;
+    const cts = all
+      .filter((p) => { const t = new Date(p.time).getTime(); return t >= from && t < now; })
+      .map((p) => priceCents(p.price, "inclusive"))
+      .filter(Number.isFinite);
+    let value = null;
+    if (cts.length >= 72) {
+      const avg = cts.reduce((a, b) => a + b, 0) / cts.length;
+      if (avg >= 5) value = avg;
+    }
+    weekAvgCache = { key: key, value: value };
+    return value;
+  }
+  // Grenzen in ct incl. belasting; dezelfde set voor kaart, grafiekkleuren en -zones.
   function effectiveThresholds() {
     const thr = (state.config && state.config.thresholds_ct_kwh_inclusive) || {};
-    const d   = state.dayPrices || [];
-    const key = state.supplierId + "|" + d.length + "|" + (d[0] ? d[0].time : "");
-    if (effThrCache && effThrCache.key === key) return effThrCache;
-    const cts = d.map((pp) => priceCents(pp.price, "inclusive"));
-    const r = relativeThresholds(cts, thr);
-    effThrCache = { key: key, cheap: r.cheap, pricey: r.pricey };
-    return effThrCache;
+    const avg = weekAverage();
+    if (avg == null) {
+      return { relative: false, avg: null, very_cheap: thr.very_cheap ?? 14, cheap: thr.cheap ?? 22,
+               pricey: thr.pricey ?? 28, very_pricey: thr.very_pricey ?? 38 };
+    }
+    return { relative: true, avg: avg, very_cheap: avg * WEEK_BANDS.veryCheap, cheap: avg * WEEK_BANDS.cheap,
+             pricey: avg * WEEK_BANDS.pricey, very_pricey: avg * WEEK_BANDS.veryPricey };
   }
 
   function classify(eurMwh) {
     // Classificeer altijd op basis van de consumentenprijs incl. energiebelasting + btw
     // + leverancieropslag (= wat de bezoeker daadwerkelijk betaalt), niet op kale EPEX.
     const ct  = priceCents(eurMwh, "inclusive");
-    const t   = state.config.thresholds_ct_kwh_inclusive || {};
     const eff = effectiveThresholds();
     if (ct < 0)                          return "negative";
-    if (ct < (t.very_cheap ?? 14))       return "very_cheap";
+    if (ct < eff.very_cheap)             return "very_cheap";
     if (ct < eff.cheap)                  return "cheap";
-    if (ct > (t.very_pricey ?? 38))      return "very_pricey";
+    if (ct > eff.very_pricey)            return "very_pricey";
     if (ct > eff.pricey)                 return "pricey";
     return "normal";
   }
@@ -216,12 +243,31 @@
     return "normal";
   }
   function statusLabel(c) {
+    if (!effectiveThresholds().relative) {
+      // Terugval zonder weekhistorie: de oude, absolute labels.
+      if (c === "negative")    return "gratis";
+      if (c === "very_cheap")  return "uitstekend";
+      if (c === "cheap")       return "goedkoop";
+      if (c === "very_pricey") return "extreem duur";
+      if (c === "pricey")      return "duur";
+      return "normaal";
+    }
     if (c === "negative")    return "gratis";
-    if (c === "very_cheap")  return "uitstekend";
-    if (c === "cheap")       return "goedkoop";
-    if (c === "very_pricey") return "extreem duur";
-    if (c === "pricey")      return "duur";
-    return "normaal";
+    if (c === "very_cheap")  return "veel goedkoper dan het gemiddelde van de afgelopen week";
+    if (c === "cheap")       return "goedkoper dan het gemiddelde van de afgelopen week";
+    if (c === "very_pricey") return "veel duurder dan het gemiddelde van de afgelopen week";
+    if (c === "pricey")      return "duurder dan het gemiddelde van de afgelopen week";
+    return "rond het gemiddelde van de afgelopen week";
+  }
+  // Korte vorm voor de mini-balk (aria-label).
+  function statusLabelShort(c) {
+    if (!effectiveThresholds().relative) return statusLabel(c);
+    if (c === "negative")    return "gratis";
+    if (c === "very_cheap")  return "ruim onder weekgemiddelde";
+    if (c === "cheap")       return "onder weekgemiddelde";
+    if (c === "very_pricey") return "ruim boven weekgemiddelde";
+    if (c === "pricey")      return "boven weekgemiddelde";
+    return "rond weekgemiddelde";
   }
 
   // ---- Format helpers ----
@@ -666,12 +712,29 @@
     setText("now-epex", `Kale EPEX: ${fmtNum(priceCentsRaw(nu.price), 2)} ct/kWh`);
     const statusEl = document.querySelector(".status-value");
     if (statusEl) statusEl.textContent = statusLabel(cls);
+    renderWeekCompare(nu.price, cls);
     // Prijs van nu doorgeven aan de mini-balk van nav.js (verschijnt bij omhoog vegen op mobiel).
-    window.svNu = { cents: fmtCents(nu.price, 1), status: classifyToCard(cls), label: statusLabel(cls) };
+    window.svNu = { cents: fmtCents(nu.price, 1), status: classifyToCard(cls), label: statusLabelShort(cls) };
     document.dispatchEvent(new CustomEvent("sv:nu", { detail: window.svNu }));
     // Het advies kijkt vooruit in hele uren (vanaf het lopende uur), maar vergelijkt
     // met de prijs die nu op de kaart staat.
     renderNowAdvice(prices, nowIdx, { time: hour.time, price: nu.price }, cls);
+  }
+
+  // Regel onder de prijs: "10% onder het weekgemiddelde van 46,6 ct/kWh".
+  // Altijd op de prijs incl. belasting, want daarop is het label gebaseerd.
+  function renderWeekCompare(eurMwh, cls) {
+    const el = document.querySelector('[data-field="now-week"]');
+    if (!el) return;
+    const eff = effectiveThresholds();
+    if (!eff.relative || cls === "negative") { el.hidden = true; return; }
+    const ct  = priceCents(eurMwh, "inclusive");
+    const pct = Math.round((ct / eff.avg - 1) * 100);
+    const avgTxt = fmtNum(eff.avg, 1) + " ct/kWh" + (state.mode === "inclusive" ? "" : " incl. belasting");
+    el.textContent = pct === 0
+      ? "Gelijk aan het weekgemiddelde van " + avgTxt
+      : Math.abs(pct) + "% " + (pct > 0 ? "boven" : "onder") + " het weekgemiddelde van " + avgTxt;
+    el.hidden = false;
   }
 
   // ---- Instap-advies: vertaalt de prijsstatus naar een concrete actie in gewone taal ----
@@ -687,8 +750,8 @@
       very_cheap:  "Uitstekend moment. Wasmachine, droger, vaatwasser of auto laden kan nu.",
       cheap:       "Goed moment voor wasmachine, droger of auto laden.",
       normal:      "Prima moment. Kan het wachten, dan is het straks vaak goedkoper.",
-      pricey:      "Aan de dure kant — stel zware apparaten liever even uit.",
-      very_pricey: "Nu duur. Stel wasmachine, droger en auto laden uit tot een goedkoper uur.",
+      pricey:      "Duurder dan de afgelopen dagen — stel zware apparaten liever even uit.",
+      very_pricey: "Een duur moment voor deze week. Stel wasmachine, droger en auto laden uit tot een goedkoper uur.",
     };
     let adviceText = advice[cls] || advice.normal;
     const profielKind = (cls === "negative" || cls === "very_cheap" || cls === "cheap") ? "laad"
@@ -1398,15 +1461,14 @@
       const taxes = state.config.taxes;
       return ct_incl / (taxes.btw_factor || 1.21) - (taxes.energiebelasting_per_kwh || 0) * 100;
     }
-    const thr = (state.config && state.config.thresholds_ct_kwh_inclusive) || {};
-    const eff = effectiveThresholds(); // #13: cheap/pricey-grens beweegt mee met de dag
+    const eff = effectiveThresholds(); // nov 2026: grenzen t.o.v. het weekgemiddelde
     return [
-      { min: null,                            max: thToChart(0),                       color: "rgba(112,72,232,0.10)" },
-      { min: thToChart(0),                    max: thToChart(thr.very_cheap ?? 14),    color: "rgba(22,115,82,0.08)"  },
-      { min: thToChart(thr.very_cheap ?? 14), max: thToChart(eff.cheap),               color: "rgba(31,168,116,0.07)"  },
-      // normaal: geen kleur
-      { min: thToChart(eff.pricey),           max: thToChart(thr.very_pricey ?? 38),   color: "rgba(242,86,74,0.08)"  },
-      { min: thToChart(thr.very_pricey ?? 38), max: null,                              color: "rgba(193,54,40,0.10)"  },
+      { min: null,                         max: thToChart(0),               color: "rgba(112,72,232,0.10)" },
+      { min: thToChart(0),                 max: thToChart(eff.very_cheap),  color: "rgba(22,115,82,0.08)"  },
+      { min: thToChart(eff.very_cheap),    max: thToChart(eff.cheap),       color: "rgba(31,168,116,0.07)"  },
+      // rond het gemiddelde: geen kleur
+      { min: thToChart(eff.pricey),        max: thToChart(eff.very_pricey), color: "rgba(242,86,74,0.08)"  },
+      { min: thToChart(eff.very_pricey),   max: null,                       color: "rgba(193,54,40,0.10)"  },
     ];
   }
 
@@ -1754,6 +1816,7 @@
       const shownClasses = new Set(
         timeline.filter((t) => t.kind === "actual").map((t) => classifyToCard(classify(t.price)))
       );
+      const legendRel = effectiveThresholds().relative;
       const holidayInView = timeline.some((t) => {
         const d = String(t.time).slice(0, 10);
         return holidays.nl.has(d) || holidays.crossborder.has(d);
@@ -1762,9 +1825,9 @@
         `<span style="font-size:11px;color:var(--c-text-mute);flex-basis:100%;">${html}</span>`;
       wrap.innerHTML =
         (shownClasses.has("free")   ? dot("var(--c-free)", "Gratis") : "") +
-        (shownClasses.has("cheap")  ? dot("var(--c-cheap)", "Goedkoop") : "") +
-        (shownClasses.has("normal") ? dot("var(--c-normal)", "Normaal") : "") +
-        (shownClasses.has("pricey") ? dot("var(--c-pricey)", "Duur") : "") +
+        (shownClasses.has("cheap")  ? dot("var(--c-cheap)", legendRel ? "Onder weekgemiddelde" : "Goedkoop") : "") +
+        (shownClasses.has("normal") ? dot("var(--c-normal)", legendRel ? "Rond weekgemiddelde" : "Normaal") : "") +
+        (shownClasses.has("pricey") ? dot("var(--c-pricey)", legendRel ? "Boven weekgemiddelde" : "Duur") : "") +
         (chartNowIdx >= 0 ? dot("var(--c-brand)", "Nu") : "") +
         (state.showFeedin && feedinAvailable() ? dash(FEEDIN_COLOR(), "Teruglevering") : "") +
         (holidayInView

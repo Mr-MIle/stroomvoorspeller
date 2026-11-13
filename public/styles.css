@@ -718,6 +718,8 @@ a:hover { text-decoration: underline; }
   gap: 8px;
   font-size: 0.95rem;
   color: var(--c-text-soft);
+  flex-wrap: wrap;
+  row-gap: 2px;
 }
 .status-dot {
   width: 10px;
@@ -754,6 +756,9 @@ a:hover { text-decoration: underline; }
   color: var(--c-text-soft);
 }
 .now-meta { color: var(--c-text-soft); font-size: 0.95rem; margin: 4px 0 0; }
+/* Nov 2026: hoe de prijs van nu zich verhoudt tot het weekgemiddelde. */
+.now-week { margin: 0; font-size: 0.95rem; font-weight: 600; color: var(--c-text-soft); }
+.now-week[hidden] { display: none; }
 .dot-sep { margin: 0 8px; color: var(--c-text-mute); }
 
 /* Instap-advies — vertaalt de prijsstatus naar een concrete actie in gewone taal.
