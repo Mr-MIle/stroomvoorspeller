@@ -19,8 +19,13 @@
 
   var TOP = 3;
 
-  // Beeldmerken in /logos. Zonder bestand toont de lijst een letter.
-  var LOGO = { zonneplan: "zonneplan.png", vattenfall: "vattenfall.svg", eneco: "eneco.png" };
+  // Beeldmerken in /logos, van de eigen site van de inboeker (apple-touch-icon,
+  // favicon of logo, geschaald naar 180 px). Zonder bestand toont de lijst een letter;
+  // Lekkerladen heeft er nog geen (lekkerladen.nl had op 15 nov 2026 een ongeldig certificaat).
+  var LOGO = {
+    zeres: "zeres.png", laadbeloning: "laadbeloning.png", stekker: "stekker.png", joulo: "joulo.png", laadloon: "laadloon.png",
+    zonneplan: "zonneplan.png", "50five": "50five.svg", vattenfall: "vattenfall.svg", eneco: "eneco.png"
+  };
 
   // ── opmaak-helpers ──────────────────────────────────────────────────
   function esc(t) {
