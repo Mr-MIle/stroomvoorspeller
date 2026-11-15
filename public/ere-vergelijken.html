@@ -54,27 +54,133 @@
   <script defer src="/_vercel/insights/script.js"></script>
 
   <style>
-    /* ── ERE-vergelijker ───────────────────────────────────────────── */
-    .ere-page { max-width: 880px; margin: 0 auto; padding: 32px 20px 64px; }
-    .ere-page h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 700; margin: 0 0 8px; }
-    .ere-page .intro { color: var(--c-text-soft); font-size: 1.05rem; line-height: 1.65; margin: 0 0 20px; max-width: 660px; }
-    .ere-page h2 { font-size: 1.2rem; margin: 34px 0 10px; }
-    .ere-page h3 { font-size: 1rem; margin: 20px 0 6px; }
-    .ere-page p { line-height: 1.65; margin: 0 0 12px; }
+    /* ── /ere-vergelijken — in de stijl van /aanbieders ─────────────── */
+    .ere-page { max-width: 960px; margin: 0 auto; padding: 20px 16px 96px; }
+    .ere-page h1 { font-size: clamp(1.35rem, 4vw, 2rem); line-height: 1.25; margin: 4px 0 6px; color: var(--c-text); }
+    .ere-page .intro { color: var(--c-text-soft); margin: 0 0 4px; max-width: 680px; }
+    .ere-page .intro a { text-decoration: underline; white-space: nowrap; }
+    .ere-page h2 { font-size: 1.2rem; margin: 28px 0 8px; }
+    .ere-page h3 { font-size: 1rem; margin: 18px 0 4px; }
+    .ere-page p { line-height: 1.6; margin: 0 0 12px; }
+    .ere-page > p { max-width: 700px; }
+    .sr, .ere-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .ere-page .ere-stand { font-size: 0.85rem; color: var(--c-text-mute); margin: 0 0 4px; }
 
-    .ere-let-op {
-      background: var(--c-normal-bg); border: 1px solid var(--c-normal-border); border-radius: 10px;
-      padding: 12px 14px; font-size: 0.9rem; line-height: 1.6; margin: 0 0 20px;
-    }
-    .ere-som {
-      background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px;
-      padding: 16px 18px; margin: 0 0 20px;
-    }
-    .ere-som code {
-      display: block; background: var(--c-bg); border-radius: 8px; padding: 10px 12px;
-      font-size: 0.9rem; margin: 8px 0; overflow-x: auto; white-space: nowrap;
-    }
+    /* situatiekader */
+    .ere-situatie { background: var(--c-surface); border: 1.5px solid var(--c-accent); border-radius: var(--radius); padding: 12px 14px 14px; margin: 12px 0 10px; box-shadow: var(--shadow-md); }
+    .ere-sit-kop { display: flex; align-items: center; justify-content: space-between; gap: 6px 12px; margin-bottom: 10px; }
+    .ere-page .ere-sit-titel { font-size: 1.05rem; line-height: 1.3; margin: 0; color: var(--c-text); }
+    .ere-page .ere-sit-sub { margin: 0; font-size: 0.84rem; color: var(--c-text-mute); line-height: 1.4; }
+    .ere-knop { min-height: 44px; padding: 0 14px; font: inherit; border: 1px solid var(--c-border-strong); border-radius: var(--radius-sm); background: var(--c-surface); color: var(--c-text); cursor: pointer; }
+    .ere-knop:hover { border-color: var(--c-brand); }
+    .ere-situatie:not(.dicht) #ere-wijzig { display: none; }
+    #ere-wijzig { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; border-color: var(--c-accent); color: var(--c-brand); font-weight: 600; }
+    #ere-wijzig:hover { background: var(--c-surface-soft); }
+    .ere-samenv { display: none; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+    .ere-situatie.dicht .ere-samenv { display: flex; }
+    .ere-situatie.dicht .ere-velden { display: none; }
+    .sit-blok { all: unset; box-sizing: border-box; display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--c-brand-deep); background: color-mix(in srgb, var(--c-accent) 12%, var(--c-surface)); border: 1px solid color-mix(in srgb, var(--c-accent) 35%, transparent); }
+    .sit-blok svg { flex-shrink: 0; color: var(--c-accent); }
+    .sit-blok:hover { background: color-mix(in srgb, var(--c-accent) 20%, var(--c-surface)); }
+    .sit-blok:focus-visible { outline: 3px solid var(--c-brand); outline-offset: 2px; }
+    .ere-veld { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+    .ere-veld label { font-size: 0.88rem; font-weight: 600; color: var(--c-text); }
+    .ere-inv { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--c-text-mute); white-space: nowrap; }
+    .ere-situatie input[type=number] { width: 6em; min-height: 44px; padding: 6px 10px; font: inherit; color: var(--c-text); background: var(--c-bg); border: 1px solid var(--c-border-strong); border-radius: var(--radius-sm); }
+    #ere-klaar { margin-left: auto; }
+    .ere-page .ere-hint { font-size: 0.8rem; color: var(--c-text-mute); margin: 6px 0 0; line-height: 1.5; }
 
+    /* verschil en filter */
+    .ere-page .ere-verschil { font-size: 0.95rem; margin: 8px 2px; max-width: none; }
+    .ere-verschil strong { font-size: 1.05rem; }
+    .ere-verschil a { text-decoration: underline; }
+    .ere-chips { display: flex; flex-wrap: wrap; gap: 8px; border: 0; padding: 0; margin: 6px 0 14px; min-width: 0; }
+    .ere-chip { position: relative; }
+    .ere-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .ere-chip span { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border: 1px solid var(--c-border-strong); border-radius: 999px; background: var(--c-surface); font-size: 0.92rem; cursor: pointer; user-select: none; color: var(--c-text); }
+    .ere-chip input:checked + span { background: var(--c-surface-soft); border-color: var(--c-brand); color: var(--c-brand-deep); font-weight: 600; }
+    .ere-chip input:checked + span::before { content: "\2713"; }
+    .ere-chip input:focus-visible + span { outline: 3px solid var(--c-brand); outline-offset: 2px; }
+
+    /* logo's */
+    .ere-logo { display: inline-block; box-sizing: border-box; flex-shrink: 0; width: 32px; height: 32px; border-radius: 8px; object-fit: contain; background: #fff; box-shadow: 0 0 0 1px var(--c-border); }
+    .ere-logo-letter { line-height: 32px; text-align: center; font-size: 0.9rem; font-weight: 700; color: var(--c-text-soft); background: var(--c-surface-soft); }
+
+    /* gedeeld door kaart en regel */
+    .ere-open { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; }
+    .ere-open:focus-visible { outline: 3px solid var(--c-brand); outline-offset: -3px; border-radius: 8px; }
+    .ere-naam { font-weight: 600; color: var(--c-text); }
+    .ere-badges { display: inline-flex; gap: 5px; margin-left: 7px; flex-wrap: wrap; vertical-align: middle; }
+    .ere-badge { font-size: 0.72rem; font-weight: 600; border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+    .badge-garantie, .badge-betaald { background: var(--c-cheap-bg); color: var(--c-cheap-link); }
+    .badge-aangekondigd { background: var(--c-normal-bg); color: var(--c-normal-text); }
+    .badge-klant { background: var(--c-surface-alt); color: var(--c-text-soft); }
+    .badge-mij { background: var(--c-free-bg); color: var(--c-free); }
+
+    /* top 3 als kaart */
+    .ere-top { display: flex; flex-direction: column; gap: 14px; margin: 4px 0 16px; }
+    .ere-kaart { position: relative; background: var(--c-surface); border: 1px solid var(--c-border-strong); border-radius: var(--radius); box-shadow: var(--shadow-md); }
+    .ere-kaart.met-badge { border: 2px solid var(--c-cheap); margin-top: 10px; }
+    .ere-kaart.badge-voorzichtig { border-color: var(--c-normal-border); }
+    .ere-kbadge { position: absolute; top: -12px; left: 14px; z-index: 1; padding: 2px 10px; border-radius: 6px; background: var(--c-cheap-fill); color: #fff; font-size: 0.78rem; font-weight: 700; }
+    .badge-voorzichtig .ere-kbadge { background: var(--c-normal-bg); color: var(--c-normal-text); border: 1px solid var(--c-normal-border); }
+    .ere-kaart .ere-open { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "logo naam bedrag" "cellen cellen cellen" "kenm kenm kenm"; gap: 6px 12px; align-items: center; padding: 14px 14px 8px; }
+    .ere-k-logo { grid-area: logo; display: flex; align-items: center; gap: 8px; }
+    .ere-k-nr { min-width: 0.8em; font-size: 1.35rem; font-weight: 700; color: var(--c-text-mute); font-variant-numeric: tabular-nums; }
+    .ere-kaart .ere-logo { width: 44px; height: 44px; border-radius: 10px; line-height: 44px; font-size: 1.1rem; }
+    .ere-kaart .ere-naam { grid-area: naam; font-size: 1.08rem; }
+    .ere-cellen { grid-area: cellen; display: flex; flex-wrap: wrap; gap: 6px; }
+    .ere-kaart .ere-cel { padding: 2px 10px; border: 1px solid var(--c-border-strong); border-radius: 999px; font-size: 0.84rem; color: var(--c-text-soft); }
+    .ere-kaart .ere-cel b { font-weight: 600; color: var(--c-text); }
+    .ere-kenm { grid-area: kenm; display: flex; flex-wrap: wrap; gap: 4px 6px; }
+    .ere-bedrag { grid-area: bedrag; align-self: center; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--c-text); }
+    .ere-bedrag small { display: block; font-weight: 400; color: var(--c-text-mute); font-size: 0.72rem; }
+    .ere-bedrag-getal { font-size: 1.7rem; line-height: 1.2; }
+    .ere-bedrag .ere-delta { margin-top: 3px; }
+    .ere-bedrag .ere-delta.goed { color: var(--c-cheap-link); font-weight: 600; }
+    .ere-snel { display: flex; flex-wrap: wrap; gap: 0 2px; margin: 2px 14px 0; padding: 0 0 4px; border-top: 1px solid var(--c-border); }
+    .ere-snel a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 8px; border-radius: 6px; font-size: 0.86rem; color: var(--c-text-soft); text-decoration: none; }
+    .ere-snel a:hover { color: var(--c-brand); background: var(--c-surface-soft); }
+    .ere-snel a:focus-visible { outline: 3px solid var(--c-brand); outline-offset: -2px; }
+    .ere-kaart .ere-details { border-radius: 0 0 var(--radius) var(--radius); }
+
+    /* de rest als lijst */
+    .ere-lijst { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+    .ere-koprij { display: none; }
+    .ere-lijst .ere-rij + .ere-rij { border-top: 1px solid var(--c-border); }
+    .ere-lijst .ere-open { display: grid; grid-template-columns: minmax(0, 1fr) 74px 84px 18px; gap: 6px; align-items: center; min-height: 44px; padding: 10px 12px; }
+    .ere-lijst .ere-open:hover { background: var(--c-surface-soft); }
+    .ere-lijst .ere-naam { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .ere-nr { color: var(--c-text-mute); font-weight: 400; font-variant-numeric: tabular-nums; }
+    .ere-naam-tekst { min-width: 0; }
+    .ere-sub { display: block; font-weight: 400; font-size: 0.78rem; color: var(--c-text-mute); margin-top: 2px; }
+    .ere-lijst .ere-cel { font-variant-numeric: tabular-nums; text-align: right; font-size: 0.92rem; }
+    .ere-cel-label { display: block; color: var(--c-text-mute); font-size: 0.72rem; }
+    .ere-jaar strong { font-size: 1.05rem; color: var(--c-text); }
+    .ere-caret { color: var(--c-text-mute); transition: transform .15s; }
+    .ere-open[aria-expanded="true"] .ere-caret { transform: rotate(180deg); }
+    .ere-leeg { padding: 14px 12px; color: var(--c-text-soft); }
+
+    /* details */
+    .ere-details { padding: 4px 14px 14px; background: var(--c-surface-soft); border-top: 1px dashed var(--c-border); font-size: 0.9rem; }
+    .ere-details[hidden] { display: none; }
+    .ere-page .ere-details p { margin: 0.25em 0; max-width: 700px; }
+    .ere-page .ere-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--c-text-mute); font-weight: 700; margin-top: 12px; scroll-margin-top: 16px; }
+    .ere-page .ere-let { background: var(--c-normal-bg); color: var(--c-normal-text); padding: 8px 10px; border-radius: var(--radius-sm); }
+    .ere-details a { text-decoration: underline; }
+    .ere-page .ere-bronregel { margin-top: 12px; font-size: 0.82rem; color: var(--c-text-mute); }
+    .ere-page .ere-disclosure { background: var(--c-free-bg); border-radius: var(--radius-sm); padding: 10px 12px; margin-top: 12px; font-size: 0.86rem; }
+
+    /* kort antwoord onder de lijst */
+    .ere-kort { background: var(--c-surface-soft); border-radius: var(--radius-sm); padding: 12px 14px; margin: 16px 0 8px; font-size: 0.92rem; color: var(--c-text-soft); }
+    .ere-page .ere-kort p { margin: 0 0 6px; }
+    .ere-kort ul { margin: 0; padding-left: 18px; }
+    .ere-kort li { margin: 0 0 4px; line-height: 1.5; }
+
+    /* uitleg */
+    .ere-let-op { background: var(--c-normal-bg); border: 1px solid var(--c-normal-border); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.9rem; line-height: 1.6; margin: 0 0 20px; max-width: 700px; }
+    .ere-som { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 16px 18px; margin: 0 0 20px; }
+    .ere-som code { display: block; background: var(--c-bg); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.9rem; margin: 8px 0; overflow-x: auto; white-space: nowrap; }
     .ere-tabelwrap { overflow-x: auto; }
     table.ere-markt { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0 0 8px; }
     table.ere-markt th, table.ere-markt td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--c-border); white-space: nowrap; }
@@ -82,74 +188,28 @@
     table.ere-markt th:last-child, table.ere-markt td:last-child { white-space: normal; min-width: 260px; }
     table.ere-markt td.num { text-align: right; font-variant-numeric: tabular-nums; }
     .ere-verwacht { color: var(--c-text-mute); font-style: italic; }
-
-    .ere-page .ere-stand { font-size: 0.82rem; color: var(--c-text-mute); margin: 0 0 14px; }
-    .ere-stand a { color: inherit; }
-    .ere-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-
-    .ere-controls {
-      background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px;
-      padding: 14px 16px; margin: 0 0 14px;
-    }
-    .ere-invoer { display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap; font-weight: 600; }
-    .ere-invoer input {
-      font: inherit; font-weight: 400; width: 110px; min-height: 44px; padding: 6px 10px; border: 1px solid var(--c-border);
-      border-radius: 8px; background: var(--c-bg); color: var(--c-text);
-    }
-    .ere-invoer .ere-eenheid { font-weight: 400; }
-    .ere-page .ere-hint { font-size: 0.8rem; color: var(--c-text-mute); margin: 6px 0 10px; line-height: 1.5; }
-    .ere-chips { display: flex; gap: 6px; flex-wrap: wrap; border: 0; padding: 0; margin: 0; min-width: 0; }
-    .ere-chips label {
-      position: relative; font-size: 0.85rem; border: 1px solid var(--c-border); border-radius: 999px;
-      padding: 0 14px; min-height: 40px; display: inline-flex; align-items: center; cursor: pointer;
-    }
-    .ere-chips input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-    .ere-chips label:has(input:checked) { background: var(--c-surface-soft); border-color: var(--c-brand-deep); font-weight: 700; }
-    .ere-chips label:has(input:focus-visible) { outline: 2px solid var(--c-brand-deep); outline-offset: 2px; }
-
-    .ere-kort { border-left: 3px solid var(--c-brand-deep); padding: 2px 0 2px 12px; margin: 0 0 16px; font-size: 0.93rem; }
-    .ere-page .ere-kort p { margin: 0 0 6px; line-height: 1.55; }
-    .ere-kort ul { margin: 0 0 6px; padding-left: 18px; }
-    .ere-kort li { margin: 0 0 4px; line-height: 1.5; }
-
-    .ere-checks { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin: 0 0 8px; }
-    .ere-check { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 12px 14px; font-size: 0.9rem; }
+    .ere-checks { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin: 0 0 8px; }
+    .ere-check { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 12px 14px; font-size: 0.9rem; }
     .ere-check strong { display: block; margin-bottom: 4px; }
     .ere-page .ere-check p { margin: 0; line-height: 1.55; }
 
-    .ere-rij { border: 1px solid var(--c-border); border-radius: 12px; background: var(--c-surface); margin-bottom: 8px; overflow: hidden; }
-    .ere-sub { display: block; font-weight: 400; font-size: 0.76rem; color: var(--c-text-mute); margin-top: 3px; }
-    .ere-open {
-      width: 100%; display: grid; grid-template-columns: 1fr 92px 96px 22px;
-      gap: 10px; align-items: center; padding: 12px 14px;
-      background: none; border: 0; font: inherit; color: inherit; text-align: left; cursor: pointer;
+    @media (max-width: 759px) {
+      .sit-blok { min-height: 36px; padding: 0 11px; font-size: 0.84rem; gap: 6px; }
+      .ere-snel { margin: 2px 10px 0; }
+      .ere-snel a { padding: 0 6px; font-size: 0.82rem; }
+      .ere-lijst .ere-logo { display: none; }
     }
-    .ere-open:hover { background: var(--c-bg); }
-    .ere-naam { font-weight: 600; }
-    .ere-cel { font-variant-numeric: tabular-nums; text-align: right; font-size: 0.92rem; }
-    .ere-cel-label { display: none; color: var(--c-text-mute); font-size: 0.72rem; }
-    .ere-jaar strong { color: var(--c-brand-deep); }
-    .ere-caret { color: var(--c-text-mute); transition: transform .15s; }
-    .ere-open[aria-expanded="true"] .ere-caret { transform: rotate(180deg); }
-    .ere-badges { display: inline-flex; gap: 5px; margin-left: 7px; flex-wrap: wrap; vertical-align: middle; }
-    .ere-badge { font-size: 0.68rem; font-weight: 600; border-radius: 999px; padding: 2px 7px; white-space: nowrap; }
-    .badge-garantie { background: var(--c-cheap-bg); color: var(--c-cheap-link); }
-    .badge-aangekondigd { background: var(--c-surface-soft); color: var(--c-text-soft); }
-    .badge-betaald { background: var(--c-surface-soft); color: var(--c-brand-deep); }
-    .badge-klant { background: var(--c-normal-bg); color: var(--c-normal-text); }
-    .badge-mij { background: var(--c-free-bg); color: var(--c-free); }
-
-    .ere-details { padding: 2px 14px 16px; border-top: 1px solid var(--c-border); font-size: 0.9rem; }
-    .ere-details p { margin: 10px 0 0; line-height: 1.6; }
-    .ere-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--c-text-mute); font-weight: 700; margin: 14px 0 0; }
-    .ere-bronregel { margin-top: 14px; font-size: 0.82rem; color: var(--c-text-mute); }
-    .ere-disclosure { background: var(--c-free-bg); border-radius: 8px; padding: 10px 12px; margin-top: 12px; font-size: 0.86rem; }
-
-    @media (max-width: 640px) {
-      .ere-open { grid-template-columns: 1fr 74px 84px 18px; gap: 6px; }
-      .ere-cel-label { display: block; }
+    @media (min-width: 760px) {
+      .ere-page { padding-top: 28px; }
+      .ere-kaart .ere-open { grid-template-areas: "logo naam bedrag" "logo cellen bedrag" "logo kenm bedrag"; gap: 6px 16px; }
+      .ere-k-logo { padding-right: 4px; }
+      .ere-koprij { display: grid; grid-template-columns: minmax(0, 1fr) 110px 110px 18px; gap: 10px; padding: 10px 12px; font-size: 0.78rem; color: var(--c-text-mute); border-bottom: 1px solid var(--c-border-strong); }
+      .ere-koprij .r { text-align: right; }
+      .ere-lijst .ere-open { grid-template-columns: minmax(0, 1fr) 110px 110px 18px; gap: 10px; }
+      .ere-lijst .ere-cel-label { display: none; }
     }
   </style>
+  <noscript><style>.ere-details[hidden] { display: block; } .ere-situatie, .ere-chips { display: none; }</style></noscript>
 </head>
 <body>
   <header class="site-header">
@@ -171,76 +231,58 @@
   </header>
 
   <main class="ere-page">
-    <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>ERE-certificaten vergelijken (2026)</h1>
-    <p class="intro">Vul in hoeveel je thuis laadt. Je ziet direct wat elk van de 10 inboekers je per jaar oplevert, na hun servicekosten.</p>
+    <p class="intro">Vul in hoeveel je thuis laadt. Je ziet direct wat elk van de 10 inboekers je per jaar oplevert, na hun servicekosten. <a href="#ere-uitleg">Hoe dit bedrag ontstaat</a></p>
     <p class="ere-stand" id="ere-stand"><!-- BUILD:STAND:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->
         Gerekend met € 0,4250 per ERE (2026 Q4, verwacht). Bijgewerkt op 1 november 2026.
-        <!-- BUILD:STAND:END --> <a href="#ere-uitleg">Hoe dit bedrag ontstaat ↓</a></p>
+        <!-- BUILD:STAND:END --></p>
 
-    <div class="ere-controls">
-      <label class="ere-invoer" for="ere-kwh">
-        <span>Thuis geladen per jaar</span>
-        <span><input type="number" id="ere-kwh" min="0" step="100" value="2000" inputmode="numeric"> <span class="ere-eenheid">kWh</span></span>
-      </label>
-      <p class="ere-hint" id="ere-hint">Dat is ongeveer 12.000 km op thuisstroom. Weet je alleen je kilometers? Deel ze door 6. Het precieze getal staat in de app van je laadpaal.</p>
-      <fieldset class="ere-chips">
-        <legend class="ere-sr">Welke inboekers wil je zien?</legend>
-        <label><input type="radio" name="ere-filter" value="alle" checked>Alle 10</label>
-        <label><input type="radio" name="ere-filter" value="vrij">Zonder klant te worden</label>
-        <label><input type="radio" name="ere-filter" value="betaald">Al uitbetaald</label>
-      </fieldset>
-    </div>
+    <form class="ere-situatie" id="ere-situatie" onsubmit="return false">
+      <script>try { var e = JSON.parse(localStorage.getItem("sv.ere") || "null"), a = JSON.parse(localStorage.getItem("sv.aanbieders") || "null"); if ((e && e.kwh > 0) || (a && a.ev && a.evKwh > 0)) document.getElementById("ere-situatie").classList.add("dicht"); } catch (x) {}</script>
+      <div class="ere-sit-kop">
+        <div>
+          <h2 class="ere-sit-titel">Jouw laadgedrag</h2>
+          <p class="ere-sit-sub" id="ere-sit-sub">Alle bedragen hieronder rekenen hiermee.</p>
+        </div>
+        <button type="button" class="ere-knop" id="ere-wijzig" aria-controls="ere-velden" aria-expanded="false"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Aanpassen</button>
+      </div>
+      <div class="ere-samenv" id="ere-sit-tekst"></div>
+      <div class="ere-velden" id="ere-velden">
+        <div class="ere-veld">
+          <label for="ere-kwh">Thuis geladen per jaar</label>
+          <span class="ere-inv"><input type="number" id="ere-kwh" min="0" max="100000" step="100" value="2000" inputmode="numeric"> kWh</span>
+          <button type="button" class="ere-knop" id="ere-klaar">Klaar</button>
+        </div>
+        <p class="ere-hint" id="ere-hint">Dat is ongeveer 12.000 km op thuisstroom. Weet je alleen je kilometers? Deel ze door 6. Het precieze getal staat in de app van je laadpaal.</p>
+      </div>
+    </form>
+
+    <p class="ere-verschil" id="ere-verschil" aria-live="polite"><!-- BUILD:VERSCHIL:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->
+        Bij 2.000 kWh thuisladen scheelt het <strong>€ 48 per jaar</strong> tussen de hoogste en de laagste opbrengst. Of je laadpaal meedoet, maakt meer uit: <a href="#ere-checks">3 dingen om eerst te checken ↓</a>
+        <!-- BUILD:VERSCHIL:END --></p>
+    <fieldset class="ere-chips">
+      <legend class="sr">Welke inboekers wil je zien?</legend>
+      <label class="ere-chip"><input type="radio" name="ere-filter" value="alle" checked><span>Alle 10</span></label>
+      <label class="ere-chip"><input type="radio" name="ere-filter" value="vrij"><span>Zonder klant te worden</span></label>
+      <label class="ere-chip"><input type="radio" name="ere-filter" value="betaald"><span>Al uitbetaald</span></label>
+    </fieldset>
+
+    <h2 class="sr">De 10 inboekers</h2>
+    <div id="ere-lijst"><!-- BUILD:ERE:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->
+<div class="ere-top"><div class="ere-rij ere-kaart met-badge badge-voorzichtig" data-id="zeres" id="zeres"><span class="ere-kbadge">Hoogste bedrag, nog niet vastgelegd</span><button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-zeres"><span class="ere-k-logo"><span class="ere-k-nr" aria-hidden="true">1</span><span class="ere-logo ere-logo-letter" aria-hidden="true">Z</span></span><span class="ere-naam"><span class="sr">1. </span>Zeres</span><span class="ere-cellen"><span class="ere-cel">servicekosten <b>19%</b></span><span class="ere-cel">netto <b>13,0 ct</b> per kWh</span><span class="ere-cel">uitbetaling <b>per kwartaal</b></span></span><span class="ere-kenm"><span class="ere-badge badge-aangekondigd">aangekondigd 13,0 ct</span><span class="ere-badge badge-betaald">uitbetaald</span></span><span class="ere-bedrag"><small>opbrengst</small><span class="ere-bedrag-getal">€ 260</span><small>per jaar</small><small class="ere-delta goed">€ 5 meer dan nr. 2</small></span></button><nav class="ere-snel" aria-label="Details van Zeres"><a href="#ere-det-zeres-kosten" data-id="zeres">Servicekosten</a><a href="#ere-det-zeres-uitbetaling" data-id="zeres">Uitbetaling</a><a href="#ere-det-zeres-voorwaarden" data-id="zeres">Voorwaarden</a><a href="#ere-det-zeres-laadpaal" data-id="zeres">Laadpaal</a></nav><div class="ere-details" id="ere-det-zeres" hidden><p class="ere-label" id="ere-det-zeres-kosten">Servicekosten</p><p>19% voor particulieren Zakelijk 13%. Laad je thuis voor je werkgever, dan gaat er 5 procentpunt af. Bij elke verlenging gaat er 1 procentpunt af, tot 14 procent na vijf jaar.</p><p class="ere-label" id="ere-det-zeres-uitbetaling">Uitbetaling</p><p>Per kwartaal. Eerste uitbetaling op 6 juli 2026, een voorschot van 50 procent over het eerste kwartaal. Het eerste tot en met het derde kwartaal worden samen afgerekend; Zeres verwacht dat medio november 2026 te doen, zodra het register het toelaat.</p><p class="ere-label">Werkelijk uitbetaald</p><p>2026-Q1: 12,2 ct</p><p class="ere-label" id="ere-det-zeres-voorwaarden">Voorwaarden</p><p>Per kalenderjaar, geen abonnement en geen vaste kosten.</p><p class="ere-label" id="ere-det-zeres-laadpaal">Laadpaal</p><p>Merkonafhankelijk met MID-meter. Handleidingen voor onder meer Easee, Alfen en Zaptec; ook handmatig doorgeven kan.</p><p class="ere-label">Sterk punt</p><p>Noemt als enige een bedrag per kilowattuur, € 0,13 voor het eerste en tweede kwartaal van 2026, en betaalt per kwartaal. Nu de ERE-prijs is gedaald levert dat meer op dan een lage commissie over een lagere marktprijs.</p><p class="ere-label">Let op</p><p class="ere-let">Dat bedrag van € 0,13 staat op de homepage en geldt daar voor het eerste en tweede kwartaal van 2026. De voorwaarden van 21 oktober 2026 noemen geen enkel bedrag per kilowattuur, en artikel 4.2 zegt dat Zeres geen opbrengst en geen ERE-prijs garandeert. De vraagbaak komt bovendien op 12 cent uit waar de homepage 13 cent noemt. Het is dus een aangekondigd bedrag, waar je Zeres contractueel niet aan kunt houden. Wat er voor 2027 geldt staat nergens.</p><p class="ere-bronregel">Gecontroleerd op 1 november 2026 &middot; <a href="https://www.zeres.nl/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.zeres.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div></div>
+<div class="ere-rij ere-kaart" data-id="laadbeloning" id="laadbeloning"><button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-laadbeloning"><span class="ere-k-logo"><span class="ere-k-nr" aria-hidden="true">2</span><span class="ere-logo ere-logo-letter" aria-hidden="true">L</span></span><span class="ere-naam"><span class="sr">2. </span>Laadbeloning</span><span class="ere-cellen"><span class="ere-cel">servicekosten <b>10%</b></span><span class="ere-cel">netto <b>12,7 ct</b> per kWh</span><span class="ere-cel">uitbetaling <b>jaarlijks</b></span></span><span class="ere-bedrag"><small>opbrengst</small><span class="ere-bedrag-getal">€ 255</span><small>per jaar</small><small class="ere-delta">€ 5 minder dan nr. 1</small></span></button><nav class="ere-snel" aria-label="Details van Laadbeloning"><a href="#ere-det-laadbeloning-kosten" data-id="laadbeloning">Servicekosten</a><a href="#ere-det-laadbeloning-uitbetaling" data-id="laadbeloning">Uitbetaling</a><a href="#ere-det-laadbeloning-voorwaarden" data-id="laadbeloning">Voorwaarden</a><a href="#ere-det-laadbeloning-laadpaal" data-id="laadbeloning">Laadpaal</a></nav><div class="ere-details" id="ere-det-laadbeloning" hidden><p class="ere-label" id="ere-det-laadbeloning-kosten">Servicekosten</p><p>10% bij het pakket Compleet Drie pakketten, met een langere machtiging voor een lagere commissie: Basis 15% bij 1 jaar met eenmalig 9,99 euro controlekosten, Comfort 11% bij 2 jaar met eenmalig 4,99 euro, Compleet 10% bij 3 jaar zonder controlekosten.</p><p class="ere-label" id="ere-det-laadbeloning-uitbetaling">Uitbetaling</p><p>Jaarlijks.</p><p class="ere-label" id="ere-det-laadbeloning-voorwaarden">Voorwaarden</p><p>Per kalenderjaar.</p><p class="ere-label" id="ere-det-laadbeloning-laadpaal">Laadpaal</p><p>Laadpaal met ingebouwde MID-meter, particulier en zakelijk.</p><p class="ere-label">Sterk punt</p><p>Laagste commissie van de tien.</p><p class="ere-label">Let op</p><p class="ere-let">De 10 procent van Compleet koop je met een machtiging van drie jaar; bij één jaar is het 15 procent. Laadbeloning noemt zelf een gemiddelde van ongeveer 10 cent per kilowattuur, met een bandbreedte van 5 tot 30 cent, en heeft nog geen uitbetaling gemeld.</p><p class="ere-bronregel">Gecontroleerd op 1 november 2026 &middot; <a href="https://laadbeloning.nl/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://laadbeloning.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div></div>
+<div class="ere-rij ere-kaart" data-id="stekker" id="stekker"><button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-stekker"><span class="ere-k-logo"><span class="ere-k-nr" aria-hidden="true">3</span><span class="ere-logo ere-logo-letter" aria-hidden="true">S</span></span><span class="ere-naam"><span class="sr">3. </span>Stekker</span><span class="ere-cellen"><span class="ere-cel">servicekosten <b>15%</b></span><span class="ere-cel">netto <b>12,0 ct</b> per kWh</span><span class="ere-cel">uitbetaling <b>jaarlijks</b></span></span><span class="ere-bedrag"><small>opbrengst</small><span class="ere-bedrag-getal">€ 240</span><small>per jaar</small><small class="ere-delta">€ 20 minder dan nr. 1</small></span></button><nav class="ere-snel" aria-label="Details van Stekker"><a href="#ere-det-stekker-kosten" data-id="stekker">Servicekosten</a><a href="#ere-det-stekker-uitbetaling" data-id="stekker">Uitbetaling</a><a href="#ere-det-stekker-voorwaarden" data-id="stekker">Voorwaarden</a><a href="#ere-det-stekker-laadpaal" data-id="stekker">Laadpaal</a></nav><div class="ere-details" id="ere-det-stekker" hidden><p class="ere-label" id="ere-det-stekker-kosten">Servicekosten</p><p>15% Combineer je het met slim laden, dan gaat de commissie naar 25%.</p><p class="ere-label" id="ere-det-stekker-uitbetaling">Uitbetaling</p><p>Jaarlijks. Standaard in het eerste kwartaal van het jaar na het laadjaar. Stekker registreert je kilowatturen maandelijks.</p><p class="ere-label" id="ere-det-stekker-voorwaarden">Voorwaarden</p><p>Loopt per kalenderjaar, zoals de NEa voorschrijft. Geen abonnement.</p><p class="ere-label" id="ere-det-stekker-laadpaal">Laadpaal</p><p>Merkonafhankelijk met MID-meter; de aansluiting moet op jouw naam staan.</p><p class="ere-label">Sterk punt</p><p>Rekent de omrekening voor: 0,33269 ERE per geladen kilowattuur. Daarnaast een vergoeding voor netcongestie van ongeveer 20 euro per jaar.</p><p class="ere-label">Let op</p><p class="ere-let">Stekker noemt zelf 13,6 cent netto per kilowattuur voor 2026. Dat cijfer hoort bij de hoge ERE-prijzen van het eerste halfjaar en is nog niet als uitbetaling bevestigd. Over het opstartjaar betaalt Stekker pas na afloop van 2026 uit.</p><p class="ere-bronregel">Gecontroleerd op 1 november 2026 &middot; <a href="https://stekker.com/ere" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://stekker.com/" target="_blank" rel="noopener">naar de website ↗</a></p></div></div></div><div class="ere-lijst"><div class="ere-koprij" aria-hidden="true"><span>Inboeker</span><span class="r">Netto per kWh</span><span class="r">Per jaar</span><span></span></div><div class="ere-rij" data-id="joulo" id="joulo"><button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-joulo"><span class="ere-naam"><span class="ere-nr">4.</span> <span class="ere-logo ere-logo-letter" aria-hidden="true">J</span><span class="ere-naam-tekst">Joulo<span class="ere-badges"><span class="ere-badge badge-betaald">uitbetaald</span><span class="ere-badge badge-mij">ik ben hier klant</span></span><span class="ere-sub">20%, aflopend tot 10% · per kwartaal</span></span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>11,3 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 226</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button><div class="ere-details" id="ere-det-joulo" hidden><p class="ere-label" id="ere-det-joulo-kosten">Servicekosten</p><p>20%, aflopend tot 10% Er gaat 1 procentpunt af per jaar dat je klant blijft en 1 procentpunt per actieve verwijzing, met een bodem van 10%.</p><p class="ere-label" id="ere-det-joulo-uitbetaling">Uitbetaling</p><p>Per kwartaal. Binnen 30 dagen na afloop van het kwartaal.</p><p class="ere-label">Werkelijk uitbetaald</p><p>2026-Q1: 13,1 ct &middot; 2026-Q2: 13,2 ct</p><p class="ere-label" id="ere-det-joulo-voorwaarden">Voorwaarden</p><p>Per kalenderjaar, één inboeker per aansluiting.</p><p class="ere-label" id="ere-det-joulo-laadpaal">Laadpaal</p><p>Merkonafhankelijk met MID-meter; het energiecontract moet op jouw naam staan.</p><p class="ere-label">Sterk punt</p><p>Houdt een openbaar verkooplogboek bij: acht verkopen, 8,5 miljoen ERE voor 3,8 miljoen euro bruto. Verkocht als eerste en tegen de hoogste bekende prijs, € 0,4810 op 29 juni 2026, en laatst voor € 0,4250 op 29 september. Betaalt per kwartaal uit.</p><p class="ere-label">Let op</p><p class="ere-let">De hoogste commissie van de vier goedkoopste aanbieders, tenzij je hem met verwijzingen omlaag brengt. Alle acht verkopen staan nog op uitbetaalstatus gepland.</p><p class="ere-disclosure">Ik ben hier zelf klant. In mijn ERE-artikel staat een verwijslink naar Joulo, en daar heb ik voordeel bij. Die link staat bewust niet op deze pagina en heeft geen invloed op de volgorde hieronder.</p><p class="ere-bronregel">Gecontroleerd op 1 november 2026 &middot; <a href="https://joulo.nl/geld-verdienen-met-laadstation" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://joulo.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div></div>
+<div class="ere-rij" data-id="laadloon" id="laadloon"><button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-laadloon"><span class="ere-naam"><span class="ere-nr">5.</span> <span class="ere-logo ere-logo-letter" aria-hidden="true">L</span><span class="ere-naam-tekst">Laadloon<span class="ere-badges"><span class="ere-badge badge-betaald">uitbetaald</span></span><span class="ere-sub">20% · na verkoop</span></span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>11,3 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 226</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button><div class="ere-details" id="ere-det-laadloon" hidden><p class="ere-label" id="ere-det-laadloon-kosten">Servicekosten</p><p>20% 20 procent inclusief btw, voor alle klanten gelijk. Geen abonnement en geen instapkosten.</p><p class="ere-label" id="ere-det-laadloon-uitbetaling">Uitbetaling</p><p>Na verkoop. Twee opties: Optimaal bundelt de certificaten en betaalt in het eerste kwartaal van het volgende jaar, Direct betaalt zodra de verkoop is ontvangen.</p><p class="ere-label">Werkelijk uitbetaald</p><p>2026-Q1: 12,6 ct &middot; 2026-Q2: 12,4 ct</p><p class="ere-label" id="ere-det-laadloon-voorwaarden">Voorwaarden</p><p>Geen lock-in volgens de eigen site.</p><p class="ere-label" id="ere-det-laadloon-laadpaal">Laadpaal</p><p>Koppeling met de bekende laadpaalmerken, of zelf doorgeven.</p><p class="ere-label">Sterk punt</p><p>Twee kwartalen met een bevestigd bedrag, dicht bij wat Joulo haalde.</p><p class="ere-label">Let op</p><p class="ere-let">Laadloon publiceert twee overeengekomen verkopen, € 0,4680 en € 0,4750 per ERE, met een verwachte uitbetaling in november 2026 en maart 2027. Overeengekomen is niet uitbetaald.</p><p class="ere-bronregel">Gecontroleerd op 1 november 2026 &middot; <a href="https://laadloon.nl/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://laadloon.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div></div>
+<div class="ere-rij" data-id="zonneplan" id="zonneplan"><button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-zonneplan"><span class="ere-naam"><span class="ere-nr">6.</span> <img class="ere-logo" src="/logos/zonneplan.png" alt="" width="32" height="32" loading="lazy" decoding="async"><span class="ere-naam-tekst">Zonneplan<span class="ere-badges"><span class="ere-badge badge-klant">alleen klanten</span></span><span class="ere-sub">20% · per kwartaal of jaarlijks</span></span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>11,3 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 226</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button><div class="ere-details" id="ere-det-zonneplan" hidden><p class="ere-label" id="ere-det-zonneplan-kosten">Servicekosten</p><p>20% Die 20 procent is voor de dienstverlening van Zonneplan en Lekkerladen samen.</p><p class="ere-label" id="ere-det-zonneplan-uitbetaling">Uitbetaling</p><p>Per kwartaal of jaarlijks. Je kiest zelf, en het gaat met terugwerkende kracht vanaf 1 januari 2026. De pagina meldt op 16 oktober 2026 nog dat de eerste uitbetaling in september volgt, zonder jaartal, dus of die is gedaan staat er niet.</p><p class="ere-label" id="ere-det-zonneplan-voorwaarden">Voorwaarden</p><p>Per kalenderjaar, aanmelden via de Zonneplan-app. Alleen voor klanten van Zonneplan Energie.</p><p class="ere-label" id="ere-det-zonneplan-laadpaal">Laadpaal</p><p>Meer dan 60 modellen met MID-meter, waaronder ABB, Alfen, Easee, EVBox, Mennekes, SolarEdge, Tesla, Wallbox en Zaptec.</p><p class="ere-label">Sterk punt</p><p>Regelt het binnen een app die je als Zonneplan-klant toch al gebruikt, en je mag kiezen tussen kwartaal en jaar.</p><p class="ere-label">Let op</p><p class="ere-let">Zonneplan rekent zelf met een marktprijs van 7 tot 10 cent per kilowattuur en komt daarmee lager uit dan wat de rest belooft. Je moet er stroomklant zijn, dus vergelijk ook het energiecontract.</p><p class="ere-bronregel">Gecontroleerd op 1 november 2026 &middot; <a href="https://www.zonneplan.nl/energie/ere-certificaten" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.zonneplan.nl/energie/ere-certificaten" target="_blank" rel="noopener">naar de website ↗</a></p></div></div>
+<div class="ere-rij" data-id="50five" id="50five"><button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-50five"><span class="ere-naam"><span class="ere-nr">7.</span> <span class="ere-logo ere-logo-letter" aria-hidden="true">5</span><span class="ere-naam-tekst">50five<span class="ere-badges"><span class="ere-badge badge-klant">alleen klanten</span></span><span class="ere-sub">23% bij 1 jaar · jaarlijks</span></span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>10,9 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 218</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button><div class="ere-details" id="ere-det-50five" hidden><p class="ere-label" id="ere-det-50five-kosten">Servicekosten</p><p>23% bij 1 jaar 21% als je voor twee jaar tekent, 19% bij drie jaar.</p><p class="ere-label" id="ere-det-50five-uitbetaling">Uitbetaling</p><p>Jaarlijks. Eén betaling na afloop van het kalenderjaar.</p><p class="ere-label" id="ere-det-50five-voorwaarden">Voorwaarden</p><p>Machtiging van 1, 2 of 3 jaar; hoe langer, hoe lager de commissie. Alleen voor 50five-klanten met een laadpunt dat 50five beheert.</p><p class="ere-label" id="ere-det-50five-laadpaal">Laadpaal</p><p>Laadpunt met MID-meter dat bij 50five in beheer is.</p><p class="ere-label">Sterk punt</p><p>Aanmelden werkt met terugwerkende kracht over 2026, particulier via de app.</p><p class="ere-label">Let op</p><p class="ere-let">Hoogste commissie in het eerste jaar, en de korting koop je met een langere binding. De prijs per ERE is sinds oktober 2026 van de site verdwenen: 50five rekent nu met ongeveer 10 cent netto per kilowattuur, bandbreedte 5 tot 30 cent. Dat is een stuk voorzichtiger dan de 15 tot 16 cent bruto die er eerder stond.</p><p class="ere-bronregel">Gecontroleerd op 1 november 2026 &middot; <a href="https://50five.com/nl/nl/services/ere-registration" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://50five.com/nl/nl/services/ere-registration" target="_blank" rel="noopener">naar de website ↗</a></p></div></div>
+<div class="ere-rij" data-id="lekkerladen" id="lekkerladen"><button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-lekkerladen"><span class="ere-naam"><span class="ere-nr">8.</span> <span class="ere-logo ere-logo-letter" aria-hidden="true">L</span><span class="ere-naam-tekst">Lekkerladen<span class="ere-sub">25% · per kwartaal</span></span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>10,6 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 212</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button><div class="ere-details" id="ere-det-lekkerladen" hidden><p class="ere-label" id="ere-det-lekkerladen-kosten">Servicekosten</p><p>25%</p><p class="ere-label" id="ere-det-lekkerladen-uitbetaling">Uitbetaling</p><p>Per kwartaal. Per kwartaal volgens laadpas.net; erecentrum noemt uitbetaling na controle.</p><p class="ere-label" id="ere-det-lekkerladen-voorwaarden">Voorwaarden</p><p>Per kalenderjaar.</p><p class="ere-label" id="ere-det-lekkerladen-laadpaal">Laadpaal</p><p>Laadpaal met MID-meter.</p><p class="ere-label">Sterk punt</p><p>Doet ook het inboeken voor Zonneplan, dus het draait al op schaal.</p><p class="ere-label">Let op</p><p class="ere-let">De eigen website blokkeert geautomatiseerd uitlezen; op 31 augustus 2026 was hij onbereikbaar door een certificaatfout. De cijfers hier komen daarom van de vergelijkers en niet van de bron zelf.</p><p class="ere-bronregel">Gecontroleerd op 14 oktober 2026 &middot; <a href="https://www.laadpas.net/ere-certificaten/vergelijken/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.lekkerladen.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div></div>
+<div class="ere-rij" data-id="vattenfall" id="vattenfall"><button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-vattenfall"><span class="ere-naam"><span class="ere-nr">9.</span> <img class="ere-logo" src="/logos/vattenfall.svg" alt="" width="32" height="32" loading="lazy" decoding="async"><span class="ere-naam-tekst">Vattenfall Thuislaadcashback<span class="ere-badges"><span class="ere-badge badge-garantie">bodem 5,0 ct</span><span class="ere-badge badge-klant">alleen klanten</span></span><span class="ere-sub">25% · jaarlijks</span></span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>10,6 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 212</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button><div class="ere-details" id="ere-det-vattenfall" hidden><p class="ere-label" id="ere-det-vattenfall-kosten">Servicekosten</p><p>25% Vattenfall telt alle verkochte ERE's van het jaar bij elkaar, neemt de gemiddelde verkoopprijs, haalt daar 25 procent af en rekent de rest om naar een bedrag per kilowattuur.</p><p class="ere-label" id="ere-det-vattenfall-uitbetaling">Uitbetaling</p><p>Jaarlijks. Rond juni van het volgende jaar; de vraagbaak houdt het op het tweede kwartaal.</p><p class="ere-label" id="ere-det-vattenfall-voorwaarden">Voorwaarden</p><p>Stop je binnen het jaar, dan krijg je over dat jaar niets. Alleen met een Vattenfall stroomcontract én een Vattenfall Charging-abonnement.</p><p class="ere-label" id="ere-det-vattenfall-laadpaal">Laadpaal</p><p>Alleen de Autel MaxiCharger met MID-meter.</p><p class="ere-label">Sterk punt</p><p>Vattenfall verzekert minimaal 5 cent per kilowattuur in 2026, en alles loopt via één partij die je al kent. Slim laden levert daar 2,5 cent per kilowattuur bovenop.</p><p class="ere-label">Let op</p><p class="ere-let">De strengste voorwaarden van de tien: één laadpaalmerk, een abonnement, een stroomcontract, en je geld pas rond juni van het jaar erna. Die 5 cent ligt ver onder wat de markt nu doet, en in de voorwaarden heet het “minimaal”, geen garantie.</p><p class="ere-bronregel">Gecontroleerd op 1 november 2026 &middot; <a href="https://www.vattenfall.nl/klantenservice/thuislaadcashback/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.vattenfall.nl/klantenservice/thuislaadcashback/" target="_blank" rel="noopener">naar de website ↗</a></p></div></div>
+<div class="ere-rij" data-id="eneco" id="eneco"><button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-eneco"><span class="ere-naam"><span class="ere-nr">10.</span> <img class="ere-logo" src="/logos/eneco.png" alt="" width="32" height="32" loading="lazy" decoding="async"><span class="ere-naam-tekst">Eneco eMobility<span class="ere-badges"><span class="ere-badge badge-klant">alleen klanten</span></span><span class="ere-sub">servicekosten niet openbaar · onbekend</span></span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>–</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>–</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button><div class="ere-details" id="ere-det-eneco" hidden><p class="ere-label" id="ere-det-eneco-kosten">Servicekosten</p><p>niet openbaar</p><p class="ere-label" id="ere-det-eneco-uitbetaling">Uitbetaling</p><p>Onbekend. Eneco rekent per kalenderjaar af en verwacht medio april of mei 2027 daadwerkelijk uit te betalen, met terugwerkende kracht.</p><p class="ere-label" id="ere-det-eneco-voorwaarden">Voorwaarden</p><p>Nog niet bekend. Laadpunt dat bij Eneco eMobility in beheer is.</p><p class="ere-label" id="ere-det-eneco-laadpaal">Laadpaal</p><p>Vier modellen met MID-meter.</p><p class="ere-label">Sterk punt</p><p>Leest je laadsessies automatisch uit, want het laadpunt hangt al aan hun systeem.</p><p class="ere-label">Let op</p><p class="ere-let">Eneco noemt tot ongeveer 10 cent per kilowattuur maar maakt de servicekosten niet bekend en wacht naar eigen zeggen nog op de laatste regelgeving. Zonder percentage valt er niets te vergelijken, dus deze staat onderaan.</p><p class="ere-bronregel">Gecontroleerd op 1 november 2026 &middot; <a href="https://www.eneco-emobility.com/thuis/kennis-en-tips/verdien-geld-met-thuisladen" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.eneco-emobility.com/thuis/kennis-en-tips/verdien-geld-met-thuisladen" target="_blank" rel="noopener">naar de website ↗</a></p></div></div></div>
+        <!-- BUILD:ERE:END --></div>
 
     <div class="ere-kort" id="ere-kort" aria-live="polite"><!-- BUILD:KORT:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->
-        <p><strong>Kort antwoord</strong> bij 2.000 kWh per jaar:</p><ul><li><strong>Hoogste bedrag:</strong> Zeres, € 260. Dat rust op 13 cent per kWh die Zeres aankondigt, maar niet in de voorwaarden vastlegt.</li><li><strong>Laagste servicekosten:</strong> Laadbeloning, 10 procent. Alleen als je voor 3 jaar tekent; voor 1 jaar is het 15 procent.</li><li><strong>Al uitbetaald:</strong> Zeres, Joulo en Laadloon, netto 12,2 tot 13,2 cent per kWh.</li></ul><p>Tussen nummer 1 en nummer 9 zit <strong>€ 48</strong> per jaar. Of je laadpaal meedoet, maakt meer uit. <a href="#ere-checks">3 dingen om eerst te checken ↓</a></p>
+        <p><strong>Kort antwoord</strong> bij 2.000 kWh per jaar:</p><ul><li><strong>Hoogste bedrag:</strong> Zeres, € 260. Dat rust op 13 cent per kWh die Zeres aankondigt, maar niet in de voorwaarden vastlegt.</li><li><strong>Laagste servicekosten:</strong> Laadbeloning, 10 procent. Alleen als je voor 3 jaar tekent; voor 1 jaar is het 15 procent.</li><li><strong>Al uitbetaald:</strong> Zeres, Joulo en Laadloon, netto 12,2 tot 13,2 cent per kWh.</li></ul>
         <!-- BUILD:KORT:END --></div>
-
-    <h2 class="ere-sr">De 10 inboekers</h2>
-    <div id="ere-lijst">
-    <!-- BUILD:ERE:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->
-      <div class="ere-rij" data-id="zeres">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-zeres"><span class="ere-naam">Zeres<span class="ere-badges"><span class="ere-badge badge-aangekondigd">aangekondigd 13,0 ct</span><span class="ere-badge badge-betaald">uitbetaald</span></span><span class="ere-sub">19% voor particulieren · per kwartaal</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>13,0 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 260</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
-        <div class="ere-details" id="ere-det-zeres" hidden><p class="ere-label">Servicekosten</p><p>19% voor particulieren Zakelijk 13%. Laad je thuis voor je werkgever, dan gaat er 5 procentpunt af. Bij elke verlenging gaat er 1 procentpunt af, tot 14 procent na vijf jaar.</p><p class="ere-label">Uitbetaling</p><p>Per kwartaal. Eerste uitbetaling op 6 juli 2026, een voorschot van 50 procent over het eerste kwartaal. Het eerste tot en met het derde kwartaal worden samen afgerekend; Zeres verwacht dat medio november 2026 te doen, zodra het register het toelaat.</p><p class="ere-label">Voorwaarden</p><p>Per kalenderjaar, geen abonnement en geen vaste kosten.</p><p class="ere-label">Laadpaal</p><p>Merkonafhankelijk met MID-meter. Handleidingen voor onder meer Easee, Alfen en Zaptec; ook handmatig doorgeven kan.</p><p class="ere-label">Werkelijk uitbetaald</p><p>2026-Q1: 12,2 ct</p><p class="ere-label">Sterk punt</p><p>Noemt als enige een bedrag per kilowattuur, € 0,13 voor het eerste en tweede kwartaal van 2026, en betaalt per kwartaal. Nu de ERE-prijs is gedaald levert dat meer op dan een lage commissie over een lagere marktprijs.</p><p class="ere-label">Let op</p><p>Dat bedrag van € 0,13 staat op de homepage en geldt daar voor het eerste en tweede kwartaal van 2026. De voorwaarden van 21 oktober 2026 noemen geen enkel bedrag per kilowattuur, en artikel 4.2 zegt dat Zeres geen opbrengst en geen ERE-prijs garandeert. De vraagbaak komt bovendien op 12 cent uit waar de homepage 13 cent noemt. Het is dus een aangekondigd bedrag, waar je Zeres contractueel niet aan kunt houden. Wat er voor 2027 geldt staat nergens.</p><p class="ere-bronregel">Gecontroleerd op 2026-11-01 &middot; <a href="https://www.zeres.nl/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.zeres.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div>
-      </div>
-      <div class="ere-rij" data-id="laadbeloning">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-laadbeloning"><span class="ere-naam">Laadbeloning<span class="ere-sub">10% bij het pakket Compleet · jaarlijks</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>12,7 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 255</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
-        <div class="ere-details" id="ere-det-laadbeloning" hidden><p class="ere-label">Servicekosten</p><p>10% bij het pakket Compleet Drie pakketten, met een langere machtiging voor een lagere commissie: Basis 15% bij 1 jaar met eenmalig 9,99 euro controlekosten, Comfort 11% bij 2 jaar met eenmalig 4,99 euro, Compleet 10% bij 3 jaar zonder controlekosten.</p><p class="ere-label">Uitbetaling</p><p>Jaarlijks.</p><p class="ere-label">Voorwaarden</p><p>Per kalenderjaar.</p><p class="ere-label">Laadpaal</p><p>Laadpaal met ingebouwde MID-meter, particulier en zakelijk.</p><p class="ere-label">Sterk punt</p><p>Laagste commissie van de tien.</p><p class="ere-label">Let op</p><p>De 10 procent van Compleet koop je met een machtiging van drie jaar; bij één jaar is het 15 procent. Laadbeloning noemt zelf een gemiddelde van ongeveer 10 cent per kilowattuur, met een bandbreedte van 5 tot 30 cent, en heeft nog geen uitbetaling gemeld.</p><p class="ere-bronregel">Gecontroleerd op 2026-11-01 &middot; <a href="https://laadbeloning.nl/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://laadbeloning.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div>
-      </div>
-      <div class="ere-rij" data-id="stekker">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-stekker"><span class="ere-naam">Stekker<span class="ere-sub">15% · jaarlijks</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>12,0 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 240</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
-        <div class="ere-details" id="ere-det-stekker" hidden><p class="ere-label">Servicekosten</p><p>15% Combineer je het met slim laden, dan gaat de commissie naar 25%.</p><p class="ere-label">Uitbetaling</p><p>Jaarlijks. Standaard in het eerste kwartaal van het jaar na het laadjaar. Stekker registreert je kilowatturen maandelijks.</p><p class="ere-label">Voorwaarden</p><p>Loopt per kalenderjaar, zoals de NEa voorschrijft. Geen abonnement.</p><p class="ere-label">Laadpaal</p><p>Merkonafhankelijk met MID-meter; de aansluiting moet op jouw naam staan.</p><p class="ere-label">Sterk punt</p><p>Rekent de omrekening voor: 0,33269 ERE per geladen kilowattuur. Daarnaast een vergoeding voor netcongestie van ongeveer 20 euro per jaar.</p><p class="ere-label">Let op</p><p>Stekker noemt zelf 13,6 cent netto per kilowattuur voor 2026. Dat cijfer hoort bij de hoge ERE-prijzen van het eerste halfjaar en is nog niet als uitbetaling bevestigd. Over het opstartjaar betaalt Stekker pas na afloop van 2026 uit.</p><p class="ere-bronregel">Gecontroleerd op 2026-11-01 &middot; <a href="https://stekker.com/ere" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://stekker.com/" target="_blank" rel="noopener">naar de website ↗</a></p></div>
-      </div>
-      <div class="ere-rij" data-id="joulo">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-joulo"><span class="ere-naam">Joulo<span class="ere-badges"><span class="ere-badge badge-betaald">uitbetaald</span><span class="ere-badge badge-mij">ik ben hier klant</span></span><span class="ere-sub">20%, aflopend tot 10% · per kwartaal</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>11,3 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 226</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
-        <div class="ere-details" id="ere-det-joulo" hidden><p class="ere-label">Servicekosten</p><p>20%, aflopend tot 10% Er gaat 1 procentpunt af per jaar dat je klant blijft en 1 procentpunt per actieve verwijzing, met een bodem van 10%.</p><p class="ere-label">Uitbetaling</p><p>Per kwartaal. Binnen 30 dagen na afloop van het kwartaal.</p><p class="ere-label">Voorwaarden</p><p>Per kalenderjaar, één inboeker per aansluiting.</p><p class="ere-label">Laadpaal</p><p>Merkonafhankelijk met MID-meter; het energiecontract moet op jouw naam staan.</p><p class="ere-label">Werkelijk uitbetaald</p><p>2026-Q1: 13,1 ct &middot; 2026-Q2: 13,2 ct</p><p class="ere-label">Sterk punt</p><p>Houdt een openbaar verkooplogboek bij: acht verkopen, 8,5 miljoen ERE voor 3,8 miljoen euro bruto. Verkocht als eerste en tegen de hoogste bekende prijs, € 0,4810 op 29 juni 2026, en laatst voor € 0,4250 op 29 september. Betaalt per kwartaal uit.</p><p class="ere-label">Let op</p><p>De hoogste commissie van de vier goedkoopste aanbieders, tenzij je hem met verwijzingen omlaag brengt. Alle acht verkopen staan nog op uitbetaalstatus gepland.</p><p class="ere-disclosure">Ik ben hier zelf klant. In mijn ERE-artikel staat een verwijslink naar Joulo, en daar heb ik voordeel bij. Die link staat bewust niet op deze pagina en heeft geen invloed op de volgorde hieronder.</p><p class="ere-bronregel">Gecontroleerd op 2026-11-01 &middot; <a href="https://joulo.nl/geld-verdienen-met-laadstation" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://joulo.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div>
-      </div>
-      <div class="ere-rij" data-id="laadloon">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-laadloon"><span class="ere-naam">Laadloon<span class="ere-badges"><span class="ere-badge badge-betaald">uitbetaald</span></span><span class="ere-sub">20% · na verkoop</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>11,3 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 226</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
-        <div class="ere-details" id="ere-det-laadloon" hidden><p class="ere-label">Servicekosten</p><p>20% 20 procent inclusief btw, voor alle klanten gelijk. Geen abonnement en geen instapkosten.</p><p class="ere-label">Uitbetaling</p><p>Na verkoop. Twee opties: Optimaal bundelt de certificaten en betaalt in het eerste kwartaal van het volgende jaar, Direct betaalt zodra de verkoop is ontvangen.</p><p class="ere-label">Voorwaarden</p><p>Geen lock-in volgens de eigen site.</p><p class="ere-label">Laadpaal</p><p>Koppeling met de bekende laadpaalmerken, of zelf doorgeven.</p><p class="ere-label">Werkelijk uitbetaald</p><p>2026-Q1: 12,6 ct &middot; 2026-Q2: 12,4 ct</p><p class="ere-label">Sterk punt</p><p>Twee kwartalen met een bevestigd bedrag, dicht bij wat Joulo haalde.</p><p class="ere-label">Let op</p><p>Laadloon publiceert twee overeengekomen verkopen, € 0,4680 en € 0,4750 per ERE, met een verwachte uitbetaling in november 2026 en maart 2027. Overeengekomen is niet uitbetaald.</p><p class="ere-bronregel">Gecontroleerd op 2026-11-01 &middot; <a href="https://laadloon.nl/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://laadloon.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div>
-      </div>
-      <div class="ere-rij" data-id="zonneplan">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-zonneplan"><span class="ere-naam">Zonneplan<span class="ere-badges"><span class="ere-badge badge-klant">alleen klanten</span></span><span class="ere-sub">20% · per kwartaal of jaarlijks</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>11,3 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 226</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
-        <div class="ere-details" id="ere-det-zonneplan" hidden><p class="ere-label">Servicekosten</p><p>20% Die 20 procent is voor de dienstverlening van Zonneplan en Lekkerladen samen.</p><p class="ere-label">Uitbetaling</p><p>Per kwartaal of jaarlijks. Je kiest zelf, en het gaat met terugwerkende kracht vanaf 1 januari 2026. De pagina meldt op 16 oktober 2026 nog dat de eerste uitbetaling in september volgt, zonder jaartal, dus of die is gedaan staat er niet.</p><p class="ere-label">Voorwaarden</p><p>Per kalenderjaar, aanmelden via de Zonneplan-app. Alleen voor klanten van Zonneplan Energie.</p><p class="ere-label">Laadpaal</p><p>Meer dan 60 modellen met MID-meter, waaronder ABB, Alfen, Easee, EVBox, Mennekes, SolarEdge, Tesla, Wallbox en Zaptec.</p><p class="ere-label">Sterk punt</p><p>Regelt het binnen een app die je als Zonneplan-klant toch al gebruikt, en je mag kiezen tussen kwartaal en jaar.</p><p class="ere-label">Let op</p><p>Zonneplan rekent zelf met een marktprijs van 7 tot 10 cent per kilowattuur en komt daarmee lager uit dan wat de rest belooft. Je moet er stroomklant zijn, dus vergelijk ook het energiecontract.</p><p class="ere-bronregel">Gecontroleerd op 2026-11-01 &middot; <a href="https://www.zonneplan.nl/energie/ere-certificaten" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.zonneplan.nl/energie/ere-certificaten" target="_blank" rel="noopener">naar de website ↗</a></p></div>
-      </div>
-      <div class="ere-rij" data-id="50five">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-50five"><span class="ere-naam">50five<span class="ere-badges"><span class="ere-badge badge-klant">alleen klanten</span></span><span class="ere-sub">23% bij 1 jaar · jaarlijks</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>10,9 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 218</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
-        <div class="ere-details" id="ere-det-50five" hidden><p class="ere-label">Servicekosten</p><p>23% bij 1 jaar 21% als je voor twee jaar tekent, 19% bij drie jaar.</p><p class="ere-label">Uitbetaling</p><p>Jaarlijks. Eén betaling na afloop van het kalenderjaar.</p><p class="ere-label">Voorwaarden</p><p>Machtiging van 1, 2 of 3 jaar; hoe langer, hoe lager de commissie. Alleen voor 50five-klanten met een laadpunt dat 50five beheert.</p><p class="ere-label">Laadpaal</p><p>Laadpunt met MID-meter dat bij 50five in beheer is.</p><p class="ere-label">Sterk punt</p><p>Aanmelden werkt met terugwerkende kracht over 2026, particulier via de app.</p><p class="ere-label">Let op</p><p>Hoogste commissie in het eerste jaar, en de korting koop je met een langere binding. De prijs per ERE is sinds oktober 2026 van de site verdwenen: 50five rekent nu met ongeveer 10 cent netto per kilowattuur, bandbreedte 5 tot 30 cent. Dat is een stuk voorzichtiger dan de 15 tot 16 cent bruto die er eerder stond.</p><p class="ere-bronregel">Gecontroleerd op 2026-11-01 &middot; <a href="https://50five.com/nl/nl/services/ere-registration" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://50five.com/nl/nl/services/ere-registration" target="_blank" rel="noopener">naar de website ↗</a></p></div>
-      </div>
-      <div class="ere-rij" data-id="lekkerladen">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-lekkerladen"><span class="ere-naam">Lekkerladen<span class="ere-sub">25% · per kwartaal</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>10,6 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 212</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
-        <div class="ere-details" id="ere-det-lekkerladen" hidden><p class="ere-label">Servicekosten</p><p>25%</p><p class="ere-label">Uitbetaling</p><p>Per kwartaal. Per kwartaal volgens laadpas.net; erecentrum noemt uitbetaling na controle.</p><p class="ere-label">Voorwaarden</p><p>Per kalenderjaar.</p><p class="ere-label">Laadpaal</p><p>Laadpaal met MID-meter.</p><p class="ere-label">Sterk punt</p><p>Doet ook het inboeken voor Zonneplan, dus het draait al op schaal.</p><p class="ere-label">Let op</p><p>De eigen website blokkeert geautomatiseerd uitlezen; op 31 augustus 2026 was hij onbereikbaar door een certificaatfout. De cijfers hier komen daarom van de vergelijkers en niet van de bron zelf.</p><p class="ere-bronregel">Gecontroleerd op 2026-10-14 &middot; <a href="https://www.laadpas.net/ere-certificaten/vergelijken/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.lekkerladen.nl/" target="_blank" rel="noopener">naar de website ↗</a></p></div>
-      </div>
-      <div class="ere-rij" data-id="vattenfall">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-vattenfall"><span class="ere-naam">Vattenfall Thuislaadcashback<span class="ere-badges"><span class="ere-badge badge-garantie">bodem 5,0 ct</span><span class="ere-badge badge-klant">alleen klanten</span></span><span class="ere-sub">25% · jaarlijks</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>10,6 ct</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>€ 212</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
-        <div class="ere-details" id="ere-det-vattenfall" hidden><p class="ere-label">Servicekosten</p><p>25% Vattenfall telt alle verkochte ERE's van het jaar bij elkaar, neemt de gemiddelde verkoopprijs, haalt daar 25 procent af en rekent de rest om naar een bedrag per kilowattuur.</p><p class="ere-label">Uitbetaling</p><p>Jaarlijks. Rond juni van het volgende jaar; de vraagbaak houdt het op het tweede kwartaal.</p><p class="ere-label">Voorwaarden</p><p>Stop je binnen het jaar, dan krijg je over dat jaar niets. Alleen met een Vattenfall stroomcontract én een Vattenfall Charging-abonnement.</p><p class="ere-label">Laadpaal</p><p>Alleen de Autel MaxiCharger met MID-meter.</p><p class="ere-label">Sterk punt</p><p>Vattenfall verzekert minimaal 5 cent per kilowattuur in 2026, en alles loopt via één partij die je al kent. Slim laden levert daar 2,5 cent per kilowattuur bovenop.</p><p class="ere-label">Let op</p><p>De strengste voorwaarden van de tien: één laadpaalmerk, een abonnement, een stroomcontract, en je geld pas rond juni van het jaar erna. Die 5 cent ligt ver onder wat de markt nu doet, en in de voorwaarden heet het “minimaal”, geen garantie.</p><p class="ere-bronregel">Gecontroleerd op 2026-11-01 &middot; <a href="https://www.vattenfall.nl/klantenservice/thuislaadcashback/" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.vattenfall.nl/klantenservice/thuislaadcashback/" target="_blank" rel="noopener">naar de website ↗</a></p></div>
-      </div>
-      <div class="ere-rij" data-id="eneco">
-        <button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-eneco"><span class="ere-naam">Eneco eMobility<span class="ere-badges"><span class="ere-badge badge-klant">alleen klanten</span></span><span class="ere-sub">servicekosten niet openbaar · onbekend</span></span><span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>–</span><span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>–</strong></span><span class="ere-caret" aria-hidden="true">▾</span></button>
-        <div class="ere-details" id="ere-det-eneco" hidden><p class="ere-label">Servicekosten</p><p>niet openbaar</p><p class="ere-label">Uitbetaling</p><p>Onbekend. Eneco rekent per kalenderjaar af en verwacht medio april of mei 2027 daadwerkelijk uit te betalen, met terugwerkende kracht.</p><p class="ere-label">Voorwaarden</p><p>Nog niet bekend. Laadpunt dat bij Eneco eMobility in beheer is.</p><p class="ere-label">Laadpaal</p><p>Vier modellen met MID-meter.</p><p class="ere-label">Sterk punt</p><p>Leest je laadsessies automatisch uit, want het laadpunt hangt al aan hun systeem.</p><p class="ere-label">Let op</p><p>Eneco noemt tot ongeveer 10 cent per kilowattuur maar maakt de servicekosten niet bekend en wacht naar eigen zeggen nog op de laatste regelgeving. Zonder percentage valt er niets te vergelijken, dus deze staat onderaan.</p><p class="ere-bronregel">Gecontroleerd op 2026-11-01 &middot; <a href="https://www.eneco-emobility.com/thuis/kennis-en-tips/verdien-geld-met-thuisladen" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="https://www.eneco-emobility.com/thuis/kennis-en-tips/verdien-geld-met-thuisladen" target="_blank" rel="noopener">naar de website ↗</a></p></div>
-      </div>
-        <!-- BUILD:ERE:END -->
-    </div>
 
     <p class="ere-bronregel" id="ere-voet"></p>
 
@@ -306,7 +348,9 @@
 
     <h2>Niet opgenomen</h2>
     <p>Er zijn meer inboekers dan deze tien. Deze staan er bewust niet bij:</p>
-    <div id="ere-niet"></div>
+    <div id="ere-niet"><!-- BUILD:NIET:START — automatisch gegenereerd door build-ere.js; niet handmatig bewerken -->
+        <ul><li><strong>LaadCash</strong> — Noemt 9,5 procent, de laagste van de markt, maar alleen voor de eerste 200 deelnemers; daarna 13 procent. Heeft naar eigen zeggen nog geen ERE ingeboekt en nog niets uitbetaald.</li><li><strong>Inboekdienst.nl</strong> — Lage commissie van 12 procent, maar nog weinig te controleren over uitbetalingen.</li><li><strong>Voltico, Earnergy, PowerD, Xolvere, Energieluitjes</strong> — Kleine partijen zonder openbaar uitbetaalcijfer.</li><li><strong>Den Hartog Charging, Groendus, Tap Electric</strong> — Richten zich vooral op zakelijke laadpunten.</li><li><strong>Ere-registratie.nl</strong> — Hoogste commissie die ik tegenkwam, 27,5 procent.</li></ul>
+        <!-- BUILD:NIET:END --></div>
 
     <h2>Verantwoording</h2>
     <p>Ik heb geen commerciële afspraak met een inboeker en word niet betaald voor een plek in deze lijst. Bij Joulo ben ik zelf klant, en in mijn ERE-artikel staat een verwijslink naar die partij waar ik voordeel bij heb. Die link staat bewust niet op deze pagina, en de volgorde hierboven komt alleen uit de cijfers. Zie ook de <a href="/disclaimer">disclaimer</a>.</p>
@@ -333,179 +377,89 @@
     </div>
   </footer>
 
+  <script src="/ere-render.js?v=1"></script>
   <script>
-  // ── ERE-vergelijker: rendert uit /data/ere.json ────────────────────────────
-  // De opmaak hieronder moet gelijk blijven aan build-ere.js, dat dezelfde
-  // regels statisch inbakt voor bezoekers en zoekmachines zonder JavaScript.
+  // ── ERE-vergelijker: rekent en rendert met ere-render.js uit /data/ere.json ──
+  // build-ere.js bakt met dezelfde code de standaardlijst statisch in.
   (function () {
     "use strict";
+    var R = window.EreRender;
+    if (!R) return;
+    var $ = function (id) { return document.getElementById(id); };
+    var OPSLAG = "sv.ere";            // eigen laadgedrag op dit apparaat (alleen gemak; mag leeg of geblokkeerd zijn)
+    var data = null, kwh = 2000, bron = null;
+    var invoer = $("ere-kwh"), sit = $("ere-situatie");
 
-    var data = null;
-    var kwh = 2000;
+    function lees(sleutel) { try { return JSON.parse(localStorage.getItem(sleutel) || "null"); } catch (e) { return null; } }
+    function bewaar() { try { localStorage.setItem(OPSLAG, JSON.stringify({ kwh: kwh })); } catch (e) { /* geen opslag: niets aan de hand */ } }
 
-    function esc(t) {
-      return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-    function ct(v) { return (v * 100).toFixed(1).replace(".", ",") + " ct"; }
-    function eur0(v) { return "€ " + String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
-    function pct(v) { return Math.round(v * 100) + "%"; }
-
-    function marktPrijs(d) {
-      var r = d.markt.reeks;
-      return r.length ? r[r.length - 1].ere_prijs : d.markt.prijs_nu;
-    }
-    function bruto(d, prijs) { return prijs * d.markt.ere_per_kwh; }
-    function netto(d, inb) {
-      if (inb.commissie == null) return null;
-      var n = bruto(d, marktPrijs(d)) * (1 - inb.commissie);
-      if (inb.garantie_per_kwh != null && inb.garantie_per_kwh > n) n = inb.garantie_per_kwh;
-      return n;
-    }
-    function perJaar(d, inb, v) {
-      var n = netto(d, inb);
-      if (n == null) return null;
-      return n * v - (inb.vaste_kosten || 0);
+    // Eerst wat je hier invulde, anders het thuisladen uit je situatie bij Aanbieders, anders de standaard.
+    function startKwh(d) {
+      var e = lees(OPSLAG);
+      if (e && e.kwh > 0) { bron = "eigen"; return Math.min(e.kwh, 100000); }
+      var a = lees("sv.aanbieders");
+      if (a && a.ev && a.evKwh > 0) { bron = "aanbieders"; return Math.min(a.evKwh, 100000); }
+      return d.aannames.kwh_per_jaar;
     }
 
-    function komma(v, n) { return v.toFixed(n).replace(".", ","); }
-    function getal(v) { return String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
-    function namen(l) { return l.length < 2 ? l.join("") : l.slice(0, -1).join(", ") + " en " + l[l.length - 1]; }
-    function subRegel(inb) { return (inb.commissie == null ? "servicekosten niet openbaar" : inb.commissie_tekst) + " · " + inb.uitbetaling; }
-
-    function kortStand(d, v) {
-      var met = d.inboekers.filter(function (i) { return perJaar(d, i, v) != null; })
-        .sort(function (a, b) { return perJaar(d, b, v) - perJaar(d, a, v); });
-      var metPct = d.inboekers.filter(function (i) { return i.commissie != null; });
-      var laag = metPct.reduce(function (m, i) { return i.commissie < m.commissie ? i : m; }, metPct[0]);
-      var betaald = d.inboekers.filter(function (i) { return i.uitbetaald && i.uitbetaald.length; });
-      var bedragen = [].concat.apply([], betaald.map(function (i) { return i.uitbetaald.map(function (u) { return u.netto_per_kwh; }); }));
-      return { met: met, top: met[0], laatste: met[met.length - 1], laag: laag, betaald: betaald,
-        min: Math.min.apply(null, bedragen), max: Math.max.apply(null, bedragen) };
+    // ── situatie als blokjes, inklappen ──
+    var ICOON = {
+      kwh: '<path d="M13 3 4 14h7l-1 7 9-11h-7l1-7z"/>',
+      km: '<path d="M5 17h14v-5l-2-5H7l-2 5v5z"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/><path d="M5 12h14"/>'
+    };
+    function blokje(soort, tekst) {
+      return '<button type="button" class="sit-blok">' +
+        '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        ICOON[soort] + "</svg>" + tekst + "</button>";
     }
-
-    function kortHtml(d, v) {
-      var k = kortStand(d, v), vast = d.kort || {};
-      function noot(sleutel, inb) { return vast[sleutel] && vast[sleutel].id === inb.id ? " " + esc(vast[sleutel].noot) : ""; }
-      var h = "<p><strong>Kort antwoord</strong> bij " + getal(v) + " kWh per jaar:</p><ul>";
-      h += "<li><strong>Hoogste bedrag:</strong> " + esc(k.top.naam) + ", " + eur0(perJaar(d, k.top, v)) + "." + noot("hoogste", k.top) + "</li>";
-      h += "<li><strong>Laagste servicekosten:</strong> " + esc(k.laag.naam) + ", " + Math.round(k.laag.commissie * 100) + " procent." + noot("laagste_commissie", k.laag) + "</li>";
-      if (k.betaald.length) {
-        h += "<li><strong>Al uitbetaald:</strong> " + esc(namen(k.betaald.map(function (i) { return i.naam; }))) + ", netto " +
-          (k.min === k.max ? komma(k.min * 100, 1) : komma(k.min * 100, 1) + " tot " + komma(k.max * 100, 1)) + " cent per kWh.</li>";
-      }
-      h += "</ul><p>Tussen nummer 1 en nummer " + k.met.length + " zit <strong>" + eur0(perJaar(d, k.top, v) - perJaar(d, k.laatste, v)) +
-        "</strong> per jaar. Of je laadpaal meedoet, maakt meer uit. <a href=\"#ere-checks\">3 dingen om eerst te checken ↓</a></p>";
-      return h;
+    function samenvatting() {
+      var km = Math.round(kwh * data.aannames.km_per_kwh / 500) * 500;
+      $("ere-sit-tekst").innerHTML = blokje("kwh", R.getal(kwh) + " kWh thuis laden") + blokje("km", "≈ " + R.getal(km) + " km per jaar");
+      $("ere-sit-sub").textContent = bron === "aanbieders"
+        ? "Overgenomen uit je situatie bij Aanbieders. Alle bedragen rekenen hiermee."
+        : "Alle bedragen hieronder rekenen hiermee.";
     }
-
-    function hintTekst(d, v) {
-      var km = Math.round(v * d.aannames.km_per_kwh / 500) * 500;
-      return "Dat is ongeveer " + getal(km) + " km op thuisstroom. Weet je alleen je kilometers? Deel ze door " +
-        d.aannames.km_per_kwh + ". Het precieze getal staat in de app van je laadpaal.";
+    function klap(dicht) {
+      sit.classList.toggle("dicht", dicht);
+      $("ere-wijzig").setAttribute("aria-expanded", String(!dicht));
+      if (dicht) $("ere-wijzig").focus(); else { invoer.focus(); invoer.select(); }
     }
+    $("ere-wijzig").addEventListener("click", function () { klap(false); });
+    $("ere-sit-tekst").addEventListener("click", function () { klap(false); });
+    $("ere-klaar").addEventListener("click", function () { klap(true); });
+    invoer.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); klap(true); } });
 
-    function badges(inb) {
-      var b = "";
-      if (inb.garantie_per_kwh != null) b += (inb.garantie_label ? '<span class="ere-badge badge-aangekondigd">' + esc(inb.garantie_label) + " " : '<span class="ere-badge badge-garantie">bodem ') + ct(inb.garantie_per_kwh) + "</span>";
-      if (inb.uitbetaald && inb.uitbetaald.length) b += '<span class="ere-badge badge-betaald">uitbetaald</span>';
-      if (inb.eis_klant) b += '<span class="ere-badge badge-klant">alleen klanten</span>';
-      if (inb.disclosure) b += '<span class="ere-badge badge-mij">ik ben hier klant</span>';
-      return b ? '<span class="ere-badges">' + b + "</span>" : "";
+    // ── uitklappen en snelkoppelingen (werkt ook op de statisch ingebakken lijst) ──
+    function zet(knop, open) {
+      knop.setAttribute("aria-expanded", String(open));
+      var det = $(knop.getAttribute("aria-controls"));
+      if (det) det.hidden = !open;
     }
-
-    function rijHtml(d, inb, v) {
-      var n = netto(d, inb), j = perJaar(d, inb, v);
-      var h = '<div class="ere-rij" data-id="' + esc(inb.id) + '">';
-      h += '<button class="ere-open" type="button" aria-expanded="false" aria-controls="ere-det-' + esc(inb.id) + '">';
-      h += '<span class="ere-naam">' + esc(inb.naam) + badges(inb) + '<span class="ere-sub">' + esc(subRegel(inb)) + "</span></span>";
-      h += '<span class="ere-cel"><span class="ere-cel-label">netto/kWh</span>' + (n == null ? "–" : ct(n)) + "</span>";
-      h += '<span class="ere-cel ere-jaar"><span class="ere-cel-label">per jaar</span><strong>' + (j == null ? "–" : eur0(j)) + "</strong></span>";
-      h += '<span class="ere-caret" aria-hidden="true">▾</span></button>';
-
-      h += '<div class="ere-details" id="ere-det-' + esc(inb.id) + '" hidden>';
-      h += '<p class="ere-label">Servicekosten</p><p>' + esc(inb.commissie_tekst) + (inb.commissie_detail ? " " + esc(inb.commissie_detail) : "") + "</p>";
-      h += '<p class="ere-label">Uitbetaling</p><p>' + esc(inb.uitbetaling.charAt(0).toUpperCase() + inb.uitbetaling.slice(1)) + "." + (inb.uitbetaling_detail ? " " + esc(inb.uitbetaling_detail) : "") + "</p>";
-      h += '<p class="ere-label">Voorwaarden</p><p>' + esc(inb.contract) + (inb.eis_klant ? " " + esc(inb.eis_klant) : "") + "</p>";
-      h += '<p class="ere-label">Laadpaal</p><p>' + esc(inb.laadpalen) + "</p>";
-      if (inb.uitbetaald && inb.uitbetaald.length) {
-        var lijst = inb.uitbetaald.map(function (u) { return esc(u.periode) + ": " + ct(u.netto_per_kwh); }).join(" &middot; ");
-        h += '<p class="ere-label">Werkelijk uitbetaald</p><p>' + lijst + "</p>";
-      }
-      if (inb.sterk) h += '<p class="ere-label">Sterk punt</p><p>' + esc(inb.sterk) + "</p>";
-      if (inb.let_op) h += '<p class="ere-label">Let op</p><p>' + esc(inb.let_op) + "</p>";
-      if (inb.disclosure) h += '<p class="ere-disclosure">' + esc(inb.disclosure) + "</p>";
-      h += '<p class="ere-bronregel">Gecontroleerd op ' + esc(inb.gecontroleerd) + " &middot; <a href=\"" + esc(inb.bron) + '" target="_blank" rel="noopener">bron ↗</a> &middot; <a href="' + esc(inb.url) + '" target="_blank" rel="noopener">naar de website ↗</a></p>';
-      h += "</div></div>";
-      return h;
-    }
-
-    function filterLijst(lijst, keuze) {
-      if (keuze === "vrij") return lijst.filter(function (i) { return !i.eis_klant; });
-      if (keuze === "betaald") return lijst.filter(function (i) { return i.uitbetaald && i.uitbetaald.length; });
-      return lijst.slice();
-    }
-
-    function sorteer(d, lijst, v) {
-      return lijst.slice().sort(function (a, b) {
-        var x = perJaar(d, a, v), y = perJaar(d, b, v);
-        if (x == null) return 1;
-        if (y == null) return -1;
-        return y - x;
-      });
+    $("ere-lijst").addEventListener("click", function (e) {
+      if (!e.target.closest) return;
+      var knop = e.target.closest(".ere-open");
+      if (knop) { zet(knop, knop.getAttribute("aria-expanded") !== "true"); return; }
+      var a = e.target.closest(".ere-snel a");
+      var rij = a && $(a.getAttribute("data-id"));
+      if (rij) zet(rij.querySelector(".ere-open"), true);   // daarna springt de link naar het juiste kopje
+    });
+    function openUitHash() {
+      var h = decodeURIComponent(location.hash.slice(1));
+      if (!h || !data) return;
+      var id = h.replace(/^ere-det-/, "").replace(/-(kosten|uitbetaling|voorwaarden|laadpaal)$/, "");
+      var rij = $(id);
+      if (!rij || !rij.classList.contains("ere-rij")) return;
+      zet(rij.querySelector(".ere-open"), true);
+      ($(h) || rij).scrollIntoView();
     }
 
     function render() {
-      if (!data) return;
       var gekozen = document.querySelector('input[name="ere-filter"]:checked');
-      var lijst = filterLijst(data.inboekers, gekozen ? gekozen.value : "alle");
-      lijst = sorteer(data, lijst, kwh);
-      document.getElementById("ere-lijst").innerHTML = lijst.map(function (i) { return rijHtml(data, i, kwh); }).join("");
-      document.getElementById("ere-kort").innerHTML = kortHtml(data, kwh);
-      document.getElementById("ere-hint").textContent = hintTekst(data, kwh);
-      knoopAan();
-    }
-
-    function knoopAan() {
-      var knoppen = document.querySelectorAll(".ere-open");
-      for (var i = 0; i < knoppen.length; i++) {
-        knoppen[i].addEventListener("click", function () {
-          var open = this.getAttribute("aria-expanded") === "true";
-          this.setAttribute("aria-expanded", open ? "false" : "true");
-          var det = document.getElementById(this.getAttribute("aria-controls"));
-          if (det) { if (open) { det.setAttribute("hidden", ""); } else { det.removeAttribute("hidden"); } }
-        });
-      }
-    }
-
-    function renderVast() {
-      var m = data.markt;
-      var rijen = m.reeks.map(function (r) {
-        return "<tr" + (r.verwacht ? ' class="ere-verwacht"' : "") + "><td>" + esc(r.periode) + '</td><td class="num">€ ' +
-          r.ere_prijs.toFixed(4).replace(".", ",") + '</td><td class="num">' + ct(r.ere_prijs * m.ere_per_kwh) +
-          "</td><td>" + esc(r.toelichting) + "</td></tr>";
-      }).join("");
-      var mt = document.querySelector("#ere-markttabel tbody");
-      if (mt) mt.innerHTML = rijen;
-
-      var betaald = data.inboekers.filter(function (i) { return i.uitbetaald && i.uitbetaald.length; });
-      var bt = document.querySelector("#ere-betaaldtabel tbody");
-      if (bt) bt.innerHTML = betaald.map(function (i) {
-        function vind(p) {
-          var u = i.uitbetaald.filter(function (x) { return x.periode === p; })[0];
-          return u ? ct(u.netto_per_kwh) : "–";
-        }
-        return "<tr><td>" + esc(i.naam) + '</td><td class="num">' + vind("2026-Q1") + '</td><td class="num">' + vind("2026-Q2") +
-          '</td><td><a href="' + esc(i.uitbetaald[0].bron) + '" target="_blank" rel="noopener">melding ↗</a></td></tr>';
-      }).join("");
-
-      var niet = document.getElementById("ere-niet");
-      if (niet) niet.innerHTML = "<ul>" + data.niet_opgenomen.map(function (n) {
-        return "<li><strong>" + esc(n.naam) + "</strong> — " + esc(n.reden) + "</li>";
-      }).join("") + "</ul>";
-
-      var voet = document.getElementById("ere-voet");
-      if (voet) voet.textContent = "Bijgewerkt op " + data.bijgewerkt + ", volgende controleronde " + data.volgende_controle +
-        ". Gerekend met € " + marktPrijs(data).toFixed(4).replace(".", ",") + " per ERE.";
+      $("ere-lijst").innerHTML = R.lijstHtml(data, kwh, gekozen ? gekozen.value : "alle");
+      $("ere-verschil").innerHTML = R.verschilHtml(data, kwh);
+      $("ere-kort").innerHTML = R.kortHtml(data, kwh);
+      $("ere-hint").textContent = R.hintTekst(data, kwh);
+      samenvatting();
     }
 
     fetch("/data/ere.json", { credentials: "same-origin" })
@@ -513,20 +467,23 @@
       .then(function (d) {
         if (!d) return;
         data = d;
-        kwh = d.aannames.kwh_per_jaar;
-        var invoer = document.getElementById("ere-kwh");
+        kwh = startKwh(d);
         invoer.value = kwh;
         invoer.addEventListener("input", function () {
           var v = parseInt(this.value, 10);
-          kwh = isNaN(v) || v < 0 ? 0 : v;
+          kwh = isNaN(v) || v < 0 ? 0 : Math.min(v, 100000);
+          bron = "eigen";
+          if (kwh > 0) bewaar();
           render();
         });
         var keuzes = document.querySelectorAll('input[name="ere-filter"]');
         for (var i = 0; i < keuzes.length; i++) keuzes[i].addEventListener("change", render);
-        renderVast();
+        $("ere-voet").textContent = R.voetTekst(d);
         render();
+        if (!bron) sit.classList.remove("dicht");
+        openUitHash();
       })
-      .catch(function () { /* de statisch ingebakken lijst blijft staan */ });
+      .catch(function () { sit.classList.remove("dicht"); /* de statisch ingebakken lijst blijft staan */ });
   })();
   </script>
 
