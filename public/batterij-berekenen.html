@@ -867,7 +867,7 @@ function renderAdvisor(p){
       +(vastRow? `De beste vaste batterij voor jou is <b>${nl(vastRow.s)} kWh</b>: ~${eur(vastRow.batSave)} per jaar, netto zo&#8217;n ${netTxt(vastRow)}. Die dekt veel meer van je verbruik, maar kost meer dan hij extra oplevert.`
                 : `Een vaste batterij verdient zich bij jouw verbruik niet binnen ${BAT_LIFESPAN} jaar terug.`)+`</span>`;
   }
-  else if(rec!=null){ recHtml=`Een batterij van <b>${nl(rec)} kWh</b> houdt je over ${BAT_LIFESPAN} jaar netto het meeste over: ongeveer <b>${eur(recRow.batSave)} per jaar</b>${p.p1?'':' bovenop je zonnepanelen'}, netto zo&#8217;n ${netTxt(recRow)} na aftrek van de aanschaf. Een grotere maat kost meer dan hij extra oplevert.`; }
+  else if(rec!=null){ recHtml=`Een batterij van <b>${nl(rec)} kWh</b> houdt je over ${BAT_LIFESPAN} jaar netto het meeste over: ongeveer <b>${eur(recRow.batSave)} per jaar</b>${p.p1?'':' bovenop je zonnepanelen'}, netto zo&#8217;n ${netTxt(recRow)} na aftrek van de aanschaf. Een grotere capaciteit kost meer dan hij extra oplevert.`; }
   else if(bestPb.batSave>5){ recHtml=`Bij de huidige batterijprijzen verdient geen enkele capaciteit zich binnen ~${BAT_LIFESPAN} jaar terug. Een batterij van ${sizeTxt(bestPb.s)} bespaart het meeste per euro (~${eur(bestPb.batSave)} per jaar), maar is financieel nog niet rond &#8211; nu interessanter voor onafhankelijkheid dan voor puur rendement.`; }
   else { recHtml='Met deze instellingen levert een batterij weinig extra op bovenop je zonnepanelen. Meer panelen of een hoger verbruik maken een batterij eerder rendabel.'; }
   if(hasPrice && userRow){
