@@ -3,7 +3,10 @@ alert_post.py — Post een alert-tweet op @stroomtarief bij extreme stroomprijze
 
 Twee alerttypen (beide gebaseerd op all-in consumentenprijs NA belasting):
   - "negative": >= 2 komende uren vandaag met all-in prijs < 0 ct/kWh
-  - "peak":     >= 1 komend uur vandaag met all-in prijs > 38 ct/kWh
+  - "peak":     >= 1 komend uur vandaag met all-in prijs > 30% boven het
+                gemiddelde van de afgelopen 7 dagen (zelfde maatstaf als het
+                weeklabel op de site) en minstens 30 ct/kWh. Te weinig historie
+                (< 72 uur) of een gemiddelde < 5 ct: terugval op vaste 38 ct.
 
 Deduplicatie: per dag per type slechts een alert. Status wordt bijgehouden in
 public/data/tweet_state.json (publiek maar niet-sensitief).
@@ -37,9 +40,16 @@ BRAND = "stroomvoorspeller.nl"
 # ---- Drempels (all-in consumentenprijs incl. btw, in ct/kWh) ----
 # Negatief: all-in prijs < 0 ct/kWh -- stroom kost letterlijk niets na belasting
 NEGATIVE_THRESHOLD_CT = 0.0
-# Piek: all-in prijs > 38 ct/kWh -- equivalent van EPEX ~200 EUR/MWh
-# na gemiddelde opslag (2,1 ct) + energiebelasting + 21% btw
-PEAK_THRESHOLD_CT = 38.0
+# Piek (nov 2026): relatief t.o.v. het voortschrijdende 7-daagse gemiddelde,
+# gelijk aan de klasse "veel duurder dan het gemiddelde van de afgelopen week"
+# in public/app.js (WEEK_BANDS.veryPricey). De ondergrens voorkomt een alert
+# als een normale prijs toevallig ver boven een heel goedkope week ligt.
+PEAK_WEEK_FACTOR   = 1.30
+PEAK_FLOOR_CT      = 30.0
+WEEK_MIN_HOURS     = 72    # minder historie: terugval op vaste drempel
+WEEK_MIN_AVG_CT    = 5.0   # gemiddelde te laag: verhouding zegt niets
+# Terugval zonder bruikbaar weekgemiddelde: vaste grens (EPEX ~200 EUR/MWh all-in)
+PEAK_THRESHOLD_CT  = 38.0
 
 # Minimaal aantal uur vereist voor een alert
 MIN_NEGATIVE_HOURS = 2
@@ -91,6 +101,31 @@ def consumer_price_ct(eur_mwh: float, config: dict) -> float:
     return ((eur_mwh / 1000.0) + markup + eb) * btw * 100.0
 
 
+def week_average_ct(prices: list, config: dict, now: datetime):
+    """Gemiddelde all-in prijs (ct/kWh) over de 7 dagen voor 'now' (lokale tijd, naive).
+
+    Zelfde definitie als weekAverage() in public/app.js. Geeft None bij te weinig
+    historie of een gemiddelde onder WEEK_MIN_AVG_CT.
+    """
+    start = now - timedelta(days=7)
+    cts = []
+    for p in prices:
+        t = datetime.fromisoformat(p["time"]).replace(tzinfo=None)
+        if start <= t < now:
+            cts.append(consumer_price_ct(float(p["price"]), config))
+    if len(cts) < WEEK_MIN_HOURS:
+        return None
+    avg = sum(cts) / len(cts)
+    return avg if avg >= WEEK_MIN_AVG_CT else None
+
+
+def peak_threshold_ct(week_avg):
+    """Piekgrens in ct/kWh: relatief t.o.v. weekgemiddelde, anders vaste terugval."""
+    if week_avg is None:
+        return PEAK_THRESHOLD_CT
+    return max(week_avg * PEAK_WEEK_FACTOR, PEAK_FLOOR_CT)
+
+
 def fmt_ct(ct: float) -> str:
     """Formateer ct-waarde in NL-notatie, bijv. '3,2' of '-12,5'."""
     return f"{ct:.1f}".replace(".", ",")
@@ -128,7 +163,7 @@ def compose_negative_tweet(neg_rows: list) -> str:
     return text
 
 
-def compose_peak_tweet(peak_rows: list, all_today: list) -> str:
+def compose_peak_tweet(peak_rows: list, all_today: list, week_avg=None) -> str:
     """Bouw alert-tweet voor uren met hoge all-in prijs (na belasting)."""
     hours   = sorted(r["hour"] for r in peak_rows)
     start_h = hours[0]
@@ -140,19 +175,28 @@ def compose_peak_tweet(peak_rows: list, all_today: list) -> str:
     if non_peak:
         cheapest   = min(non_peak, key=lambda r: r["ct"])
         cheap_line = (
-            f"Goedkoopste uur vandaag: {cheapest['hour']:02d}:00 "
+            f"Goedkoopste uur: {cheapest['hour']:02d}:00 "
             f"({fmt_ct(cheapest['ct'])} ct)\n"
         )
     else:
         cheap_line = ""
 
+    if week_avg is not None:
+        pct = round((max_ct / week_avg - 1) * 100)
+        head = "Stroom is veel duurder dan de afgelopen week.\n\n"
+        avg_line = f"Weekgemiddelde: {fmt_ct(week_avg)} ct (+{pct}%)\n"
+    else:
+        head = "Stroom is vandaag erg duur, ook na belasting.\n\n"
+        avg_line = ""
+
     text = (
-        "Stroom is extreem duur, ook na belasting.\n\n"
-        + f"{start_h:02d}:00-{end_h:02d}:00 | Piek all-in: {fmt_ct(max_ct)} ct/kWh\n\n"
+        head
+        + f"{start_h:02d}:00-{end_h:02d}:00 | Piek all-in: {fmt_ct(max_ct)} ct/kWh\n"
+        + avg_line + "\n"
         + f"{cheap_line}"
         + "Wassen of EV laden? Wacht tot na de piek.\n\n"
         + f"→ {BRAND}\n\n"
-        + "#energieprijzen #stroomprijzen #dynamischcontract #energietips #slimstroom"
+        + "#energieprijzen #stroomprijzen #dynamischcontract"
     )
     return text
 
@@ -243,12 +287,18 @@ def main() -> None:
         )
 
     # ---- Check 2: Hoge all-in prijs ----
-    peak_rows = [r for r in upcoming if r["ct"] > PEAK_THRESHOLD_CT]
+    week_avg  = week_average_ct(prices, config, now)
+    peak_thr  = peak_threshold_ct(week_avg)
+    if week_avg is not None:
+        print(f"Weekgemiddelde all-in: {fmt_ct(week_avg)} ct -> piekgrens {fmt_ct(peak_thr)} ct")
+    else:
+        print(f"Geen bruikbaar weekgemiddelde -> vaste piekgrens {fmt_ct(peak_thr)} ct")
+    peak_rows = [r for r in upcoming if r["ct"] > peak_thr]
     if len(peak_rows) >= MIN_PEAK_HOURS:
         if already_alerted(state, today_str, "peak"):
             print(f"SKIP piek-alert: al gepost vandaag ({today_str}).")
         else:
-            tweet = compose_peak_tweet(peak_rows, today_rows)
+            tweet = compose_peak_tweet(peak_rows, today_rows, week_avg)
             print(f"\n=== Alert PIEK ===\n{tweet}\n==================")
             validate_length(tweet, "piek")
             if not args.dry_run:
@@ -259,7 +309,7 @@ def main() -> None:
                 print("DRY RUN -- niet gepost.")
     else:
         print(
-            f"Geen piek-alert: {len(peak_rows)} uur met all-in prijs > {PEAK_THRESHOLD_CT} ct "
+            f"Geen piek-alert: {len(peak_rows)} uur met all-in prijs > {fmt_ct(peak_thr)} ct "
             f"(minimum {MIN_PEAK_HOURS} vereist)."
         )
 

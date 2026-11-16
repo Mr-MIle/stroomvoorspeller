@@ -380,9 +380,20 @@ def already_posted(target_date: str) -> bool:
 def mark_posted(target_date: str) -> None:
     """Leg vast dat voor deze morgen-datum een tweet is gepost."""
     TWEET_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    # Bestaande velden (o.a. "alerts" van alert_post.py) bewaren; alleen eigen velden bijwerken.
+    # Zonder dit wist de dagelijkse tweet de alert-deduplicatie en kan er dezelfde dag
+    # een tweede piek-alert uitgaan.
+    try:
+        state = json.loads(TWEET_STATE_FILE.read_text(encoding="utf-8"))
+        if not isinstance(state, dict):
+            state = {}
+    except Exception:  # noqa: BLE001 -- ontbrekend of onleesbaar: begin leeg
+        state = {}
+    state["last_posted_date"] = target_date
+    state["posted_at"] = datetime.now(timezone.utc).isoformat()
     TWEET_STATE_FILE.write_text(
         json.dumps(
-            {"last_posted_date": target_date, "posted_at": datetime.now(timezone.utc).isoformat()},
+            state,
             indent=2,
             ensure_ascii=False,
         ),
