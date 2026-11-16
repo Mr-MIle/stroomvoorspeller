@@ -856,24 +856,6 @@ a:hover { text-decoration: underline; }
   .forecast-highlights { grid-template-columns: 1fr; }
 }
 
-/* Nudge: opent 'Mijn situatie' in de instellingen */
-.profile-nudge {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: var(--c-bg);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  padding: 8px 12px;
-  margin: 0 0 12px;
-  font-size: 0.85rem;
-  font-family: inherit;
-  color: var(--c-accent);
-  cursor: pointer;
-}
-.profile-nudge[hidden] { display: none; }
-.profile-nudge:hover { border-color: var(--c-accent); }
-.profile-nudge-icon { font-size: 0.95rem; }
 
 /* 'Mijn situatie' — aantikbare pillen in instellingen */
 .situation-options { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -1661,7 +1643,7 @@ body.has-neg-alert .site-header { top: 56px; }
   .suppliers-table .td-fixed.is-leeg::after { content: none; }
   .suppliers-table .td-markup, .suppliers-table .td-fixed { white-space: nowrap; }
   .suppliers-table .td-action { grid-column: 3; grid-row: 2; padding-top: 0; width: auto; text-align: right; }
-  .suppliers-table .supplier-pick-btn { width: auto; min-height: 40px; padding: 6px 14px; font-size: 0.9rem; }
+  .suppliers-table .supplier-pick-btn { width: auto; min-height: 44px; padding: 6px 14px; font-size: 0.9rem; }
 }
 
 
@@ -3376,7 +3358,13 @@ p a, li a, td a, p code, li code, .aanbieder-meta span {
 
   /* Ruimere tikvlakken: footerlinks en de scroll-pijl */
   .site-footer .footer-meta a { display: inline-block; padding: 10px 2px; }
-  .scroll-nudge-arrow { padding: 10px 18px; }
+  .scroll-nudge-arrow { padding: 12px 18px; }
+
+  /* #77 (16 nov 2026): knoppen die op 390 px nog onder de 44 px zaten.
+     De Kies-knop staat bij de leverancierstabel; Per uur/kwartier zit in een pil van 44 px. */
+  .settings-toggle,
+  .hero-lint a { min-height: 44px; box-sizing: border-box; }
+  .hero-lint a { display: inline-flex; align-items: center; }
 
   /* Leveranciersknop: eigen regel, met het woord "leverancier" erbij */
   .settings-toggle { order: 2; width: 100%; }

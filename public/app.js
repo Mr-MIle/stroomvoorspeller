@@ -1869,13 +1869,11 @@
   // zodat de generieke strip niet tegenstrijdig is met de incl-belasting grafiek.
   function renderForecastHighlights() {
     const el    = document.getElementById("forecast-highlights");
-    const nudge = document.getElementById("profile-nudge");
     if (!el || !state.config) return;
 
     const fc = state.forecasts || [];
     if (fc.length === 0) {
       el.setAttribute("hidden", ""); el.innerHTML = "";
-      if (nudge) nudge.setAttribute("hidden", "");
       return;
     }
 
@@ -1987,12 +1985,6 @@
       `</div>`
     ).join("");
     el.removeAttribute("hidden");
-
-    // Nudge tonen zolang er nog geen profiel is ingesteld.
-    if (nudge) {
-      if (profileEmpty()) nudge.removeAttribute("hidden");
-      else nudge.setAttribute("hidden", "");
-    }
   }
 
   // ---- Voorspellingsgrafiek: dag 2 t/m 7 ----
@@ -2204,22 +2196,6 @@
       suppliersMoreBtn.addEventListener("click", () => {
         state.suppliersExpanded = !state.suppliersExpanded;
         renderSupplierTable();
-      });
-    }
-
-    // Nudge boven de week-strip → open instellingen en scroll erheen
-    const nudge = document.getElementById("profile-nudge");
-    if (nudge) {
-      nudge.addEventListener("click", () => {
-        const panel = document.getElementById("settings-panel");
-        const toggleBtn = document.getElementById("settings-toggle");
-        if (panel) {
-          panel.removeAttribute("hidden");
-          if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "true");
-          panel.scrollIntoView({ behavior: "smooth", block: "center" });
-          const evCb = document.getElementById("profile-ev");
-          if (evCb) evCb.focus({ preventScroll: true });
-        }
       });
     }
 
