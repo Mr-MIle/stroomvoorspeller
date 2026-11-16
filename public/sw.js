@@ -7,7 +7,7 @@
  *
  * Verhoog VERSIE bij elke wijziging aan dit bestand of aan de schil hieronder.
  */
-var VERSIE = "v13";
+var VERSIE = "v14";
 var SCHIL_CACHE = "schil-" + VERSIE;
 var DATA_CACHE = "data-" + VERSIE;
 var PAGINA_CACHE = "paginas-" + VERSIE;

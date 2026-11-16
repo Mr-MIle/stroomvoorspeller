@@ -2267,6 +2267,8 @@ body.has-neg-alert .site-header { top: 56px; }
 }
 .interesse-knop:hover { background: var(--c-brand-fill-deep); }
 .interesse-knop:focus-visible { outline: 2px solid var(--c-brand); outline-offset: 2px; }
+/* #104: scrollende tabellen zijn met tab bereikbaar (nav.js zet tabindex) */
+[data-scrollregio]:focus-visible { outline: 2px solid var(--c-brand); outline-offset: 2px; }
 .interesse-knop[hidden], .interesse-bedankt[hidden] { display: none; }
 .interesse-bedankt { margin: 0; font-weight: 700; flex: 1 1 100%; }
 

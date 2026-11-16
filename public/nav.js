@@ -104,7 +104,12 @@
     });
     document.addEventListener("keydown", function (e) {
       if (e.key !== "Escape") return;
+      // #104: stond de focus in een uitklapmenu, zet hem terug op de knop,
+      // anders blijft hij op een link die na het sluiten verborgen is.
+      var groep = document.activeElement && document.activeElement.closest
+        ? document.activeElement.closest("nav.primary-nav .nav-group.open") : null;
       closeOthers(null);
+      if (groep) { var knop = groep.querySelector(".nav-toggle"); if (knop) knop.focus(); }
       if (burger && nav.classList.contains("is-open")) {
         setBurger(nav, burger, false);
         burger.focus();
@@ -328,6 +333,46 @@
     else window.addEventListener("load", registreer);
   }
 
+  // #104 (16 nov 2026): tabellen die opzij scrollen moeten met het toetsenbord
+  // bereikbaar zijn (WCAG 2.1.1). Alleen als het vak echt scrolt en er geen
+  // knop of link in staat, krijgt het tabindex, role="region" en een naam.
+  var SCROLL_SEL = ".static-table-wrap, .suppliers-table-wrap, .morgen-cmp-wrap, .scroll-x";
+  var FOCUSBAAR = "a[href], button, input, select, textarea, [tabindex]";
+
+  function scrollRegios() {
+    document.querySelectorAll(SCROLL_SEL).forEach(function (el) {
+      var scrolt = el.scrollWidth > el.clientWidth + 1;
+      var gezet = el.hasAttribute("data-scrollregio");
+      if (scrolt && !gezet && !el.querySelector(FOCUSBAAR)) {
+        var cap = el.querySelector("caption");
+        var sec = el.closest("section");
+        var kop = sec && sec.querySelector("h2, h3");
+        var naam = (cap && cap.textContent.trim()) || (kop && kop.textContent.trim()) || "Tabel";
+        el.setAttribute("tabindex", "0");
+        el.setAttribute("role", "region");
+        el.setAttribute("aria-label", naam);
+        el.setAttribute("data-scrollregio", "");
+      } else if (!scrolt && gezet) {
+        el.removeAttribute("tabindex");
+        el.removeAttribute("role");
+        el.removeAttribute("aria-label");
+        el.removeAttribute("data-scrollregio");
+      }
+    });
+  }
+
+  function initScrollRegios() {
+    var t = null;
+    function later() { clearTimeout(t); t = setTimeout(scrollRegios, 150); }
+    scrollRegios();
+    window.addEventListener("load", later);
+    window.addEventListener("resize", later);
+    document.addEventListener("toggle", later, true);
+    if ("MutationObserver" in window && document.body) {
+      new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+    }
+  }
+
   function init() {
     document.documentElement.classList.add("has-js");
     build(location.pathname);
@@ -335,6 +380,7 @@
     initPartner();
     initToolKaart();
     initPWA();
+    initScrollRegios();
   }
 
   if (document.readyState === "loading") {

@@ -248,7 +248,7 @@
     h += '<div class="aanb-rij-kop">';
     h += '<button type="button" class="aanb-open" aria-expanded="' + (open ? "true" : "false") + '" aria-controls="det-' + id + '">';
     if (kaart) {
-      h += '<span class="aanb-k-logo"><span class="aanb-k-nr">' + nr + "</span>" + logoHtml(s, 44) + "</span>";
+      h += '<span class="aanb-k-logo"><span class="aanb-k-nr" aria-hidden="true">' + nr + "</span>" + logoHtml(s, 44) + "</span>";
       h += '<span class="aanb-naam"><span class="sr">' + nr + ". </span>" + esc(s.name) + "</span>";
     } else {
       h += '<span class="aanb-naam"><span class="aanb-nr">' + nr + '.</span> ' + logoHtml(s, 32) + esc(s.name) + "</span>";
