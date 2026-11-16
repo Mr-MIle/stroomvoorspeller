@@ -169,6 +169,10 @@ PREDICTION_LOG_MAX_DAYS = 90
 # Maximale bias-correctie die wordt toegepast (cap ter veiligheid).
 BIAS_CORRECTION_MAX_EUR = 50.0
 
+# MOS-correctie ook op v5-uren toepassen? Uit sinds 16 nov 2026: de maandcellen
+# ijlen na bij een prijsomslag en maakten v5 25 EUR/MWh slechter (zie bij de aanroep).
+MOS_FOR_V5 = False
+
 # P_negative drempel: toon P_negative=0.0 als de voorspelde prijs >= dit niveau is.
 # Voorkomt UX-probleem waarbij P_negative > 0.2 bij predicted=90 EUR/MWh (bevinding 4,
 # analyse 13 mei 2026). P_negative wordt puur op severity berekend, onafhankelijk van
@@ -967,7 +971,12 @@ def main() -> int:
             # MOS bias-correctie (v2.2): additief toepassen na alle andere berekeningen.
             # Corrigeert structurele modelfouten per (uur, regime, maand)-cel.
             # De correctie wordt ook zichtbaar in fc_dict["factors"] voor transparantie.
-            apply_bias_correction(fc_dict, bias_corrections, target_dt)
+            # Niet voor v5-uren (16 nov 2026): de maandcellen leerden de onderschatting
+            # van 1-7 nov (kou, ~280 EUR/MWh) en telden vanaf 8 nov +20 tot +50 op
+            # terwijl de prijs naar ~185 zakte. MAE 2-7 dagen vooruit, snapshots
+            # 11-15 nov: 61,0 met MOS, 36,4 zonder. v5 is zonder MOS gevalideerd.
+            if v5_day is None or MOS_FOR_V5:
+                apply_bias_correction(fc_dict, bias_corrections, target_dt)
 
             # P_negative drempel (v2.2): toon P_negative=0.0 als de (gecorrigeerde)
             # voorspelde prijs >= P_NEGATIVE_PRICE_THRESHOLD EUR/MWh is.
