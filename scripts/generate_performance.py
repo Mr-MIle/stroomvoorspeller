@@ -139,14 +139,12 @@ def load_archive(prefix="forecast", directory=None):
                 try:
                     dt = datetime.fromisoformat(hour_str.replace("Z", "+00:00"))
                     key = dt.strftime("%Y-%m-%dT%H:00:00Z")
-                    v4 = entry.get("predicted_v4")
                     v50 = entry.get("predicted_v50")
                     fc_dict[key] = {
                         "forecast": float(fc_val),
                         "band_low": float(band_low) if band_low is not None else None,
                         "band_high": float(band_high) if band_high is not None else None,
                         "model": str(entry.get("model") or snap_model),
-                        "forecast_v4": float(v4) if v4 is not None else None,
                         "forecast_v50": float(v50) if v50 is not None else None,
                     }
                 except ValueError:
@@ -277,7 +275,6 @@ def compute_performance():
                 "error": abs(forecast - actual),
                 "signed_error": forecast - actual,
                 "model": fc_entry.get("model", ""),
-                "forecast_v4": fc_entry.get("forecast_v4"),
                 "forecast_v50": fc_entry.get("forecast_v50"),
                 "snap": snap_date,
                 "key": hour_str,
@@ -504,22 +501,15 @@ def compute_performance():
         print("[INFO] Nog geen preauction-snapshots; D+1 blijft leeg tot die er zijn.")
 
     # ---------------------------------------------------------------------------
-    # v5: per modelversie, v4 als schaduw, en een externe meetlat
+    # v5: per modelversie, v5.0 als schaduw, en een externe meetlat
     # ---------------------------------------------------------------------------
     by_model = []
     for mv in sorted({p["model"] for p in pairs if p["model"]}):
         mp = [p for p in pairs if p["model"] == mv]
         by_model.append({"model_version": mv, "n_hours": len(mp), "mae_eur_mwh": mae(mp)})
 
-    # Zelfde uren, twee modellen: v5 en wat v4 er tegelijk van zei.
-    sh = [p for p in pairs if p.get("forecast_v4") is not None and p["model"].startswith("5")]
-    shadow_v4 = None
-    if sh:
-        shadow_v4 = {
-            "n_hours": len(sh),
-            "mae_v5_eur_mwh": mae(sh),
-            "mae_v4_eur_mwh": round(sum(abs(p["forecast_v4"] - p["actual"]) for p in sh) / len(sh), 2),
-        }
+    # De v4-schaduw (shadow_v4) is op 16 nov 2026 gestopt (#93): v5 hield stand,
+    # 60 tegen 73,6 EUR/MWh op 3.960 dezelfde uren.
 
     # v5.1: zelfde uren, met en zonder patroonmodel.
     sh50 = [p for p in pairs if p.get("forecast_v50") is not None]
@@ -598,7 +588,6 @@ def compute_performance():
         "by_price_bucket": by_price_bucket,
         "daily_series": daily_series,
         "by_model": by_model,
-        "shadow_v4": shadow_v4,
         "shadow_v50": shadow_v50,
         "benchmark": benchmark,
         "benchmark_wattwanneer": benchmark_wattwanneer,

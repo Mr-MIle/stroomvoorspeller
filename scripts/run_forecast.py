@@ -141,7 +141,7 @@ V4_NONLINEAR_FLOOR = -3.0
 #   - historie uit het archief (28 dagen) in plaats van alleen prices.json (16 dagen).
 # Eerlijke backtest juli 2024 - sept 2026 met het weer zoals het vooraf verwacht
 # werd: MAE 25,2 -> 21,1 EUR/MWh. Live-venster v4 (20 aug - 1 okt 2026): 34,1 -> 28,1.
-# v4 rekent als schaduw mee (veld predicted_v4) zodat de twee live te vergelijken zijn.
+# v4 rekende tot 16 nov 2026 als schaduw mee (veld predicted_v4); nu alleen terugval.
 # Kill-switch: terug op False, dan draait v4 ongewijzigd.
 ENABLE_MODEL_V5 = True
 V5_HISTORY_DAYS = 40
@@ -601,8 +601,6 @@ def log_predictions(forecasts: list, log_file: Path) -> None:
             "temp_c":         fc.get("temp_c"),
             "regime":         fc.get("regime"),
             "P_negative":     fc.get("P_negative"),
-            # v5: wat v4 voor hetzelfde uur zei (schaduwmeting)
-            "predicted_v4":   fc.get("predicted_v4"),
             # v5.1: wat het lineaire model alleen (v5.0) zei
             "predicted_v50":  fc.get("predicted_v50"),
             # Plausibility (v2.1)
@@ -916,13 +914,15 @@ def main() -> int:
                 ],
             }
 
-            # v5: vervang voorspelling, band en factoren; v4 blijft als schaduw staan.
+            # v5: vervang voorspelling, band en factoren. v4 blijft alleen staan als
+            # terugval voor dagen zonder v5-invoer. De schaduwmeting (predicted_v4)
+            # is op 16 nov 2026 gestopt: v5 hield stand (MAE 60 tegen 73,6 EUR/MWh
+            # op 3.960 dezelfde uren, #93).
             fc_dict["model"] = "4.0"
             if v5_day is not None:
                 hr5 = v5_day["hours"][hour]
                 pred5 = round(hr5["pred"], 2)
                 half5 = _m5.band_half(pred5, v5_day["lead"])
-                fc_dict["predicted_v4"] = fc_dict["predicted"]
                 fc_dict.update({
                     "baseline":        round(hr5["b4"], 2),
                     "predicted":       pred5,
