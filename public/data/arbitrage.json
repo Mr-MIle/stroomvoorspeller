@@ -1,21 +1,21 @@
 {
- "generated_at": "2026-11-16T12:16:58+00:00",
+ "generated_at": "2026-11-17T12:38:18+00:00",
  "currency": "EUR",
  "supplier": "Tibber",
  "markup_per_kwh": 0.014876,
  "method": "Verbruik = homeLoad. Kosten actueel = inkoop x consumentenprijs - teruglevering x terugleverprijs. Kosten zonder = verbruik x consumentenprijs. Terugleverprijs t/m 2026 (saldering) = (EPEX + energiebelasting) incl. btw + teruglever-opslag aanbieder (0 bij methode jaaroverschot); vanaf 2027 EPEX + opslag. Grid Rewards (grid-rewards.json, per factuurperiode gelijk verdeeld, incl. btw) tellen als batterij-opbrengst. Laden uit zon = gemiste teruglevering; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen naar huis = vermeden inkoop; naar net = inkomsten tegen terugleverprijs. Besparing geschat gesplitst in batterij (arbitrage) en zon. Voorraad FIFO: ontladen kWh krijgen de kostprijs van het laadmoment (net = consumentenprijs, zon = gemiste teruglevering). Kosten en besparing zijn gerealiseerd; wat nog in de batterij zit staat als reserve buiten de totalen. De voorraad is begrensd op laadniveau x capaciteit; het teveel telt als verlies van de batterij. Aanbieder per dag staat in days[].supplier.",
  "totals": {
-  "days": 397,
-  "consumption_kwh": 6289.4,
-  "cost_actual_eur": 731.06,
-  "cost_without_eur": 1546.09,
-  "saving_eur": 815.11,
-  "battery_saving_eur": 547.87,
-  "solar_saving_eur": 267.25,
-  "battery_home_kwh": 2209.5,
-  "arbitrage_income_eur": 1110.44,
+  "days": 398,
+  "consumption_kwh": 6301.1,
+  "cost_actual_eur": 734.49,
+  "cost_without_eur": 1550.68,
+  "saving_eur": 816.26,
+  "battery_saving_eur": 549.53,
+  "solar_saving_eur": 266.75,
+  "battery_home_kwh": 2214.7,
+  "arbitrage_income_eur": 1115.61,
   "grid_rewards_eur": 25.8,
-  "solar_charged_kwh": 1488.6
+  "solar_charged_kwh": 1489.7
  },
  "days": [
   {
@@ -78104,6 +78104,195 @@
     [
      0.1,
      0.30006
+    ]
+   ],
+   "price_coverage": 1.0,
+   "grid_data_ok": true,
+   "n_points": 288
+  },
+  {
+   "date": "2026-11-16",
+   "supplier": "Tibber",
+   "saldering": true,
+   "consumption_kwh": 11.7,
+   "cost_actual_eur": 3.43,
+   "cash_cost_eur": 3.26,
+   "cost_without_eur": 4.59,
+   "saving_eur": 1.15,
+   "battery_home_kwh": 5.2,
+   "battery_home_value_eur": 1.99,
+   "arbitrage_kwh": 14.0,
+   "arbitrage_income_eur": 5.17,
+   "grid_rewards_eur": 0.0,
+   "reserve_kwh": 11.75,
+   "reserve_value_eur": 3.74,
+   "unknown_kwh": 0.0,
+   "loss_kwh": 1.15,
+   "loss_eur": 0.3,
+   "solar_charged_kwh": 1.1,
+   "grid_charged_kwh": 16.5,
+   "grid_charge_cost_eur": 4.99,
+   "battery_saving_eur": 1.66,
+   "solar_saving_eur": -0.5,
+   "charged_kwh": 17.6,
+   "discharged_kwh": 19.2,
+   "import_kwh": 27.5,
+   "export_kwh": 17.1,
+   "battery_to_grid_kwh": 14.0,
+   "soc_start_pct": 58,
+   "soc_end_pct": 47,
+   "lots_end": [
+    [
+     0.55,
+     0.25857
+    ],
+    [
+     0.7,
+     0.25857
+    ],
+    [
+     0.4,
+     0.25857
+    ],
+    [
+     0.5,
+     0.25857
+    ],
+    [
+     0.4,
+     0.25857
+    ],
+    [
+     0.4,
+     0.25857
+    ],
+    [
+     0.1,
+     0.24057
+    ],
+    [
+     0.4,
+     0.25857
+    ],
+    [
+     0.5,
+     0.25857
+    ],
+    [
+     0.4,
+     0.25857
+    ],
+    [
+     0.4,
+     0.25857
+    ],
+    [
+     0.1,
+     0.24057
+    ],
+    [
+     0.3,
+     0.26097
+    ],
+    [
+     0.2,
+     0.26097
+    ],
+    [
+     0.2,
+     0.26097
+    ],
+    [
+     0.1,
+     0.24297
+    ],
+    [
+     0.1,
+     0.26097
+    ],
+    [
+     0.4,
+     0.40375
+    ],
+    [
+     0.3,
+     0.40375
+    ],
+    [
+     0.4,
+     0.37489
+    ],
+    [
+     0.1,
+     0.35689
+    ],
+    [
+     0.4,
+     0.37489
+    ],
+    [
+     0.4,
+     0.37489
+    ],
+    [
+     0.1,
+     0.35689
+    ],
+    [
+     0.4,
+     0.37489
+    ],
+    [
+     0.4,
+     0.37489
+    ],
+    [
+     0.1,
+     0.35689
+    ],
+    [
+     0.3,
+     0.37489
+    ],
+    [
+     0.3,
+     0.37489
+    ],
+    [
+     0.1,
+     0.35689
+    ],
+    [
+     0.4,
+     0.37489
+    ],
+    [
+     0.4,
+     0.37489
+    ],
+    [
+     0.1,
+     0.35689
+    ],
+    [
+     0.3,
+     0.37489
+    ],
+    [
+     0.1,
+     0.35689
+    ],
+    [
+     0.5,
+     0.37489
+    ],
+    [
+     0.3,
+     0.37489
+    ],
+    [
+     0.2,
+     0.36781
     ]
    ],
    "price_coverage": 1.0,
