@@ -44,6 +44,14 @@
     return p.length === 3 ? parseInt(p[2], 10) + " " + MAANDEN[parseInt(p[1], 10) - 1] + " " + p[0] : String(iso);
   }
 
+  // Tarief ouder dan dit aantal dagen: waarschuwing, net als op /aanbieders.
+  var VEROUDERD_DAGEN = 90;
+  function dagenOud(iso, nu) {
+    var t = Date.parse(iso || "");
+    return isNaN(t) ? Infinity : ((nu || Date.now()) - t) / 864e5;
+  }
+  function verouderd(inb, nu) { return dagenOud(inb.gecontroleerd, nu) > VEROUDERD_DAGEN; }
+
   // ── rekensom ────────────────────────────────────────────────────────
   function marktPrijs(d) {
     var r = d.markt.reeks;
@@ -89,6 +97,7 @@
     if (inb.uitbetaald && inb.uitbetaald.length) b += '<span class="ere-badge badge-betaald">uitbetaald</span>';
     if (inb.eis_klant) b += '<span class="ere-badge badge-klant">alleen klanten</span>';
     if (inb.disclosure) b += '<span class="ere-badge badge-mij">ik ben hier klant</span>';
+    if (verouderd(inb)) b += '<span class="ere-badge badge-aangekondigd" title="Laatst gecontroleerd op ' + esc(datumNL(inb.gecontroleerd)) + '">⚠ mogelijk verouderd</span>';
     return b;
   }
 
@@ -101,6 +110,7 @@
   function detailsHtml(inb) {
     var id = esc(inb.id);
     var h = '<div class="ere-details" id="ere-det-' + id + '" hidden>';
+    if (verouderd(inb)) h += '<p class="ere-let">⚠ Laatst gecontroleerd op ' + esc(datumNL(inb.gecontroleerd)) + ', meer dan ' + VEROUDERD_DAGEN + ' dagen geleden. Servicekosten en bedragen kunnen inmiddels anders zijn; kijk ze na op de website van ' + esc(inb.naam) + '.</p>';
     h += '<p class="ere-label" id="ere-det-' + id + '-kosten">Servicekosten</p><p>' + esc(inb.commissie_tekst) + (inb.commissie_detail ? " " + esc(inb.commissie_detail) : "") + "</p>";
     h += '<p class="ere-label" id="ere-det-' + id + '-uitbetaling">Uitbetaling</p><p>' + esc(hoofdletter(inb.uitbetaling)) + "." + (inb.uitbetaling_detail ? " " + esc(inb.uitbetaling_detail) : "") + "</p>";
     if (inb.uitbetaald && inb.uitbetaald.length) {
@@ -266,6 +276,7 @@
 
   return {
     esc: esc, ct: ct, eur0: eur0, getal: getal, komma: komma, datumNL: datumNL,
+    VEROUDERD_DAGEN: VEROUDERD_DAGEN, dagenOud: dagenOud, verouderd: verouderd,
     marktPrijs: marktPrijs, netto: netto, perJaar: perJaar, opAankondiging: opAankondiging,
     filter: filter, sorteer: sorteer, lijstHtml: lijstHtml,
     standTekst: standTekst, kortStand: kortStand, verschilHtml: verschilHtml, kortHtml: kortHtml, hintTekst: hintTekst,

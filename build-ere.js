@@ -76,6 +76,9 @@ if (!vk.hoogste || vk.hoogste.id !== ks.top.id)
 if (!vk.laagste_commissie || vk.laagste_commissie.id !== ks.laag.id)
   console.warn("LET OP: laagste commissie is nu " + ks.laag.naam + ", niet " + (vk.laagste_commissie ? vk.laagste_commissie.id : "?") +
     ". De noot bij 'Laagste servicekosten' valt weg; zet kort.laagste_commissie in ere.json opnieuw en lees het korte antwoord na.");
+const oud = data.inboekers.filter((i) => R.verouderd(i));
+if (oud.length) console.warn("LET OP: gecontroleerd langer dan " + R.VEROUDERD_DAGEN + " dagen geleden bij " +
+  oud.map((i) => i.naam + " (" + R.datumNL(i.gecontroleerd) + ")").join(", ") + ". Op de pagina staat nu een waarschuwing.");
 lijst.forEach((i) => {
   const j = R.perJaar(data, i, v);
   console.log("  " + i.naam.padEnd(28) + (j == null ? "onbekend" : R.eur0(j) + " / jaar"));
