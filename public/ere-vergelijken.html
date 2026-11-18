@@ -66,6 +66,20 @@
     .sr, .ere-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     .ere-page .ere-stand { font-size: 0.85rem; color: var(--c-text-mute); margin: 0 0 4px; }
 
+    /* MID-vraag vóór de lijst */
+    .ere-mid { background: var(--c-surface); border: 1px solid var(--c-border-strong); border-radius: var(--radius); padding: 12px 14px; margin: 12px 0 0; }
+    .ere-page .ere-mid-vraag { margin: 0; color: var(--c-text); line-height: 1.5; }
+    .ere-mid-knoppen { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .ere-mid-knoppen[hidden] { display: none; }
+    .ere-mid-knoppen .ere-knop[aria-pressed="true"] { background: var(--c-surface-soft); border-color: var(--c-brand); color: var(--c-brand-deep); font-weight: 600; }
+    .ere-mid-knoppen .ere-knop:focus-visible { outline: 3px solid var(--c-brand); outline-offset: 2px; }
+    .ere-mid-antw:empty { display: none; }
+    .ere-mid-antw { margin-top: 10px; padding: 10px 12px; border-radius: var(--radius-sm); font-size: 0.92rem; line-height: 1.5; color: var(--c-text); background: var(--c-surface-soft); }
+    .ere-mid-antw p { margin: 0 0 6px; }
+    .ere-mid-antw p:last-child { margin-bottom: 0; }
+    .ere-mid-antw.ja { background: var(--c-cheap-bg); }
+    .ere-mid-antw.nee { background: var(--c-normal-bg); color: var(--c-normal-text); }
+
     /* situatiekader */
     .ere-situatie { background: var(--c-surface); border: 1.5px solid var(--c-accent); border-radius: var(--radius); padding: 12px 14px 14px; margin: 12px 0 10px; box-shadow: var(--shadow-md); }
     .ere-sit-kop { display: flex; align-items: center; justify-content: space-between; gap: 6px 12px; margin-bottom: 10px; }
@@ -237,6 +251,16 @@
         Gerekend met € 0,4250 per ERE (2026 Q4, verwacht). Bijgewerkt op 1 november 2026.
         <!-- BUILD:STAND:END --></p>
 
+    <div class="ere-mid" id="ere-mid">
+      <p class="ere-mid-vraag"><strong>Eerst: zit er een MID-meter in je laadpaal?</strong> Zonder die meter doet geen enkele inboeker mee, hoe hoog hun bedrag ook is. <a href="#ere-laadpaal" id="ere-mid-link">Welke modellen meedoen ↓</a></p>
+      <div class="ere-mid-knoppen" id="ere-mid-knoppen" role="group" aria-label="Zit er een MID-meter in je laadpaal?" hidden>
+        <button type="button" class="ere-knop" data-mid="ja" aria-pressed="false">Ja</button>
+        <button type="button" class="ere-knop" data-mid="nee" aria-pressed="false">Nee</button>
+        <button type="button" class="ere-knop" data-mid="weet" aria-pressed="false">Weet ik niet</button>
+      </div>
+      <div class="ere-mid-antw" id="ere-mid-antw" aria-live="polite"></div>
+    </div>
+
     <form class="ere-situatie" id="ere-situatie" onsubmit="return false">
       <script>try { var e = JSON.parse(localStorage.getItem("sv.ere") || "null"), a = JSON.parse(localStorage.getItem("sv.aanbieders") || "null"); if ((e && e.kwh > 0) || (a && a.ev && a.evKwh > 0)) document.getElementById("ere-situatie").classList.add("dicht"); } catch (x) {}</script>
       <div class="ere-sit-kop">
@@ -378,6 +402,40 @@
     </div>
   </footer>
 
+  <script>
+  // ── MID-vraag: los van de data, zodat hij ook werkt als ere.json niet laadt ──
+  (function () {
+    "use strict";
+    var OPSLAG = "sv.ere-mid";        // alleen gemak; mag leeg of geblokkeerd zijn
+    var knoppen = document.getElementById("ere-mid-knoppen");
+    var antw = document.getElementById("ere-mid-antw");
+    if (!knoppen || !antw) return;
+    var TEKST = {
+      ja: "<p>Dan telt de lijst hieronder voor jou. De paal moet wel achter je eigen meter hangen en online zijn; dat checkt de inboeker als je je aanmeldt.</p>",
+      nee: "<p>Dan levert ERE je nu niets op, bij welke inboeker ook. De bedragen hieronder krijg je pas met een laadpaal die zelf een MID-meter heeft. Een losse meter in de meterkast telt niet.</p>",
+      weet: "<p>Kijk op het typeplaatje van je laadpaal. Staat daar een M met een jaartal, zoals M24, dan zit er een MID-meter in.</p>" +
+        "<p><strong>Doen mee:</strong> Zaptec Go 2 en Pro, Easee Charge Max en Charge Pro, Alfen Eve Single Pro-line, EVBox Elvi MID, Wallbox Em4, Tesla Wall Connector 3 MID.</p>" +
+        "<p><strong>Doen niet mee:</strong> de oude Easee Charge, Wallbox Pulsar Plus en Commander 2, go-e Charger Gemini, Juice Booster 2 en oudere Tesla Wall Connectors.</p>" +
+        "<p>Staat je model er niet bij? Elke inboeker heeft een checker waarin je merk en type invult.</p>"
+    };
+    function kies(k, bewaren) {
+      var lijst = knoppen.querySelectorAll("[data-mid]");
+      for (var i = 0; i < lijst.length; i++) lijst[i].setAttribute("aria-pressed", String(lijst[i].getAttribute("data-mid") === k));
+      antw.className = "ere-mid-antw " + k;
+      antw.innerHTML = TEKST[k] || "";
+      if (bewaren) { try { localStorage.setItem(OPSLAG, k); } catch (e) { /* geen opslag: niets aan de hand */ } }
+    }
+    knoppen.hidden = false;
+    document.getElementById("ere-mid-link").hidden = true;
+    knoppen.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest("[data-mid]");
+      if (b) kies(b.getAttribute("data-mid"), true);
+    });
+    var eerder = null;
+    try { eerder = localStorage.getItem(OPSLAG); } catch (e) { /* leeg */ }
+    if (TEKST[eerder] && eerder !== "weet") kies(eerder, false);
+  })();
+  </script>
   <script src="/ere-render.js?v=2"></script>
   <script>
   // ── ERE-vergelijker: rekent en rendert met ere-render.js uit /data/ere.json ──

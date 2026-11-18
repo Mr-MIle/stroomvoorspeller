@@ -323,6 +323,15 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
         <div class="field">
           <label for="prijs">Wat kost deze batterij? <span class="hint">prijs voor de capaciteit hierboven, inclusief installatie; hiermee rekenen we de terugverdientijd</span></label>
           <input type="number" inputmode="numeric" id="prijs" min="0" max="30000" step="100" placeholder="bijv. 6000" />
+          <button type="button" class="adv-toggle" id="extraBtn" style="margin-top:8px;display:block" aria-expanded="false" aria-controls="extraBox">+ bijkomende kosten</button>
+          <div class="adv" id="extraBox">
+            <label for="extraEen" style="font-weight:600;font-size:.82rem">Eenmalig extra (&#8364;)
+              <span class="hint">wat niet in de offerte zit, zoals een nieuwe meterkast (&#8364;500 tot &#8364;1.000) of een 3-fase aansluiting (&#8364;500 tot &#8364;1.500); telt niet bij de stekkerbatterij</span></label>
+            <input type="number" inputmode="numeric" id="extraEen" min="0" max="20000" step="50" placeholder="0" />
+            <label for="extraMnd" style="font-weight:600;font-size:.82rem;display:block;margin-top:10px">Abonnement per maand (&#8364;)
+              <span class="hint">voor de app of slimme besturing; &#8364;5 per maand is &#8364;900 over 15 jaar</span></label>
+            <input type="number" inputmode="decimal" id="extraMnd" min="0" max="100" step="0.5" placeholder="0" />
+          </div>
         </div>
 
         <div class="field">
@@ -494,7 +503,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
   <script src="/nav.js" defer></script>
   <script src="/tel.js" data-tool="batterij" defer></script>
-  <script src="/batterij-model.js?v=3"></script>
+  <script src="/batterij-model.js?v=4"></script>
   <script>
 // Het rekenmodel (prijzen, profielen, dagplanner, jaarberekening) staat in /batterij-model.js.
 
@@ -605,7 +614,7 @@ function poolInit(warm){
   if(POOL.length||typeof Worker==='undefined') return;
   const n=Math.max(1,Math.min(4,(navigator.hardwareConcurrency||2)-1));
   for(let i=0;i<n;i++){
-    let w; try{ w=new Worker('/batterij-model.js?v=3'); }catch(e){ break; }
+    let w; try{ w=new Worker('/batterij-model.js?v=4'); }catch(e){ break; }
     const done=(val,err)=>{ const j=w.busy; w.busy=null; if(j) (err==null? j.resolve(val) : j.reject(err)); poolPump(); };
     w.onmessage=e=>{ if(e.data.warm) return; done(e.data.val,e.data.err); };
     w.onerror=e=>{ e.preventDefault(); w.dead=true; done(null,'worker'); };
@@ -766,35 +775,47 @@ function batPrice(s){
 const sizeTxt=s=> isStekker(s)? '2,7 kWh stekker' : nl(s)+' kWh';
 const fmtPb=(pb,unit)=> isFinite(pb)? pb.toFixed(1).replace('.',',')+' '+unit : '> '+BAT_LIFESPAN+' '+unit;
 const BE_JAREN=10;
+// bijkomende kosten: eenmalig (meterkast, 3-fase; niet bij een stekkerbatterij) en een abonnement per maand
+const extraEen=s=> isStekker(s)? 0 : Math.max(0,parseFloat(v('extraEen'))||0);
+const aboMnd=()=> Math.max(0,parseFloat(v('extraMnd'))||0);
+const aboJaar=()=> 12*aboMnd();
+const eurMnd=x=> '€'+x.toLocaleString('nl-NL',{minimumFractionDigits:x%1?2:0,maximumFractionDigits:2});
 
 // ---------- resultaatpaneel ----------
 let cumChart=null;
 function renderResult(p){
   const curKwh=p.capKwh;
-  const batYear= curKwh>0? yearSavingM(p,curKwh)-yearSavingM(p,0) : 0;
+  const bruto= curKwh>0? yearSavingM(p,curKwh)-yearSavingM(p,0) : 0;
+  const abo= curKwh>0? aboJaar() : 0, extra=extraEen(curKwh);
+  const batYear=bruto-abo;          // wat je per jaar overhoudt, na het abonnement
   const userPr=parseFloat(v('prijs'));
-  const price= userPr>0? userPr : richtprijs(curKwh);
+  const basis= userPr>0? userPr : richtprijs(curKwh);
+  const price=basis+extra;
   const cum=[]; let tot=0;
-  for(let k=0;k<BAT_LIFESPAN;k++){ tot+=batYear*Math.pow(DEGRADE,k); cum.push(tot); }
-  const pb=paybackYears(price,batYear);
+  for(let k=0;k<BAT_LIFESPAN;k++){ tot+=bruto*Math.pow(DEGRADE,k)-abo; cum.push(tot); }
+  const pb=paybackYears(price,bruto,abo);
   const wie= isStekker(curKwh)? 'Een stekkerbatterij van 2,7 kWh' : 'Een batterij van '+nl(curKwh)+' kWh';
   $('rConclusie').innerHTML= curKwh<=0
     ? 'Kies de capaciteit van de batterij om te zien wat hij oplevert.'
     : batYear<=0
-      ? wie+' levert met deze instellingen niets extra op.'
-      : wie+' bespaart je ongeveer <strong>'+eur(batYear)+' per jaar</strong>'+(p.p1?'':' bovenop je zonnepanelen')+' en is '+
+      ? wie+(bruto>0&&abo>0? ' bespaart minder dan het abonnement kost: per jaar hou je niets over.' : ' levert met deze instellingen niets extra op.')
+      : wie+' bespaart je'+(abo>0?', na aftrek van het abonnement,':'')+' ongeveer <strong>'+eur(batYear)+' per jaar</strong>'+(p.p1?'':' bovenop je zonnepanelen')+' en is '+
         (isFinite(pb)? 'na <strong>'+fmtPb(pb,'jaar')+'</strong> terugverdiend.' : '<strong>niet binnen '+BAT_LIFESPAN+' jaar</strong> terugverdiend.');
   $('rJaar').textContent= eur(Math.max(0,batYear));
-  $('rJaarSub').textContent= p.p1
+  $('rJaarSub').textContent= (p.p1
     ? 'bovenop je zonnepanelen, op jouw meterdata van '+p.p1.nDays+' dagen, omgerekend naar een jaar'
-    : 'bovenop je zonnepanelen, gemiddeld over de laatste 12 maanden';
+    : 'bovenop je zonnepanelen, gemiddeld over de laatste 12 maanden')
+    + (abo>0? '; het abonnement van '+eur(abo)+' per jaar is er al af' : '');
   $('rPayback').textContent= batYear<=0? '–' : fmtPb(pb,'jaar');
+  const extraTxt= extra>0? ' plus '+eur(extra)+' bijkomende kosten' : '';
   $('rPaybackSub').innerHTML= userPr>0
-    ? 'bij jouw prijs van '+eur(price)
-    : 'bij een richtprijs van '+eur(price)+(isStekker(curKwh)?'':' incl. installatie')+'. Vul je eigen prijs in voor een precieze uitkomst.';
-  const be=breakEven(Math.max(0,batYear),BE_JAREN);
+    ? 'bij jouw prijs van '+eur(basis)+extraTxt
+    : 'bij een richtprijs van '+eur(basis)+(isStekker(curKwh)?'':' incl. installatie')+extraTxt+'. Vul je eigen prijs in voor een precieze uitkomst.';
+  const be=breakEven(Math.max(0,bruto),BE_JAREN,abo)-extra;
   $('rBreak').innerHTML= batYear>0
-    ? 'Om hem binnen '+BE_JAREN+' jaar terug te verdienen, mag deze batterij hooguit <b>'+eur(Math.floor(be/50)*50)+'</b> kosten'+(isStekker(curKwh)?'':', inclusief installatie')+'.'
+    ? (be>0
+      ? 'Om hem binnen '+BE_JAREN+' jaar terug te verdienen, mag deze batterij hooguit <b>'+eur(Math.floor(be/50)*50)+'</b> kosten'+(isStekker(curKwh)?'':', inclusief installatie')+(extra>0?' en naast je bijkomende kosten':'')+'.'
+      : 'Binnen '+BE_JAREN+' jaar terugverdienen lukt niet: alleen je bijkomende kosten zijn al meer dan de batterij in die tijd bespaart.')
     : '';
   // kleur volgt de uitkomst: binnen 10 jaar groen, 10 tot 15 jaar geel, daarboven rood
   const tone= batYear<=0||!isFinite(pb)? 'bad' : (pb>10? 'mid' : '');
@@ -805,16 +826,18 @@ function renderResult(p){
     : 'Bespaart <b>'+eur(batYear)+'</b>/jaar &#183; '+(isFinite(pb)? 'terug in <b>'+fmtPb(pb,'jaar')+'</b>' : '<b>niet terug in '+BAT_LIFESPAN+' jaar</b>');
   if(batYear<=0){
     $('cumWrap').style.display='none';
-    $('cumNote').textContent='Met deze instellingen levert de batterij niets extra op bovenop je zonnepanelen.';
+    $('cumNote').textContent= bruto>0&&abo>0
+      ? 'Met dit abonnement houdt de batterij niets over.'
+      : 'Met deze instellingen levert de batterij niets extra op bovenop je zonnepanelen.';
     if(cumChart){cumChart.destroy();cumChart=null;}
     return;
   }
   $('cumWrap').style.display='block';
-  $('cumNote').innerHTML='Opgeteld bespaard door de batterij, jaar na jaar, met elk jaar 2% minder opbrengst door slijtage. De gestreepte lijn is de aanschafprijs: waar de balken erboven uitkomen, heb je de batterij terugverdiend.';
+  $('cumNote').innerHTML='Opgeteld bespaard door de batterij, jaar na jaar, met elk jaar 2% minder opbrengst door slijtage'+(abo>0?' en het abonnement er elk jaar af':'')+'. De gestreepte lijn is de aanschafprijs'+(extra>0?' plus je bijkomende kosten':'')+': waar de balken erboven uitkomen, heb je de batterij terugverdiend.';
   const labels=[...Array(BAT_LIFESPAN).keys()].map(k=>'jr '+(k+1));
   const colors=cum.map(c=> c>=price? '#1FA874':'#9fe0c2');
   const cfg={type:'bar',data:{labels,datasets:[
-    {type:'line',label:'Aanschafprijs',data:Array(BAT_LIFESPAN).fill(Math.round(price)),borderColor:'#E9A800',borderDash:[6,4],pointRadius:0,borderWidth:2},
+    {type:'line',label:extra>0?'Aanschaf + bijkomend':'Aanschafprijs',data:Array(BAT_LIFESPAN).fill(Math.round(price)),borderColor:'#E9A800',borderDash:[6,4],pointRadius:0,borderWidth:2},
     {label:'Bespaard (opgeteld)',data:cum.map(x=>Math.round(x)),backgroundColor:colors},
   ]},options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{labels:{boxWidth:12,font:{size:11}}},
@@ -828,15 +851,17 @@ function renderAdvisor(p){
   const base0=yearSavingM(p,0);
   const pr=parseFloat(v('prijs')), userKwh=p.capKwh;
   const hasPrice=(pr>0 && userKwh>0);
-  let rows=ADV_SIZES.map(s=>({s,batSave:yearSavingM(p,s)-base0,price:batPrice(s),std:true}));
+  const abo=aboJaar();
+  let rows=ADV_SIZES.map(s=>({s,batSave:yearSavingM(p,s)-base0,price:batPrice(s)+extraEen(s),std:true}));
   let userRow=null;
   if(userKwh>0){
     const ex=rows.find(r=>Math.abs(r.s-userKwh)<0.01);
-    if(ex){ if(hasPrice) ex.price=pr; ex.isUser=true; userRow=ex; }
-    else { userRow={s:userKwh,batSave:yearSavingM(p,userKwh)-base0,price:batPrice(userKwh),isUser:true}; rows.push(userRow); rows.sort((a,b)=>a.s-b.s); }
+    if(ex){ if(hasPrice) ex.price=pr+extraEen(userKwh); ex.isUser=true; userRow=ex; }
+    else { userRow={s:userKwh,batSave:yearSavingM(p,userKwh)-base0,price:batPrice(userKwh)+extraEen(userKwh),isUser:true}; rows.push(userRow); rows.sort((a,b)=>a.s-b.s); }
   }
-  // netto = opgetelde besparing over de levensduur (met slijtage) min de aanschafprijs
-  rows.forEach(r=>{ r.payback=paybackYears(r.price,r.batSave); r.perEur= r.price>0? r.batSave/r.price : 0; r.net=breakEven(Math.max(0,r.batSave),BAT_LIFESPAN)-r.price; });
+  // netto = opgetelde besparing over de levensduur (met slijtage, min abonnement) min aanschaf en bijkomende kosten;
+  // daarna is batSave wat je per jaar overhoudt na het abonnement
+  rows.forEach(r=>{ r.payback=paybackYears(r.price,r.batSave,abo); r.net=breakEven(Math.max(0,r.batSave),BAT_LIFESPAN,abo)-r.price; r.batSave-=abo; r.perEur= r.price>0? r.batSave/r.price : 0; });
   const std=rows.filter(r=>r.std);
   // Advies: de capaciteit die over de levensduur netto het meeste overhoudt. Geen ladder van klein naar groot:
   // een stekkerbatterij en een vaste batterij zijn alternatieven, niemand 'stapt op' van de een naar de ander.
@@ -854,7 +879,7 @@ function renderAdvisor(p){
       +(best? `<span class="bb-kbadge">${badgeTxt}</span>` : '')
       +`<span class="bb-kcap">${nl(r.s)} kWh<small>${st?'stekkerbatterij':'vaste batterij, met installatie'}</small></span>`
       +`<span class="bb-kbedrag">${eur(Math.max(0,r.batSave))}<small>bespaart per jaar</small></span>`
-      +`<span class="bb-kcellen"><span class="bb-kcel">${hasPrice?'prijs':'richtprijs'} <b>${eur(r.price)}</b></span>`
+      +`<span class="bb-kcellen"><span class="bb-kcel">${extraEen(r.s)>0?'totaal':(hasPrice?'prijs':'richtprijs')} <b>${eur(r.price)}</b></span>`
       +`<span class="bb-kcel">terug in <b>${r.batSave>0?fmtPb(r.payback,'jr'):'&#8211;'}</b></span></span>`
       +(r.isUser? '<span class="bb-kjij">jouw keuze</span>' : '')
       +'</button>';
@@ -875,7 +900,7 @@ function renderAdvisor(p){
     recHtml += `<br><span style="font-weight:400;font-size:.92em">Jouw keuze: <b>${sizeTxt(userKwh)}</b> voor ${eur(pr)} &#8211; bespaart ~${eur(userRow.batSave)}/jaar, terugverdientijd ${yrs}.</span>`;
   }
   $('advRec').innerHTML=recHtml;
-  $('advNote').innerHTML=`&#8220;Bespaart per jaar&#8221; is wat de batterij <b>bovenop</b> alleen zonnepanelen oplevert, ${p.p1?'op jouw meterdata, omgerekend naar een jaar':'gemiddeld over 12 maanden'}. De stekkerbatterij rekenen we met 800 watt, 80% rendement heen en terug (een vaste batterij 90%) en zonder terugleveren uit de batterij. ${hasPrice?`Gerekend met jouw prijs (${eur(pr)} voor ${sizeTxt(userKwh)}); de andere capaciteiten schalen we in dezelfde verhouding tot de richtprijs mee.`:'Richtprijzen 2026 incl. installatie (0% btw met zon); vul je eigen prijs in bij &#8220;Wat kost deze batterij&#8221;.'}`;
+  $('advNote').innerHTML=`&#8220;Bespaart per jaar&#8221; is wat de batterij <b>bovenop</b> alleen zonnepanelen oplevert, ${p.p1?'op jouw meterdata, omgerekend naar een jaar':'gemiddeld over 12 maanden'}. De stekkerbatterij rekenen we met 800 watt, 80% rendement heen en terug (een vaste batterij 90%) en zonder terugleveren uit de batterij. ${hasPrice?`Gerekend met jouw prijs (${eur(pr)} voor ${sizeTxt(userKwh)}); de andere capaciteiten schalen we in dezelfde verhouding tot de richtprijs mee.`:'Richtprijzen 2026 incl. installatie (0% btw met zon); vul je eigen prijs in bij &#8220;Wat kost deze batterij&#8221;.'}${extraEen(10)>0?` Daar tellen we ${eur(extraEen(10))} aan bijkomende kosten bij op (niet bij de stekkerbatterij).`:''}${abo>0?` Het abonnement (${eur(abo)} per jaar) is van elke besparing al af.`:''}`;
 }
 
 // ---------- meterdata inlezen ----------
@@ -910,7 +935,7 @@ function p1Apply(){
 
 // ---------- instellingen in het adres, zodat je een uitkomst kunt delen ----------
 // Meterdata gaat nooit in het adres: die blijft in je browser.
-const URL_KEYS={pan:'panelen',opw:'opwek',vb:'verbruik',afn:'afname',ter:'terug',pers:'qPersons',won:'qHome',ev:'qEv',wp:'qHpOn',wpk:'qHpKwh',bat:'batkwh',kw:'batkw',prijs:'prijs',lev:'aanbieder'};
+const URL_KEYS={pan:'panelen',opw:'opwek',vb:'verbruik',afn:'afname',ter:'terug',pers:'qPersons',won:'qHome',ev:'qEv',wp:'qHpOn',wpk:'qHpKwh',bat:'batkwh',kw:'batkw',prijs:'prijs',extra:'extraEen',abo:'extraMnd',lev:'aanbieder'};
 const DEFAULTS={};
 function writeUrl(){
   const q=new URLSearchParams();
@@ -1006,7 +1031,7 @@ function samenvatting(){
     : nl(+v('verbruik')||0)+' kWh verbruik');
   if(!p1&&v('qHpOn')==='1') h+=blokje('wp','warmtepomp '+nl(+v('qHpKwh')||0)+' kWh');
   const pr=parseFloat(v('prijs'));
-  h+=blokje('bat', 'batterij '+sizeTxt(+v('batkwh')||0)+(pr>0? ' · '+eur(pr) : ''));
+  h+=blokje('bat', 'batterij '+sizeTxt(+v('batkwh')||0)+(pr>0? ' · '+eur(pr) : '')+(extraEen(+v('batkwh')||0)>0? ' + '+eur(extraEen(+v('batkwh')||0))+' extra' : '')+(aboMnd()>0? ' · '+eurMnd(aboMnd())+'/mnd' : ''));
   const lev=$('aanbieder'); if(lev&&lev.selectedIndex>=0) h+=blokje('lev', lev.options[lev.selectedIndex].text);
   h+=blokje('modus', {self:'Eigen stroom',balanced:'Gebalanceerd',max:'Volop handelen'}[state.mode]);
   el.innerHTML=h;
@@ -1062,6 +1087,8 @@ async function init(){
     $('capOther').style.display='none'; $('batkwh').value=b.dataset.c; applyMode(); render();
   });
   $('advBtn').onclick=()=>{ const open=$('advBox').classList.toggle('show'); $('advBtn').setAttribute('aria-expanded',open?'true':'false'); };
+  $('extraBtn').onclick=()=>{ const open=$('extraBox').classList.toggle('show'); $('extraBtn').setAttribute('aria-expanded',open?'true':'false'); };
+  if(parseFloat(v('extraEen'))>0||parseFloat(v('extraMnd'))>0){ $('extraBox').classList.add('show'); $('extraBtn').setAttribute('aria-expanded','true'); }
   document.querySelectorAll('#modus button').forEach(b=>b.onclick=()=>{ state.mode=b.dataset.m; applyMode(); render(); });
   document.querySelectorAll('#zonMode button').forEach(b=>b.onclick=()=>{
     // omschakelen: neem de waarde mee, zodat de uitkomst niet verspringt
@@ -1074,7 +1101,7 @@ async function init(){
   // typen in een getalveld: pas rekenen als je even stopt (een jaar doorrekenen kost tijd)
   let tRender=null;
   const later=()=>{ clearTimeout(tRender); tRender=setTimeout(render,300); };
-  ['maand','batkwh','batkw','aanbieder','panelen','opwek','verbruik','afname','terug','prijs','qPersons','qHome','qEv','qHpOn','qHpKwh'].forEach(id=>{
+  ['maand','batkwh','batkw','aanbieder','panelen','opwek','verbruik','afname','terug','prijs','extraEen','extraMnd','qPersons','qHome','qEv','qHpOn','qHpKwh'].forEach(id=>{
     $(id).addEventListener('input',()=>{
       if(['qPersons','qHome','qEv','qHpOn','batkwh'].includes(id)) applyMode();
       if($(id).tagName==='SELECT') render(); else later();

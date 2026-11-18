@@ -381,14 +381,15 @@ const BAT_LIFESPAN=15;           // jaar; stap loont als hij zich binnen de leve
 const DEGRADE=0.98;              // 2% minder opbrengst per jaar door slijtage
 // Eén terugverdientijd voor resultaatpaneel én adviestabel: het moment waarop de opgetelde
 // besparing (met slijtage) de aanschafprijs haalt. Infinity = niet binnen de levensduur.
-function paybackYears(price, yearly){
-  if(!(yearly>0)||!(price>0)) return Infinity;
+// vast = vaste kosten per jaar (bijv. een abonnement); die slijten niet mee.
+function paybackYears(price, yearly, vast=0){
+  if(!(yearly-vast>0)||!(price>0)) return Infinity;
   let tot=0;
-  for(let k=0;k<BAT_LIFESPAN;k++){ const y=yearly*Math.pow(DEGRADE,k); if(tot+y>=price) return k+(price-tot)/y; tot+=y; }
+  for(let k=0;k<BAT_LIFESPAN;k++){ const y=yearly*Math.pow(DEGRADE,k)-vast; if(y<=0) break; if(tot+y>=price) return k+(price-tot)/y; tot+=y; }
   return Infinity;
 }
 // hoogste aanschafprijs waarbij de batterij zich binnen 'jaren' terugverdient
-function breakEven(yearly,jaren){ let t=0; for(let k=0;k<jaren;k++) t+=yearly*Math.pow(DEGRADE,k); return t; }
+function breakEven(yearly,jaren,vast=0){ let t=0; for(let k=0;k<jaren;k++) t+=yearly*Math.pow(DEGRADE,k)-vast; return t; }
 // laadvermogen bij een batterijmaat: stekker 0,8 kW, eigen invoer voor jouw maat, anders 0,5 x capaciteit
 const isStekker=c=>Math.abs(c-STEKKER_KWH)<0.01;
 function pwrFor(capKwh,p){
