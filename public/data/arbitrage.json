@@ -1,21 +1,21 @@
 {
- "generated_at": "2026-11-18T12:29:28+00:00",
+ "generated_at": "2026-11-19T12:19:42+00:00",
  "currency": "EUR",
  "supplier": "Tibber",
  "markup_per_kwh": 0.014876,
  "method": "Verbruik = homeLoad. Kosten actueel = inkoop x consumentenprijs - teruglevering x terugleverprijs. Kosten zonder = verbruik x consumentenprijs. Terugleverprijs t/m 2026 (saldering) = (EPEX + energiebelasting) incl. btw + teruglever-opslag aanbieder (0 bij methode jaaroverschot); vanaf 2027 EPEX + opslag. Grid Rewards (grid-rewards.json, per factuurperiode gelijk verdeeld, incl. btw) tellen als batterij-opbrengst. Laden uit zon = gemiste teruglevering; laden uit net (import boven huisverbruik) = consumentenprijs. Ontladen naar huis = vermeden inkoop; naar net = inkomsten tegen terugleverprijs. Besparing geschat gesplitst in batterij (arbitrage) en zon. Voorraad FIFO: ontladen kWh krijgen de kostprijs van het laadmoment (net = consumentenprijs, zon = gemiste teruglevering). Kosten en besparing zijn gerealiseerd; wat nog in de batterij zit staat als reserve buiten de totalen. De voorraad is begrensd op laadniveau x capaciteit; het teveel telt als verlies van de batterij. Aanbieder per dag staat in days[].supplier.",
  "totals": {
-  "days": 399,
-  "consumption_kwh": 6312.5,
-  "cost_actual_eur": 738.38,
-  "cost_without_eur": 1554.86,
-  "saving_eur": 816.55,
-  "battery_saving_eur": 550.16,
-  "solar_saving_eur": 266.41,
-  "battery_home_kwh": 2217.4,
-  "arbitrage_income_eur": 1117.85,
+  "days": 400,
+  "consumption_kwh": 6328.0,
+  "cost_actual_eur": 742.3,
+  "cost_without_eur": 1559.79,
+  "saving_eur": 817.57,
+  "battery_saving_eur": 551.71,
+  "solar_saving_eur": 265.87,
+  "battery_home_kwh": 2221.2,
+  "arbitrage_income_eur": 1124.07,
   "grid_rewards_eur": 25.8,
-  "solar_charged_kwh": 1489.8
+  "solar_charged_kwh": 1490.7
  },
  "days": [
   {
@@ -78414,6 +78414,115 @@
     [
      0.8,
      0.28361
+    ]
+   ],
+   "price_coverage": 1.0,
+   "grid_data_ok": true,
+   "n_points": 288
+  },
+  {
+   "date": "2026-11-18",
+   "supplier": "Tibber",
+   "saldering": true,
+   "consumption_kwh": 15.5,
+   "cost_actual_eur": 3.92,
+   "cash_cost_eur": 2.66,
+   "cost_without_eur": 4.93,
+   "saving_eur": 1.02,
+   "battery_home_kwh": 3.8,
+   "battery_home_value_eur": 1.41,
+   "arbitrage_kwh": 17.0,
+   "arbitrage_income_eur": 6.22,
+   "grid_rewards_eur": 0.0,
+   "reserve_kwh": 7.25,
+   "reserve_value_eur": 1.89,
+   "unknown_kwh": 0.0,
+   "loss_kwh": 1.7,
+   "loss_eur": 0.38,
+   "solar_charged_kwh": 0.9,
+   "grid_charged_kwh": 19.3,
+   "grid_charge_cost_eur": 4.63,
+   "battery_saving_eur": 1.55,
+   "solar_saving_eur": -0.54,
+   "charged_kwh": 20.2,
+   "discharged_kwh": 20.8,
+   "import_kwh": 35.0,
+   "export_kwh": 19.2,
+   "battery_to_grid_kwh": 17.0,
+   "soc_start_pct": 39,
+   "soc_end_pct": 29,
+   "lots_end": [
+    [
+     0.05,
+     0.22318
+    ],
+    [
+     0.1,
+     0.20518
+    ],
+    [
+     0.8,
+     0.22318
+    ],
+    [
+     0.8,
+     0.22318
+    ],
+    [
+     0.7,
+     0.22318
+    ],
+    [
+     0.7,
+     0.22318
+    ],
+    [
+     0.6,
+     0.22318
+    ],
+    [
+     0.2,
+     0.22318
+    ],
+    [
+     0.1,
+     0.20518
+    ],
+    [
+     0.2,
+     0.22318
+    ],
+    [
+     0.1,
+     0.22318
+    ],
+    [
+     0.2,
+     0.19443
+    ],
+    [
+     0.1,
+     0.24371
+    ],
+    [
+     0.1,
+     0.24371
+    ],
+    [
+     0.1,
+     0.33156
+    ],
+    [
+     0.8,
+     0.33396
+    ],
+    [
+     0.8,
+     0.33396
+    ],
+    [
+     0.8,
+     0.33396
     ]
    ],
    "price_coverage": 1.0,
