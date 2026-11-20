@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AC en DC uitgelegd: wisselstroom, gelijkstroom, laadpaal en thuisbatterij</title>
+  <meta name="description" content="Wat is het verschil tussen AC en DC? Simpel uitgelegd, met een schema van hoe de stroom omgezet wordt tussen je meterkast en je zonnepanelen, thuisbatterij en laadpaal." />
+  <meta name="kb-categorie" content="Thuisbatterij" />
+  <meta name="theme-color" content="#1D2B53" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/kennisbank/ac-dc-wisselstroom-gelijkstroom" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="AC en DC uitgelegd: wat je laadpaal en thuisbatterij met wisselstroom en gelijkstroom doen" />
+  <meta property="og:description" content="Het verschil tussen wisselstroom en gelijkstroom, en een schema van 
+
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    /* Stroomschema (alleen dit artikel) */waar de stroom omgezet wordt tussen meterkast, zonnepanelen, thuisbatterij en auto." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/kennisbank/ac-dc-wisselstroom-gelijkstroom" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Stroomvoorspeller.nl — AC en DC uitgelegd" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AC en DC uitgelegd: wat je laadpaal en thuisbatterij met wisselstroom en gelijkstroom doen" />
+  <meta name="twitter:description" content="Wisselstroom, gelijkstroom en een schema van waar de omzetting zit bij zonnepanelen, thuisbatterij en laadpaal." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+    .kb-schema { margin: 20px 0 28px; }
+    .kb-schema-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 16px; font-size: 0.9rem; color: var(--c-text-soft); }
+    .kb-schema-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .kb-schema-group { margin: 22px 0 6px; font-weight: 700; color: var(--c-text); }
+    .kb-flow { margin: 0 0 14px; padding: 14px; border: 1px solid var(--c-border); border-radius: 12px; background: var(--c-surface); }
+    .kb-flow-title { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; margin: 0 0 12px; font-weight: 600; color: var(--c-text); }
+    .kb-flow-count { font-weight: 500; font-size: 0.88rem; color: var(--c-text-mute); }
+    .kb-flow-steps { list-style: none; margin: 0; padding: 0; display: flex; align-items: stretch; gap: 0; }
+    .kb-flow-node { flex: 1 1 0; min-width: 0; padding: 10px 12px; border: 1px solid var(--c-border); border-radius: 10px; background: var(--c-surface-soft); display: flex; flex-direction: column; gap: 3px; justify-content: center; }
+    .kb-flow-node.conv { border: 2px solid var(--c-accent); }
+    .kb-flow-node.home { background: var(--c-surface-alt); }
+    .kb-flow-name { font-weight: 600; color: var(--c-text); line-height: 1.3; }
+    .kb-flow-note { font-size: 0.84rem; color: var(--c-text-soft); line-height: 1.35; }
+    .kb-flow-badge { align-self: flex-start; font-size: 0.75rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; background: var(--c-accent); color: var(--c-surface); white-space: nowrap; }
+    .kb-flow-link { flex: 0 0 74px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 0 4px; }
+    .kb-flow-link .arrow { font-size: 1.25rem; line-height: 1; color: var(--c-text-mute); }
+    .kb-chip { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+    .kb-chip.dc { background: var(--c-cheap-bg); color: var(--c-cheap-text); border: 1px solid var(--c-cheap-border); }
+    .kb-chip.ac { background: var(--c-normal-bg); color: var(--c-normal-text); border: 1px solid var(--c-normal-border); }
+    .kb-flow-foot { margin: 10px 0 0; font-size: 0.86rem; color: var(--c-text-soft); }
+    .arrow .v { display: none; }
+    @media (max-width: 640px) {
+      .kb-flow-steps { flex-direction: column; }
+      .kb-flow-link { flex: 0 0 auto; flex-direction: row; gap: 8px; padding: 6px 0; }
+      .arrow .h { display: none; }
+      .arrow .v { display: inline; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://stroomvoorspeller.nl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kennisbank",
+            "item": "https://stroomvoorspeller.nl/kennisbank/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "AC en DC uitgelegd",
+            "item": "https://stroomvoorspeller.nl/kennisbank/ac-dc-wisselstroom-gelijkstroom"
+          }
+        ]
+      },
+      {
+        "@type": "Article",
+        "headline": "AC en DC uitgelegd: wat je laadpaal en thuisbatterij met wisselstroom en gelijkstroom doen",
+        "description": "Wat is het verschil tussen AC en DC? Simpel uitgelegd, met een schema van hoe de stroom omgezet wordt tussen je meterkast en je zonnepanelen, thuisbatterij en laadpaal.",
+        "author": {
+          "@type": "Person",
+          "@id": "https://stroomvoorspeller.nl/#emile",
+          "name": "Emile",
+          "jobTitle": "Beheerder van stroomvoorspeller.nl",
+          "description": "AI- en energie-enthousiast, zelf klant op een dynamisch contract",
+          "worksFor": { "@id": "https://stroomvoorspeller.nl/#organization" }
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://stroomvoorspeller.nl/#organization"
+        },
+        "datePublished": "2026-11-20",
+        "dateModified": "2026-11-20",
+        "inLanguage": "nl-NL",
+        "image": "https://stroomvoorspeller.nl/og-image.png",
+        "mainEntityOfPage": "https://stroomvoorspeller.nl/kennisbank/ac-dc-wisselstroom-gelijkstroom"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Wat is het verschil tussen AC en DC?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "DC (gelijkstroom) loopt altijd dezelfde kant op. Batterijen, accu's en zonnepanelen werken met DC. AC (wisselstroom) draait voortdurend van richting om, in Nederland 50 keer per seconde op 230 volt. Dat is de stroom uit je stopcontact en uit het net. Waar de twee elkaar tegenkomen, zet een omvormer of lader de ene vorm om in de andere."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is mijn laadpaal thuis AC of DC?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Vrijwel elke laadpaal thuis is een AC-lader. De paal schakelt de wisselstroom door en overlegt met de auto hoeveel er mag. De omzetting naar gelijkstroom gebeurt in de auto zelf, in de boordlader. Daarom bepaalt je auto mee hoe snel je laadt. Een snellader langs de snelweg is een DC-lader: die zet de stroom zelf om en stuurt gelijkstroom rechtstreeks de accu in."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Hoeveel stroom gaat er verloren bij het omzetten?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Per omzetting een paar procent, die als warmte verdwijnt. Een rondje een thuisbatterij in en weer uit kost grofweg 6 tot 10 procent. Bij het laden van een elektrische auto thuis raak je tussen meterkast en accu meestal rond de 10 procent kwijt. Zonnestroom die je direct gebruikt, wordt maar één keer omgezet en is dus het zuinigst."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Waarom is het stroomnet wisselstroom?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Omdat je wisselstroom met een transformator makkelijk naar een hogere of lagere spanning brengt. Over lange afstand vervoert het net stroom op hoge spanning, tot 380.000 volt, omdat je dan minder verliest in de kabels. Een transformatorhuisje in je wijk brengt het terug naar 230 volt voor je huis."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank" aria-current="page">Kennisbank</a>
+        <a href="/historisch">Historisch</a>
+        <a href="/batterij">Batterij</a>
+        <a href="/integraties">Integraties</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="legal-page container">
+    <p class="legal-breadcrumb"><a href="/kennisbank">← terug naar de kennisbank</a></p>
+    <h1>AC en DC uitgelegd: wat je laadpaal en thuisbatterij met wisselstroom en gelijkstroom doen</h1>
+    <p class="legal-meta">20 november 2026 · leestijd ~7 minuten</p>
+    <p class="kb-author">Geschreven door Emile, beheerder van stroomvoorspeller.nl, AI- en energie-enthousiast en zelf klant op een dynamisch contract</p>
+
+    <p>Op de doos van een thuisbatterij staat "AC-gekoppeld". Je laadpaal heet een AC-lader en langs de snelweg laad je "DC". Het zijn de twee soorten stroom waar alles in je huis op draait. Wie weet waar de ene in de andere verandert, snapt meteen waarom een snellader zo groot is, waarom je auto aan de ene paal sneller laadt dan aan de andere en waar je onderweg stroom kwijtraakt.</p>
+
+    <nav class="kb-toc" aria-label="Inhoud van dit artikel">
+      <p class="kb-toc-title">In dit artikel</p>
+      <ol>
+        <li><a href="#wat-is-het-verschil">Wat is het verschil tussen AC en DC?</a></li>
+        <li><a href="#waarom-wisselstroom">Waarom zit er wisselstroom in het net?</a></li>
+        <li><a href="#de-omvormer">De omvormer zet de ene vorm om in de andere</a></li>
+        <li><a href="#schema">Schema: zo loopt de stroom naar je meterkast</a></li>
+        <li><a href="#zonnepanelen">Zonnepanelen</a></li>
+        <li><a href="#thuisbatterij">Thuisbatterij</a></li>
+        <li><a href="#laadpaal">Laadpaal en snellader</a></li>
+        <li><a href="#wat-heb-je-eraan">Wat heb je eraan?</a></li>
+        <li><a href="#veelgestelde-vragen">Veelgestelde vragen</a></li>
+      </ol>
+    </nav>
+
+    <section>
+      <h2 id="wat-is-het-verschil">Wat is het verschil tussen AC en DC?</h2>
+      <p><strong>DC</strong> staat voor <em>direct current</em>, in het Nederlands gelijkstroom. De stroom loopt altijd dezelfde kant op, van plus naar min. Een AA-batterijtje werkt zo, de accu van je telefoon ook, en de accu van je elektrische auto net zo.</p>
+      <p><strong>AC</strong> staat voor <em>alternating current</em>, wisselstroom. Die draait voortdurend van richting om. In Nederland gaat dat 50 keer per seconde heen en terug (50 hertz), op 230 volt. Dat is de stroom uit je stopcontact.</p>
+      <p>Denk aan water in een tuinslang. Bij DC stroomt het water één kant op. Bij AC klotst het razendsnel heen en weer. Met allebei kun je een molentje laten draaien, maar vullen kun je een emmer alleen met water dat één kant op stroomt. Zo zit het ook met opslaan: elke batterij slaat gelijkstroom op.</p>
+    </section>
+
+    <section>
+      <h2 id="waarom-wisselstroom">Waarom zit er wisselstroom in het net?</h2>
+      <p>Omdat je wisselstroom met een transformator makkelijk naar een andere spanning brengt. Het hoogspanningsnet vervoert stroom op tot 380.000 volt, omdat je bij hoge spanning veel minder verliest in de kabels. Het transformatorhuisje in je wijk brengt dat terug naar 230 volt. Met gelijkstroom kon dat lange tijd alleen met dure, ingewikkelde apparatuur.</p>
+      <p>Je huis draait dus op AC. Alles in de meterkast werkt met wisselstroom: de slimme meter die je verbruik meet, de groepen die het over je huis verdelen. Elk apparaat dat met DC werkt, moet dus ergens langs een omzetter.</p>
+    </section>
+
+    <section>
+      <h2 id="de-omvormer">De omvormer zet de ene vorm om in de andere</h2>
+      <p>Een apparaat dat DC omzet naar AC heet een omvormer. Andersom, van AC naar DC, heet het een gelijkrichter of gewoon een lader. Je hebt er thuis al een stapel van: de oplader van je telefoon en het blok aan de kabel van je laptop maken van 230 volt wisselstroom een paar volt gelijkstroom.</p>
+      <p>Elke omzetting kost een paar procent stroom. Die verdwijnt als warmte, en dat is ook waarom je laptopblok warm wordt en een grote omvormer koelribben of een ventilator heeft. Eén omzetting merk je nauwelijks. Drie achter elkaar tellen wel op.</p>
+    </section>
+
+    <section>
+      <h2 id="schema">Schema: zo loopt de stroom naar je meterkast</h2>
+      <p>In elk schema staat de meterkast rechts (op je telefoon: onderaan). De omkaderde blokken zijn de plekken waar de stroom van vorm verandert.</p>
+
+      <div class="kb-schema" role="group" aria-label="Schema van de stroomomzetting tussen meterkast en zonnepanelen, thuisbatterij en auto">
+        <p class="kb-schema-legend">
+          <span><span class="kb-chip dc">DC</span> gelijkstroom</span>
+          <span><span class="kb-chip ac">AC</span> wisselstroom</span>
+          <span><span class="kb-flow-badge">DC → AC</span> hier wordt omgezet</span>
+        </p>
+
+        <p class="kb-schema-group">☀️ Zonnepanelen</p>
+        <figure class="kb-flow">
+          <figcaption class="kb-flow-title">Zonnepanelen naar de meterkast <span class="kb-flow-count">1 omzetting</span></figcaption>
+          <ol class="kb-flow-steps">
+            <li class="kb-flow-node"><span class="kb-flow-name">Zonnepanelen</span><span class="kb-flow-note">maken gelijkstroom, vaak een paar honderd volt per rij panelen</span></li>
+            <li class="kb-flow-link"><span class="kb-chip dc">DC</span><span class="arrow" aria-hidden="true"><span class="h">→</span><span class="v">↓</span></span></li>
+            <li class="kb-flow-node conv"><span class="kb-flow-badge">DC → AC</span><span class="kb-flow-name">Omvormer</span><span class="kb-flow-note">op zolder, in de garage of als micro-omvormer onder elk paneel</span></li>
+            <li class="kb-flow-link"><span class="kb-chip ac">AC 230 V</span><span class="arrow" aria-hidden="true"><span class="h">→</span><span class="v">↓</span></span></li>
+            <li class="kb-flow-node home"><span class="kb-flow-name">Meterkast</span><span class="kb-flow-note">naar je apparaten, of terug het net op</span></li>
+          </ol>
+        </figure>
+
+        <p class="kb-schema-group">🔋 Thuisbatterij</p>
+        <figure class="kb-flow">
+          <figcaption class="kb-flow-title">AC-gekoppelde batterij (ook een stekkerbatterij) <span class="kb-flow-count">laden: 1 omzetting · ontladen: 1 omzetting</span></figcaption>
+          <ol class="kb-flow-steps">
+            <li class="kb-flow-node"><span class="kb-flow-name">Batterijcellen</span><span class="kb-flow-note">slaan gelijkstroom op</span></li>
+            <li class="kb-flow-link"><span class="kb-chip dc">DC</span><span class="arrow" aria-hidden="true"><span class="h">⇄</span><span class="v">⇅</span></span></li>
+            <li class="kb-flow-node conv"><span class="kb-flow-badge">AC ⇄ DC</span><span class="kb-flow-name">Batterij-omvormer</span><span class="kb-flow-note">zit in de batterij of ernaast, werkt beide kanten op</span></li>
+            <li class="kb-flow-link"><span class="kb-chip ac">AC 230 V</span><span class="arrow" aria-hidden="true"><span class="h">⇄</span><span class="v">⇅</span></span></li>
+            <li class="kb-flow-node home"><span class="kb-flow-name">Meterkast</span><span class="kb-flow-note">eigen groep, of gewoon het stopcontact</span></li>
+          </ol>
+          <p class="kb-flow-foot">Zonnestroom die via deze batterij gaat, wordt in totaal 3 keer omgezet: in de paneelomvormer, de batterij in en de batterij weer uit.</p>
+        </figure>
+        <figure class="kb-flow">
+          <figcaption class="kb-flow-title">Batterij aan een hybride omvormer <span class="kb-flow-count">zonnestroom via de batterij: 1 omzetting</span></figcaption>
+          <ol class="kb-flow-steps">
+            <li class="kb-flow-node"><span class="kb-flow-name">Zonnepanelen + batterijcellen</span><span class="kb-flow-note">allebei op de gelijkstroomkant; zonnestroom gaat zonder omweg de batterij in</span></li>
+            <li class="kb-flow-link"><span class="kb-chip dc">DC</span><span class="arrow" aria-hidden="true"><span class="h">⇄</span><span class="v">⇅</span></span></li>
+            <li class="kb-flow-node conv"><span class="kb-flow-badge">DC ⇄ AC</span><span class="kb-flow-name">Hybride omvormer</span><span class="kb-flow-note">één kastje voor panelen én batterij</span></li>
+            <li class="kb-flow-link"><span class="kb-chip ac">AC 230 V</span><span class="arrow" aria-hidden="true"><span class="h">⇄</span><span class="v">⇅</span></span></li>
+            <li class="kb-flow-node home"><span class="kb-flow-name">Meterkast</span><span class="kb-flow-note">laden uit het net kan ook, dan via AC → DC</span></li>
+          </ol>
+        </figure>
+
+        <p class="kb-schema-group">🚗 Elektrische auto</p>
+        <figure class="kb-flow">
+          <figcaption class="kb-flow-title">Thuis aan de laadpaal (AC-laden) <span class="kb-flow-count">1 omzetting, in de auto</span></figcaption>
+          <ol class="kb-flow-steps">
+            <li class="kb-flow-node"><span class="kb-flow-name">Accu van de auto</span><span class="kb-flow-note">gelijkstroom, meestal rond 400 volt</span></li>
+            <li class="kb-flow-link"><span class="kb-chip dc">DC</span><span class="arrow" aria-hidden="true"><span class="h">←</span><span class="v">↑</span></span></li>
+            <li class="kb-flow-node conv"><span class="kb-flow-badge">AC → DC</span><span class="kb-flow-name">Boordlader</span><span class="kb-flow-note">zit in de auto en bepaalt hoe snel je laadt</span></li>
+            <li class="kb-flow-link"><span class="kb-chip ac">AC</span><span class="arrow" aria-hidden="true"><span class="h">←</span><span class="v">↑</span></span></li>
+            <li class="kb-flow-node"><span class="kb-flow-name">Laadpaal</span><span class="kb-flow-note">schakelt en meet, zet niets om</span></li>
+            <li class="kb-flow-link"><span class="kb-chip ac">AC</span><span class="arrow" aria-hidden="true"><span class="h">←</span><span class="v">↑</span></span></li>
+            <li class="kb-flow-node home"><span class="kb-flow-name">Meterkast</span><span class="kb-flow-note">eigen groep, 1 of 3 fasen</span></li>
+          </ol>
+        </figure>
+        <figure class="kb-flow">
+          <figcaption class="kb-flow-title">Snellader langs de snelweg (DC-laden) <span class="kb-flow-count">1 omzetting, in de paal</span></figcaption>
+          <ol class="kb-flow-steps">
+            <li class="kb-flow-node"><span class="kb-flow-name">Accu van de auto</span><span class="kb-flow-note">gelijkstroom gaat er rechtstreeks in, buiten de boordlader om</span></li>
+            <li class="kb-flow-link"><span class="kb-chip dc">DC</span><span class="arrow" aria-hidden="true"><span class="h">←</span><span class="v">↑</span></span></li>
+            <li class="kb-flow-node conv"><span class="kb-flow-badge">AC → DC</span><span class="kb-flow-name">Snellaadpaal</span><span class="kb-flow-note">kast zo groot als een koelkast, 50 tot 350 kW</span></li>
+            <li class="kb-flow-link"><span class="kb-chip ac">AC</span><span class="arrow" aria-hidden="true"><span class="h">←</span><span class="v">↑</span></span></li>
+            <li class="kb-flow-node home"><span class="kb-flow-name">Stroomnet</span><span class="kb-flow-note">eigen zware aansluiting, geen meterkast van een woning</span></li>
+          </ol>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="zonnepanelen">Zonnepanelen</h2>
+      <p>Zonnepanelen maken gelijkstroom. Bij de meeste installaties lopen de panelen in een rij (een <em>string</em>) naar één omvormer op zolder of in de garage. Die maakt er 230 volt wisselstroom van en stuurt het naar de meterkast. Daar gaat de stroom naar je apparaten, of het net op als je meer opwekt dan je gebruikt.</p>
+      <p>Heb je micro-omvormers, dan zit er onder elk paneel een kleine omvormer en komt er al wisselstroom van het dak. De omzetting is dezelfde, alleen op een andere plek.</p>
+    </section>
+
+    <section>
+      <h2 id="thuisbatterij">Thuisbatterij</h2>
+      <p>Een thuisbatterij slaat gelijkstroom op en je huis draait op wisselstroom. Bij laden gaat de stroom dus van AC naar DC, bij ontladen weer terug. Er zijn twee manieren om dat te regelen, en het schema hierboven laat ze allebei zien.</p>
+      <p>Een <strong>AC-gekoppelde batterij</strong> heeft een eigen omvormer en hangt aan je groepenkast, net als je wasmachine. Een stekkerbatterij die je in het stopcontact prikt, werkt ook zo. Voordeel: hij past naast elke bestaande installatie, welk merk omvormer je ook hebt. Nadeel: zonnestroom die via deze batterij gaat, wordt drie keer omgezet.</p>
+      <p>Met een <strong>hybride omvormer</strong> hangen panelen en batterij aan één kastje. Zonnestroom gaat dan als gelijkstroom de batterij in en wordt pas omgezet als je hem gebruikt. Dat scheelt een paar procent. Wat dat in euro's is en wanneer welke opstelling past, staat in <a href="/kennisbank/hybride-omvormer-thuisbatterij">Hybride of AC-gekoppelde omvormer?</a></p>
+      <p>Laad je de batterij uit het net op een goedkoop uur, wat op een <a href="/kennisbank/thuisbatterij-zonder-zonnepanelen">batterij zonder zonnepanelen</a> de hele bedoeling is, dan maakt de koppeling weinig uit. De stroom gaat in beide gevallen één keer van AC naar DC en één keer terug. Op dat rondje raak je grofweg 6 tot 10 procent kwijt.</p>
+    </section>
+
+    <section>
+      <h2 id="laadpaal">Laadpaal en snellader</h2>
+      <p>De accu van een elektrische auto is gelijkstroom, bij de meeste auto's rond de 400 volt en bij sommige nieuwere modellen 800 volt. Toch levert de laadpaal aan je gevel wisselstroom. Die paal is eigenlijk een slim, beveiligd stopcontact: hij zet de stroom aan, spreekt met de auto af hoeveel er mag en meet wat er doorgaat. De omzetting naar gelijkstroom gebeurt in de auto, in de <strong>boordlader</strong>.</p>
+      <p>Daarom laden twee auto's aan dezelfde paal niet even snel. Een paal van 11 kW haalt dat alleen als de boordlader ook 11 kW kan en alle 3 fasen gebruikt. Kan je auto maar op 1 fase laden, dan haal je aan een paal van 3 x 16 ampère zo'n 3,7 kW. Ook bij AC-laden gaat er wat verloren: tussen meterkast en accu meestal rond de 10 procent. Op heel lage laadstroom is dat vaak iets meer, omdat de elektronica in de auto de hele tijd meedraait.</p>
+      <p>Langs de snelweg laad je met 50 tot 350 kW. Zo'n vermogen past in geen enkele boordlader. Een snellader zet de stroom daarom zelf om en stuurt gelijkstroom rechtstreeks de accu in. Dat verklaart het formaat: in die grote kast zit de omzetter die in je auto geen plek heeft. Thuis kan een DC-lader ook, maar die is duur en zie je vooral bij <a href="/kennisbank/v2g-bidirectioneel-laden">bidirectioneel laden</a>, waarbij de auto ook stroom terug levert aan je huis.</p>
+    </section>
+
+    <section>
+      <h2 id="wat-heb-je-eraan">Wat heb je eraan?</h2>
+      <ul>
+        <li><strong>Direct gebruiken is het zuinigst.</strong> Zonnestroom die meteen je wasmachine of auto in gaat, wordt één keer omgezet. Via een batterij worden dat er meer. Kun je verbruik naar de middag schuiven, dan wint dat het van opslaan. Meer daarover in <a href="/kennisbank/eigen-verbruik-zonne-energie">eigen verbruik van zonnestroom</a>.</li>
+        <li><strong>Een batterij laden op een goedkoop uur loont pas bij genoeg prijsverschil.</strong> Laad je op 10 cent en gebruik je de stroom op 30 cent, dan is dat verlies van een paar procent een detail. Bij 22 cent tegen 24 cent eet het verlies je winst op. Op <a href="/">de uurprijzen van vandaag</a> zie je hoe groot het verschil is.</li>
+        <li><strong>Kies een laadpaal die bij je auto past.</strong> Een paal van 22 kW heeft geen zin als je boordlader 11 kW kan. Kijk ook naar je aansluiting: lees <a href="/kennisbank/groepenkast-warmtepomp-laadpaal-batterij">groepenkast voor warmtepomp, laadpaal en batterij</a> voordat je een installateur belt.</li>
+        <li><strong>Reken met het verlies.</strong> Thuis laden kost meer kWh dan er in de accu belandt. Zie <a href="/kennisbank/kosten-elektrische-auto-laden">wat elektrisch laden kost</a> voor een rekenvoorbeeld per kWh.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 id="veelgestelde-vragen">Veelgestelde vragen</h2>
+
+      <h3>Wat is het verschil tussen AC en DC?</h3>
+      <p>DC (gelijkstroom) loopt altijd dezelfde kant op. Batterijen, accu's en zonnepanelen werken met DC. AC (wisselstroom) draait voortdurend van richting om, in Nederland 50 keer per seconde op 230 volt. Dat is de stroom uit je stopcontact en uit het net. Waar de twee elkaar tegenkomen, zet een omvormer of lader de ene vorm om in de andere.</p>
+
+      <h3>Is mijn laadpaal thuis AC of DC?</h3>
+      <p>Vrijwel elke laadpaal thuis is een AC-lader. De paal schakelt de wisselstroom door en overlegt met de auto hoeveel er mag. De omzetting naar gelijkstroom gebeurt in de auto zelf, in de boordlader. Daarom bepaalt je auto mee hoe snel je laadt. Een snellader langs de snelweg is een DC-lader: die zet de stroom zelf om en stuurt gelijkstroom rechtstreeks de accu in.</p>
+
+      <h3>Hoeveel stroom gaat er verloren bij het omzetten?</h3>
+      <p>Per omzetting een paar procent, die als warmte verdwijnt. Een rondje een thuisbatterij in en weer uit kost grofweg 6 tot 10 procent. Bij het laden van een elektrische auto thuis raak je tussen meterkast en accu meestal rond de 10 procent kwijt. Zonnestroom die je direct gebruikt, wordt maar één keer omgezet en is dus het zuinigst.</p>
+
+      <h3>Waarom is het stroomnet wisselstroom?</h3>
+      <p>Omdat je wisselstroom met een transformator makkelijk naar een hogere of lagere spanning brengt. Over lange afstand vervoert het net stroom op hoge spanning, tot 380.000 volt, omdat je dan minder verliest in de kabels. Een transformatorhuisje in je wijk brengt het terug naar 230 volt voor je huis.</p>
+    </section>
+
+    <section class="kb-lees-ook">
+      <p class="kb-lees-ook-label">Lees ook</p>
+      <div class="kb-lees-ook-grid">
+        <a class="kb-lees-ook-card" href="/kennisbank/hybride-omvormer-thuisbatterij">
+          <span class="kb-lees-ook-tag">🔋 Thuisbatterij · Gevorderd</span>
+          <span class="kb-lees-ook-title">Hybride of AC-gekoppelde omvormer voor je thuisbatterij? Zo kies je in 2026</span>
+          <span class="kb-lees-ook-meta">⏱ 8 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/v2g-bidirectioneel-laden">
+          <span class="kb-lees-ook-tag">🚗 Elektrisch rijden · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Bidirectioneel laden (V2G) in 2026: je auto als thuisbatterij</span>
+          <span class="kb-lees-ook-meta">⏱ 9 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/kennisbank/groepenkast-warmtepomp-laadpaal-batterij">
+          <span class="kb-lees-ook-tag">💡 Slim besparen · Gemiddeld</span>
+          <span class="kb-lees-ook-title">Is je groepenkast klaar voor een warmtepomp, laadpaal en thuisbatterij?</span>
+          <span class="kb-lees-ook-meta">⏱ 8 min leestijd</span>
+        </a>
+        <a class="kb-lees-ook-card" href="/batterij-berekenen">
+          <span class="kb-lees-ook-tag">🔋 Rekentool</span>
+          <span class="kb-lees-ook-title">Bereken de terugverdientijd van jouw thuisbatterij</span>
+          <span class="kb-lees-ook-meta">↗ stroomvoorspeller.nl</span>
+        </a>
+      </div>
+      <p class="legal-related" style="margin-top:14px;"><a href="/kennisbank">← Terug naar de Kennisbank</a> · <a href="/disclaimer">Disclaimer</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a> ·
+          <a href="/over/voorspelling">Voorspelling</a> ·
+          <a href="/aanbieders">Aanbieders</a> ·
+          <a href="/kennisbank">Kennisbank</a>
+        </p>
+        <p class="footer-meta-small">Project van één persoon met een zwak voor tech, smart home en AI.</p>
+      </div>
+    </div>
+  </footer>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script src="/nav.js" defer></script>
+</body>
+</html>
