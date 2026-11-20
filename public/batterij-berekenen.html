@@ -124,7 +124,7 @@ input[type=number],select{width:100%;min-height:44px;padding:6px 10px;border:1px
 .kpi .lbl{font-size:.76rem;color:var(--c-text-mute);margin-bottom:3px}
 .kpi .val{font-size:1.3rem;font-weight:700;color:var(--c-brand-deep);line-height:1.1}
 .kpi .sub{font-size:.76rem;color:var(--c-text-soft);margin-top:2px}
-.headline{background:var(--c-cheap-bg);border:1px solid var(--c-cheap-border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:18px;font-size:1.05rem}
+.headline{background:var(--c-surface-soft);border:1px solid var(--c-border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:18px;font-size:1.05rem}
 .headline b{color:var(--c-cheap-link)}
 table.bd{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:6px}
 table.bd th,table.bd td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--c-border)}
@@ -143,7 +143,7 @@ h3{font-size:.95rem;margin:22px 0 6px}
 .seg button:focus-visible,.chips button:focus-visible{outline:3px solid var(--c-brand);outline-offset:2px}
 .res-kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 @media(max-width:480px){.res-kpis{grid-template-columns:1fr}}
-.res-kpi{background:var(--c-cheap-bg);border:1px solid var(--c-cheap-border);border-radius:var(--radius-sm);padding:13px 14px}
+.res-kpi{background:var(--c-surface-soft);border:1px solid var(--c-border);border-radius:var(--radius-sm);padding:13px 14px}
 .card.busy .res-kpis,.card.busy #rBreak,.card.busy #cumWrap,.card.busy #advRec,.card.busy .table-wrap{opacity:.45;transition:opacity .15s}
 .res-kpi .lbl{font-size:.76rem;color:var(--c-text-mute);margin-bottom:3px}
 .res-kpi .val{font-size:1.55rem;font-weight:700;color:var(--c-cheap-link);line-height:1.1}
@@ -164,11 +164,18 @@ h3{font-size:.95rem;margin:22px 0 6px}
 .foot{font-size:.78rem;color:var(--c-text-mute);margin-top:26px;border-top:1px solid var(--c-border);padding-top:14px}
 .field .flabel{display:block;font-weight:600;font-size:.88rem;margin-bottom:5px}
 .seg button,.chips button{min-height:44px}
-.res-kpi.mid{background:var(--c-normal-bg);border-color:var(--c-normal-border)}
+.res-kpi.mid{}
 .res-kpi.mid .val{color:var(--c-normal-text)}
-.res-kpi.bad{background:var(--c-pricey-bg);border-color:var(--c-pricey-border)}
+.res-kpi.bad{}
 .res-kpi.bad .val{color:var(--c-pricey-text)}
 .est-note{font-size:.8rem;color:var(--c-text-mute);margin:10px 0 0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#rBreak:empty{display:none}
+#rBreak{margin-top:6px}
+#meerBtn{display:block;margin:-4px 0 6px}
+details.uitleg{font-size:.8rem;color:var(--c-text-mute);margin:6px 0 0}
+details.uitleg summary{cursor:pointer;color:var(--c-brand);min-height:32px;display:flex;align-items:center}
+details.uitleg p{margin:2px 0 4px;line-height:1.5}
 .readmore{padding-left:1.1em;max-width:70ch;font-size:.95rem;line-height:1.6}
 .sticky-res{display:none}
 .byline{font-size:.8rem;color:var(--c-text-mute);margin:-.4em 0 1em}
@@ -219,7 +226,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
   <main>
 <div class="wrap">
   <h1>Thuisbatterij berekenen: wat levert hij op na 2027?</h1>
-  <p class="lead">Vul je zonnepanelen en verbruik in, of laad je eigen meterdata. Je ziet meteen wat een thuisbatterij je per jaar oplevert, hoe snel je hem terugverdient en welke capaciteit het meeste oplevert. Alles gerekend op de echte stroomprijzen van de afgelopen 12 maanden, per kwartier waar die er zijn, en zonder saldering: zoals het vanaf 1 januari 2027 is.</p>
+  <p class="lead">Zie wat een thuisbatterij jou per jaar oplevert en wanneer hij is terugverdiend. Gerekend op de echte stroomprijzen van de afgelopen 12 maanden, zonder saldering: zoals het vanaf 2027 is.</p>
   <p class="byline">Bijgewerkt op <time datetime="2026-11-20">20 november 2026</time> &#183; prijzen elke dag aangevuld &#183; <a href="#bronnen">bronnen</a> &#183; <a href="#rekenvoorbeeld">rekenvoorbeeld</a></p>
   <div class="proto-note" id="protoNote"><b>Prijzen laden…</b> Een moment, de tool haalt de echte uurprijzen op.</div>
 
@@ -244,7 +251,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
           <button type="button" data-z="kwh" aria-pressed="false">Opwek per jaar</button>
         </div>
         <div id="zonPan" style="margin-top:10px">
-          <label for="panelen" class="sub-label">Aantal panelen <span class="hint">op het zuiden, ongeveer 350 kWh per paneel per jaar</span></label>
+          <label for="panelen" class="sub-label">Aantal panelen <span class="hint">op het zuiden</span></label>
           <input type="number" inputmode="numeric" id="panelen" min="0" max="60" step="1" value="8" />
         </div>
         <div id="zonKwh" style="display:none;margin-top:10px">
@@ -254,7 +261,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
       </div>
 
       <div class="field">
-        <span class="flabel" id="lblVerbruik">Jaarverbruik <span class="hint" id="verbruikHint">je stroomverbruik zonder warmtepomp, en zonder je zonnestroom eraf te trekken</span></span>
+        <span class="flabel" id="lblVerbruik">Jaarverbruik <span class="hint" id="verbruikHint">zonder warmtepomp</span></span>
         <div class="seg seg4" id="verbruikMode" role="group" aria-labelledby="lblVerbruik">
           <button type="button" data-v="kwh" class="on" aria-pressed="true">Ik weet het (kWh)</button>
           <button type="button" data-v="afr" aria-pressed="false">Uit mijn jaarafrekening</button>
@@ -266,7 +273,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
             <div><label for="afname" class="sub-label">Afname <span class="hint">kWh</span></label><input type="number" inputmode="numeric" id="afname" min="0" max="30000" step="50" value="2200" /></div>
             <div><label for="terug" class="sub-label">Teruglevering <span class="hint">kWh</span></label><input type="number" inputmode="numeric" id="terug" min="0" max="30000" step="50" value="2100" /></div>
           </div>
-          <p class="muted small-note">Neem de totalen over van je jaarafrekening (normaal plus dal). Heb je een warmtepomp, vul die dan hieronder in: wij halen hem eraf en tellen de zonnestroom die je zelf gebruikte er weer bij. <span id="afrUit"></span></p>
+          <p class="muted small-note">Totalen van je jaarafrekening, normaal plus dal. <span id="afrUit"></span></p>
         </div>
         <div id="verbruikP1" style="display:none;margin-top:10px">
           <label for="p1File" class="sub-label">CSV-bestand met je meterdata <span class="hint">per kwartier of per uur</span></label>
@@ -277,7 +284,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
         </div>
         <div id="verbruikKwh" style="margin-top:10px">
           <input type="number" inputmode="numeric" id="verbruik" min="0" max="20000" step="50" value="2900" />
-          <p class="muted" style="font-size:.78rem;margin:5px 0 0">Vul je bruto huishoudverbruik in: <b>exclusief</b> warmtepomp (die zet je hieronder apart aan) en <b>zonder</b> je zonnestroom-eigenverbruik eraf te halen. Heb je zonnepanelen met saldering? Dan staat op je meter het netto verbruik &#8211; tel je opgewekte en zelf gebruikte stroom er weer bij op.</p>
+          <details class="uitleg"><summary>Welk getal vul ik in?</summary><p>Je hele huishoudverbruik, zonder warmtepomp (die vul je hieronder in). Trek je zonnestroom er niet vanaf. Staat op je meter alleen het netto verbruik door saldering, tel dan de zonnestroom die je zelf gebruikte er weer bij op.</p></details>
         </div>
         <div class="verbruik-vragen" id="verbruikVragen">
           <div class="field" style="margin:10px 0 8px">
@@ -297,18 +304,18 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
       </div>
 
       <div class="field" id="hpField">
-        <label for="qHpOn">Warmtepomp <span class="hint">stuwt je winterverbruik op en dempt zo de opbrengst in oktober&#8211;maart</span></label>
+        <label for="qHpOn">Warmtepomp</label>
         <select id="qHpOn"><option value="0" selected>Nee</option><option value="1">Ja</option></select>
         <div id="qHpKwhBox" style="display:none;margin-top:8px">
-          <label for="qHpKwh" style="font-weight:600;font-size:.82rem">Verbruik warmtepomp <span class="hint">kWh per jaar, bovenop je verbruik hierboven</span></label>
+          <label for="qHpKwh" style="font-weight:600;font-size:.82rem">Verbruik warmtepomp <span class="hint">kWh per jaar</span></label>
           <input type="number" inputmode="numeric" id="qHpKwh" min="0" max="12000" step="100" value="3000" />
-          <p class="muted" style="font-size:.78rem;margin:5px 0 0">Vuistregel: hybride warmtepomp ~1.500&#8211;2.500 kWh, volledige (all-electric) warmtepomp ~3.000&#8211;6.000 kWh per jaar.</p>
+          <p class="muted small-note">Hybride ongeveer 1.500 tot 2.500 kWh, volledig elektrisch 3.000 tot 6.000 kWh.</p>
         </div>
       </div>
 
       <div id="verfijnBox" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--c-border)">
         <div class="field">
-          <span class="flabel" id="lblCap">Capaciteit van de batterij <span class="hint">hoeveel stroom hij opslaat, in kWh</span></span>
+          <span class="flabel" id="lblCap">Capaciteit van de batterij <span class="hint">in kWh</span></span>
           <div class="chips" id="capChips" role="group" aria-labelledby="lblCap">
             <button type="button" data-c="2.7" aria-pressed="false">2,7 kWh stekker</button>
             <button type="button" data-c="5.12" aria-pressed="false">5,1 kWh stekker</button>
@@ -322,7 +329,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
             <input type="number" id="batkwh" min="0" max="100" step="0.5" value="10" aria-label="Capaciteit in kWh" />
           </div>
           <div class="model-kies">
-            <label for="modelKeuze" class="sub-label">Of kies een model <span class="hint">vult capaciteit, vermogen en prijs voor je in</span></label>
+            <label for="modelKeuze" class="sub-label">Of kies een model</label>
             <select id="modelKeuze"><option value="">Geen model, zelf invullen</option></select>
             <p class="muted small-note" id="modelNote" style="display:none"></p>
           </div>
@@ -339,7 +346,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
         </div>
 
         <div class="field">
-          <label for="prijs">Wat kost deze batterij? <span class="hint">prijs voor de capaciteit hierboven, inclusief installatie; hiermee rekenen we de terugverdientijd</span></label>
+          <label for="prijs">Wat kost deze batterij? <span class="hint">inclusief installatie</span></label>
           <input type="number" inputmode="numeric" id="prijs" min="0" max="30000" step="100" placeholder="bijv. 6000" />
           <button type="button" class="adv-toggle" id="extraBtn" style="margin-top:8px;display:block" aria-expanded="false" aria-controls="extraBox">+ bijkomende kosten</button>
           <div class="adv" id="extraBox">
@@ -352,6 +359,8 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
           </div>
         </div>
 
+        <button type="button" class="adv-toggle" id="meerBtn" aria-expanded="false" aria-controls="meerBox">+ leverancier en strategie</button>
+        <div class="adv" id="meerBox">
         <div class="field">
           <label for="aanbieder">Je leverancier</label>
           <select id="aanbieder"></select>
@@ -367,6 +376,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
           </div>
           <p class="modus-note" id="modusNote"></p>
         </div>
+        </div>
 
       </div>
       <div class="bb-klaar"><button type="button" class="bb-knop" id="sitKlaar">Klaar</button></div>
@@ -377,19 +387,21 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
     <div>
       <div class="card" id="resultCard">
         <h2>Jouw resultaat</h2>
-        <p class="bb-conclusie" id="rConclusie" aria-live="polite"></p>
+        <p class="sr" id="rConclusie" aria-live="polite"></p>
         <div class="res-kpis">
           <div class="res-kpi" id="kpiJaar"><div class="lbl">Batterij bespaart per jaar</div><div class="val" id="rJaar"></div><div class="sub" id="rJaarSub">bovenop je zonnepanelen, gemiddeld over de laatste 12 maanden</div></div>
-          <div class="res-kpi" id="kpiPb"><div class="lbl">Terugverdientijd</div><div class="val" id="rPayback"></div><div class="sub" id="rPaybackSub"></div></div>
+          <div class="res-kpi" id="kpiPb"><div class="lbl">Terugverdientijd</div><div class="val" id="rPayback"></div><div class="sub" id="rPaybackSub"></div><div class="sub" id="rBreak"></div></div>
         </div>
-        <button type="button" class="adv-toggle" id="bandBtn" aria-expanded="false" aria-controls="bandBox">+ toon de bandbreedte over 3 jaar</button>
-        <div class="adv band" id="bandBox" aria-live="polite"></div>
-        <p class="be-note" id="rBreak"></p>
-        <div id="cumWrap">
-          <div class="chart-box chart-box-sm"><canvas id="cumChart"></canvas></div>
+        <button type="button" class="adv-toggle" id="detBtn" aria-expanded="false" aria-controls="resDetails">+ meer details: grafiek en bandbreedte</button>
+        <div class="adv" id="resDetails">
+          <div id="cumWrap">
+            <div class="chart-box chart-box-sm"><canvas id="cumChart"></canvas></div>
+          </div>
+          <p class="muted" id="cumNote" style="font-size:.8rem;margin:8px 0 0"></p>
+          <button type="button" class="adv-toggle" id="bandBtn" aria-expanded="false" aria-controls="bandBox">+ toon de bandbreedte over 3 jaar</button>
+          <div class="adv band" id="bandBox" aria-live="polite"></div>
         </div>
-        <p class="muted" id="cumNote" style="font-size:.8rem;margin:8px 0 0"></p>
-        <p class="est-note">Dit is een schatting op de echte prijzen van de afgelopen 12 maanden, geen garantie. Je eigen verbruik, het weer en de prijzen van straks maken het anders. <a href="#hoe-we-rekenen">Zo rekenen we</a> &#183; <a href="#andere-tools">waarom andere tools vaak hoger uitkomen</a>.</p>
+        <p class="est-note">Een schatting, geen garantie. <a href="#hoe-we-rekenen">Zo rekenen we</a> &#183; <a href="#andere-tools">waarom andere tools hoger uitkomen</a></p>
       </div>
       <div class="card" id="advCard" style="margin-top:22px">
         <h2>Welke capaciteit levert het meeste op?</h2>
@@ -655,6 +667,8 @@ function refreshDataNote(){
   txt+= usingP1()? 'Verbruik en teruglevering komen uit jouw meterdata.' : 'Zonopwek en verbruik zijn een schatting op basis van gemiddelde patronen.';
   if(!CONFIG_OK) txt+=' De tarieven per aanbieder lukten niet te laden; we rekenen met de gemiddelde opslag.';
   el.innerHTML=txt;
+  // alles in orde: geen extra regel boven de tool (staat ook onder Hoe we rekenen)
+  el.hidden= anyReal&&CONFIG_OK&&!usingP1();
 }
 
 function currentParams(){
@@ -918,18 +932,18 @@ function renderResult(p){
   $('rJaar').textContent= eur(Math.max(0,batYear));
   $('rJaarSub').textContent= (p.p1
     ? 'bovenop je zonnepanelen, op jouw meterdata van '+p.p1.nDays+' dagen, omgerekend naar een jaar'
-    : 'bovenop je zonnepanelen, gemiddeld over de laatste 12 maanden')
+    : 'gemiddeld over de laatste 12 maanden')
     + (abo>0? '; het abonnement van '+eur(abo)+' per jaar is er al af' : '');
   $('rPayback').textContent= batYear<=0? '–' : fmtPb(pb,'jaar');
   const extraTxt= extra>0? ' plus '+eur(extra)+' bijkomende kosten' : '';
   $('rPaybackSub').innerHTML= userPr>0
     ? 'bij jouw prijs van '+eur(basis)+extraTxt
-    : 'bij een richtprijs van '+eur(basis)+(stek(curKwh)?'':' incl. installatie')+extraTxt+'. Vul je eigen prijs in voor een precieze uitkomst.';
+    : 'bij een richtprijs van '+eur(basis)+(stek(curKwh)?'':' incl. installatie')+extraTxt;
   const be=breakEven(Math.max(0,bruto),BE_JAREN,abo)-extra;
   $('rBreak').innerHTML= batYear>0
     ? (be>0
-      ? 'Om hem binnen '+BE_JAREN+' jaar terug te verdienen, mag deze batterij hooguit <b>'+eur(Math.floor(be/50)*50)+'</b> kosten'+(stek(curKwh)?'':', inclusief installatie')+(extra>0?' en naast je bijkomende kosten':'')+'.'
-      : 'Binnen '+BE_JAREN+' jaar terugverdienen lukt niet: alleen je bijkomende kosten zijn al meer dan de batterij in die tijd bespaart.')
+      ? 'Binnen '+BE_JAREN+' jaar terug bij hooguit <b>'+eur(Math.floor(be/50)*50)+'</b>'
+      : 'Binnen '+BE_JAREN+' jaar terug lukt niet: je bijkomende kosten zijn al hoger')
     : '';
   // kleur volgt de uitkomst: binnen 10 jaar groen, 10 tot 15 jaar geel, daarboven rood
   const tone= batYear<=0||!isFinite(pb)? 'bad' : (pb>10? 'mid' : '');
@@ -949,7 +963,7 @@ function renderResult(p){
   $('cumWrap').style.display='block';
   $('cumNote').innerHTML='Opgeteld bespaard door de batterij, jaar na jaar, met elk jaar 2% minder opbrengst door slijtage'+(abo>0?' en het abonnement er elk jaar af':'')+'. De gestreepte lijn is de aanschafprijs'+(extra>0?' plus je bijkomende kosten':'')+': waar de balken erboven uitkomen, heb je de batterij terugverdiend.';
   const labels=[...Array(BAT_LIFESPAN).keys()].map(k=>'jr '+(k+1));
-  const colors=cum.map(c=> c>=price? '#1FA874':'#9fe0c2');
+  const colors=cum.map(c=> c>=price? '#1FA874':'#b9c3dd');
   const cfg={type:'bar',data:{labels,datasets:[
     {type:'line',label:extra>0?'Aanschaf + bijkomend':'Aanschafprijs',data:Array(BAT_LIFESPAN).fill(Math.round(price)),borderColor:'#E9A800',borderDash:[6,4],pointRadius:0,borderWidth:2},
     {label:'Bespaard (opgeteld)',data:cum.map(x=>Math.round(x)),backgroundColor:colors},
@@ -1219,6 +1233,8 @@ async function init(){
     if(bandOpen) renderBand(currentParams());
   };
   $('advBtn').onclick=()=>{ const open=$('advBox').classList.toggle('show'); $('advBtn').setAttribute('aria-expanded',open?'true':'false'); };
+  $('meerBtn').onclick=()=>{ const open=$('meerBox').classList.toggle('show'); $('meerBtn').setAttribute('aria-expanded',open?'true':'false'); };
+  $('detBtn').onclick=()=>{ const open=$('resDetails').classList.toggle('show'); $('detBtn').setAttribute('aria-expanded',open?'true':'false'); $('detBtn').textContent=open?'− minder details':'+ meer details: grafiek en bandbreedte'; if(open&&cumChart) cumChart.resize(); };
   $('extraBtn').onclick=()=>{ const open=$('extraBox').classList.toggle('show'); $('extraBtn').setAttribute('aria-expanded',open?'true':'false'); };
   if(parseFloat(v('extraEen'))>0||parseFloat(v('extraMnd'))>0){ $('extraBox').classList.add('show'); $('extraBtn').setAttribute('aria-expanded','true'); }
   document.querySelectorAll('#modus button').forEach(b=>b.onclick=()=>{ state.mode=b.dataset.m; applyMode(); render(); });
