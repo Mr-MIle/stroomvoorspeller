@@ -2039,6 +2039,50 @@ body.has-neg-alert .site-header { top: 56px; }
   vertical-align: middle;
 }
 
+/* ── "Zelf narekenen"-blok op artikelpagina's (scripts/kb-tool-blokken.js) ── */
+.kb-tool {
+  margin-top: 36px;
+}
+.kb-tool-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--c-cheap-link);
+  margin-bottom: 10px;
+}
+.kb-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+.kb-tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: var(--c-cheap-bg);
+  border: 1px solid var(--c-cheap-border);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.kb-tool-card:hover {
+  border-color: var(--c-cheap-link);
+  text-decoration: none;
+}
+.kb-tool-titel {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--c-cheap-link);
+}
+.kb-tool-tekst {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--c-text);
+}
+
 /* ── "Lees ook"-blok op artikelpagina's ─────────────────── */
 .kb-lees-ook {
   margin-top: 40px;
