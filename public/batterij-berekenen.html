@@ -24,7 +24,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script type="application/ld+json">
 { "@context":"https://schema.org","@graph":[
- {"@type":"WebApplication","name":"Thuisbatterij berekenen: wat levert hij op na 2027?","url":"https://stroomvoorspeller.nl/batterij-berekenen","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"inLanguage":"nl-NL","isPartOf":{"@id":"https://stroomvoorspeller.nl/#website"},"author":{"@type":"Organization","@id":"https://stroomvoorspeller.nl/#organization"},"dateModified":"2026-11-05"},
+ {"@type":"WebApplication","name":"Thuisbatterij berekenen: wat levert hij op na 2027?","url":"https://stroomvoorspeller.nl/batterij-berekenen","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"inLanguage":"nl-NL","isPartOf":{"@id":"https://stroomvoorspeller.nl/#website"},"author":{"@type":"Organization","@id":"https://stroomvoorspeller.nl/#organization"},"dateModified":"2026-11-20"},
  {"@type":"BreadcrumbList","itemListElement":[
    {"@type":"ListItem","position":1,"name":"Home","item":"https://stroomvoorspeller.nl/"},
    {"@type":"ListItem","position":2,"name":"Batterij berekenen","item":"https://stroomvoorspeller.nl/batterij-berekenen"}]},
@@ -108,6 +108,15 @@ input[type=number],select{width:100%;min-height:44px;padding:6px 10px;border:1px
 .adv-toggle{background:none;border:0;color:var(--c-brand);font-size:.82rem;cursor:pointer;padding:8px 0;min-height:40px;font-family:inherit;text-decoration:underline}
 .adv{display:none;margin-top:10px;padding-top:12px;border-top:1px dashed var(--c-border)}
 .adv.show{display:block}
+.model-kies{margin-top:12px}
+.model-kies .sub-label{display:block;font-weight:600;font-size:.82rem;margin-bottom:5px}
+#modelNote a{white-space:nowrap}
+#bandBtn{padding:4px 0;min-height:36px}
+.adv.band{margin:0 0 6px;padding-top:10px}
+.band table{width:100%;border-collapse:collapse;font-size:.86rem;margin:4px 0 6px}
+.band th,.band td{padding:5px 6px;border-bottom:1px solid var(--c-border);text-align:left}
+.band .num{text-align:right;font-variant-numeric:tabular-nums}
+.band p{font-size:.84rem;margin:4px 0}
 .verbruik-vragen{display:none}.verbruik-vragen.show{display:block}
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
 @media(max-width:680px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
@@ -211,7 +220,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
 <div class="wrap">
   <h1>Thuisbatterij berekenen: wat levert hij op na 2027?</h1>
   <p class="lead">Vul je zonnepanelen en verbruik in, of laad je eigen meterdata. Je ziet meteen wat een thuisbatterij je per jaar oplevert, hoe snel je hem terugverdient en welke capaciteit het meeste oplevert. Alles gerekend op de echte stroomprijzen van de afgelopen 12 maanden, per kwartier waar die er zijn, en zonder saldering: zoals het vanaf 1 januari 2027 is.</p>
-  <p class="byline">Bijgewerkt op <time datetime="2026-11-11">11 november 2026</time> &#183; prijzen elke dag aangevuld &#183; <a href="#bronnen">bronnen</a> &#183; <a href="#rekenvoorbeeld">rekenvoorbeeld</a></p>
+  <p class="byline">Bijgewerkt op <time datetime="2026-11-20">20 november 2026</time> &#183; prijzen elke dag aangevuld &#183; <a href="#bronnen">bronnen</a> &#183; <a href="#rekenvoorbeeld">rekenvoorbeeld</a></p>
   <div class="proto-note" id="protoNote"><b>Prijzen laden…</b> Een moment, de tool haalt de echte uurprijzen op.</div>
 
   <div class="grid">
@@ -302,6 +311,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
           <span class="flabel" id="lblCap">Capaciteit van de batterij <span class="hint">hoeveel stroom hij opslaat, in kWh</span></span>
           <div class="chips" id="capChips" role="group" aria-labelledby="lblCap">
             <button type="button" data-c="2.7" aria-pressed="false">2,7 kWh stekker</button>
+            <button type="button" data-c="5.12" aria-pressed="false">5,1 kWh stekker</button>
             <button type="button" data-c="5" aria-pressed="false">5 kWh</button>
             <button type="button" data-c="10" class="on" aria-pressed="true">10 kWh</button>
             <button type="button" data-c="15" aria-pressed="false">15 kWh</button>
@@ -311,12 +321,20 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
           <div id="capOther" style="display:none;margin-top:8px">
             <input type="number" id="batkwh" min="0" max="100" step="0.5" value="10" aria-label="Capaciteit in kWh" />
           </div>
+          <div class="model-kies">
+            <label for="modelKeuze" class="sub-label">Of kies een model <span class="hint">vult capaciteit, vermogen en prijs voor je in</span></label>
+            <select id="modelKeuze"><option value="">Geen model, zelf invullen</option></select>
+            <p class="muted small-note" id="modelNote" style="display:none"></p>
+          </div>
           <p class="muted small-note" id="stekkerNote" style="display:none">Een stekkerbatterij steek je zelf in het stopcontact. We rekenen met 800 watt laad- en ontlaadvermogen, 80% rendement heen en terug en zonder terugleveren uit de batterij: zo werken de meeste stekkerbatterijen met een P1-meter. Meer in <a href="/kennisbank/stekker-thuisbatterij-vergelijken">stekkerbatterijen vergelijken</a>.</p>
-          <button type="button" class="adv-toggle" id="advBtn" style="margin-top:8px" aria-expanded="false" aria-controls="advBox">+ laadvermogen instellen</button>
+          <button type="button" class="adv-toggle" id="advBtn" style="margin-top:8px" aria-expanded="false" aria-controls="advBox">+ vermogen en sluipverbruik</button>
           <div class="adv" id="advBox">
             <label for="batkw" style="font-weight:600;font-size:.82rem">Laad- en ontlaadvermogen (kW)
               <span class="hint">leeg laten = automatisch</span></label>
-            <input type="number" id="batkw" min="0" max="50" step="0.5" placeholder="auto" />
+            <input type="number" id="batkw" min="0" max="50" step="0.1" placeholder="auto" />
+            <label for="sluip" style="font-weight:600;font-size:.82rem;display:block;margin-top:10px">Sluipverbruik (watt)
+              <span class="hint" id="sluipHint">wat de batterij in rust gebruikt; leeg = 15 watt (stekker 10)</span></label>
+            <input type="number" inputmode="numeric" id="sluip" min="0" max="200" step="1" placeholder="auto" />
           </div>
         </div>
 
@@ -364,12 +382,14 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
           <div class="res-kpi" id="kpiJaar"><div class="lbl">Batterij bespaart per jaar</div><div class="val" id="rJaar"></div><div class="sub" id="rJaarSub">bovenop je zonnepanelen, gemiddeld over de laatste 12 maanden</div></div>
           <div class="res-kpi" id="kpiPb"><div class="lbl">Terugverdientijd</div><div class="val" id="rPayback"></div><div class="sub" id="rPaybackSub"></div></div>
         </div>
+        <button type="button" class="adv-toggle" id="bandBtn" aria-expanded="false" aria-controls="bandBox">+ toon de bandbreedte over 3 jaar</button>
+        <div class="adv band" id="bandBox" aria-live="polite"></div>
         <p class="be-note" id="rBreak"></p>
         <div id="cumWrap">
           <div class="chart-box chart-box-sm"><canvas id="cumChart"></canvas></div>
         </div>
         <p class="muted" id="cumNote" style="font-size:.8rem;margin:8px 0 0"></p>
-        <p class="est-note">Dit is een schatting op de echte prijzen van de afgelopen 12 maanden, geen garantie. Je eigen verbruik, het weer en de prijzen van straks maken het anders. <a href="#hoe-we-rekenen">Zo rekenen we</a>.</p>
+        <p class="est-note">Dit is een schatting op de echte prijzen van de afgelopen 12 maanden, geen garantie. Je eigen verbruik, het weer en de prijzen van straks maken het anders. <a href="#hoe-we-rekenen">Zo rekenen we</a> &#183; <a href="#andere-tools">waarom andere tools vaak hoger uitkomen</a>.</p>
       </div>
       <div class="card" id="advCard" style="margin-top:22px">
         <h2>Welke capaciteit levert het meeste op?</h2>
@@ -423,13 +443,21 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
     </div>
 
     <h2>Wat kost een thuisbatterij?</h2>
-    <p>De tool rekent met richtprijzen inclusief installatie: ongeveer &#8364;4.000 voor 5 kWh, &#8364;6.000 voor 10 kWh, &#8364;8.000 voor 15 kWh en &#8364;11.000 voor 20 kWh. Heb je een offerte, vul dan je eigen prijs in; prijzen per kWh, installatiekosten en btw staan in <a href="/kennisbank/thuisbatterij-kosten">wat een thuisbatterij kost</a>.</p>
+    <p>De tool rekent met richtprijzen inclusief installatie: ongeveer &#8364;4.000 voor 5 kWh, &#8364;6.000 voor 10 kWh, &#8364;7.500 voor 15 kWh en &#8364;9.000 voor 20 kWh. Een stekkerbatterij kost &#8364;1.195 (2,7 kWh) of zo&#8217;n &#8364;1.400 (5,1 kWh), zonder installateur. Kies je een model uit de lijst, dan rekenen we met de prijs van dat model; alle modellen met hun prijs, voors en tegens staan in <a href="/batterijen-vergelijken">thuisbatterijen vergelijken</a>. Heb je een offerte, vul dan je eigen prijs in. Prijzen per kWh, installatiekosten en btw staan in <a href="/kennisbank/thuisbatterij-kosten">wat een thuisbatterij kost</a>.</p>
 
     <h2>Waar hangt de terugverdientijd van af?</h2>
     <p>Vier dingen. Het prijsverschil tussen goedkope en dure uren: hoe groter, hoe meer de batterij verdient. Je leverancier: Zonneplan geeft 2 cent vergoeding per teruggeleverde kWh, Pure Energie rekent 3,7 cent kosten &#8211; bij 2.000 kWh teruglevering per jaar scheelt dat ruim &#8364;100. Je eigen situatie: veel panelen en een hoog verbruik geven de batterij meer te doen. En de aanschafprijs zelf: wie scherp inkoopt, is jaren eerder klaar.</p>
 
+    <h2 id="andere-tools">Waarom andere rekentools vaak hoger uitkomen</h2>
+    <p>Zet je deze uitkomst naast die van een leverancier, dan schrik je misschien. Zonneplan noemt voor een batterij van 20 kWh zo&#8217;n &#8364;2.000 per jaar; deze tool komt in het <a href="#rekenvoorbeeld">rekenvoorbeeld</a> op &#8364;338. Dat verschil heeft vier oorzaken.</p>
+    <p><b>Handelen via je leverancier.</b> Zonneplan (Powerplay), Frank Energie (Slim Stroom Handelen) en Tibber (Grid Rewards) laten je batterij ook geld verdienen op de onbalansmarkt: de markt waarop netbeheerder TenneT vraag en aanbod per minuut gelijk trekt. Die opbrengst rekenen wij niet mee. Hij is er wel, maar hij wisselt sterk en wordt kleiner nu er meer batterijen meedoen. Mijn eigen batterij van 25 kWh verdiende in de tweede helft van oktober 2026 &#8364;21 met Grid Rewards, zo&#8217;n &#8364;1,40 per dag. Wat dat over een heel jaar wordt, weet ik pas na een paar maanden meer.</p>
+    <p><b>Een vast prijsverschil keer een vast aantal laadbeurten.</b> Veel tools rekenen met &#8220;16 cent verschil, 300 keer per jaar&#8221;. In werkelijkheid is het verschil op de meeste dagen kleiner, en op een zonnige zomerdag zit de batterij al vol met je eigen stroom. Deze tool rekent elke dag apart door, op de echte prijzen.</p>
+    <p><b>Btw terug en stijgende prijzen.</b> Sommige tools trekken standaard 21% btw af van de aanschaf. Dat mag alleen onder voorwaarden, zie <a href="/kennisbank/thuisbatterij-kosten">wat een thuisbatterij kost</a>. Andere laten de stroomprijs elk jaar 2 tot 3% stijgen. Wij doen geen van beide.</p>
+    <p><b>Verlies en sluipverbruik.</b> Een batterij verliest bij laden en ontladen, en zijn omvormer gebruikt ook stroom als hij niets doet. Wie dat weglaat, telt er al snel &#8364;20 tot &#8364;60 per jaar bij op. In het rekenvoorbeeld kost 15 watt sluipverbruik een batterij van 10 kWh &#8364;27 per jaar.</p>
+    <p>Wil je zien hoeveel de uitkomst per jaar schommelt, klik dan in je resultaat op &#8220;toon de bandbreedte&#8221;. Dan reken je dezelfde batterij door op de prijzen van de 2 jaren ervoor.</p>
+
     <h2 id="hoe-we-rekenen">Hoe we rekenen</h2>
-    <p>Per paneel rekenen we met ongeveer 350 kWh zonnestroom per jaar, gericht op het zuiden. Weet je je opwek, vul die dan zelf in. Laad je je eigen meterdata, dan rekenen we niet met gemiddelde patronen maar met jouw afname en teruglevering per kwartier; de rest van deze alinea geldt dan niet. Je verbruik volgt een gemiddeld dagpatroon; zet je een warmtepomp aan, dan komt dat verbruik er winterzwaar bovenop, precies wanneer je panelen weinig leveren. De batterij verliest wat stroom bij laden en ontladen (ruwweg 1 op de 10 kWh) en gebruikt 90% van zijn opgegeven capaciteit.</p>
+    <p>Per paneel rekenen we met ongeveer 350 kWh zonnestroom per jaar, gericht op het zuiden. Weet je je opwek, vul die dan zelf in. Laad je je eigen meterdata, dan rekenen we niet met gemiddelde patronen maar met jouw afname en teruglevering per kwartier; de rest van deze alinea geldt dan niet. Je verbruik volgt een gemiddeld dagpatroon; zet je een warmtepomp aan, dan komt dat verbruik er winterzwaar bovenop, precies wanneer je panelen weinig leveren. De batterij verliest wat stroom bij laden en ontladen (ruwweg 1 op de 10 kWh) en gebruikt 90% van zijn opgegeven capaciteit. In rust gebruikt hij ook wat stroom: zonder opgave van de fabrikant rekenen we met 15 watt voor een vaste batterij en 10 watt voor een stekkerbatterij. Dat is 131 en 88 kWh per jaar. Gemeten waarden lopen van onder 1 tot ruim 60 watt; weet je het voor jouw batterij, vul het dan in.</p>
     <p>Voor stroom die je inkoopt betaal je de marktprijs plus belasting; voor teruglevering krijg je de kale marktprijs, minus de terugleverkosten van je leverancier. Sinds 1 oktober 2025 heeft de stroombeurs een prijs per kwartier; vanaf die maand rekenen we ook per kwartier. Daarvoor per uur. De batterij plant elke dag opnieuw, zoals een slimme besturing: met de prijzen van vandaag en morgenochtend, want die zijn vanaf ongeveer 13:15 bekend. Hij laadt nooit sneller dan zijn vermogen en nooit voller dan hij is. Bij &#8220;Gebalanceerd&#8221; laadt hij alleen uit het net als dat minstens 6 cent per kWh oplevert, om slijtage te sparen. Bij &#8220;Volop handelen&#8221; is dat 1 cent. Een stekkerbatterij rekenen we met 800 watt, zonder terugleveren uit de batterij en met 2 op de 10 kWh verlies bij laden en ontladen, want de kleine omvormer werkt minder efficiënt. We rekenen zonder salderingsregeling; zolang die nog geldt (tot 2027) levert terugleveren iets meer op. De werkelijke opbrengst kan afwijken en aan deze uitkomsten kun je geen rechten ontlenen.</p>
     <p>Wat we er bewust <b>niet</b> in stoppen: de zonnebonus van Frank, NextEnergy en Zonneplan. Die drie betalen een flinke opslag boven op de marktprijs &#8211; 15, 50 en 10 procent &#8211; maar alleen over stroom die rechtstreeks van je zonnepanelen komt. Over stroom die je batterij teruglevert krijg je hem niet; dat staat in hun eigen voorwaarden. Zou de tool die bonus toch meerekenen, dan zou hij je opbrengst bij precies die drie aanbieders te rooskleurig voorstellen. Hoe het per aanbieder zit staat in <a href="/kennisbank/teruglevertarief-vergelijken">teruglevertarief vergelijken</a>.</p>
 
@@ -439,11 +467,12 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
     <table class="bd ex">
       <thead><tr><th>Batterij</th><th class="num">Richtprijs</th><th class="num">Bespaart/jaar</th><th class="num">Terugverdientijd</th></tr></thead>
       <tbody id="exBody">
-      <tr><td>2,7 kWh stekker</td><td class="num">&#8364;1.195</td><td class="num">&#8364;167</td><td class="num">7,6 jaar</td></tr>
-      <tr><td>5 kWh</td><td class="num">&#8364;4.000</td><td class="num">&#8364;260</td><td class="num">&gt; 15 jaar</td></tr>
-      <tr><td>10 kWh</td><td class="num">&#8364;6.000</td><td class="num">&#8364;312</td><td class="num">&gt; 15 jaar</td></tr>
-      <tr><td>15 kWh</td><td class="num">&#8364;8.000</td><td class="num">&#8364;338</td><td class="num">&gt; 15 jaar</td></tr>
-      <tr><td>20 kWh</td><td class="num">&#8364;11.000</td><td class="num">&#8364;364</td><td class="num">&gt; 15 jaar</td></tr>
+      <tr><td>2,7 kWh stekker</td><td class="num">&#8364;1.195</td><td class="num">&#8364;166</td><td class="num">7,7 jaar</td></tr>
+      <tr><td>5,1 kWh stekker</td><td class="num">&#8364;1.400</td><td class="num">&#8364;172</td><td class="num">8,8 jaar</td></tr>
+      <tr><td>5 kWh</td><td class="num">&#8364;4.000</td><td class="num">&#8364;235</td><td class="num">&gt; 15 jaar</td></tr>
+      <tr><td>10 kWh</td><td class="num">&#8364;6.000</td><td class="num">&#8364;285</td><td class="num">&gt; 15 jaar</td></tr>
+      <tr><td>15 kWh</td><td class="num">&#8364;7.500</td><td class="num">&#8364;312</td><td class="num">&gt; 15 jaar</td></tr>
+      <tr><td>20 kWh</td><td class="num">&#8364;9.000</td><td class="num">&#8364;338</td><td class="num">&gt; 15 jaar</td></tr>
       </tbody>
     </table>
     </div>
@@ -455,11 +484,13 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
       <li>Kwartierprijzen van oktober 2025 tot november 2026: <a href="https://www.energy-charts.info/" rel="noopener">Energy-Charts</a> (Fraunhofer ISE), CC BY 4.0, data van Bundesnetzagentur | SMARD.de. Daarna van ENTSO-E.</li>
       <li>Opslag en terugleverkosten per aanbieder: dezelfde gegevens als op <a href="/aanbieders">aanbieders vergelijken</a>, met de datum van controle per aanbieder.</li>
       <li>Energiebelasting <span id="ebTxt">2026: 9,16 cent per kWh</span> exclusief btw, volgens de <a href="https://www.belastingdienst.nl/" rel="noopener">Belastingdienst</a>.</li>
-      <li>Richtprijzen van batterijen: gemiddelde offerteprijzen 2026, zie <a href="/kennisbank/thuisbatterij-kosten">wat een thuisbatterij kost</a> en <a href="/kennisbank/stekker-thuisbatterij-vergelijken">stekkerbatterijen vergelijken</a>.</li>
+      <li>Richtprijzen en modellen: prijzen van november 2026 met hun bron per model, zie <a href="/batterijen-vergelijken">thuisbatterijen vergelijken</a> en <a href="/kennisbank/thuisbatterij-kosten">wat een thuisbatterij kost</a>.</li>
+      <li>Sluipverbruik: opgave van de fabrikant waar die er is; meetbereik uit de test van stekkerbatterijen door <a href="https://www.test-aankoop.be/woning-energie/hernieuwbare-energie/nieuws/beste-plug-and-play-thuisbatterijen" rel="noopener">Test-Aankoop</a> (2026).</li>
     </ul>
 
     <h2>Verder lezen</h2>
     <ul class="readmore">
+      <li><a href="/batterijen-vergelijken">Thuisbatterijen vergelijken</a>. 11 modellen met prijs, garantie, voors en tegens.</li>
       <li><a href="/kennisbank/welke-thuisbatterij-past-bij-mij">Welke thuisbatterij past bij mij?</a> Hoeveel kWh en kW je nodig hebt.</li>
       <li><a href="/kennisbank/thuisbatterij-na-2027">Thuisbatterij na 2027</a>. Wat een batterij oplevert met en zonder saldering, per huishouden.</li>
       <li><a href="/kennisbank/thuisbatterij-kosten">Wat kost een thuisbatterij?</a> Prijs per kWh en installatiekosten.</li>
@@ -503,7 +534,7 @@ table.ex td.num,table.ex th.num{white-space:nowrap}
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
   <script src="/nav.js" defer></script>
   <script src="/tel.js" data-tool="batterij" defer></script>
-  <script src="/batterij-model.js?v=4"></script>
+  <script src="/batterij-model.js?v=5"></script>
   <script>
 // Het rekenmodel (prijzen, profielen, dagplanner, jaarberekening) staat in /batterij-model.js.
 
@@ -514,8 +545,44 @@ const eur=x=>'€'+(x).toLocaleString('nl-NL',{minimumFractionDigits:0,maximumFr
 const eur2=x=>'€'+(x).toLocaleString('nl-NL',{minimumFractionDigits:2,maximumFractionDigits:2});
 const kwh=x=>Math.round(x).toLocaleString('nl-NL')+' kWh';
 const nl=x=>(+x).toLocaleString('nl-NL');
-let state={mode:'balanced',verbruikMode:'kwh',zonMode:'pan',p1:null,p1An:null};
+let state={mode:'balanced',verbruikMode:'kwh',zonMode:'pan',p1:null,p1An:null,modelFilled:false};
 let chart=null;
+
+// ---------- batterijmodellen (/data/batterijen.json) ----------
+// Een model kiezen vult capaciteit, vermogen en prijs in; rendement en sluipverbruik van het model rekenen mee.
+let BATS=[];
+const modelSel=()=>{ const id=v('modelKeuze'); if(!id) return null; const [mid,i]=id.split(':'); const b=BATS.find(x=>x.id===mid); const u=b&&b.uitvoeringen[+i||0]; return u? {b,u} : null; };
+const stekUser=()=>{ const m=modelSel(); return m? m.b.type==='stekker' : !!stekOpt(+v('batkwh')||0); };
+const stek=s=> isStekker(s,{capKwh:Math.max(0,+v('batkwh')||0),stekUser:stekUser()});
+const modelNaam=m=> m.b.merk+' '+m.b.model;
+const DAGPRIJS={zelf:'handelt zelf op de dagprijs','via-leverancier':'handelt via je energieleverancier',beperkt:'handelt niet zelf op de dagprijs'};
+function vulModellen(){
+  const sel=$('modelKeuze'), groep=(t,label)=>'<optgroup label="'+label+'">'+BATS.filter(b=>b.type===t).map(b=>b.uitvoeringen.map((u,i)=>
+    '<option value="'+b.id+':'+i+'">'+b.merk+' '+b.model+' · '+nl(u.kwh)+' kWh</option>').join('')).join('')+'</optgroup>';
+  sel.innerHTML='<option value="">Geen model, zelf invullen</option>'+groep('stekker','Stekkerbatterijen')+groep('vast','Vaste batterijen');
+}
+function modelInvullen(){
+  const m=modelSel(); if(!m) return;
+  $('batkwh').value=m.u.kwh; $('batkw').value= m.b.type==='vast'? m.u.kw : ''; $('prijs').value=m.u.prijs;
+  const chip=[...document.querySelectorAll('#capChips button')].some(b=>b.dataset.c!=='other'&&Math.abs(+b.dataset.c-m.u.kwh)<0.01);
+  $('capOther').style.display= chip? 'none' : 'block';
+  state.modelFilled=true;
+}
+function modelWeg(){
+  if(!v('modelKeuze')) return;
+  $('modelKeuze').value='';
+  if(state.modelFilled){ $('batkw').value=''; $('prijs').value=''; }
+  state.modelFilled=false;
+}
+function modelNoot(){
+  const el=$('modelNote'), m=modelSel();
+  if(!m){ el.style.display='none'; el.innerHTML=''; return; }
+  const b=m.b;
+  el.innerHTML='<b>'+modelNaam(m)+'</b>: '+DAGPRIJS[b.dagprijs]+'. Garantie: '+b.garantie+'. We rekenen met '+eur(m.u.prijs)+(b.type==='vast'?' inclusief installatie':'')+
+    ', '+(b.type==='vast'? nl(m.u.kw)+' kW' : '800 watt')+', '+Math.round(100*(b.type==='stekker'?0.8:(b.rendement||0.9)))+'% rendement en '+(b.sluip_w!=null? b.sluip_w+' watt sluipverbruik ('+b.sluip_bron+')' : 'het standaard sluipverbruik')+
+    '. <a href="/batterijen-vergelijken#'+b.id+'">Voors, tegens en bronnen</a>';
+  el.style.display='block';
+}
 
 const _now=new Date();
 const NOW={y:_now.getFullYear(), m:_now.getMonth()}; // huidige maand
@@ -597,7 +664,11 @@ function currentParams(){
   const [yy,mm]=v('maand').split('-').map(Number);
   const p={y:yy,m:mm,capKwh,pwrUser:pwrUser>0?pwrUser:0,ce:0.95,de:0.95,solarKwh:solarKwh(),base:baseKwh(),hp:hpKwh(),
     markup:sup.markup,tlv:sup.tlv,mode:state.mode,p1:usingP1()? state.p1 : null};
-  p.cap=capKwh*0.9; p.pwr=pwrFor(capKwh,p); p.noExport=isStekker(capKwh); p.ce=p.de=effFor(capKwh);
+  const m=modelSel(), sl=parseFloat(v('sluip'));
+  p.stekUser=stekUser();
+  p.sluipUser= sl>=0? sl : (m&&m.b.sluip_w!=null? m.b.sluip_w : -1);
+  p.rteUser= m&&m.b.rendement? m.b.rendement : 0;
+  p.cap=capKwh*0.9; p.pwr=pwrFor(capKwh,p); p.noExport=isStekker(capKwh,p); p.ce=p.de=effFor(capKwh,p); p.standby=sluipFor(capKwh,p)/1000;
   return p;
 }
 
@@ -614,7 +685,7 @@ function poolInit(warm){
   if(POOL.length||typeof Worker==='undefined') return;
   const n=Math.max(1,Math.min(4,(navigator.hardwareConcurrency||2)-1));
   for(let i=0;i<n;i++){
-    let w; try{ w=new Worker('/batterij-model.js?v=4'); }catch(e){ break; }
+    let w; try{ w=new Worker('/batterij-model.js?v=5'); }catch(e){ break; }
     const done=(val,err)=>{ const j=w.busy; w.busy=null; if(j) (err==null? j.resolve(val) : j.reject(err)); poolPump(); };
     w.onmessage=e=>{ if(e.data.warm) return; done(e.data.val,e.data.err); };
     w.onerror=e=>{ e.preventDefault(); w.dead=true; done(null,'worker'); };
@@ -675,6 +746,44 @@ async function render(){
   renderResult(p);
   renderAdvisor(p);
   setBusy('resultCard',false); setBusy('advCard',false);
+  if(bandOpen) renderBand(p);
+}
+
+// ---------- bandbreedte: dezelfde batterij in de 2 jaren ervoor ----------
+// Optioneel, via de knop in het resultaat: een jaar doorrekenen kost tijd, en de meeste mensen hebben genoeg aan één getal.
+// Vóór oktober 2025 had de stroombeurs alleen uurprijzen; die jaren rekenen we per uur.
+let bandOpen=false, bandSeq=0;
+const winMonths=off=>MONTHS.map(o=>{ const t=new Date(o.y-off,o.m,1); return {y:t.getFullYear(),m:t.getMonth()}; });
+const kortMnd=o=>MNAMES[o.m].slice(0,3)+' '+o.y;
+async function renderBand(p){
+  const box=$('bandBox'), my=++bandSeq;
+  if(p.p1){ box.innerHTML='<p>Met je eigen meterdata rekenen we alleen op de periode van je data. Kies een andere manier van invullen om de bandbreedte te zien.</p>'; return; }
+  const cap=p.capKwh;
+  if(!(cap>0)){ box.innerHTML='<p>Kies eerst een capaciteit.</p>'; return; }
+  if(!box.querySelector('table')) box.innerHTML='<p>Rekenen…</p>';
+  const jaren=[0,1,2].map(off=>{
+    const wm= off? winMonths(off) : MONTHS.map(o=>({y:o.y,m:o.m}));
+    const pp= off? Object.assign({},p,{winMonths:wm}) : p;
+    const nx=new Date(wm[0].y,wm[0].m+1,1), load=wm.concat([{y:nx.getFullYear(),m:nx.getMonth()}]);
+    return {off,wm,pp,load};
+  });
+  let res;
+  try{
+    for(const j of jaren) if(j.off) await ensureMonths(j.load);
+    if(my!==bandSeq) return;
+    res=await Promise.all(jaren.map(j=>Promise.all([ysAsync(j.pp,cap,j.load),ysAsync(j.pp,0,j.load)]).then(([a,b])=>Object.assign(j,{val:a-b}))));
+  }catch(e){ box.innerHTML='<p>De bandbreedte lukte niet te berekenen.</p>'; return; }
+  if(my!==bandSeq||!bandOpen) return;
+  const userPr=parseFloat(v('prijs')), price=(userPr>0? userPr : richtprijs(cap))+extraEen(cap), abo=aboJaar();
+  const rows=res.map(j=>{ const pb=paybackYears(price,j.val,abo); return {j,jaar:j.val-abo,pb}; });
+  const lo=Math.min(...rows.map(r=>r.jaar)), hi=Math.max(...rows.map(r=>r.jaar));
+  const pbs=rows.map(r=>r.pb), pbLo=Math.min(...pbs), pbHi=Math.max(...pbs);
+  const pbTxt= !isFinite(pbLo)? 'in geen van de drie jaren binnen '+BAT_LIFESPAN+' jaar terugverdiend'
+    : 'terugverdiend in '+fmtPb(pbLo,'')+(pbHi!==pbLo? 'tot '+fmtPb(pbHi,'jaar') : 'jaar');
+  box.innerHTML='<p>Met de prijzen van een ander jaar bespaart deze batterij <b>'+eur(Math.max(0,lo))+' tot '+eur(Math.max(0,hi))+' per jaar</b>, '+pbTxt+'.</p>'
+    +'<table><thead><tr><th>Prijzen van</th><th class="num">Bespaart/jaar</th><th class="num">Terug in</th></tr></thead><tbody>'
+    +rows.map(r=>'<tr><td>'+kortMnd(r.j.wm[r.j.wm.length-1])+' – '+kortMnd(r.j.wm[0])+(r.j.off?'':' (hierboven)')+'</td><td class="num">'+eur(Math.max(0,r.jaar))+'</td><td class="num">'+(r.jaar>0? fmtPb(r.pb,'jr') : '&#8211;')+'</td></tr>').join('')
+    +'</tbody></table><p class="muted">Zelfde situatie en batterij, alleen andere stroomprijzen. Vóór oktober 2025 waren er alleen uurprijzen; die jaren rekenen we per uur, dat geeft een paar procent minder. Hoe de prijzen straks lopen weet niemand.</p>';
 }
 
 function renderMonth(p){
@@ -737,8 +846,9 @@ function renderMonth(p){
 function drawChart(p){
   let last=daysInMonth(p.y,p.m);
   if(!p.p1&&p.y===NOW.y&&p.m===NOW.m) last=Math.max(1,Math.min(TODAY_DAY-1,last));
-  let d=Math.max(1,Math.min(15,last)), x=dayInputs(p.y,p.m,d,p);
-  for(let k=1;!x&&k<=31;k++){ for(const dd of [d+k,d-k]) if(!x&&dd>=1&&dd<=last){ x=dayInputs(p.y,p.m,dd,p); if(x) d=dd; } }
+  const pc=Object.assign({},p,{standby:0});   // de grafiek toont je huis, zonder het sluipverbruik van de batterij
+  let d=Math.max(1,Math.min(15,last)), x=dayInputs(p.y,p.m,d,pc);
+  for(let k=1;!x&&k<=31;k++){ for(const dd of [d+k,d-k]) if(!x&&dd>=1&&dd<=last){ x=dayInputs(p.y,p.m,dd,pc); if(x) d=dd; } }
   if(!x){ $('dagInfo').textContent='Geen dag met gegevens in deze maand.'; if(chart){chart.destroy();chart=null;} return; }
   const h=toRes(x,false);
   const cp=h.cp.map(c=>c*100); // ct/kWh, per uur gemiddeld
@@ -757,14 +867,17 @@ function drawChart(p){
 }
 
 // ---------- capaciteitsadvies ----------
-const ADV_SIZES=[STEKKER_KWH,5,10,15,20];
-// richtprijzen 2026: stekker ~EUR1.195; vast incl. installatie + 0% btw met zon: 5kWh ~4000, 10 ~6000, 15 ~8000, 20 ~11000
+const ADV_SIZES=STEKKER_OPT.map(o=>o.kwh).concat([5,10,15,20]);
+// richtprijzen november 2026 (zie /batterijen-vergelijken): stekker 2,7 kWh ~€1.195, 5,1 kWh ~€1.400;
+// vast incl. installatie: 5 kWh ~€4.000, 10 ~€6.000, 15 ~€7.500, 20 ~€9.000 (Zonneplan 20 kWh €7.990, Tesla 13,5 kWh ~€10.500)
+// Een gekozen model rekent met zijn eigen prijs.
 function richtprijs(s){
-  if(isStekker(s)) return STEKKER_PRIJS;
+  const m=modelSel(); if(m&&Math.abs(s-m.u.kwh)<0.01) return m.u.prijs;
+  if(stek(s)){ const o=stekOpt(s); return o? o.prijs : Math.round(280*s/50)*50; }
   if(s<=5) return 800*s;
   if(s<=10) return 4000+400*(s-5);
-  if(s<=15) return 6000+400*(s-10);
-  return 8000+600*(s-15);
+  if(s<=15) return 6000+300*(s-10);
+  return 7500+300*(s-15);
 }
 // met een eigen prijs schalen we de richtprijzen mee: wie 10% onder de richtprijs koopt, krijgt dat bij elke capaciteit
 function batPrice(s){
@@ -772,11 +885,11 @@ function batPrice(s){
   if(pr>0&&cur>0) return pr*richtprijs(s)/richtprijs(cur);
   return richtprijs(s);
 }
-const sizeTxt=s=> isStekker(s)? '2,7 kWh stekker' : nl(s)+' kWh';
+const sizeTxt=s=> stek(s)? nl(s)+' kWh stekker' : nl(s)+' kWh';
 const fmtPb=(pb,unit)=> isFinite(pb)? pb.toFixed(1).replace('.',',')+' '+unit : '> '+BAT_LIFESPAN+' '+unit;
 const BE_JAREN=10;
 // bijkomende kosten: eenmalig (meterkast, 3-fase; niet bij een stekkerbatterij) en een abonnement per maand
-const extraEen=s=> isStekker(s)? 0 : Math.max(0,parseFloat(v('extraEen'))||0);
+const extraEen=s=> stek(s)? 0 : Math.max(0,parseFloat(v('extraEen'))||0);
 const aboMnd=()=> Math.max(0,parseFloat(v('extraMnd'))||0);
 const aboJaar=()=> 12*aboMnd();
 const eurMnd=x=> '€'+x.toLocaleString('nl-NL',{minimumFractionDigits:x%1?2:0,maximumFractionDigits:2});
@@ -794,7 +907,8 @@ function renderResult(p){
   const cum=[]; let tot=0;
   for(let k=0;k<BAT_LIFESPAN;k++){ tot+=bruto*Math.pow(DEGRADE,k)-abo; cum.push(tot); }
   const pb=paybackYears(price,bruto,abo);
-  const wie= isStekker(curKwh)? 'Een stekkerbatterij van 2,7 kWh' : 'Een batterij van '+nl(curKwh)+' kWh';
+  const mod=modelSel();
+  const wie= mod? 'De '+modelNaam(mod)+' ('+nl(curKwh)+' kWh)' : stek(curKwh)? 'Een stekkerbatterij van '+nl(curKwh)+' kWh' : 'Een batterij van '+nl(curKwh)+' kWh';
   $('rConclusie').innerHTML= curKwh<=0
     ? 'Kies de capaciteit van de batterij om te zien wat hij oplevert.'
     : batYear<=0
@@ -810,11 +924,11 @@ function renderResult(p){
   const extraTxt= extra>0? ' plus '+eur(extra)+' bijkomende kosten' : '';
   $('rPaybackSub').innerHTML= userPr>0
     ? 'bij jouw prijs van '+eur(basis)+extraTxt
-    : 'bij een richtprijs van '+eur(basis)+(isStekker(curKwh)?'':' incl. installatie')+extraTxt+'. Vul je eigen prijs in voor een precieze uitkomst.';
+    : 'bij een richtprijs van '+eur(basis)+(stek(curKwh)?'':' incl. installatie')+extraTxt+'. Vul je eigen prijs in voor een precieze uitkomst.';
   const be=breakEven(Math.max(0,bruto),BE_JAREN,abo)-extra;
   $('rBreak').innerHTML= batYear>0
     ? (be>0
-      ? 'Om hem binnen '+BE_JAREN+' jaar terug te verdienen, mag deze batterij hooguit <b>'+eur(Math.floor(be/50)*50)+'</b> kosten'+(isStekker(curKwh)?'':', inclusief installatie')+(extra>0?' en naast je bijkomende kosten':'')+'.'
+      ? 'Om hem binnen '+BE_JAREN+' jaar terug te verdienen, mag deze batterij hooguit <b>'+eur(Math.floor(be/50)*50)+'</b> kosten'+(stek(curKwh)?'':', inclusief installatie')+(extra>0?' en naast je bijkomende kosten':'')+'.'
       : 'Binnen '+BE_JAREN+' jaar terugverdienen lukt niet: alleen je bijkomende kosten zijn al meer dan de batterij in die tijd bespaart.')
     : '';
   // kleur volgt de uitkomst: binnen 10 jaar groen, 10 tot 15 jaar geel, daarboven rood
@@ -866,18 +980,18 @@ function renderAdvisor(p){
   // Advies: de capaciteit die over de levensduur netto het meeste overhoudt. Geen ladder van klein naar groot:
   // een stekkerbatterij en een vaste batterij zijn alternatieven, niemand 'stapt op' van de een naar de ander.
   const pick=list=>{ let b=null; for(const r of list) if(r.net>0&&isFinite(r.payback)&&(!b||r.net>b.net)) b=r; return b; };
-  const recRow=pick(std), vastRow=pick(std.filter(r=>!isStekker(r.s)));
+  const recRow=pick(std), vastRow=pick(std.filter(r=>!stek(r.s)));
   const rec= recRow? recRow.s : null;
   let bestPb=std[0]; for(const r of std) if(r.perEur>bestPb.perEur) bestPb=r;
   const mark = rec!=null? rec : bestPb.s;
   // één kaart per capaciteit; klikken kiest die capaciteit in het formulier
   const badgeTxt= rec!=null? 'Houdt het meeste over' : 'Meeste besparing per euro';
   $('advKaarten').innerHTML=rows.map(r=>{
-    const best= r.s===mark && (rec!=null || bestPb.batSave>5), st=isStekker(r.s);
+    const best= r.s===mark && (rec!=null || bestPb.batSave>5), st=stek(r.s);
     const cls='bb-kaart'+(best?(rec!=null?' beste':' zuinig'):'')+(r.isUser?' jij':'');
     return `<button type="button" class="${cls}" data-cap="${r.s}" aria-pressed="${r.isUser?'true':'false'}">`
       +(best? `<span class="bb-kbadge">${badgeTxt}</span>` : '')
-      +`<span class="bb-kcap">${nl(r.s)} kWh<small>${st?'stekkerbatterij':'vaste batterij, met installatie'}</small></span>`
+      +`<span class="bb-kcap">${nl(r.s)} kWh<small>${r.isUser&&modelSel()? modelNaam(modelSel()) : st?'stekkerbatterij':'vaste batterij, met installatie'}</small></span>`
       +`<span class="bb-kbedrag">${eur(Math.max(0,r.batSave))}<small>bespaart per jaar</small></span>`
       +`<span class="bb-kcellen"><span class="bb-kcel">${extraEen(r.s)>0?'totaal':(hasPrice?'prijs':'richtprijs')} <b>${eur(r.price)}</b></span>`
       +`<span class="bb-kcel">terug in <b>${r.batSave>0?fmtPb(r.payback,'jr'):'&#8211;'}</b></span></span>`
@@ -886,8 +1000,8 @@ function renderAdvisor(p){
   }).join('');
   let recHtml;
   const netTxt=r=>eur(Math.floor(r.net/50)*50);
-  if(rec!=null&&isStekker(rec)){
-    recHtml=`Financieel houdt een <b>stekkerbatterij van 2,7 kWh</b> je over ${BAT_LIFESPAN} jaar het meeste over: ongeveer <b>${eur(recRow.batSave)} per jaar</b>${p.p1?'':' bovenop je zonnepanelen'}, netto zo&#8217;n ${netTxt(recRow)} na aftrek van de aanschaf. Dat komt vooral door de lage prijs.`
+  if(rec!=null&&stek(rec)){
+    recHtml=`Financieel houdt een <b>stekkerbatterij van ${nl(rec)} kWh</b> je over ${BAT_LIFESPAN} jaar het meeste over: ongeveer <b>${eur(recRow.batSave)} per jaar</b>${p.p1?'':' bovenop je zonnepanelen'}, netto zo&#8217;n ${netTxt(recRow)} na aftrek van de aanschaf. Dat komt vooral door de lage prijs.`
       +`<br><span style="font-weight:400;font-size:.92em">Reken op de grenzen: hij laadt en levert hooguit 800 watt via het stopcontact, dus een waterkoker, oven of warmtepomp vangt hij maar voor een klein deel op. Hij levert niet terug aan het net en verliest meer bij laden en ontladen dan een vaste batterij. `
       +(vastRow? `De beste vaste batterij voor jou is <b>${nl(vastRow.s)} kWh</b>: ~${eur(vastRow.batSave)} per jaar, netto zo&#8217;n ${netTxt(vastRow)}. Die dekt veel meer van je verbruik, maar kost meer dan hij extra oplevert.`
                 : `Een vaste batterij verdient zich bij jouw verbruik niet binnen ${BAT_LIFESPAN} jaar terug.`)+`</span>`;
@@ -900,7 +1014,7 @@ function renderAdvisor(p){
     recHtml += `<br><span style="font-weight:400;font-size:.92em">Jouw keuze: <b>${sizeTxt(userKwh)}</b> voor ${eur(pr)} &#8211; bespaart ~${eur(userRow.batSave)}/jaar, terugverdientijd ${yrs}.</span>`;
   }
   $('advRec').innerHTML=recHtml;
-  $('advNote').innerHTML=`&#8220;Bespaart per jaar&#8221; is wat de batterij <b>bovenop</b> alleen zonnepanelen oplevert, ${p.p1?'op jouw meterdata, omgerekend naar een jaar':'gemiddeld over 12 maanden'}. De stekkerbatterij rekenen we met 800 watt, 80% rendement heen en terug (een vaste batterij 90%) en zonder terugleveren uit de batterij. ${hasPrice?`Gerekend met jouw prijs (${eur(pr)} voor ${sizeTxt(userKwh)}); de andere capaciteiten schalen we in dezelfde verhouding tot de richtprijs mee.`:'Richtprijzen 2026 incl. installatie (0% btw met zon); vul je eigen prijs in bij &#8220;Wat kost deze batterij&#8221;.'}${extraEen(10)>0?` Daar tellen we ${eur(extraEen(10))} aan bijkomende kosten bij op (niet bij de stekkerbatterij).`:''}${abo>0?` Het abonnement (${eur(abo)} per jaar) is van elke besparing al af.`:''}`;
+  $('advNote').innerHTML=`&#8220;Bespaart per jaar&#8221; is wat de batterij <b>bovenop</b> alleen zonnepanelen oplevert, ${p.p1?'op jouw meterdata, omgerekend naar een jaar':'gemiddeld over 12 maanden'}. De stekkerbatterijen rekenen we met 800 watt, 80% rendement heen en terug (een vaste batterij 90%) en zonder terugleveren uit de batterij. Het sluipverbruik van de batterij is er al af. ${hasPrice?`Gerekend met jouw prijs (${eur(pr)} voor ${sizeTxt(userKwh)}); de andere capaciteiten schalen we in dezelfde verhouding tot de richtprijs mee.`:'Richtprijzen 2026 incl. installatie (0% btw met zon); vul je eigen prijs in bij &#8220;Wat kost deze batterij&#8221;.'}${extraEen(10)>0?` Daar tellen we ${eur(extraEen(10))} aan bijkomende kosten bij op (niet bij de stekkerbatterij).`:''}${abo>0?` Het abonnement (${eur(abo)} per jaar) is van elke besparing al af.`:''}`;
 }
 
 // ---------- meterdata inlezen ----------
@@ -935,7 +1049,7 @@ function p1Apply(){
 
 // ---------- instellingen in het adres, zodat je een uitkomst kunt delen ----------
 // Meterdata gaat nooit in het adres: die blijft in je browser.
-const URL_KEYS={pan:'panelen',opw:'opwek',vb:'verbruik',afn:'afname',ter:'terug',pers:'qPersons',won:'qHome',ev:'qEv',wp:'qHpOn',wpk:'qHpKwh',bat:'batkwh',kw:'batkw',prijs:'prijs',extra:'extraEen',abo:'extraMnd',lev:'aanbieder'};
+const URL_KEYS={pan:'panelen',opw:'opwek',vb:'verbruik',afn:'afname',ter:'terug',pers:'qPersons',won:'qHome',ev:'qEv',wp:'qHpOn',wpk:'qHpKwh',bat:'batkwh',kw:'batkw',sl:'sluip',mod:'modelKeuze',prijs:'prijs',extra:'extraEen',abo:'extraMnd',lev:'aanbieder'};
 const DEFAULTS={};
 function writeUrl(){
   const q=new URLSearchParams();
@@ -985,7 +1099,7 @@ function applyMode(){
   const cur=+v('batkwh'); let hit=null;
   document.querySelectorAll('#capChips button').forEach(b=>{ if(b.dataset.c!=='other'&&Math.abs(+b.dataset.c-cur)<0.01) hit=b; });
   if($('capOther').style.display==='none'){ if(hit) press('#capChips',hit); } else press('#capChips',document.querySelector('#capChips button[data-c="other"]'));
-  $('stekkerNote').style.display= isStekker(cur)?'block':'none';
+  $('stekkerNote').style.display= stek(cur)?'block':'none';
   buildMonths();
 }
 
@@ -994,8 +1108,10 @@ function applyMode(){
 const OPSLAG='sv.batterij';
 const lees=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
 let sitBron=null;
+// alleen ?mod=... (een link vanaf /batterijen-vergelijken): je eigen situatie blijft staan, alleen de batterij wisselt
+const alleenModel=()=>{ const k=[...new URLSearchParams(location.search).keys()]; return k.length===1&&k[0]==='mod'; };
 function herstelSituatie(){
-  if(location.search.length>1) return;                       // een gedeelde link gaat voor
+  if(location.search.length>1&&!alleenModel()) return;       // een gedeelde link gaat voor
   const eigen=lees(OPSLAG);
   if(eigen){ readUrl(eigen==='-'?'':eigen); sitBron='eigen'; return; }
   // anders: je situatie van /aanbieders (stroom van het net, teruglevering, thuisladen, batterij)
@@ -1031,7 +1147,8 @@ function samenvatting(){
     : nl(+v('verbruik')||0)+' kWh verbruik');
   if(!p1&&v('qHpOn')==='1') h+=blokje('wp','warmtepomp '+nl(+v('qHpKwh')||0)+' kWh');
   const pr=parseFloat(v('prijs'));
-  h+=blokje('bat', 'batterij '+sizeTxt(+v('batkwh')||0)+(pr>0? ' · '+eur(pr) : '')+(extraEen(+v('batkwh')||0)>0? ' + '+eur(extraEen(+v('batkwh')||0))+' extra' : '')+(aboMnd()>0? ' · '+eurMnd(aboMnd())+'/mnd' : ''));
+  const mod=modelSel();
+  h+=blokje('bat', (mod? modelNaam(mod)+' '+nl(+v('batkwh')||0)+' kWh' : 'batterij '+sizeTxt(+v('batkwh')||0))+(pr>0? ' · '+eur(pr) : '')+(extraEen(+v('batkwh')||0)>0? ' + '+eur(extraEen(+v('batkwh')||0))+' extra' : '')+(aboMnd()>0? ' · '+eurMnd(aboMnd())+'/mnd' : ''));
   const lev=$('aanbieder'); if(lev&&lev.selectedIndex>=0) h+=blokje('lev', lev.options[lev.selectedIndex].text);
   h+=blokje('modus', {self:'Eigen stroom',balanced:'Gebalanceerd',max:'Volop handelen'}[state.mode]);
   el.innerHTML=h;
@@ -1062,7 +1179,9 @@ function wireSituatie(){
   // capaciteitskaart: kies die capaciteit (en schaal een eigen prijs mee)
   $('advKaarten').addEventListener('click',e=>{
     const k=e.target.closest&&e.target.closest('[data-cap]'); if(!k) return;
-    const s=+k.dataset.cap;
+    const s=+k.dataset.cap, m=modelSel();
+    if(m&&Math.abs(s-m.u.kwh)<0.01) return;                  // dit is je gekozen model al
+    if(m) modelWeg();                                        // andere capaciteit: niet meer dit model
     if(parseFloat(v('prijs'))>0) $('prijs').value=Math.round(batPrice(s)/50)*50;
     $('batkwh').value=s;
     const chip=[...document.querySelectorAll('#capChips button')].some(b=>b.dataset.c!=='other'&&Math.abs(+b.dataset.c-s)<0.01);
@@ -1078,14 +1197,27 @@ async function init(){
   try{ CONFIG_RAW=await CONFIG_P; if(CONFIG_RAW) applyConfig(CONFIG_RAW); }catch(e){}
   $('aanbieder').innerHTML=SUPPLIERS.map(s=>`<option value="${s.id}" ${s.id==='average'?'selected':''}>${s.name}</option>`).join('');
   if($('ebTxt')) $('ebTxt').textContent=TAX_YEAR+': '+(EB*100).toLocaleString('nl-NL',{maximumFractionDigits:2})+' cent per kWh';
+  try{ const bd=await BATS_P; if(bd&&Array.isArray(bd.batterijen)) BATS=bd.batterijen; }catch(e){}
+  vulModellen();
   for(const id of Object.values(URL_KEYS)) DEFAULTS[id]=v(id);
   herstelSituatie();
-  readUrl();
+  if(alleenModel()){ readUrl(); modelInvullen(); state.touched=true; }   // link vanaf de vergelijkpagina
+  else { readUrl(); state.modelFilled=!!modelSel(); }
+  modelNoot();
+  $('modelKeuze').addEventListener('change',()=>{ if(modelSel()) modelInvullen(); else modelWeg(); modelNoot(); applyMode(); render(); });
   document.querySelectorAll('#capChips button').forEach(b=>b.onclick=()=>{
     press('#capChips',b);
+    modelWeg(); modelNoot();
     if(b.dataset.c==='other'){ $('capOther').style.display='block'; $('batkwh').focus(); return; }
     $('capOther').style.display='none'; $('batkwh').value=b.dataset.c; applyMode(); render();
   });
+  $('bandBtn').onclick=()=>{
+    bandOpen=!bandOpen;
+    $('bandBox').classList.toggle('show',bandOpen);
+    $('bandBtn').setAttribute('aria-expanded',bandOpen?'true':'false');
+    $('bandBtn').textContent= bandOpen? '− verberg de bandbreedte' : '+ toon de bandbreedte over 3 jaar';
+    if(bandOpen) renderBand(currentParams());
+  };
   $('advBtn').onclick=()=>{ const open=$('advBox').classList.toggle('show'); $('advBtn').setAttribute('aria-expanded',open?'true':'false'); };
   $('extraBtn').onclick=()=>{ const open=$('extraBox').classList.toggle('show'); $('extraBtn').setAttribute('aria-expanded',open?'true':'false'); };
   if(parseFloat(v('extraEen'))>0||parseFloat(v('extraMnd'))>0){ $('extraBox').classList.add('show'); $('extraBtn').setAttribute('aria-expanded','true'); }
@@ -1101,8 +1233,9 @@ async function init(){
   // typen in een getalveld: pas rekenen als je even stopt (een jaar doorrekenen kost tijd)
   let tRender=null;
   const later=()=>{ clearTimeout(tRender); tRender=setTimeout(render,300); };
-  ['maand','batkwh','batkw','aanbieder','panelen','opwek','verbruik','afname','terug','prijs','extraEen','extraMnd','qPersons','qHome','qEv','qHpOn','qHpKwh'].forEach(id=>{
+  ['maand','batkwh','batkw','sluip','aanbieder','panelen','opwek','verbruik','afname','terug','prijs','extraEen','extraMnd','qPersons','qHome','qEv','qHpOn','qHpKwh'].forEach(id=>{
     $(id).addEventListener('input',()=>{
+      if(id==='batkwh'){ modelWeg(); modelNoot(); }               // zelf een capaciteit typen: niet meer het gekozen model
       if(['qPersons','qHome','qEv','qHpOn','batkwh'].includes(id)) applyMode();
       if($(id).tagName==='SELECT') render(); else later();
     });
@@ -1120,6 +1253,7 @@ async function init(){
 }
 // prijzen, tarieven en rekenhulpen al klaarzetten terwijl Chart.js en de rest van de pagina nog laden
 const CONFIG_P=getJson('/data/config.json').catch(()=>null);
+const BATS_P=getJson('/data/batterijen.json').catch(()=>null);
 (()=>{ const l=[]; let y=NOW.y,m=NOW.m; for(let i=0;i<13;i++){ l.push({y,m}); if(--m<0){m=11;y--;} } ensureMonths(l); poolInit(l); })();
 if(window.Chart) init(); else window.addEventListener('load',init);
 </script>

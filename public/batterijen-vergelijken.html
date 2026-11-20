@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Thuisbatterijen vergelijken 2026: 11 modellen met prijs</title>
+  <meta name="description" content="11 thuisbatterijen en stekkerbatterijen naast elkaar: capaciteit, vermogen, prijs, garantie, sluipverbruik en of ze zelf op de dagprijs handelen. Met voor en tegen per model." />
+  <meta name="theme-color" content="#1D2B53" />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/batterijen-vergelijken" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Thuisbatterijen vergelijken (2026) — Stroomvoorspeller.nl" />
+  <meta property="og:description" content="11 thuisbatterijen en stekkerbatterijen met prijs, garantie en voor en tegen. Reken elk model direct door voor jouw situatie." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/batterijen-vergelijken" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Thuisbatterijen vergelijken (2026) — Stroomvoorspeller.nl" />
+  <meta name="twitter:description" content="11 thuisbatterijen met prijs, garantie en voor en tegen." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+      { "@type": "ListItem", "position": 2, "name": "Thuisbatterij", "item": "https://stroomvoorspeller.nl/batterij" },
+      { "@type": "ListItem", "position": 3, "name": "Thuisbatterijen vergelijken", "item": "https://stroomvoorspeller.nl/batterijen-vergelijken" }
+    ]
+  }
+  </script>
+
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <style>
+    .bv-page { max-width: 960px; margin: 0 auto; padding: 20px 16px 96px; }
+    .bv-page h1 { font-size: clamp(1.35rem, 4vw, 2rem); line-height: 1.25; margin: 4px 0 6px; color: var(--c-text); }
+    .bv-page .intro { color: var(--c-text-soft); margin: 0 0 4px; max-width: 680px; }
+    .bv-page h2 { font-size: 1.2rem; margin: 28px 0 8px; }
+    .bv-page p { line-height: 1.6; margin: 0 0 12px; }
+    .bv-page > p, .bv-page > ul { max-width: 700px; }
+    .bv-page > p a, .bv-page > ul a { text-decoration: underline; }
+    .bv-page .bv-stand { font-size: 0.85rem; color: var(--c-text-mute); margin: 0 0 4px; }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    .bv-reken-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; background: var(--c-surface); border: 1.5px solid var(--c-accent); border-radius: var(--radius); padding: 12px 14px; margin: 12px 0; box-shadow: var(--shadow-md); }
+    .bv-page .bv-reken-cta p { margin: 0; flex: 1 1 260px; line-height: 1.5; }
+    .bv-knop { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: var(--radius-sm); background: var(--c-brand); color: var(--c-bg); font-weight: 600; text-decoration: none; }
+    .bv-knop:hover { background: var(--c-brand-deep); color: var(--c-bg); }
+
+    .bv-chips { display: flex; flex-wrap: wrap; gap: 8px; border: 0; padding: 0; margin: 6px 0 14px; min-width: 0; }
+    .bv-chip { position: relative; }
+    .bv-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .bv-chip span { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 1px solid var(--c-border-strong); border-radius: 999px; background: var(--c-surface); font-size: 0.92rem; cursor: pointer; user-select: none; color: var(--c-text); }
+    .bv-chip input:checked + span { background: var(--c-surface-soft); border-color: var(--c-brand); color: var(--c-brand-deep); font-weight: 600; }
+    .bv-chip input:focus-visible + span { outline: 3px solid var(--c-brand); outline-offset: 2px; }
+
+    .bv-lijst { display: grid; gap: 14px; }
+    .bv-kaart { background: var(--c-surface); border: 1px solid var(--c-border-strong); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 14px 14px 10px; scroll-margin-top: 80px; }
+    .bv-kaart[hidden] { display: none; }
+    .bv-kaart:target { border: 2px solid var(--c-brand); }
+    .bv-kop { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+    .bv-page .bv-naam { font-size: 1.08rem; margin: 0; color: var(--c-text); }
+    .bv-naam span { font-weight: 400; color: var(--c-text-soft); }
+    .bv-type { font-size: 0.78rem; color: var(--c-text-mute); }
+    .bv-cellen { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+    .bv-cel { padding: 2px 10px; border: 1px solid var(--c-border-strong); border-radius: 999px; font-size: 0.84rem; color: var(--c-text-soft); }
+    .bv-cel b { font-weight: 600; color: var(--c-text); }
+    .bv-page .bv-sturing { font-size: 0.88rem; color: var(--c-text-soft); margin: 0 0 8px; line-height: 1.5; }
+    .bv-badge { display: inline-block; font-size: 0.72rem; font-weight: 600; border-radius: 999px; padding: 2px 9px; margin-right: 4px; white-space: nowrap; }
+    .b-zelf { background: var(--c-cheap-bg); color: var(--c-cheap-link); }
+    .b-lev { background: var(--c-free-bg); color: var(--c-free); }
+    .b-beperkt { background: var(--c-surface-alt); color: var(--c-text-soft); }
+    .bv-voortegen { display: grid; gap: 4px 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .bv-page .bv-vt h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--c-text-mute); margin: 4px 0 2px; }
+    .bv-voortegen ul { margin: 0 0 4px; padding-left: 18px; font-size: 0.88rem; line-height: 1.5; }
+    .bv-meer { margin-top: 6px; font-size: 0.88rem; }
+    .bv-meer summary { cursor: pointer; min-height: 40px; display: flex; align-items: center; color: var(--c-text-soft); }
+    .bv-meer dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; margin: 4px 0 8px; }
+    .bv-meer dt { color: var(--c-text-mute); }
+    .bv-meer dd { margin: 0; }
+    .bv-page .bv-bron { font-size: 0.8rem; color: var(--c-text-mute); margin: 0 0 6px; }
+    .bv-bron a { text-decoration: underline; }
+    .bv-datum.oud { color: var(--c-normal-text); background: var(--c-normal-bg); padding: 0 4px; border-radius: 4px; }
+    .bv-acties { display: flex; flex-wrap: wrap; gap: 0 4px; border-top: 1px solid var(--c-border); padding-top: 4px; margin-top: 4px; }
+    .bv-reken { display: inline-flex; align-items: center; min-height: 40px; padding: 0 8px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; color: var(--c-brand); text-decoration: none; }
+    .bv-reken::after { content: " \2192"; white-space: pre; }
+    .bv-reken:hover { background: var(--c-surface-soft); }
+    .bv-niet ul { margin: 0; padding-left: 18px; }
+    .bv-niet li { margin: 0 0 4px; line-height: 1.5; }
+
+    @media (max-width: 520px) { .bv-meer dl { grid-template-columns: 1fr; gap: 0; } .bv-meer dd { margin-bottom: 6px; } }
+    @media (min-width: 760px) { .bv-page { padding-top: 28px; } }
+  </style>
+  <noscript><style>.bv-chips { display: none; }</style></noscript>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank">Kennisbank</a>
+        <a href="/batterij">Batterij</a>
+        <a href="/batterij-berekenen">Berekenen</a>
+        <a href="/batterijen-vergelijken" aria-current="page">Batterijen</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="bv-page">
+    <h1>Thuisbatterijen vergelijken (2026)</h1>
+    <p class="intro">Stekkerbatterijen en vaste thuisbatterijen naast elkaar, met prijs, garantie en wat ze wel en niet goed doen. Wat een model jou oplevert, hangt af van je verbruik en zonnepanelen. Dat reken je uit met de knop onder elk model.</p>
+    <p class="bv-stand"><!-- BUILD:STAND:START — automatisch gegenereerd door build-batterijen.js; niet handmatig bewerken -->
+        11 modellen: 4 stekkerbatterijen en 7 vaste batterijen. Prijzen en specs gecontroleerd op 20 november 2026.
+        <!-- BUILD:STAND:END --></p>
+
+    <div class="bv-reken-cta">
+      <p><strong>Eerst rekenen?</strong> In de batterijcalculator kies je een model of vul je zelf een capaciteit in. Je ziet wat hij per jaar bespaart en wanneer hij is terugverdiend.</p>
+      <a class="bv-knop" href="/batterij-berekenen">Naar de calculator</a>
+    </div>
+
+    <fieldset class="bv-chips" id="bv-filter">
+      <legend class="sr">Toon</legend>
+      <label class="bv-chip"><input type="radio" name="bv-type" value="alle" checked><span>Alle</span></label>
+      <label class="bv-chip"><input type="radio" name="bv-type" value="stekker"><span>Stekker</span></label>
+      <label class="bv-chip"><input type="radio" name="bv-type" value="vast"><span>Vast</span></label>
+    </fieldset>
+
+    <h2 class="sr">De modellen</h2>
+    <div class="bv-lijst" id="bv-lijst"><!-- BUILD:LIJST:START — automatisch gegenereerd door build-batterijen.js; niet handmatig bewerken -->
+<article class="bv-kaart" id="anker" data-type="stekker" data-dagprijs="zelf" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">Anker <span>SOLIX Solarbank Max AC</span></h3><span class="bv-type">Stekker</span></div><div class="bv-cellen"><span class="bv-cel"><b>7 kWh</b></span><span class="bv-cel">800 W via het stopcontact</span><span class="bv-cel"><b>€1.899</b></span><span class="bv-cel">€271 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-zelf">Handelt zelf op de dagprijs</span> De AI-modus houdt rekening met de dagprijs. Volgens Anker werkt hij met Slim Stroom Handelen van Frank Energie. Je hebt de P1-meter van Anker of een Shelly-meter nodig.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Veel capaciteit voor een stekkerbatterij</li><li>10 jaar garantie en 10.000 laadbeurten</li><li>Te koppelen aan Frank Energie</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>Anker noemt zowel 800 als 3.000 watt via het stopcontact; reken op 800</li><li>Rendement en sluipverbruik niet opgegeven</li><li>73 kg</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>€1.899 in de aanbieding, adviesprijs €2.499 (november 2026).</dd><dt>Garantie</dt><dd>10 jaar, 10.000 laadbeurten</dd><dt>Rendement</dt><dd>niet opgegeven; wij rekenen met 80%</dd><dt>Sluipverbruik</dt><dd>niet opgegeven; wij rekenen met 10 watt</dd><dt>Uit te breiden</dt><dd>tot 42 kWh met extra batterijen</dd><dt>Noodstroom</dt><dd>aparte uitgang tot 3.680 W; je hele huis alleen met een extra schakelaar en een vaste aansluiting</dd><dt>Plaatsing</dt><dd>binnen en buiten (IP66); weegt 73 kg</dd></dl><p class="bv-bron">Bronnen: <a href="https://www.ankersolix.com/nl/products/a17e2" rel="noopener" target="_blank">Anker SOLIX</a> · <a href="https://www.ankersolix.com/nl/blogs/thuisbatterij-101/haal-meer-uit-thuisbatterij-dynamisch-energiecontract-frank-energie" rel="noopener" target="_blank">Anker over Frank Energie</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=anker%3A0">Reken door</a></div></article>
+<article class="bv-kaart" id="marstek" data-type="stekker" data-dagprijs="zelf" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">Marstek <span>Venus E 3.0</span></h3><span class="bv-type">Stekker</span></div><div class="bv-cellen"><span class="bv-cel"><b>5,12 kWh</b></span><span class="bv-cel">800 W via het stopcontact</span><span class="bv-cel"><b>€1.400</b></span><span class="bv-cel">€273 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-zelf">Handelt zelf op de dagprijs</span> De AI-modus volgt de dagprijs zelf. Geen abonnement. Laden tot 2,5 kW kan alleen met een eigen groep.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Laagste prijs per kWh van de stekkerbatterijen hier</li><li>10 jaar garantie</li><li>Ook buiten op te hangen</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>Prijs en specs spreken elkaar tegen op Marsteks eigen site</li><li>63 kg: ophangen is een klus voor twee</li><li>Ontladen via het stopcontact hooguit 800 watt</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>€1.099 tot €1.899: de actieprijs en de prijs in Marsteks eigen vragenlijst lopen uiteen (november 2026). Wij rekenen met €1.400. De P1-meter zit erbij.</dd><dt>Garantie</dt><dd>10 jaar, ruim 6.000 laadbeurten</dd><dt>Rendement</dt><dd>Marstek noemt tot 90%; wij rekenen met 80%, zoals bij elke stekkerbatterij</dd><dt>Sluipverbruik</dt><dd>niet opgegeven; wij rekenen met 10 watt</dd><dt>Uit te breiden</dt><dd>meerdere stuks; Marstek noemt op verschillende pagina's 3 en 6 als maximum</dd><dt>Noodstroom</dt><dd>aparte noodstroomaansluiting voor een paar apparaten</dd><dt>Plaatsing</dt><dd>binnen en buiten (IP65); weegt 63 kg</dd></dl><p class="bv-bron">Bronnen: <a href="https://www.marstek.nl/marstek-venus-e-3-0-thuisbatterij/" rel="noopener" target="_blank">Marstek, productpagina</a> · <a href="https://www.marstek.nl/" rel="noopener" target="_blank">Marstek, prijzen en vragen</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=marstek%3A0">Reken door</a></div></article>
+<article class="bv-kaart" id="ecoflow" data-type="stekker" data-dagprijs="zelf" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">EcoFlow <span>STREAM AC 5000</span></h3><span class="bv-type">Stekker</span></div><div class="bv-cellen"><span class="bv-cel"><b>5,02 kWh</b></span><span class="bv-cel">800 W via het stopcontact</span><span class="bv-cel"><b>€1.399</b></span><span class="bv-cel">€279 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-zelf">Handelt zelf op de dagprijs</span> Haalt zelf elk uur de Nederlandse dagprijzen op. Werkt met P1-meters van EcoFlow, HomeWizard, Shelly en Tibber. Voor sommige slimme functies vraagt EcoFlow mogelijk een abonnement.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Werkt met veel P1-meters, ook die van HomeWizard</li><li>10 jaar garantie en 10.000 laadbeurten</li><li>De garantie noemt een ondergrens: 60% capaciteit</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>Uitverkocht bij EcoFlow op 20 november</li><li>Mogelijk een abonnement voor de slimme functies</li><li>Rendement en sluipverbruik niet opgegeven</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>€1.399 in de aanbieding, adviesprijs €1.699; op 20 november uitverkocht bij EcoFlow. Bundels van 10 en 15 kWh: €2.598 en €3.797.</dd><dt>Garantie</dt><dd>10 jaar, 10.000 laadbeurten (tot minstens 60% capaciteit)</dd><dt>Rendement</dt><dd>niet opgegeven; wij rekenen met 80%</dd><dt>Sluipverbruik</dt><dd>niet opgegeven; wij rekenen met 10 watt</dd><dt>Uit te breiden</dt><dd>bundels van 10 en 15 kWh; tot 90 kWh is aangekondigd</dd><dt>Noodstroom</dt><dd>volgens EcoFlow zonder onderbreking</dd><dt>Plaatsing</dt><dd>IP65, van -20 tot 55 °C</dd></dl><p class="bv-bron">Bronnen: <a href="https://www.ecoflow.com/nl/stream-series-plug-in-thuisbatterij" rel="noopener" target="_blank">EcoFlow STREAM</a> · <a href="https://www.ecoflow.com/nl/ecoflow-stream-plug-in-thuisbatterij" rel="noopener" target="_blank">EcoFlow, prijzen</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=ecoflow%3A0">Reken door</a></div></article>
+<article class="bv-kaart" id="homewizard" data-type="stekker" data-dagprijs="zelf" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">HomeWizard <span>Plug-In Battery</span></h3><span class="bv-type">Stekker</span></div><div class="bv-cellen"><span class="bv-cel"><b>2,7 kWh</b></span><span class="bv-cel">800 W via het stopcontact</span><span class="bv-cel"><b>€1.195</b></span><span class="bv-cel">€443 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-zelf">Handelt zelf op de dagprijs</span> Handelt zelf op de dagprijs via de HomeWizard-app. Lokale API, werkt met Home Assistant. Geen abonnement.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Zelf in het stopcontact, geen installateur nodig</li><li>Zuinig in rust: 1 watt volgens HomeWizard</li><li>Lokale API, goed te koppelen met Home Assistant</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>Maar 2 jaar fabrieksgarantie, daarna een ruilservice</li><li>Hooguit 800 watt: een waterkoker of oven vangt hij maar voor een deel op</li><li>Geen noodstroom en niet buiten te plaatsen</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>€1.195 adviesprijs; in de aanbieding €1.075 (november 2026). De P1-meter die je nodig hebt kost €25 los.</dd><dt>Garantie</dt><dd>2 jaar fabrieksgarantie, daarna een ruilservice tot 7 jaar of 4.000 laadbeurten</dd><dt>Rendement</dt><dd>70 tot 85% heen en terug, volgens HomeWizard</dd><dt>Sluipverbruik</dt><dd>1 watt (HomeWizard)</dd><dt>Uit te breiden</dt><dd>tot 4 stuks (10,8 kWh); boven 800 watt samen heb je een eigen groep nodig</dd><dt>Noodstroom</dt><dd>nee</dd><dt>Plaatsing</dt><dd>alleen binnen, vorstvrij</dd></dl><p class="bv-bron">Bronnen: <a href="https://www.homewizard.com/nl/plug-in-battery/" rel="noopener" target="_blank">HomeWizard</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=homewizard%3A0">Reken door</a></div></article>
+<article class="bv-kaart" id="zonneplan" data-type="vast" data-dagprijs="via-leverancier" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">Zonneplan <span>Nexus</span></h3><span class="bv-type">Vast, met installateur</span></div><div class="bv-cellen"><span class="bv-cel"><b>10 of 20 kWh</b></span><span class="bv-cel">4,4 of 5 kW</span><span class="bv-cel">met installatie <b>€5.490 / €7.990</b></span><span class="bv-cel">€400 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-lev">Handelt via je leverancier</span> Zonneplan stuurt de batterij zelf aan (Powerplay) als je een energiecontract bij Zonneplan hebt. Die extra opbrengst zit niet in onze berekening. Een open API voor Home Assistant vonden we niet.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Scherpe prijs per kWh bij 20 kWh</li><li>Hoog vermogen voor 1-fase: 4,4 kW</li><li>Garantie met een ondergrens van 70%</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>Het volle voordeel alleen met een Zonneplan-contract</li><li>De prijs die Zonneplan noemt is na een btw-teruggave die niet iedereen krijgt</li><li>Geen open API gevonden</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>Zonneplan noemt €4.690 (10 kWh) en €7.290 (20 kWh) inclusief installatie, maar ná btw-teruggave. Die krijg je alleen als je met een dynamisch contract stroom handelt. Andere sites noemen €5.190 tot €5.495 en €7.990; daar rekenen wij mee.</dd><dt>Garantie</dt><dd>10 jaar of 6.000 laadbeurten, met minstens 70% capaciteit</dd><dt>Rendement</dt><dd>tot 90% heen en terug, volgens Zonneplan</dd><dt>Sluipverbruik</dt><dd>niet opgegeven; wij rekenen met 15 watt</dd><dt>Uit te breiden</dt><dd>tot 35 kWh</dd><dt>Noodstroom</dt><dd>optie, €250 extra</dd><dt>Aansluiting</dt><dd>10 kWh op 1-fase; 20 kWh op 1- of 3-fase</dd></dl><p class="bv-bron">Bronnen: <a href="https://www.zonneplan.nl/thuisbatterij/10-kwh-thuisbatterij" rel="noopener" target="_blank">Zonneplan, 10 kWh</a> · <a href="https://www.zonneplan.nl/thuisbatterij/20-kwh-thuisbatterij" rel="noopener" target="_blank">Zonneplan, 20 kWh</a> · <a href="https://www.zonneplan.nl/thuisbatterij/kosten" rel="noopener" target="_blank">Zonneplan, kosten</a> · <a href="https://thuisbatterijenzaak.nl/thuisbatterij-vergelijken/" rel="noopener" target="_blank">Thuisbatterijenzaak (20 kWh)</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=zonneplan%3A0">Reken 10 kWh door</a><a class="bv-reken" href="/batterij-berekenen?mod=zonneplan%3A1">Reken 20 kWh door</a></div></article>
+<article class="bv-kaart" id="sessy" data-type="vast" data-dagprijs="zelf" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">Sessy <span>Thuisbatterij</span></h3><span class="bv-type">Vast, met installateur</span></div><div class="bv-cellen"><span class="bv-cel"><b>5 of 10 kWh</b></span><span class="bv-cel">1,7 kW</span><span class="bv-cel">met installatie <b>€3.850 / €5.800</b></span><span class="bv-cel">€580 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-zelf">Handelt zelf op de dagprijs</span> Handelt zelf op de dagprijs en de onbalansmarkt, zonder abonnement. Open API voor Home Assistant en Homey. Doet ook mee met Slim Stroom Handelen van Frank Energie.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Gemaakt voor de Nederlandse dagprijs, zonder abonnement</li><li>Zuinig in rust: 3 watt volgens Sessy</li><li>Open API voor Home Assistant en Homey</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>Laag vermogen: 2,2 kW laden, 1,7 kW leveren, ook bij 10 kWh</li><li>Prijs is zonder installatie, dus hoger dan hij lijkt</li><li>Geen noodstroom</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>€3.550 (5 kWh) en €5.500 (10 kWh) adviesprijs, zonder installatie. Reken €225 tot €400 voor de installateur; wij rekenen met €3.850 en €5.800.</dd><dt>Garantie</dt><dd>10 jaar op de batterij, 5 jaar op de omvormer, ruim 6.000 laadbeurten</dd><dt>Rendement</dt><dd>85% heen en terug, volgens Sessy</dd><dt>Sluipverbruik</dt><dd>3 watt (Sessy)</dd><dt>Uit te breiden</dt><dd>meerdere stuks naast elkaar</dd><dt>Noodstroom</dt><dd>nee (de nieuwe Sessy Plus wel)</dd><dt>Plaatsing</dt><dd>binnen, 0 tot 40 °C</dd><dt>Aansluiting</dt><dd>werkt met 1- en 3-fase</dd></dl><p class="bv-bron">Bronnen: <a href="https://www.sessy.nl/specificaties/" rel="noopener" target="_blank">Sessy, specificaties</a> · <a href="https://www.sessy.nl/" rel="noopener" target="_blank">Sessy, prijzen</a> · <a href="https://solarmagazine.nl/nieuws-zonne-energie/i36856/samenwerking-frank-energie-bliq-sessy-en-accuselect-voor-slim-stroom-handelen" rel="noopener" target="_blank">Solar Magazine over Frank en Sessy</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=sessy%3A0">Reken 5 kWh door</a><a class="bv-reken" href="/batterij-berekenen?mod=sessy%3A1">Reken 10 kWh door</a></div></article>
+<article class="bv-kaart" id="byd" data-type="vast" data-dagprijs="beperkt" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">BYD <span>Battery-Box Premium HVS</span></h3><span class="bv-type">Vast, met installateur</span></div><div class="bv-cellen"><span class="bv-cel"><b>10,24 kWh</b></span><span class="bv-cel">5 kW</span><span class="bv-cel">met installatie <b>€6.000</b></span><span class="bv-cel">€586 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-beperkt">Handelt niet zelf op de dagprijs</span> Dit is alleen de batterij: een hybride omvormer van een ander merk stuurt hem. Handelen op de dagprijs regel je via die omvormer, je leverancier of Home Assistant.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Bij de zuinigste systemen in de Duitse test van 2026</li><li>Modulair en ver uit te breiden</li><li>Groot merk, veel installateurs kennen hem</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>Je hebt een geschikte hybride omvormer nodig</li><li>Geen eigen app voor handelen op de dagprijs</li><li>Nederlandse prijzen zijn moeilijk te vinden</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>Rond €6.000 voor 10 kWh inclusief installatie (Thuisbatterijenzaak, september 2026). De batterij alleen kost €3.100 tot €3.300 in Duitse webshops.</dd><dt>Garantie</dt><dd>10 jaar</dd><dt>Rendement</dt><dd>niet opgegeven; BYD hoorde in 2026 bij de zuinigste systemen in de Duitse Stromspeicher-Inspektion. Wij rekenen met 90%</dd><dt>Sluipverbruik</dt><dd>niet opgegeven; wij rekenen met 15 watt</dd><dt>Uit te breiden</dt><dd>5,1 tot 12,8 kWh per kast, tot 38,4 kWh met 3 kasten</dd><dt>Noodstroom</dt><dd>hangt af van de omvormer</dd><dt>Aansluiting</dt><dd>hangt af van de omvormer</dd></dl><p class="bv-bron">Bronnen: <a href="https://www.bydbatterybox.com/" rel="noopener" target="_blank">BYD Battery-Box</a> · <a href="https://www.pv-magazine.de/2026/03/05/neue-und-mehr-testsieger-bei-der-stromspeicher-inspektion-2026-fox-ess-sma-sax-power-kostal-und-byd-ueberzeugen-mit-hoher-effizienz/" rel="noopener" target="_blank">pv magazine over de Stromspeicher-Inspektion 2026</a> · <a href="https://thuisbatterijenzaak.nl/thuisbatterij-vergelijken/" rel="noopener" target="_blank">Thuisbatterijenzaak</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=byd%3A0">Reken door</a></div></article>
+<article class="bv-kaart" id="huawei" data-type="vast" data-dagprijs="beperkt" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">Huawei <span>LUNA2000-S1</span></h3><span class="bv-type">Vast, met installateur</span></div><div class="bv-cellen"><span class="bv-cel"><b>10 kWh</b></span><span class="bv-cel">5 kW</span><span class="bv-cel">met installatie <b>€6.150</b></span><span class="bv-cel">€615 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-beperkt">Handelt niet zelf op de dagprijs</span> Werkt alleen met een Huawei-omvormer. De app laadt op ingestelde tijden. Home Assistant via een integratie van gebruikers zelf.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Logische keus als je al een Huawei-omvormer hebt</li><li>Buiten te plaatsen en stil</li><li>Modulair van 5 tot 21 kWh</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>Alleen met een Huawei-omvormer</li><li>Handelt niet zelf op de dagprijs: dat regel je zelf of via een andere partij</li><li>Rendement en sluipverbruik niet opgegeven</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>€5.800 tot €6.500 voor 10 kWh (2 modules van 5 kWh) inclusief installatie, volgens Slimster (2026). Wij rekenen met €6.150.</dd><dt>Garantie</dt><dd>Huawei noemt een levensduur tot 15 jaar; de precieze voorwaarden staan in een aparte garantiebrief</dd><dt>Rendement</dt><dd>niet opgegeven; wij rekenen met 90%</dd><dt>Sluipverbruik</dt><dd>niet opgegeven; wij rekenen met 15 watt</dd><dt>Uit te breiden</dt><dd>5 tot 21 kWh per systeem</dd><dt>Noodstroom</dt><dd>via de FusionSolar-app, met de juiste Huawei-omvormer</dd><dt>Plaatsing</dt><dd>binnen en buiten (IP66), stil (onder 29 dB)</dd><dt>Aansluiting</dt><dd>1- en 3-fase</dd></dl><p class="bv-bron">Bronnen: <a href="https://solar.huawei.com/nl/products/luna2000-7-14-21-s1/specs/" rel="noopener" target="_blank">Huawei, specificaties</a> · <a href="https://slimster.nl/thuisbatterij/merken/huawei-thuisbatterij/" rel="noopener" target="_blank">Slimster</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=huawei%3A0">Reken door</a></div></article>
+<article class="bv-kaart" id="alphaess" data-type="vast" data-dagprijs="via-leverancier" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">AlphaESS <span>SMILE-G3</span></h3><span class="bv-type">Vast, met installateur</span></div><div class="bv-cellen"><span class="bv-cel"><b>10,1 kWh</b></span><span class="bv-cel">5 kW</span><span class="bv-cel">met installatie <b>€6.700</b></span><span class="bv-cel">€663 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-lev">Handelt via je leverancier</span> Volgens AlphaESS gekoppeld aan Frank Energie en andere Nederlandse partijen die de batterij laten handelen.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Veelverkocht in Nederland, dus veel installateurs</li><li>Gekoppeld aan Frank Energie</li><li>Ver uit te breiden</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>Garantie: de bronnen noemen 5 of 10 jaar op het product</li><li>Capaciteit op AlphaESS' eigen site spreekt zichzelf tegen</li><li>Duurder per kWh dan Zonneplan of BYD</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>Vanaf €6.716 inclusief btw en installatie (Energie Morgen, oktober 2026); vergelijkers noemen €6.500 tot €8.500.</dd><dt>Garantie</dt><dd>AlphaESS noemt 5 jaar op het product en 10 jaar op de batterij; installateurs noemen 10 jaar op beide</dd><dt>Rendement</dt><dd>niet opgegeven; wij rekenen met 90%</dd><dt>Sluipverbruik</dt><dd>niet opgegeven; wij rekenen met 15 watt</dd><dt>Uit te breiden</dt><dd>van 3,8 tot ruim 60 kWh</dd><dt>Noodstroom</dt><dd>met een back-upkast, tegen meerprijs</dd><dt>Plaatsing</dt><dd>binnen en buiten (IP65)</dd><dt>Aansluiting</dt><dd>1-fase met 5 kW; er is ook een 3-fase-versie</dd></dl><p class="bv-bron">Bronnen: <a href="https://www.alphaess.com/smile-g3-3-6kw-5kw-residential-energy-storage-system" rel="noopener" target="_blank">AlphaESS, SMILE-G3</a> · <a href="https://energiemorgen.nl/thuisbatterij/vergelijken" rel="noopener" target="_blank">Energie Morgen</a> · <a href="https://eu.alphaess.com/blogs/blog/alphaess-top-1-residential-battery-storage-netherlands-28-8-market-share-h1-2025" rel="noopener" target="_blank">AlphaESS over Nederland</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=alphaess%3A0">Reken door</a></div></article>
+<article class="bv-kaart" id="tesla" data-type="vast" data-dagprijs="beperkt" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">Tesla <span>Powerwall 3</span></h3><span class="bv-type">Vast, met installateur</span></div><div class="bv-cellen"><span class="bv-cel"><b>13,5 kWh</b></span><span class="bv-cel">5 kW</span><span class="bv-cel">met installatie <b>€10.500</b></span><span class="bv-cel">€778 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-beperkt">Handelt niet zelf op de dagprijs</span> Tesla-app met laden op vaste tijden. Een koppeling met Nederlandse dynamische leveranciers vonden we niet.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Grote capaciteit in één kast, met de omvormer erin</li><li>Bekend merk met veel installateurs</li><li>Uit te breiden</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>Hoogste prijs per kWh in dit overzicht</li><li>Het vermogen in Nederlandse pakketten wisselt (4,6 tot 11,5 kW): vraag ernaar</li><li>Geen bekende koppeling met Nederlandse dynamische leveranciers</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>Alleen de Powerwall kost €7.779; geïnstalleerd €9.500 tot €13.500 volgens installateurs en vergelijkers (september 2026). Wij rekenen met €10.500.</dd><dt>Garantie</dt><dd>10 jaar; de Nederlandse garantievoorwaarden vonden we niet</dd><dt>Rendement</dt><dd>niet gevonden voor Nederland; wij rekenen met 90%</dd><dt>Sluipverbruik</dt><dd>niet opgegeven; wij rekenen met 15 watt</dd><dt>Uit te breiden</dt><dd>met de Powerwall 3 Expansion</dd><dt>Noodstroom</dt><dd>mogelijk; vraag de installateur naar de schakelkast</dd><dt>Aansluiting</dt><dd>Powerwall 3 op 1-fase; de Powerwall 3P is de 3-fase-versie</dd></dl><p class="bv-bron">Bronnen: <a href="https://solarmagazine.nl/nieuws-zonne-energie/i45050/nieuwste-versie-van-tesla-s-thuisbatterij-nu-in-nederland-verkrijgbaar-powerwall-3p-geschikt-voor-driefase-aansluiting" rel="noopener" target="_blank">Solar Magazine over de Powerwall 3P</a> · <a href="https://thuisbatterijenzaak.nl/thuisbatterij-vergelijken/" rel="noopener" target="_blank">Thuisbatterijenzaak</a> · <a href="https://www.ecoquote.nl/thuisbatterij/merken" rel="noopener" target="_blank">EcoQuote</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=tesla%3A0">Reken door</a></div></article>
+<article class="bv-kaart" id="sigenergy" data-type="vast" data-dagprijs="beperkt" data-gecontroleerd="2026-11-20"><div class="bv-kop"><h3 class="bv-naam">Sigenergy <span>SigenStor</span></h3><span class="bv-type">Vast, met installateur</span></div><div class="bv-cellen"><span class="bv-cel"><b>9 kWh</b></span><span class="bv-cel">4,6 kW</span><span class="bv-cel">met installatie <b>€8.500</b></span><span class="bv-cel">€944 per kWh</span></div><p class="bv-sturing"><span class="bv-badge b-beperkt">Handelt niet zelf op de dagprijs</span> mySigen-app met een AI-modus. Een koppeling met Nederlandse dynamische leveranciers vonden we niet.</p><div class="bv-voortegen"><div class="bv-vt voor"><h4>Voor</h4><ul><li>Omvormer, batterij en desgewenst laadpaal in één systeem</li><li>Buiten te plaatsen</li><li>Modulair en snel te installeren</li></ul></div><div class="bv-vt tegen"><h4>Tegen</h4><ul><li>De prijzen lopen het verst uiteen van alle merken hier</li><li>Duur per kWh</li><li>Onduidelijk hoe hij op de dagprijs stuurt</li></ul></div></div><details class="bv-meer"><summary>Garantie, rendement en bronnen</summary><dl><dt>Prijs</dt><dd>€6.500 tot €10.000 voor 8 tot 11 kWh inclusief installatie; de bronnen lopen ver uiteen (Frank vanaf €6.499 zonder btw voor 8 kWh, Slimster €8.500 tot €10.000 voor 10,8 kWh). Wij rekenen met €8.500 voor 9 kWh.</dd><dt>Garantie</dt><dd>10 jaar op het product; een ondergrens voor de capaciteit vonden we niet</dd><dt>Rendement</dt><dd>niet opgegeven; wij rekenen met 90%</dd><dt>Sluipverbruik</dt><dd>niet opgegeven; wij rekenen met 15 watt</dd><dt>Uit te breiden</dt><dd>1 tot 6 modules per kast</dd><dt>Noodstroom</dt><dd>met de Sigen-gateway</dd><dt>Plaatsing</dt><dd>binnen en buiten (IP66)</dd><dt>Aansluiting</dt><dd>1- en 3-fase</dd></dl><p class="bv-bron">Bronnen: <a href="https://www.sigenergy.com/nl/products/sigenstor/spec" rel="noopener" target="_blank">Sigenergy, specificaties</a> · <a href="https://www.frankenergie.nl/nl/thuisbatterij/vergelijken" rel="noopener" target="_blank">Frank Energie</a> · <a href="https://slimster.nl/thuisbatterij/merken/sigenergy-thuisbatterij/" rel="noopener" target="_blank">Slimster</a>. <span class="bv-datum">Gecontroleerd op 20 november 2026.</span></p></details><div class="bv-acties"><a class="bv-reken" href="/batterij-berekenen?mod=sigenergy%3A0">Reken door</a></div></article>
+        <!-- BUILD:LIJST:END --></div>
+
+    <h2>Zo lees je de lijst</h2>
+    <ul>
+      <li><strong>Capaciteit (kWh)</strong> is hoeveel stroom erin past. <strong>Vermogen (kW)</strong> is hoe snel hij laadt en levert. Een stekkerbatterij levert maximaal 800 watt via het stopcontact, wat de capaciteit ook is.</li>
+      <li><strong>Prijs</strong> bij vaste batterijen is inclusief installatie, voor zover we dat konden vinden. Offertes van installateurs lopen flink uiteen, dus vraag er altijd een paar op.</li>
+      <li><strong>Handelt zelf op de dagprijs</strong> betekent dat de batterij uit zichzelf laadt als stroom goedkoop is en levert als hij duur is. Bij "via je leverancier" heb je daarvoor een contract bij een bepaalde leverancier nodig.</li>
+      <li><strong>Sluipverbruik</strong> is wat de batterij zelf gebruikt als hij niets doet. 15 watt lijkt weinig, maar is ruim 130 kWh per jaar.</li>
+    </ul>
+    <p>De lijst staat op type en daarna op prijs per kWh, goedkoopste eerst. Dat zegt niets over wat het beste bij jou past. Een grote batterij is per kWh vaak goedkoper, maar levert met een dynamisch contract per extra kWh steeds minder op. Meer daarover in <a href="/kennisbank/welke-thuisbatterij-past-bij-mij">welke thuisbatterij past bij mij</a> en <a href="/kennisbank/thuisbatterij-merken-vergelijken">thuisbatterij-merken vergelijken</a>.</p>
+
+    <h2>Niet opgenomen</h2>
+    <p>Er zijn meer merken. Deze staan er bewust niet bij:</p>
+    <div class="bv-niet"><!-- BUILD:NIET:START — automatisch gegenereerd door build-batterijen.js; niet handmatig bewerken -->
+        <ul><li><b>Zendure SolarFlow</b>: de productpagina was niet bereikbaar, dus de specs konden we niet controleren.</li><li><b>Growatt APX</b>: geen Nederlandse prijs en geen informatie over de aansturing gevonden.</li><li><b>Victron, Pylontech en Dyness</b>: losse onderdelen die een installateur tot een systeem bouwt; daar is geen prijs voor één product te geven.</li></ul>
+        <!-- BUILD:NIET:END --></div>
+
+    <h2>Verantwoording</h2>
+    <p>Ik heb geen afspraak met een fabrikant of verkoper en er staan geen verwijslinks op deze pagina. Zelf heb ik een Solis-batterij en ben ik klant bij Tibber. Die batterij staat hier niet in, omdat je hem alleen als losse onderdelen via een installateur koopt.</p>
+    <p>Specs komen van de eigen pagina's van de fabrikant, prijzen van webwinkels, vergelijkers en installateurs. Bij elk model staan de bronnen en de datum waarop ik ze heb gecontroleerd. Prijzen veranderen vaak; zie ze als richtprijs. Klopt er iets niet, laat het weten via <a href="https://x.com/stroomtarief" target="_blank" rel="noopener">@stroomtarief</a>. Zie ook de <a href="/disclaimer">disclaimer</a>.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><strong>stroomvoorspeller.nl</strong></p>
+        <p class="footer-tag">Onafhankelijk, eenvoudig, eerlijk over wat we wel en niet weten.</p>
+      </div>
+      <div>
+        <p class="footer-meta">
+          <a href="/privacy">Privacy</a> ·
+          <a href="/cookies">Cookies</a> ·
+          <a href="/disclaimer">Disclaimer</a>
+        </p>
+        <p class="footer-meta">
+          <a href="/batterij-berekenen">Batterij berekenen</a> ·
+          <a href="/batterij">Thuisbatterij</a>
+        </p>
+        <p class="footer-meta-small">Project van één persoon met een zwak voor tech, smart home en AI.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/batterijen-render.js?v=1"></script>
+  <script>
+  (function () {
+    "use strict";
+    var lijst = document.getElementById("bv-lijst");
+    var kaarten = lijst.querySelectorAll(".bv-kaart");
+    var OPSLAG = "sv.bv-type";
+
+    function filter(type) {
+      for (var i = 0; i < kaarten.length; i++) kaarten[i].hidden = type !== "alle" && kaarten[i].getAttribute("data-type") !== type;
+    }
+    document.getElementById("bv-filter").addEventListener("change", function (e) {
+      if (e.target.name !== "bv-type") return;
+      filter(e.target.value);
+      try { localStorage.setItem(OPSLAG, e.target.value); } catch (x) { /* geen opslag */ }
+    });
+    var eerder = null;
+    try { eerder = localStorage.getItem(OPSLAG); } catch (x) { /* leeg */ }
+    // een link naar één model (#id) toont altijd alles
+    if (!location.hash && (eerder === "stekker" || eerder === "vast")) {
+      var r = document.querySelector('input[name="bv-type"][value="' + eerder + '"]');
+      if (r) { r.checked = true; filter(eerder); }
+    }
+
+    // gegevens die langer dan 90 dagen niet zijn gecontroleerd: markeren
+    if (window.BatRender) {
+      var nu = Date.now();
+      for (var j = 0; j < kaarten.length; j++) {
+        var g = kaarten[j].getAttribute("data-gecontroleerd");
+        if (g && BatRender.dagenOud(g, nu) > BatRender.OUD_DAGEN) {
+          var d = kaarten[j].querySelector(".bv-datum");
+          if (d) { d.classList.add("oud"); d.textContent = "Gecontroleerd op " + BatRender.datum(g) + "; dit kan inmiddels anders zijn."; }
+        }
+      }
+    }
+  })();
+  </script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script src="/nav.js" defer></script>
+</body>
+</html>

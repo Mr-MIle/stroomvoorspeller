@@ -40,9 +40,16 @@ const MODUS_TXT={
  max:"De batterij benut elk voordeel: laden als stroom goedkoop is, gebruiken of terugleveren als het duur is. Meeste opbrengst, maar ook de meeste laadbeurten en dus meer slijtage."
 };
 const STEKKER_KWH=2.7, STEKKER_KW=0.8, STEKKER_PRIJS=1195;   // stekkerbatterij: klein, 800 watt, zonder installateur
+// De stekkerbatterijen in de capaciteitskaarten: 2,7 kWh (HomeWizard) en 5,12 kWh (Marstek Venus E), allebei 800 watt.
+// sluip = sluipverbruik in watt (HomeWizard noemt 1 W; voor de 5,12 kWh is niets opgegeven, dus de standaard).
+const STEKKER_OPT=[{kwh:2.7,prijs:1195,sluip:1},{kwh:5.12,prijs:1400,sluip:10}];
 // Rendement per richting. Een vaste batterij haalt rond 90% heen en terug. Een stekkerbatterij is AC-gekoppeld met
 // een kleine omvormer die vaak op laag vermogen draait; HomeWizard noemt zelf 70 tot 85%. We rekenen met 80%.
 const EFF_VAST=0.95, EFF_STEKKER=0.894;
+// Sluipverbruik: wat de batterij en zijn omvormer in rust gebruiken. Gemeten waarden lopen van onder 1 tot 36 watt bij
+// stekkerbatterijen (Test-Aankoop 2026) en van een paar tot ruim 60 watt bij vaste systemen. Zonder opgave rekenen we
+// met 10 en 15 watt. 15 watt is 131 kWh per jaar.
+const SLUIP_VAST=15, SLUIP_STEKKER=10;
 
 // ---------- voorbeeldprijzen (alleen als het archief niet laadt) ----------
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -133,6 +140,8 @@ function dayInputs(y,m,d,p){
     s=solarDay(y,m,d,p.solarKwh); l=consDay(y,m,p.base,p.hp);
     if(q){ s=split4(s); l=split4(l); }
   }
+  // sluipverbruik van de batterij telt als extra verbruik, alleen als er een batterij is
+  if(p.standby>0&&p.cap>0.01){ const e=p.standby*(q?0.25:1); for(let i=0;i<l.length;i++) l[i]+=e; }
   return {q, cp:pr.e.map(e=>(e/1000+p.markup+EB)*BTW), tb:pr.e.map(e=>e/1000-(p.tlv||0)), s, l, e:pr.e};
 }
 function toRes(x,q){
@@ -222,6 +231,7 @@ function planDay(cpA,tbA,solarA,loadA,bat,mode,socIn){
   for(let t=H-1;t>=0;t--){ if(!N){ V[t]=best(t,0,-1); continue; } for(let i=0;i<=N;i++) V[t*N1+i]=best(t,i*st,i); }
   // eerste nExec stappen uitvoeren en boeken
   let x= N? Math.max(0,Math.min(cap,socIn||0)) : 0, gridPool=0;   // gridPool = deel van de inhoud uit het net
+  const sb=bat.sb||0;
   const r={solToLoad:0,batToLoad:0,expKwh:0,soldKwh:0,soldGridKwh:0,solarGen:0,charged:0,loadTot:0,impKwh:0,costWithout:0,costWith:0,solSave:0,batSave:0,expRev:0,soldRev:0};
   for(let t=0;t<Math.min(nExec,H);t++){
     best(t,x,-1); const dS=bdS;
@@ -230,8 +240,9 @@ function planDay(cpA,tbA,solarA,loadA,bat,mode,socIn){
     else if(dS<0&&x>1e-9){ const frac=Math.min(1,gridPool/x); r.soldGridKwh+=f.sold*frac; gridPool-=(-dS)*frac; }
     x=Math.max(0,Math.min(cap,x+dS)); gridPool=Math.max(0,Math.min(gridPool,x));
     r.solToLoad+=f.solL; r.batToLoad+=f.batL; r.expKwh+=f.expK; r.soldKwh+=f.sold; r.impKwh+=f.imp;
-    r.solarGen+=solarA[t]; r.loadTot+=loadA[t];
-    r.costWithout+=loadA[t]*cpA[t]; r.costWith+=f.cost;
+    // 'zonder' = je huis zonder zon en batterij, dus zonder het sluipverbruik van de batterij (sb per stap)
+    r.solarGen+=solarA[t]; r.loadTot+=loadA[t]-sb;
+    r.costWithout+=(loadA[t]-sb)*cpA[t]; r.costWith+=f.cost;
     r.solSave+=f.solL*cpA[t]; r.batSave+=f.batL*cpA[t]; r.expRev+=f.expK*tbA[t]; r.soldRev+=f.sold*tbA[t];
   }
   r.socOut=x;
@@ -252,7 +263,8 @@ function simulateMonth(y,m,p,lastDay){
       if(t){ const tt=toRes(t,today.q), n=(PLAN_H-24)*(today.q?4:1);
         cp=cp.concat(tt.cp.slice(0,n)); tb=tb.concat(tt.tb.slice(0,n)); s=s.concat(tt.s.slice(0,n)); l=l.concat(tt.l.slice(0,n)); }
     }
-    const f=planDay(cp,tb,s,l,{cap:p.cap,pwr:p.pwr,ce:p.ce,de:p.de,dt:today.q?0.25:1,nExec:today.q?96:24,noExport:p.noExport},p.mode,soc);
+    const dt=today.q?0.25:1, sb=(p.standby>0&&p.cap>0.01)? p.standby*dt : 0;   // sluipverbruik per stap, zit al in l
+    const f=planDay(cp,tb,s,l,{cap:p.cap,pwr:p.pwr,ce:p.ce,de:p.de,dt,nExec:today.q?96:24,noExport:p.noExport,sb},p.mode,soc);
     soc=Math.min(f.socOut,p.cap); agg.days++;
     for(const k of Object.keys(f)) if(k in agg) agg[k]+=f[k];
   }
@@ -390,19 +402,32 @@ function paybackYears(price, yearly, vast=0){
 }
 // hoogste aanschafprijs waarbij de batterij zich binnen 'jaren' terugverdient
 function breakEven(yearly,jaren,vast=0){ let t=0; for(let k=0;k<jaren;k++) t+=yearly*Math.pow(DEGRADE,k)-vast; return t; }
-// laadvermogen bij een batterijmaat: stekker 0,8 kW, eigen invoer voor jouw maat, anders 0,5 x capaciteit
-const isStekker=c=>Math.abs(c-STEKKER_KWH)<0.01;
+// Is de batterij bij deze capaciteit een stekkerbatterij? De vaste stekkermaten uit de kaarten, of jouw eigen keuze
+// (p.stekUser, bijvoorbeeld een stekkermodel uit de lijst) bij jouw capaciteit.
+const isUserCap=(c,p)=> !!p&&p.capKwh>0&&Math.abs(c-p.capKwh)<0.01;
+const stekOpt=c=> STEKKER_OPT.find(o=>Math.abs(c-o.kwh)<0.01);
+const isStekker=(c,p)=> (isUserCap(c,p)&&p.stekUser!=null)? !!p.stekUser : !!stekOpt(c);
+// laadvermogen: eigen invoer voor jouw maat, anders stekker 0,8 kW en vast 0,5 x capaciteit
 function pwrFor(capKwh,p){
-  if(Math.abs(capKwh-STEKKER_KWH)<0.01) return STEKKER_KW;
-  if(p&&p.pwrUser>0&&Math.abs(capKwh-p.capKwh)<0.01) return p.pwrUser;
+  if(isUserCap(capKwh,p)&&p.pwrUser>0) return p.pwrUser;
+  if(isStekker(capKwh,p)) return STEKKER_KW;
   return Math.max(0.01,capKwh*0.5);
 }
 let MONTHS=[];
-const effFor=c=> isStekker(c)? EFF_STEKKER : EFF_VAST;
+// rendement per richting: jouw model (rteUser, heen en terug) of de standaard
+const effFor=(c,p)=> (isUserCap(c,p)&&p.rteUser>0&&!isStekker(c,p))? Math.sqrt(p.rteUser) : (isStekker(c,p)? EFF_STEKKER : EFF_VAST);
+// sluipverbruik in watt: jouw invoer, een bekende stekkermaat, of de standaard
+function sluipFor(c,p){
+  if(!(c>0)) return 0;
+  if(isUserCap(c,p)&&p.sluipUser>=0) return p.sluipUser;
+  if(isStekker(c,p)){ const o=stekOpt(c); return o? o.sluip : SLUIP_STEKKER; }
+  return SLUIP_VAST;
+}
+// p.winMonths: een ander jaar doorrekenen (bandbreedte); anders het gewone jaar of je meterdata
 function yearSaving(p, capKwh){
-  const cap=capKwh*0.9, pwr=pwrFor(capKwh,p), noExport=isStekker(capKwh), ce=effFor(capKwh), de=ce;
+  const cap=capKwh*0.9, pwr=pwrFor(capKwh,p), noExport=isStekker(capKwh,p), ce=effFor(capKwh,p), de=ce, standby=sluipFor(capKwh,p)/1000;
   let tot=0, days=0;
-  for(const o of (p.p1? p.p1.months : MONTHS)){ const a=simulateMonth(o.y,o.m,Object.assign({},p,{cap,pwr,noExport,ce,de})); tot+=(a.costWithout-a.costWith); days+=a.days; }
+  for(const o of (p.p1? p.p1.months : (p.winMonths||MONTHS))){ const a=simulateMonth(o.y,o.m,Object.assign({},p,{cap,pwr,noExport,ce,de,standby})); tot+=(a.costWithout-a.costWith); days+=a.days; }
   return p.p1? (days? tot*365/days : 0) : tot;   // meterdata: omgerekend naar een jaar
 }
 // memo: dezelfde jaarberekening wordt door resultaatpaneel én adviestabel gebruikt
@@ -413,7 +438,8 @@ function yearSavingM(p, capKwh){
   return ysCache[key];
 }
 
-function ysKey(p,capKwh){ return [p.p1?p.p1.id:'-',p.solarKwh,p.base,p.hp,p.markup,p.tlv,p.mode,capKwh,pwrFor(capKwh,p),EB,BTW].join('|'); }
+function ysKey(p,capKwh){ const w=p.winMonths&&p.winMonths.length? p.winMonths[0].y+'-'+p.winMonths[0].m : '';
+  return [p.p1?p.p1.id:'-',p.solarKwh,p.base,p.hp,p.markup,p.tlv,p.mode,capKwh,pwrFor(capKwh,p),isStekker(capKwh,p)?1:0,effFor(capKwh,p),sluipFor(capKwh,p),w,EB,BTW].join('|'); }
 
 // ---------- web worker ----------
 // Bericht in: {id, cfg (config.json), months (jaar), load (te laden prijsmaanden), p, capKwh}; uit: {id, val}.

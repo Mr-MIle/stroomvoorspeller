@@ -1,0 +1,392 @@
+{
+  "bijgewerkt": "2026-11-20",
+  "toelichting": "Thuisbatterijen voor /batterijen-vergelijken en de modelkeuze in /batterij-berekenen. Specs uit de eigen pagina's van de fabrikant, prijzen uit de genoemde bronnen. rekenen = waarmee /batterij-berekenen rekent: kwh (capaciteit), kw (laad- en ontlaadvermogen), prijs (inclusief installatie bij vaste batterijen), rendement (heen en terug; null = standaard 90% vast / 80% stekker), sluip_w (sluipverbruik; null = standaard 15 W vast / 10 W stekker). Na build-batterijen.js draaien.",
+  "standaard": { "rendement_vast": 0.9, "rendement_stekker": 0.8, "sluip_vast_w": 15, "sluip_stekker_w": 10 },
+  "niet_opgenomen": [
+    { "naam": "Zendure SolarFlow", "reden": "de productpagina was niet bereikbaar, dus de specs konden we niet controleren" },
+    { "naam": "Growatt APX", "reden": "geen Nederlandse prijs en geen informatie over de aansturing gevonden" },
+    { "naam": "Victron, Pylontech en Dyness", "reden": "losse onderdelen die een installateur tot een systeem bouwt; daar is geen prijs voor één product te geven" }
+  ],
+  "batterijen": [
+    {
+      "id": "homewizard",
+      "merk": "HomeWizard",
+      "model": "Plug-In Battery",
+      "type": "stekker",
+      "uitvoeringen": [ { "kwh": 2.7, "kw": 0.8, "prijs": 1195 } ],
+      "rendement": null,
+      "rendement_tekst": "70 tot 85% heen en terug, volgens HomeWizard",
+      "sluip_w": 1,
+      "sluip_bron": "HomeWizard",
+      "prijs_tekst": "€1.195 adviesprijs; in de aanbieding €1.075 (november 2026). De P1-meter die je nodig hebt kost €25 los.",
+      "garantie": "2 jaar fabrieksgarantie, daarna een ruilservice tot 7 jaar of 4.000 laadbeurten",
+      "uitbreidbaar": "tot 4 stuks (10,8 kWh); boven 800 watt samen heb je een eigen groep nodig",
+      "noodstroom": "nee",
+      "plaatsing": "alleen binnen, vorstvrij",
+      "sturing": "Handelt zelf op de dagprijs via de HomeWizard-app. Lokale API, werkt met Home Assistant. Geen abonnement.",
+      "dagprijs": "zelf",
+      "voor": [
+        "Zelf in het stopcontact, geen installateur nodig",
+        "Zuinig in rust: 1 watt volgens HomeWizard",
+        "Lokale API, goed te koppelen met Home Assistant"
+      ],
+      "tegen": [
+        "Maar 2 jaar fabrieksgarantie, daarna een ruilservice",
+        "Hooguit 800 watt: een waterkoker of oven vangt hij maar voor een deel op",
+        "Geen noodstroom en niet buiten te plaatsen"
+      ],
+      "bronnen": [ { "naam": "HomeWizard", "url": "https://www.homewizard.com/nl/plug-in-battery/" } ],
+      "gecontroleerd": "2026-11-20"
+    },
+    {
+      "id": "marstek",
+      "merk": "Marstek",
+      "model": "Venus E 3.0",
+      "type": "stekker",
+      "uitvoeringen": [ { "kwh": 5.12, "kw": 0.8, "prijs": 1400 } ],
+      "rendement": null,
+      "rendement_tekst": "Marstek noemt tot 90%; wij rekenen met 80%, zoals bij elke stekkerbatterij",
+      "sluip_w": null,
+      "sluip_bron": null,
+      "prijs_tekst": "€1.099 tot €1.899: de actieprijs en de prijs in Marsteks eigen vragenlijst lopen uiteen (november 2026). Wij rekenen met €1.400. De P1-meter zit erbij.",
+      "garantie": "10 jaar, ruim 6.000 laadbeurten",
+      "uitbreidbaar": "meerdere stuks; Marstek noemt op verschillende pagina's 3 en 6 als maximum",
+      "noodstroom": "aparte noodstroomaansluiting voor een paar apparaten",
+      "plaatsing": "binnen en buiten (IP65); weegt 63 kg",
+      "sturing": "De AI-modus volgt de dagprijs zelf. Geen abonnement. Laden tot 2,5 kW kan alleen met een eigen groep.",
+      "dagprijs": "zelf",
+      "voor": [
+        "Laagste prijs per kWh van de stekkerbatterijen hier",
+        "10 jaar garantie",
+        "Ook buiten op te hangen"
+      ],
+      "tegen": [
+        "Prijs en specs spreken elkaar tegen op Marsteks eigen site",
+        "63 kg: ophangen is een klus voor twee",
+        "Ontladen via het stopcontact hooguit 800 watt"
+      ],
+      "bronnen": [
+        { "naam": "Marstek, productpagina", "url": "https://www.marstek.nl/marstek-venus-e-3-0-thuisbatterij/" },
+        { "naam": "Marstek, prijzen en vragen", "url": "https://www.marstek.nl/" }
+      ],
+      "gecontroleerd": "2026-11-20"
+    },
+    {
+      "id": "anker",
+      "merk": "Anker",
+      "model": "SOLIX Solarbank Max AC",
+      "type": "stekker",
+      "uitvoeringen": [ { "kwh": 7, "kw": 0.8, "prijs": 1899 } ],
+      "rendement": null,
+      "rendement_tekst": "niet opgegeven; wij rekenen met 80%",
+      "sluip_w": null,
+      "sluip_bron": null,
+      "prijs_tekst": "€1.899 in de aanbieding, adviesprijs €2.499 (november 2026).",
+      "garantie": "10 jaar, 10.000 laadbeurten",
+      "uitbreidbaar": "tot 42 kWh met extra batterijen",
+      "noodstroom": "aparte uitgang tot 3.680 W; je hele huis alleen met een extra schakelaar en een vaste aansluiting",
+      "plaatsing": "binnen en buiten (IP66); weegt 73 kg",
+      "sturing": "De AI-modus houdt rekening met de dagprijs. Volgens Anker werkt hij met Slim Stroom Handelen van Frank Energie. Je hebt de P1-meter van Anker of een Shelly-meter nodig.",
+      "dagprijs": "zelf",
+      "voor": [
+        "Veel capaciteit voor een stekkerbatterij",
+        "10 jaar garantie en 10.000 laadbeurten",
+        "Te koppelen aan Frank Energie"
+      ],
+      "tegen": [
+        "Anker noemt zowel 800 als 3.000 watt via het stopcontact; reken op 800",
+        "Rendement en sluipverbruik niet opgegeven",
+        "73 kg"
+      ],
+      "bronnen": [
+        { "naam": "Anker SOLIX", "url": "https://www.ankersolix.com/nl/products/a17e2" },
+        { "naam": "Anker over Frank Energie", "url": "https://www.ankersolix.com/nl/blogs/thuisbatterij-101/haal-meer-uit-thuisbatterij-dynamisch-energiecontract-frank-energie" }
+      ],
+      "gecontroleerd": "2026-11-20"
+    },
+    {
+      "id": "ecoflow",
+      "merk": "EcoFlow",
+      "model": "STREAM AC 5000",
+      "type": "stekker",
+      "uitvoeringen": [ { "kwh": 5.02, "kw": 0.8, "prijs": 1399 } ],
+      "rendement": null,
+      "rendement_tekst": "niet opgegeven; wij rekenen met 80%",
+      "sluip_w": null,
+      "sluip_bron": null,
+      "prijs_tekst": "€1.399 in de aanbieding, adviesprijs €1.699; op 20 november uitverkocht bij EcoFlow. Bundels van 10 en 15 kWh: €2.598 en €3.797.",
+      "garantie": "10 jaar, 10.000 laadbeurten (tot minstens 60% capaciteit)",
+      "uitbreidbaar": "bundels van 10 en 15 kWh; tot 90 kWh is aangekondigd",
+      "noodstroom": "volgens EcoFlow zonder onderbreking",
+      "plaatsing": "IP65, van -20 tot 55 °C",
+      "sturing": "Haalt zelf elk uur de Nederlandse dagprijzen op. Werkt met P1-meters van EcoFlow, HomeWizard, Shelly en Tibber. Voor sommige slimme functies vraagt EcoFlow mogelijk een abonnement.",
+      "dagprijs": "zelf",
+      "voor": [
+        "Werkt met veel P1-meters, ook die van HomeWizard",
+        "10 jaar garantie en 10.000 laadbeurten",
+        "De garantie noemt een ondergrens: 60% capaciteit"
+      ],
+      "tegen": [
+        "Uitverkocht bij EcoFlow op 20 november",
+        "Mogelijk een abonnement voor de slimme functies",
+        "Rendement en sluipverbruik niet opgegeven"
+      ],
+      "bronnen": [
+        { "naam": "EcoFlow STREAM", "url": "https://www.ecoflow.com/nl/stream-series-plug-in-thuisbatterij" },
+        { "naam": "EcoFlow, prijzen", "url": "https://www.ecoflow.com/nl/ecoflow-stream-plug-in-thuisbatterij" }
+      ],
+      "gecontroleerd": "2026-11-20"
+    },
+    {
+      "id": "sessy",
+      "merk": "Sessy",
+      "model": "Thuisbatterij",
+      "type": "vast",
+      "uitvoeringen": [
+        { "kwh": 5, "kw": 1.7, "prijs": 3850 },
+        { "kwh": 10, "kw": 1.7, "prijs": 5800 }
+      ],
+      "rendement": 0.85,
+      "rendement_tekst": "85% heen en terug, volgens Sessy",
+      "sluip_w": 3,
+      "sluip_bron": "Sessy",
+      "prijs_tekst": "€3.550 (5 kWh) en €5.500 (10 kWh) adviesprijs, zonder installatie. Reken €225 tot €400 voor de installateur; wij rekenen met €3.850 en €5.800.",
+      "garantie": "10 jaar op de batterij, 5 jaar op de omvormer, ruim 6.000 laadbeurten",
+      "uitbreidbaar": "meerdere stuks naast elkaar",
+      "noodstroom": "nee (de nieuwe Sessy Plus wel)",
+      "plaatsing": "binnen, 0 tot 40 °C",
+      "fase": "werkt met 1- en 3-fase",
+      "sturing": "Handelt zelf op de dagprijs en de onbalansmarkt, zonder abonnement. Open API voor Home Assistant en Homey. Doet ook mee met Slim Stroom Handelen van Frank Energie.",
+      "dagprijs": "zelf",
+      "voor": [
+        "Gemaakt voor de Nederlandse dagprijs, zonder abonnement",
+        "Zuinig in rust: 3 watt volgens Sessy",
+        "Open API voor Home Assistant en Homey"
+      ],
+      "tegen": [
+        "Laag vermogen: 2,2 kW laden, 1,7 kW leveren, ook bij 10 kWh",
+        "Prijs is zonder installatie, dus hoger dan hij lijkt",
+        "Geen noodstroom"
+      ],
+      "bronnen": [
+        { "naam": "Sessy, specificaties", "url": "https://www.sessy.nl/specificaties/" },
+        { "naam": "Sessy, prijzen", "url": "https://www.sessy.nl/" },
+        { "naam": "Solar Magazine over Frank en Sessy", "url": "https://solarmagazine.nl/nieuws-zonne-energie/i36856/samenwerking-frank-energie-bliq-sessy-en-accuselect-voor-slim-stroom-handelen" }
+      ],
+      "gecontroleerd": "2026-11-20"
+    },
+    {
+      "id": "zonneplan",
+      "merk": "Zonneplan",
+      "model": "Nexus",
+      "type": "vast",
+      "uitvoeringen": [
+        { "kwh": 10, "kw": 4.4, "prijs": 5490 },
+        { "kwh": 20, "kw": 5, "prijs": 7990 }
+      ],
+      "rendement": 0.9,
+      "rendement_tekst": "tot 90% heen en terug, volgens Zonneplan",
+      "sluip_w": null,
+      "sluip_bron": null,
+      "prijs_tekst": "Zonneplan noemt €4.690 (10 kWh) en €7.290 (20 kWh) inclusief installatie, maar ná btw-teruggave. Die krijg je alleen als je met een dynamisch contract stroom handelt. Andere sites noemen €5.190 tot €5.495 en €7.990; daar rekenen wij mee.",
+      "garantie": "10 jaar of 6.000 laadbeurten, met minstens 70% capaciteit",
+      "uitbreidbaar": "tot 35 kWh",
+      "noodstroom": "optie, €250 extra",
+      "plaatsing": null,
+      "fase": "10 kWh op 1-fase; 20 kWh op 1- of 3-fase",
+      "sturing": "Zonneplan stuurt de batterij zelf aan (Powerplay) als je een energiecontract bij Zonneplan hebt. Die extra opbrengst zit niet in onze berekening. Een open API voor Home Assistant vonden we niet.",
+      "dagprijs": "via-leverancier",
+      "voor": [
+        "Scherpe prijs per kWh bij 20 kWh",
+        "Hoog vermogen voor 1-fase: 4,4 kW",
+        "Garantie met een ondergrens van 70%"
+      ],
+      "tegen": [
+        "Het volle voordeel alleen met een Zonneplan-contract",
+        "De prijs die Zonneplan noemt is na een btw-teruggave die niet iedereen krijgt",
+        "Geen open API gevonden"
+      ],
+      "bronnen": [
+        { "naam": "Zonneplan, 10 kWh", "url": "https://www.zonneplan.nl/thuisbatterij/10-kwh-thuisbatterij" },
+        { "naam": "Zonneplan, 20 kWh", "url": "https://www.zonneplan.nl/thuisbatterij/20-kwh-thuisbatterij" },
+        { "naam": "Zonneplan, kosten", "url": "https://www.zonneplan.nl/thuisbatterij/kosten" },
+        { "naam": "Thuisbatterijenzaak (20 kWh)", "url": "https://thuisbatterijenzaak.nl/thuisbatterij-vergelijken/" }
+      ],
+      "gecontroleerd": "2026-11-20"
+    },
+    {
+      "id": "tesla",
+      "merk": "Tesla",
+      "model": "Powerwall 3",
+      "type": "vast",
+      "uitvoeringen": [ { "kwh": 13.5, "kw": 5, "prijs": 10500 } ],
+      "rendement": null,
+      "rendement_tekst": "niet gevonden voor Nederland; wij rekenen met 90%",
+      "sluip_w": null,
+      "sluip_bron": null,
+      "prijs_tekst": "Alleen de Powerwall kost €7.779; geïnstalleerd €9.500 tot €13.500 volgens installateurs en vergelijkers (september 2026). Wij rekenen met €10.500.",
+      "garantie": "10 jaar; de Nederlandse garantievoorwaarden vonden we niet",
+      "uitbreidbaar": "met de Powerwall 3 Expansion",
+      "noodstroom": "mogelijk; vraag de installateur naar de schakelkast",
+      "plaatsing": null,
+      "fase": "Powerwall 3 op 1-fase; de Powerwall 3P is de 3-fase-versie",
+      "sturing": "Tesla-app met laden op vaste tijden. Een koppeling met Nederlandse dynamische leveranciers vonden we niet.",
+      "dagprijs": "beperkt",
+      "voor": [
+        "Grote capaciteit in één kast, met de omvormer erin",
+        "Bekend merk met veel installateurs",
+        "Uit te breiden"
+      ],
+      "tegen": [
+        "Hoogste prijs per kWh in dit overzicht",
+        "Het vermogen in Nederlandse pakketten wisselt (4,6 tot 11,5 kW): vraag ernaar",
+        "Geen bekende koppeling met Nederlandse dynamische leveranciers"
+      ],
+      "bronnen": [
+        { "naam": "Solar Magazine over de Powerwall 3P", "url": "https://solarmagazine.nl/nieuws-zonne-energie/i45050/nieuwste-versie-van-tesla-s-thuisbatterij-nu-in-nederland-verkrijgbaar-powerwall-3p-geschikt-voor-driefase-aansluiting" },
+        { "naam": "Thuisbatterijenzaak", "url": "https://thuisbatterijenzaak.nl/thuisbatterij-vergelijken/" },
+        { "naam": "EcoQuote", "url": "https://www.ecoquote.nl/thuisbatterij/merken" }
+      ],
+      "gecontroleerd": "2026-11-20"
+    },
+    {
+      "id": "huawei",
+      "merk": "Huawei",
+      "model": "LUNA2000-S1",
+      "type": "vast",
+      "uitvoeringen": [ { "kwh": 10, "kw": 5, "prijs": 6150 } ],
+      "rendement": null,
+      "rendement_tekst": "niet opgegeven; wij rekenen met 90%",
+      "sluip_w": null,
+      "sluip_bron": null,
+      "prijs_tekst": "€5.800 tot €6.500 voor 10 kWh (2 modules van 5 kWh) inclusief installatie, volgens Slimster (2026). Wij rekenen met €6.150.",
+      "garantie": "Huawei noemt een levensduur tot 15 jaar; de precieze voorwaarden staan in een aparte garantiebrief",
+      "uitbreidbaar": "5 tot 21 kWh per systeem",
+      "noodstroom": "via de FusionSolar-app, met de juiste Huawei-omvormer",
+      "plaatsing": "binnen en buiten (IP66), stil (onder 29 dB)",
+      "fase": "1- en 3-fase",
+      "sturing": "Werkt alleen met een Huawei-omvormer. De app laadt op ingestelde tijden. Home Assistant via een integratie van gebruikers zelf.",
+      "dagprijs": "beperkt",
+      "voor": [
+        "Logische keus als je al een Huawei-omvormer hebt",
+        "Buiten te plaatsen en stil",
+        "Modulair van 5 tot 21 kWh"
+      ],
+      "tegen": [
+        "Alleen met een Huawei-omvormer",
+        "Handelt niet zelf op de dagprijs: dat regel je zelf of via een andere partij",
+        "Rendement en sluipverbruik niet opgegeven"
+      ],
+      "bronnen": [
+        { "naam": "Huawei, specificaties", "url": "https://solar.huawei.com/nl/products/luna2000-7-14-21-s1/specs/" },
+        { "naam": "Slimster", "url": "https://slimster.nl/thuisbatterij/merken/huawei-thuisbatterij/" }
+      ],
+      "gecontroleerd": "2026-11-20"
+    },
+    {
+      "id": "byd",
+      "merk": "BYD",
+      "model": "Battery-Box Premium HVS",
+      "type": "vast",
+      "uitvoeringen": [ { "kwh": 10.24, "kw": 5, "prijs": 6000 } ],
+      "rendement": null,
+      "rendement_tekst": "niet opgegeven; BYD hoorde in 2026 bij de zuinigste systemen in de Duitse Stromspeicher-Inspektion. Wij rekenen met 90%",
+      "sluip_w": null,
+      "sluip_bron": null,
+      "prijs_tekst": "Rond €6.000 voor 10 kWh inclusief installatie (Thuisbatterijenzaak, september 2026). De batterij alleen kost €3.100 tot €3.300 in Duitse webshops.",
+      "garantie": "10 jaar",
+      "uitbreidbaar": "5,1 tot 12,8 kWh per kast, tot 38,4 kWh met 3 kasten",
+      "noodstroom": "hangt af van de omvormer",
+      "plaatsing": null,
+      "fase": "hangt af van de omvormer",
+      "sturing": "Dit is alleen de batterij: een hybride omvormer van een ander merk stuurt hem. Handelen op de dagprijs regel je via die omvormer, je leverancier of Home Assistant.",
+      "dagprijs": "beperkt",
+      "voor": [
+        "Bij de zuinigste systemen in de Duitse test van 2026",
+        "Modulair en ver uit te breiden",
+        "Groot merk, veel installateurs kennen hem"
+      ],
+      "tegen": [
+        "Je hebt een geschikte hybride omvormer nodig",
+        "Geen eigen app voor handelen op de dagprijs",
+        "Nederlandse prijzen zijn moeilijk te vinden"
+      ],
+      "bronnen": [
+        { "naam": "BYD Battery-Box", "url": "https://www.bydbatterybox.com/" },
+        { "naam": "pv magazine over de Stromspeicher-Inspektion 2026", "url": "https://www.pv-magazine.de/2026/03/05/neue-und-mehr-testsieger-bei-der-stromspeicher-inspektion-2026-fox-ess-sma-sax-power-kostal-und-byd-ueberzeugen-mit-hoher-effizienz/" },
+        { "naam": "Thuisbatterijenzaak", "url": "https://thuisbatterijenzaak.nl/thuisbatterij-vergelijken/" }
+      ],
+      "gecontroleerd": "2026-11-20"
+    },
+    {
+      "id": "alphaess",
+      "merk": "AlphaESS",
+      "model": "SMILE-G3",
+      "type": "vast",
+      "uitvoeringen": [ { "kwh": 10.1, "kw": 5, "prijs": 6700 } ],
+      "rendement": null,
+      "rendement_tekst": "niet opgegeven; wij rekenen met 90%",
+      "sluip_w": null,
+      "sluip_bron": null,
+      "prijs_tekst": "Vanaf €6.716 inclusief btw en installatie (Energie Morgen, oktober 2026); vergelijkers noemen €6.500 tot €8.500.",
+      "garantie": "AlphaESS noemt 5 jaar op het product en 10 jaar op de batterij; installateurs noemen 10 jaar op beide",
+      "uitbreidbaar": "van 3,8 tot ruim 60 kWh",
+      "noodstroom": "met een back-upkast, tegen meerprijs",
+      "plaatsing": "binnen en buiten (IP65)",
+      "fase": "1-fase met 5 kW; er is ook een 3-fase-versie",
+      "sturing": "Volgens AlphaESS gekoppeld aan Frank Energie en andere Nederlandse partijen die de batterij laten handelen.",
+      "dagprijs": "via-leverancier",
+      "voor": [
+        "Veelverkocht in Nederland, dus veel installateurs",
+        "Gekoppeld aan Frank Energie",
+        "Ver uit te breiden"
+      ],
+      "tegen": [
+        "Garantie: de bronnen noemen 5 of 10 jaar op het product",
+        "Capaciteit op AlphaESS' eigen site spreekt zichzelf tegen",
+        "Duurder per kWh dan Zonneplan of BYD"
+      ],
+      "bronnen": [
+        { "naam": "AlphaESS, SMILE-G3", "url": "https://www.alphaess.com/smile-g3-3-6kw-5kw-residential-energy-storage-system" },
+        { "naam": "Energie Morgen", "url": "https://energiemorgen.nl/thuisbatterij/vergelijken" },
+        { "naam": "AlphaESS over Nederland", "url": "https://eu.alphaess.com/blogs/blog/alphaess-top-1-residential-battery-storage-netherlands-28-8-market-share-h1-2025" }
+      ],
+      "gecontroleerd": "2026-11-20"
+    },
+    {
+      "id": "sigenergy",
+      "merk": "Sigenergy",
+      "model": "SigenStor",
+      "type": "vast",
+      "uitvoeringen": [ { "kwh": 9, "kw": 4.6, "prijs": 8500 } ],
+      "rendement": null,
+      "rendement_tekst": "niet opgegeven; wij rekenen met 90%",
+      "sluip_w": null,
+      "sluip_bron": null,
+      "prijs_tekst": "€6.500 tot €10.000 voor 8 tot 11 kWh inclusief installatie; de bronnen lopen ver uiteen (Frank vanaf €6.499 zonder btw voor 8 kWh, Slimster €8.500 tot €10.000 voor 10,8 kWh). Wij rekenen met €8.500 voor 9 kWh.",
+      "garantie": "10 jaar op het product; een ondergrens voor de capaciteit vonden we niet",
+      "uitbreidbaar": "1 tot 6 modules per kast",
+      "noodstroom": "met de Sigen-gateway",
+      "plaatsing": "binnen en buiten (IP66)",
+      "fase": "1- en 3-fase",
+      "sturing": "mySigen-app met een AI-modus. Een koppeling met Nederlandse dynamische leveranciers vonden we niet.",
+      "dagprijs": "beperkt",
+      "voor": [
+        "Omvormer, batterij en desgewenst laadpaal in één systeem",
+        "Buiten te plaatsen",
+        "Modulair en snel te installeren"
+      ],
+      "tegen": [
+        "De prijzen lopen het verst uiteen van alle merken hier",
+        "Duur per kWh",
+        "Onduidelijk hoe hij op de dagprijs stuurt"
+      ],
+      "bronnen": [
+        { "naam": "Sigenergy, specificaties", "url": "https://www.sigenergy.com/nl/products/sigenstor/spec" },
+        { "naam": "Frank Energie", "url": "https://www.frankenergie.nl/nl/thuisbatterij/vergelijken" },
+        { "naam": "Slimster", "url": "https://slimster.nl/thuisbatterij/merken/sigenergy-thuisbatterij/" }
+      ],
+      "gecontroleerd": "2026-11-20"
+    }
+  ]
+}
