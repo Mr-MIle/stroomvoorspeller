@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Wat voorspelde het model vooraf? — Stroomvoorspeller.nl</title>
+  <meta name="description" content="Kies een dag en zie wat het model 2 tot 7 dagen eerder voorspelde, naast de werkelijke stroomprijs. Elke voorspelling staat met datum in de openbare git-geschiedenis." />
+  <meta name="theme-color" content="#1D2B53" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href="https://stroomvoorspeller.nl/over/voorspelarchief" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Stroomvoorspeller.nl" />
+  <meta property="og:title" content="Wat voorspelde het model vooraf? — Stroomvoorspeller.nl" />
+  <meta property="og:description" content="Voorspelling van 2 tot 7 dagen eerder naast de werkelijke prijs, per dag terug te kijken." />
+  <meta property="og:url" content="https://stroomvoorspeller.nl/over/voorspelarchief" />
+  <meta property="og:image" content="https://stroomvoorspeller.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Stroomvoorspeller.nl — voorspelarchief" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Wat voorspelde het model vooraf? — Stroomvoorspeller.nl" />
+  <meta name="twitter:description" content="Voorspelling van 2 tot 7 dagen eerder naast de werkelijke prijs, per dag terug te kijken." />
+  <meta name="twitter:image" content="https://stroomvoorspeller.nl/og-image.png" />
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://stroomvoorspeller.nl/#organization",
+        "name": "Stroomvoorspeller.nl",
+        "url": "https://stroomvoorspeller.nl/",
+        "logo": "https://stroomvoorspeller.nl/logo.svg",
+        "sameAs": [
+          "https://x.com/stroomtarief",
+          "https://github.com/mr-mile/stroomvoorspeller"
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stroomvoorspeller.nl/" },
+          { "@type": "ListItem", "position": 2, "name": "Hoe nauwkeurig is de voorspelling?", "item": "https://stroomvoorspeller.nl/over/performance" },
+          { "@type": "ListItem", "position": 3, "name": "Wat voorspelde het model vooraf?", "item": "https://stroomvoorspeller.nl/over/voorspelarchief" }
+        ]
+      },
+      {
+        "@type": "Dataset",
+        "name": "Voorspelarchief stroomvoorspeller.nl",
+        "description": "Dagelijkse voorspellingen van de Nederlandse day-ahead stroomprijs (EPEX, €/MWh) voor 2 tot 7 dagen vooruit, zoals ze op de dag zelf zijn vastgelegd, vanaf september 2026.",
+        "url": "https://stroomvoorspeller.nl/over/voorspelarchief",
+        "isAccessibleForFree": true,
+        "inLanguage": "nl-NL",
+        "creator": { "@type": "Organization", "@id": "https://stroomvoorspeller.nl/#organization" },
+        "temporalCoverage": "2026-09-12/..",
+        "distribution": [
+          { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://stroomvoorspeller.nl/data/voorspelarchief/index.json" }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0c666a71b274ee7b092122def7755e8"}'></script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <style>
+    .perf-hero {
+      background: var(--surface-2, #f3f5fb);
+      border-bottom: 1px solid var(--border, #e1e5ef);
+      padding: 2rem 0 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .hero-sub {
+      max-width: 60ch;
+      color: var(--text-muted, #555);
+      margin: 0.5rem 0 0;
+      font-size: 0.95rem;
+    }
+    .perf-section { margin-bottom: 2.5rem; }
+    .perf-section h2 {
+      font-size: 1.15rem;
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border, #e1e5ef);
+    }
+    .info-box {
+      background: var(--surface-2, #f3f5fb);
+      border-left: 4px solid var(--accent, #1D2B53);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+
+    /* Dagkeuze */
+    .va-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0 0 1rem;
+    }
+    .va-controls input[type="date"] {
+      font: inherit;
+      padding: 0.45rem 0.6rem;
+      border: 1px solid var(--border, #e1e5ef);
+      border-radius: 8px;
+      background: var(--surface, #fff);
+      color: inherit;
+      min-height: 44px;
+    }
+    .va-btn {
+      font: inherit;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0 0.8rem;
+      border: 1px solid var(--border, #e1e5ef);
+      border-radius: 8px;
+      background: var(--surface, #fff);
+      color: inherit;
+      cursor: pointer;
+    }
+    .va-btn:disabled { opacity: 0.4; cursor: default; }
+    .va-dagnaam { font-weight: 600; margin-left: 0.3rem; }
+
+    /* Horizonkeuze */
+    .va-leads {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin: 0 0 0.6rem;
+    }
+    .va-lead {
+      font: inherit;
+      font-size: 0.85rem;
+      min-height: 40px;
+      min-width: 40px;
+      padding: 0 0.55rem;
+      border: 1px solid var(--border, #e1e5ef);
+      border-radius: 999px;
+      background: var(--surface, #fff);
+      color: inherit;
+      cursor: pointer;
+    }
+    .va-lead[aria-pressed="true"] {
+      background: var(--accent, #1D2B53);
+      border-color: var(--accent, #1D2B53);
+      color: #fff;
+    }
+    .va-lead:disabled { opacity: 0.35; cursor: default; }
+
+    .chart-wrap { position: relative; width: 100%; height: 300px; margin: 0.6rem 0 0.4rem; }
+    .va-legend { font-size: 0.82rem; color: var(--text-muted, #666); margin: 0 0 1.2rem; }
+    .va-legend span { white-space: nowrap; margin-right: 1rem; }
+    .va-swatch { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin-right: 0.3rem; border-radius: 2px; }
+
+    .va-status { font-size: 0.9rem; color: var(--text-muted, #666); margin: 0.4rem 0 1rem; }
+
+    .table-wrap { overflow-x: auto; }
+    .va-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 0.6rem 0 0.4rem; }
+    .va-table th {
+      text-align: left;
+      padding: 0.5rem 0.6rem;
+      background: var(--surface-2, #f3f5fb);
+      border-bottom: 2px solid var(--border, #e1e5ef);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .va-table td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border, #e1e5ef); white-space: nowrap; }
+    .va-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .va-table tr.is-actief td { font-weight: 600; }
+    .va-table a { white-space: nowrap; }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" class="brand-mark">
+        <span class="brand-name">stroomvoorspeller<span class="brand-tld">.nl</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="hoofdmenu">
+        <a href="/">Prijzen</a>
+        <a href="/morgen">Morgen</a>
+        <a href="/aanbieders">Aanbieders</a>
+        <a href="/kennisbank">Kennisbank</a>
+        <a href="/historisch">Historisch</a>
+        <a href="/batterij">Batterij</a>
+        <a href="/integraties">Integraties</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="perf-hero">
+    <div class="container" style="max-width:760px;">
+      <p class="legal-breadcrumb"><a href="/">← homepage</a> / <a href="/over/performance">Nauwkeurigheid</a></p>
+      <h1>Wat voorspelde het model vooraf?</h1>
+      <p class="hero-sub">
+        Kies een dag en zie wat het model 2 tot 7 dagen eerder dacht dat de stroomprijs zou worden,
+        naast wat de prijs echt werd. Elke voorspelling staat met datum en tijd in de openbare
+        git-geschiedenis, dus achteraf bijschaven kan niet.
+      </p>
+    </div>
+  </div>
+
+  <main class="container" style="max-width:760px;">
+
+    <section class="perf-section" aria-labelledby="dag-h2">
+      <h2 id="dag-h2">Kies een dag</h2>
+      <div class="va-controls">
+        <button type="button" class="va-btn" id="va-prev" aria-label="Vorige dag">‹</button>
+        <input type="date" id="va-datum" aria-label="Datum">
+        <button type="button" class="va-btn" id="va-next" aria-label="Volgende dag">›</button>
+        <span class="va-dagnaam" id="va-dagnaam"></span>
+      </div>
+
+      <div class="va-leads" id="va-leads" role="group" aria-label="Hoeveel dagen vooraf">
+        <span style="flex-basis:100%;font-size:0.85rem;color:var(--text-muted,#666);">Hoeveel dagen vooraf voorspeld</span>
+        <button type="button" class="va-lead" data-lead="2" aria-pressed="true">2</button>
+        <button type="button" class="va-lead" data-lead="3" aria-pressed="false">3</button>
+        <button type="button" class="va-lead" data-lead="4" aria-pressed="false">4</button>
+        <button type="button" class="va-lead" data-lead="5" aria-pressed="false">5</button>
+        <button type="button" class="va-lead" data-lead="6" aria-pressed="false">6</button>
+        <button type="button" class="va-lead" data-lead="7" aria-pressed="false">7</button>
+      </div>
+
+      <p class="va-status" id="va-status">Archief wordt geladen…</p>
+
+      <div class="chart-wrap">
+        <canvas id="va-chart" aria-label="Voorspelde en werkelijke prijs per uur"></canvas>
+      </div>
+      <p class="va-legend">
+        <span><i class="va-swatch" id="sw-echt"></i>werkelijke prijs</span>
+        <span><i class="va-swatch" id="sw-voor"></i>voorspelling</span>
+        <span><i class="va-swatch" id="sw-band" style="height:10px;opacity:.35"></i>onzekerheidsband</span>
+      </p>
+
+      <div class="table-wrap">
+        <table class="va-table">
+          <thead>
+            <tr>
+              <th scope="col">Vooraf</th>
+              <th scope="col">Vastgelegd op</th>
+              <th scope="col">Model</th>
+              <th scope="col">Gem. ernaast</th>
+              <th scope="col">Binnen band</th>
+              <th scope="col">Bewijs</th>
+            </tr>
+          </thead>
+          <tbody id="va-tbody">
+            <tr><td colspan="6">Laden…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-muted,#666);">
+        Alle prijzen zijn de kale beursprijs (EPEX day-ahead) in ct/kWh, zonder energiebelasting, btw of opslag.
+        "Gem. ernaast" is de gemiddelde afwijking per uur ten opzichte van de werkelijke prijs.
+      </p>
+    </section>
+
+    <section class="perf-section" aria-labelledby="hoe-h2">
+      <h2 id="hoe-h2">Hoe je dit controleert</h2>
+      <p>
+        Elke avond schrijft het model zijn voorspelling voor de komende zeven dagen weg in
+        <code>data/forecast_archive/forecast_JJJJ-MM-DD.json</code> en zet die direct in de
+        <a href="https://github.com/mr-mile/stroomvoorspeller">openbare repository</a>.
+        De link "git" in de tabel opent de geschiedenis van precies dat bestand: daar zie je wanneer het
+        is vastgelegd en dat het daarna niet meer is veranderd.
+      </p>
+      <p>
+        Het bestand van een dag wordt die dag een paar keer ververst (ochtend, middag, avond).
+        Deze pagina toont de laatste versie van die dag. Ook die is dus minstens twee dagen vóór de getoonde
+        dag vastgelegd.
+      </p>
+    </section>
+
+    <div class="info-box">
+      <strong>Waarom pas vanaf september 2026?</strong><br>
+      Het archief loopt terug tot mei 2026, maar de bestanden van vóór 10 september 2026 zijn op die datum
+      in één keer aan de repository toegevoegd. Voor die periode bewijst de git-geschiedenis dus niet dat
+      ze vooraf bestonden. Daarom laat deze pagina alleen voorspellingen zien die op de dag zelf zijn vastgelegd.
+    </div>
+
+    <div class="info-box">
+      <strong>Waarom geen "1 dag vooraf"?</strong><br>
+      Het archief wordt geschreven nadat EPEX de prijzen voor morgen al heeft gepubliceerd. Een voorspelling
+      voor morgen is op dat moment geen voorspelling meer. Dezelfde regel geldt op de
+      <a href="/over/performance">nauwkeurigheidspagina</a>.
+    </div>
+
+    <div class="info-box">
+      <strong>Let op de modelversie</strong><br>
+      Het model is in deze periode een paar keer vervangen. Een oude dag laat zien wat het model van
+      dát moment voorspelde, niet wat het huidige model zou doen. De kolom "Model" geeft de versie per voorspelling.
+      Wat er per versie veranderde, staat op de <a href="/over/performance#versions-section">nauwkeurigheidspagina</a>.
+    </div>
+
+    <section class="perf-section">
+      <h2>Meer lezen</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+        <a href="/over/performance" style="display:block;padding:1rem;background:var(--surface-2,#f3f5fb);border:1px solid var(--border,#e1e5ef);border-radius:8px;text-decoration:none;color:inherit;">
+          <strong style="color:var(--accent,#1D2B53);">Hoe nauwkeurig is de voorspelling?</strong><br>
+          <span style="font-size:0.82rem;color:var(--text-muted,#666);">De cijfers over de laatste 30 dagen.</span>
+        </a>
+        <a href="/over/voorspelling" style="display:block;padding:1rem;background:var(--surface-2,#f3f5fb);border:1px solid var(--border,#e1e5ef);border-radius:8px;text-decoration:none;color:inherit;">
+          <strong style="color:var(--accent,#1D2B53);">Hoe werkt de voorspelling?</strong><br>
+          <span style="font-size:0.82rem;color:var(--text-muted,#666);">Uitleg van het model in begrijpelijke taal.</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 stroomvoorspeller.nl</span>
+      <nav aria-label="footer">
+        <a href="/privacy">Privacy</a>
+        <a href="/cookies">Cookies</a>
+        <a href="/disclaimer">Disclaimer</a>
+        <a href="/over/voorspelling">Over de voorspelling</a>
+        <a href="/over/performance">Nauwkeurigheid</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <script>
+  (function () {
+    const BRON = '/data/voorspelarchief/';
+    const ECHT = '/data/archief/';
+    const LEADS = [2, 3, 4, 5, 6, 7];
+
+    const el = (id) => document.getElementById(id);
+    const css = (naam, terug) => (getComputedStyle(document.documentElement).getPropertyValue(naam) || '').trim() || terug;
+    const KLEUR_ECHT = css('--c-text', '#1D2B53');
+    const KLEUR_VOOR = '#5268b8';
+    el('sw-echt').style.background = KLEUR_ECHT;
+    el('sw-voor').style.background = KLEUR_VOOR;
+    el('sw-band').style.background = KLEUR_VOOR;
+
+    const ct = (eurMwh) => eurMwh / 10;
+    const fmt = (x, n = 1) => x.toLocaleString('nl-NL', { minimumFractionDigits: n, maximumFractionDigits: n });
+    const plusDag = (d, n) => {
+      const t = new Date(d + 'T12:00:00Z');
+      t.setUTCDate(t.getUTCDate() + n);
+      return t.toISOString().slice(0, 10);
+    };
+    const nlDatum = (d, opties) => new Date(d + 'T12:00:00Z').toLocaleDateString('nl-NL', opties);
+
+    let index = null;
+    const cacheVoor = {};
+    const cacheEcht = {};
+    let grafiek = null;
+    let dag = null;
+    let lead = 2;
+
+    function haal(url, cache) {
+      if (!cache[url]) {
+        cache[url] = fetch(url).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      }
+      return cache[url];
+    }
+
+    async function echtePrijzen(d) {
+      const j = await haal(ECHT + d.slice(0, 7) + '.json', cacheEcht);
+      const uit = {};
+      if (!j || !j.prices) return uit;
+      for (const p of j.prices) {
+        if (p.time && p.time.slice(0, 10) === d && p.price != null) {
+          uit[Number(p.time.slice(11, 13))] = p.price;  // bij de wintertijd-wissel wint het tweede uur
+        }
+      }
+      return uit;
+    }
+
+    async function voorspellingen(d) {
+      const j = await haal(BRON + d.slice(0, 7) + '.json', cacheVoor);
+      return (j && j.dagen && j.dagen[d]) || {};
+    }
+
+    function zetLead(n) {
+      lead = n;
+      for (const b of el('va-leads').querySelectorAll('.va-lead')) {
+        b.setAttribute('aria-pressed', String(Number(b.dataset.lead) === n));
+      }
+    }
+
+    function tijdNl(iso) {
+      if (!iso) return '';
+      const t = new Date(iso);
+      if (isNaN(t)) return '';
+      return t.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' });
+    }
+
+    async function toon(d, schrijfUrl = true) {
+      dag = d;
+      el('va-datum').value = d;
+      el('va-prev').disabled = d <= index.eerste_dag;
+      el('va-next').disabled = d >= index.laatste_dag;
+      el('va-dagnaam').textContent = nlDatum(d, { weekday: 'long' });
+      if (schrijfUrl) {
+        const u = new URL(location.href);
+        u.searchParams.set('dag', d);
+        history.replaceState(null, '', u);
+      }
+
+      const [voor, echt] = await Promise.all([voorspellingen(d), echtePrijzen(d)]);
+      if (d !== dag) return;  // intussen een andere dag gekozen
+
+      const beschikbaar = LEADS.filter((l) => voor[l]);
+      for (const b of el('va-leads').querySelectorAll('.va-lead')) {
+        b.disabled = !voor[Number(b.dataset.lead)];
+      }
+      if (!voor[lead] && beschikbaar.length) zetLead(beschikbaar[0]);
+
+      const heeftEcht = Object.keys(echt).length > 0;
+      const datumTekst = nlDatum(d, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      if (!beschikbaar.length) {
+        el('va-status').textContent = `Voor ${datumTekst} staat geen voorspelling in het archief.`;
+      } else if (!heeftEcht) {
+        el('va-status').textContent = `Voor ${datumTekst} is de werkelijke prijs nog niet bekend. Dit is wat het model al heeft vastgelegd; de voorspelling van vandaag kan tot vanavond nog worden ververst.`;
+      } else {
+        el('va-status').textContent = '';
+      }
+
+      // Tabel: één regel per horizon
+      const rijen = [];
+      for (const l of LEADS) {
+        const v = voor[l];
+        if (!v) continue;
+        let fouten = 0, n = 0, binnen = 0;
+        for (const [uur, p, lo, hi] of v.uren) {
+          const e = echt[uur];
+          if (e == null || p == null) continue;
+          fouten += Math.abs(p - e);
+          n++;
+          if (lo != null && hi != null && e >= lo && e <= hi) binnen++;
+        }
+        const gemaakt = nlDatum(v.gemaakt, { day: 'numeric', month: 'short' }) + (v.om ? ' ' + tijdNl(v.om) : '');
+        const git = index.repo_pad + 'forecast_' + (v.bestand || v.gemaakt) + '.json';
+        rijen.push(
+          `<tr class="${l === lead ? 'is-actief' : ''}">` +
+          `<td>${l} dagen</td>` +
+          `<td>${gemaakt}</td>` +
+          `<td>${v.versie || '–'}</td>` +
+          `<td class="num">${n ? fmt(ct(fouten / n), 1) + ' ct' : '–'}</td>` +
+          `<td class="num">${n ? Math.round((100 * binnen) / n) + '%' : '–'}</td>` +
+          `<td><a href="${git}" rel="noopener" target="_blank">git ↗</a></td>` +
+          `</tr>`
+        );
+      }
+      el('va-tbody').innerHTML = rijen.length ? rijen.join('') : '<tr><td colspan="6">Geen voorspelling voor deze dag.</td></tr>';
+
+      // Grafiek
+      const v = voor[lead];
+      const uren = Array.from({ length: 24 }, (_, i) => i);
+      const perUur = {};
+      if (v) for (const [uur, p, lo, hi] of v.uren) perUur[uur] = { p, lo, hi };
+      const reeks = (f) => uren.map((u) => (perUur[u] && perUur[u][f] != null ? ct(perUur[u][f]) : null));
+      const data = {
+        labels: uren.map((u) => String(u).padStart(2, '0') + ':00'),
+        datasets: [
+          { label: 'band onder', data: reeks('lo'), borderWidth: 0, pointRadius: 0, fill: false },
+          { label: 'band boven', data: reeks('hi'), borderWidth: 0, pointRadius: 0, fill: '-1', backgroundColor: 'rgba(82,104,184,0.18)' },
+          { label: `voorspelling ${lead} dagen vooraf`, data: reeks('p'), borderColor: KLEUR_VOOR, borderWidth: 2, borderDash: [6, 4], pointRadius: 0, tension: 0.2 },
+          { label: 'werkelijke prijs', data: uren.map((u) => (echt[u] != null ? ct(echt[u]) : null)), borderColor: KLEUR_ECHT, borderWidth: 2.5, pointRadius: 0, tension: 0.2 },
+        ],
+      };
+      if (grafiek) {
+        grafiek.data = data;
+        grafiek.update();
+      } else {
+        grafiek = new Chart(el('va-chart'), {
+          type: 'line',
+          data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                filter: (item) => item.datasetIndex >= 2,
+                callbacks: { label: (c) => `${c.dataset.label}: ${fmt(c.parsed.y, 1)} ct/kWh` },
+              },
+            },
+            scales: {
+              x: { ticks: { maxTicksLimit: 8, color: css('--text-muted', '#666') }, grid: { display: false } },
+              y: { title: { display: true, text: 'ct/kWh (kale beursprijs)', color: css('--text-muted', '#666') }, ticks: { color: css('--text-muted', '#666') } },
+            },
+          },
+        });
+      }
+    }
+
+    function geldig(d) {
+      return /^\d{4}-\d{2}-\d{2}$/.test(d || '') && d >= index.eerste_dag && d <= index.laatste_dag;
+    }
+
+    async function start() {
+      index = await fetch(BRON + 'index.json').then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      if (!index || !index.eerste_dag) {
+        el('va-status').textContent = 'Het archief kon niet worden geladen. Probeer het later opnieuw.';
+        return;
+      }
+      const inp = el('va-datum');
+      inp.min = index.eerste_dag;
+      inp.max = index.laatste_dag;
+
+      // Standaard: de laatste dag waarvan de werkelijke prijzen al bekend zijn.
+      let d = new URLSearchParams(location.search).get('dag');
+      if (!geldig(d)) {
+        d = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Amsterdam' });
+        for (let i = 0; i < 4; i++) {
+          if (d <= index.laatste_dag && Object.keys(await echtePrijzen(d)).length) break;
+          d = plusDag(d, -1);
+        }
+        if (!geldig(d)) d = index.laatste_dag;
+      }
+      await toon(d, false);
+
+      el('va-prev').addEventListener('click', () => toon(plusDag(dag, -1)));
+      el('va-next').addEventListener('click', () => toon(plusDag(dag, 1)));
+      inp.addEventListener('change', () => { if (geldig(inp.value)) toon(inp.value); });
+      el('va-leads').addEventListener('click', (e) => {
+        const b = e.target.closest('.va-lead');
+        if (!b || b.disabled) return;
+        zetLead(Number(b.dataset.lead));
+        toon(dag, false);
+      });
+    }
+
+    start();
+  })();
+  </script>
+  <script src="/nav.js" defer></script>
+</body>
+</html>

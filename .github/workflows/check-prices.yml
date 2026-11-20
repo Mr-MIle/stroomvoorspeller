@@ -144,6 +144,12 @@ jobs:
         continue-on-error: true
         run: python scripts/generate_jaaroverzicht.py
 
+      - name: Voorspelarchief voor /over/voorspelarchief
+        # Zet data/forecast_archive om naar kleine maandbestanden in
+        # public/data/voorspelarchief/. Mag falen.
+        continue-on-error: true
+        run: node build-voorspelarchief.js
+
       - name: Commit en push als er iets veranderd is
         id: commit
         if: steps.check.outcome == 'success'
@@ -162,6 +168,7 @@ jobs:
           git add public/aanbieders.html public/historisch.html 2>/dev/null || true
           git add public/records.html 2>/dev/null || true
           git add data/forecast_archive/ 2>/dev/null || true
+          git add public/data/voorspelarchief/ 2>/dev/null || true
           git add data/benchmark_archive/ 2>/dev/null || true
           git add 03-data/prediction_log.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
