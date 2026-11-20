@@ -395,7 +395,7 @@
         </div>
         <div class="score-card score-good">
           <div class="score-value" id="sc-band">–</div>
-          <div class="score-label" id="sc-band-label">9 van de 10 uur<br>binnen deze marge</div>
+          <div class="score-label" id="sc-band-label">Werkelijke prijs binnen<br>de getoonde band</div>
         </div>
       </div>
       <p class="window-note" id="window-note">Meetvenster en aantal geëvalueerde uren staan hieronder in de tekst.</p>
@@ -406,8 +406,8 @@
     <!-- STATIC:ACCURACY:START -->
     <section class="perf-section static-prices" aria-labelledby="cijfers-h2">
       <h2 id="cijfers-h2">De cijfers, in tekst</h2>
-      <p>Het voorspellingsmodel (versie 5.3) zit gemiddeld <strong>6,24 ct/kWh</strong> naast de werkelijke prijs op een horizon van <strong>2 tot 7 dagen vooruit</strong>, gemeten over <strong>3.960 uur</strong> tussen 23 oktober 2026 en 21 november 2026, een venster van 30 dagen. Dat is 5,2% beter dan de simpele benchmark: dezelfde dag vorige week. De richting - duurder of goedkoper dan normaal - klopt in <strong>58,9%</strong> van de uren, en <strong>56,8%</strong> van de voorspellingen valt binnen de getoonde onzekerheidsband.</p>
-      <p>Dag 1 telt niet mee in dat cijfer. De prijzen voor morgen worden rond 14:00 door EPEX gepubliceerd en staan bij de dagelijkse meting dus al vast; meetellen zou de uitslag meten in plaats van de voorspelling. Cijfers van anderen die één dag vooruit meten, gaan over een makkelijkere opgave.</p>
+      <p>Het voorspellingsmodel (versie 5.3) zit gemiddeld <strong>6,24 ct/kWh</strong> naast de werkelijke prijs op een horizon van <strong>2 tot 7 dagen vooruit</strong>, gemeten over <strong>3.960 uur</strong> tussen 23 oktober 2026 en 21 november 2026, een venster van 30 dagen. Dat is 5,2% beter dan de simpele benchmark: het middelste van de prijzen op hetzelfde uur over de laatste 7 dagen (in het weekend 14) die bij het voorspellen al bekend waren. De richting - duurder of goedkoper dan normaal - klopt in <strong>58,9%</strong> van de uren, en <strong>56,8%</strong> van de voorspellingen valt binnen de getoonde onzekerheidsband.</p>
+      <p>Dag 1 telt niet mee in dat cijfer. De prijzen voor morgen worden rond 13:00 door EPEX gepubliceerd en staan bij de dagelijkse meting dus al vast; meetellen zou de uitslag meten in plaats van de voorspelling. Cijfers van anderen die één dag vooruit meten, gaan over een makkelijkere opgave.</p>
       <p>Apart gemeten, en wél vergelijkbaar met een cijfer van één dag vooruit: een voorspelling die ’s ochtends wordt vastgelegd, vóórdat de veiling sluit, zit gemiddeld <strong>5,63 ct/kWh</strong> naast de prijs die EPEX later die dag publiceert, over 720 uur verdeeld over 30 dagen.</p>
       <div class="static-table-wrap">
         <table class="static-price-table">
@@ -441,11 +441,45 @@
     <div class="info-box">
       <strong>Wat betekenen deze cijfers?</strong><br>
       "Gemiddeld ernaast" is de gemiddelde absolute afwijking: hoeveel ct/kWh de voorspelling er doorgaans naast zit.
-      "Scherper dan de simpele benchmark" vergelijkt het model met de meest voor de hand liggende gok — dezelfde dag vorige week.
+      "Scherper dan de simpele benchmark" vergelijkt het model met een voor de hand liggende gok: de prijs die hetzelfde uur de afgelopen week meestal had (het middelste van de laatste 7 bekende dagen, in het weekend 14).
       Een positief percentage betekent dat het model het beter doet.
       "Richting goed voorspeld" meet of het model correct ziet aankomen of een uur duurder of goedkoper wordt dan normaal —
       ruim boven de 50% van een muntje opgooien.
     </div>
+
+    <div class="info-box">
+      <strong>Twee soorten marge</strong><br>
+      Bovenaan de pagina staat een gemeten marge: achteraf geteld, zo ver zat de voorspelling er in 8 van de 10 uur
+      hooguit naast. De band rond de voorspellingslijn in de grafiek is iets anders: die tekent het model vooraf,
+      per uur, als schatting van de normale spreiding. De vierde kaart hierboven laat zien hoe vaak de werkelijke prijs
+      binnen die getekende band viel.
+      <span id="band-uitleg-cijfers"></span>
+    </div>
+
+    <!-- ── Horizon-tabel ── -->
+    <section class="perf-section" id="horizon-section">
+      <h2>Nauwkeurigheid per horizon</h2>
+      <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.6rem;">
+        Hoe verder vooruit de voorspelling, hoe groter de onzekerheid. Dit is normaal —
+        ook professionele weersmodellen worden minder betrouwbaar naarmate ze verder kijken.
+        Dag 2 en 3 zijn het meest betrouwbaar.
+      </p>
+      <div class="table-wrap">
+        <table class="horizon-table" id="horizon-table">
+        <thead>
+          <tr>
+            <th>Dag vooruit</th>
+            <th>Gem. afwijking</th>
+            <th>vs benchmark</th>
+            <th>Richting correct</th>
+          </tr>
+        </thead>
+        <tbody id="horizon-tbody">
+          <tr><td colspan="4" class="loading-state">Laden…</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
 
     <!-- ── Foutverdeling ── -->
     <section class="perf-section" id="distribution-section" style="display:none;">
@@ -474,31 +508,6 @@
       </p>
       <div class="chart-wrap" style="height:200px;">
         <canvas id="chart-daily" aria-label="Foutmarge per dag"></canvas>
-      </div>
-    </section>
-
-    <!-- ── Horizon-tabel ── -->
-    <section class="perf-section" id="horizon-section">
-      <h2>Nauwkeurigheid per horizon</h2>
-      <p style="font-size:0.85rem;color:var(--text-muted,#666);margin-bottom:0.6rem;">
-        Hoe verder vooruit de voorspelling, hoe groter de onzekerheid. Dit is normaal —
-        ook professionele weersmodellen worden minder betrouwbaar naarmate ze verder kijken.
-        Dag 2 en 3 zijn het meest betrouwbaar.
-      </p>
-      <div class="table-wrap">
-        <table class="horizon-table" id="horizon-table">
-        <thead>
-          <tr>
-            <th>Dag vooruit</th>
-            <th>Gem. afwijking</th>
-            <th>vs naïef</th>
-            <th>Richting correct</th>
-          </tr>
-        </thead>
-        <tbody id="horizon-tbody">
-          <tr><td colspan="4" class="loading-state">Laden…</td></tr>
-        </tbody>
-      </table>
       </div>
     </section>
 
@@ -665,15 +674,15 @@
       dirEl.textContent = fmtRate(o.direction_hit_rate);
       document.getElementById('sc-dir-card').className = 'score-card ' + dirClass(o.direction_hit_rate);
 
-      // 4e kaart: liefst de empirische 9-op-10-marge, anders terugvallen op de band-score.
-      const bandEl = document.getElementById('sc-band');
-      const bandLabel = document.getElementById('sc-band-label');
-      if (dist && dist.p90_eur_mwh != null) {
-        bandEl.textContent = '±' + mwhToCt(dist.p90_eur_mwh).toFixed(1) + ' ct';
-        bandLabel.innerHTML = '9 van de 10 uur<br>binnen deze marge';
-      } else {
-        bandEl.textContent = fmtRate(o.within_band_pct);
-        bandLabel.innerHTML = 'Werkelijk binnen<br>de onzekerheidsband';
+      // 4e kaart: hoe vaak de prijs binnen de band uit de grafiek viel. De
+      // gemeten foutmarge (8 of 9 van de 10 uur) staat al in de kop en bij de
+      // foutverdeling; hier hoort het cijfer dat ook in de tekst staat.
+      document.getElementById('sc-band').textContent = fmtRate(o.within_band_pct);
+      const bandNote = document.getElementById('band-uitleg-cijfers');
+      if (bandNote && o.within_band_pct != null && dist && dist.empirical_band_ct != null) {
+        bandNote.textContent =
+          `Nu valt ${fmtRate(o.within_band_pct)} van de uren binnen de band, en 8 van de 10 uur binnen ±${dist.empirical_band_ct.toFixed(1)} ct/kWh. ` +
+          `De band is dus smaller dan de marge die het model in de praktijk haalt.`;
       }
 
       // Venstertekst uit de data zelf, niet hardgecodeerd: na elke modelwissel
@@ -745,7 +754,7 @@
         if (beter > 0) {
           cards.push({
             value: '+' + beter.toFixed(1) + '%',
-            label: 'scherper dan simpelweg “dezelfde dag vorige week” aanhouden',
+            label: 'scherper dan simpelweg aanhouden wat hetzelfde uur de afgelopen week kostte',
           });
         }
       }

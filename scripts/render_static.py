@@ -404,7 +404,8 @@ def blok_accuracy(performance):
         beter = (
             f" Dat is {ct(abs(naive))}% "
             f"{'beter' if naive < 0 else 'slechter'} dan de simpele benchmark: "
-            "dezelfde dag vorige week."
+            "het middelste van de prijzen op hetzelfde uur over de laatste 7 dagen "
+            "(in het weekend 14) die bij het voorspellen al bekend waren."
         )
 
     h_min = performance.get("horizon_min_days", 2)
@@ -425,7 +426,7 @@ def blok_accuracy(performance):
         f"<strong>{ct(band)}%</strong> van de voorspellingen valt binnen de getoonde "
         "onzekerheidsband.</p>",
         "      <p>Dag 1 telt niet mee in dat cijfer. De prijzen voor morgen worden rond "
-        "14:00 door EPEX gepubliceerd en staan bij de dagelijkse meting dus al vast; "
+        "13:00 door EPEX gepubliceerd en staan bij de dagelijkse meting dus al vast; "
         "meetellen zou de uitslag meten in plaats van de voorspelling. Cijfers van "
         "anderen die één dag vooruit meten, gaan over een makkelijkere opgave.</p>",
     ]
