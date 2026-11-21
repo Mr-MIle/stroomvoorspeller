@@ -55,6 +55,8 @@
     const epex = eurMwh / 1000;
     if (mode === "exclusive") return (epex + effectiveMarkup()) * 100;
     const t = state.config.taxes;
+    // Zakelijk: met energiebelasting, zonder btw (die trekt een bedrijf af).
+    if (mode === "business") return (epex + effectiveMarkup() + t.energiebelasting_per_kwh) * 100;
     return (epex + effectiveMarkup() + t.energiebelasting_per_kwh) * t.btw_factor * 100;
   }
   function priceCentsForSupplier(eurMwh, supplier) {
@@ -153,7 +155,10 @@
     return new Date(new Date(iso).getTime() + 3_600_000)
       .toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
   }
-  function modeLabel() { return state.mode === "exclusive" ? "excl. belasting" : "incl. belasting"; }
+  function modeLabel() {
+    if (state.mode === "business") return "zakelijk, excl. btw";
+    return state.mode === "exclusive" ? "excl. belasting" : "incl. belasting";
+  }
 
   // ---- Datum ----
   function isSameLocalDay(iso, date) {
@@ -244,6 +249,7 @@
       btn.setAttribute("aria-pressed", String(active));
     });
     document.querySelectorAll("[data-mode-label]").forEach(el => el.textContent = modeLabel());
+    document.querySelectorAll("[data-mode-hint]").forEach(el => { el.hidden = state.mode !== "business"; });
   }
 
   // ---- Render: highlight cards ----
@@ -876,6 +882,8 @@
     if (!select) return;
     // Eenmalig vullen
     if (!select.dataset.populated) {
+      // Plaatshouder 'Laden…' heeft ook value 'average' en won anders van de echte optie.
+      select.innerHTML = "";
       (state.config.suppliers || [])
         .filter(s => s.id !== "custom")
         .forEach(s => {
@@ -993,6 +1001,7 @@
   // ---- Bootstrap ----
   async function init() {
     state.mode       = loadStored(STORAGE_KEYS.mode, "inclusive");
+    if (["inclusive", "exclusive", "business"].indexOf(state.mode) < 0) state.mode = "inclusive";
     state.supplierId = loadStored(STORAGE_KEYS.supplier, "average");
     state.showFeedin = loadStored(STORAGE_KEYS.feedin, "0") === "1";
     const cm = parseFloat(loadStored(STORAGE_KEYS.customMarkup, "0.025"));

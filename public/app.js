@@ -121,6 +121,8 @@
   }
 
   // EPEX EUR/MWh -> ct/kWh in de gekozen weergave-modus.
+  // 'business' (nov 2026): zakelijk = met energiebelasting (eerste schijf), zonder btw,
+  // want een bedrijf trekt de btw af. De volgorde van de uren blijft gelijk.
   function priceCents(eurMwh, mode = state.mode) {
     const epex_per_kwh = eurMwh / 1000;
     if (mode === "exclusive") {
@@ -128,6 +130,7 @@
     }
     const t = state.config.taxes;
     const subtotal = epex_per_kwh + effectiveMarkup() + (t.energiebelasting_per_kwh || 0);
+    if (mode === "business") return subtotal * 100;
     return subtotal * (t.btw_factor || 1) * 100;
   }
   function priceCentsRaw(eurMwh) {
@@ -287,9 +290,13 @@
     return `${date} ${fmtTime(iso)}`;
   }
   function modeLabel(mode = state.mode) {
+    if (mode === "business") return "zakelijk, excl. btw";
     return mode === "exclusive" ? "excl. belasting" : "incl. belasting";
   }
+  // Zakelijk toont als tweede regel de particuliere prijs (incl. btw).
   function otherMode() { return state.mode === "inclusive" ? "exclusive" : "inclusive"; }
+  const MODES = ["inclusive", "exclusive", "business"];
+  function validMode(m) { return MODES.indexOf(m) >= 0 ? m : "inclusive"; }
 
   function setText(field, text) {
     document.querySelectorAll(`[data-field="${field}"]`).forEach((el) => { el.textContent = text; });
@@ -695,6 +702,7 @@
       btn.classList.toggle("is-active", active);
       btn.setAttribute("aria-pressed", active ? "true" : "false");
     });
+    document.querySelectorAll("[data-mode-hint]").forEach((el) => { el.hidden = state.mode !== "business"; });
   }
 
   function renderNowCard() {
@@ -730,7 +738,10 @@
     if (!eff.relative || cls === "negative") { el.hidden = true; return; }
     const ct  = priceCents(eurMwh, "inclusive");
     const pct = Math.round((ct / eff.avg - 1) * 100);
-    const avgTxt = fmtNum(eff.avg, 1) + " ct/kWh" + (state.mode === "inclusive" ? "" : " incl. belasting");
+    // Zakelijk: het gemiddelde ook zonder btw, zodat het naast de grote prijs klopt.
+    const avgTxt = state.mode === "business"
+      ? fmtNum(eff.avg / ((state.config.taxes && state.config.taxes.btw_factor) || 1.21), 1) + " ct/kWh"
+      : fmtNum(eff.avg, 1) + " ct/kWh" + (state.mode === "inclusive" ? "" : " incl. belasting");
     el.textContent = pct === 0
       ? "Gelijk aan het weekgemiddelde van " + avgTxt
       : Math.abs(pct) + "% " + (pct > 0 ? "boven" : "onder") + " het weekgemiddelde van " + avgTxt;
@@ -1459,6 +1470,7 @@
     function thToChart(ct_incl) {
       if (state.mode === "inclusive") return ct_incl;
       const taxes = state.config.taxes;
+      if (state.mode === "business") return ct_incl / (taxes.btw_factor || 1.21);
       return ct_incl / (taxes.btw_factor || 1.21) - (taxes.energiebelasting_per_kwh || 0) * 100;
     }
     const eff = effectiveThresholds(); // nov 2026: grenzen t.o.v. het weekgemiddelde
@@ -1648,6 +1660,9 @@
                     `Excl. belasting: ${fmtNum(priceCents(eurMwh, "exclusive"), 2)} ct/kWh`,
                     `Incl. belasting: ${fmtNum(priceCents(eurMwh, "inclusive"), 2)} ct/kWh`,
                   ];
+                  if (state.mode === "business") {
+                    lines.push(`Zakelijk (excl. btw): ${fmtNum(priceCents(eurMwh, "business"), 2)} ct/kWh`);
+                  }
                   if (state.showFeedin && feedinAvailable()) {
                     lines.push(`Teruglevering: ${fmtNum(feedinCents(eurMwh), 2)} ct/kWh`);
                   }
@@ -2102,7 +2117,7 @@
     document.querySelectorAll("[data-mode-btn]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const mode = btn.dataset.modeBtn;
-        if (mode !== "inclusive" && mode !== "exclusive") return;
+        if (MODES.indexOf(mode) < 0) return;
         if (state.mode === mode) return;
         state.mode = mode;
         saveStored(STORAGE_KEYS.mode, mode);
@@ -2225,7 +2240,7 @@
 
   // ---- Boot ----
   function loadInitialState() {
-    state.mode = loadStored(STORAGE_KEYS.mode, "inclusive") === "exclusive" ? "exclusive" : "inclusive";
+    state.mode = validMode(loadStored(STORAGE_KEYS.mode, "inclusive"));
     state.supplierId = loadStored(STORAGE_KEYS.supplier, "average");
     // Migratie: 'Eigen waarde invullen' bestaat niet meer -> terug naar het gemiddelde
     if (state.supplierId === "custom") {

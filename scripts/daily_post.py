@@ -147,7 +147,19 @@ def compute_summary(window: list, config: dict) -> dict:
         "cheapest": min(rows, key=lambda r: r["ct"]),
         "dearest": max(rows, key=lambda r: r["ct"]),
         "n_negative_epex": sum(1 for r in rows if r["epex"] < 0),
+        # Zakelijk = zelfde prijs zonder btw (energiebelasting eerste schijf blijft).
+        "btw_factor": float(config.get("taxes", {}).get("btw_factor", 1.21)) or 1.21,
     }
+
+
+def tweet_length(text: str) -> int:
+    """Benadering van X' telling: URL's tellen als 23, emoji en pijlen als 2."""
+    import re
+    n = 0
+    rest = re.sub(r"\S+\.nl\S*", lambda m: "\0" * 23, text)
+    for ch in rest:
+        n += 2 if ord(ch) >= 0x2000 else 1
+    return n
 
 
 def compose_tweet(summary: dict) -> str:
@@ -167,18 +179,31 @@ def compose_tweet(summary: dict) -> str:
         tags = "#stroomprijzen #energieprijzen #dynamischcontract"
     else:
         spread_pct = max(0, round((dear["ct"] - cheap["ct"]) / max(dear["ct"], 1) * 100))
-        insight = f"📊 Spreiding {spread_pct}% tussen goedkoopste en duurste uur — schakelen scheelt"
+        insight = f"📊 Goedkoopste uur {spread_pct}% onder duurste: schuiven loont"
         tags = "#stroomprijzen #dynamischcontract #energieprijzen"
 
-    return (
-        f"⚡ Stroomprijs morgen ({date_str})\n\n"
-        f"Gem: {fmt_ct(avg)} ct/kWh\n"
-        f"Goedkoopst: {cheap['hour']:02d}u → {fmt_ct(cheap['ct'])} ct\n"
-        f"Duurst: {dear['hour']:02d}u → {fmt_ct(dear['ct'])} ct\n"
-        f"{insight}\n\n"
-        f"→ stroomvoorspeller.nl/morgen\n\n"
-        f"{tags}"
+    # Nov 2026: extra regel voor ondernemers. Zij trekken de btw af; de uren blijven gelijk.
+    btw = summary.get("btw_factor", 1.21)
+    zakelijk = (
+        f"Zakelijk excl. btw: {fmt_ct(cheap['ct'] / btw)} tot {fmt_ct(dear['ct'] / btw)} ct\n"
     )
+
+    def build(zak: str) -> str:
+        return (
+            f"⚡ Stroomprijs morgen ({date_str})\n\n"
+            f"Gem: {fmt_ct(avg)} ct/kWh\n"
+            f"Goedkoopst: {cheap['hour']:02d}u → {fmt_ct(cheap['ct'])} ct\n"
+            f"Duurst: {dear['hour']:02d}u → {fmt_ct(dear['ct'])} ct\n"
+            f"{zak}"
+            f"{insight}\n\n"
+            f"→ stroomvoorspeller.nl/morgen\n\n"
+            f"{tags}"
+        )
+
+    text = build(zakelijk)
+    if tweet_length(text) > 280:
+        text = build("")  # te lang: zakelijke regel laten vallen, de rest is belangrijker
+    return text
 
 
 def fmt_ct(ct: float) -> str:
