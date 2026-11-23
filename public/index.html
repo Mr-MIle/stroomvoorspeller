@@ -215,19 +215,6 @@
       <div class="container">
         <h1 class="hero-heading">Actuele en voorspelde stroomprijzen voor Nederland</h1>
         <p class="hero-tagline">De Buienradar voor stroomprijzen.</p>
-        <style>
-        .hero-lint{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
-        .hero-lint a{display:inline-block;padding:9px 14px;border-radius:20px;border:1px solid var(--c-border);background:var(--c-surface);color:var(--c-text);font-size:.85rem;font-weight:500;text-decoration:none;line-height:1.2}
-        .hero-lint a:hover{border-color:var(--c-brand);color:var(--c-brand)}
-        .hero-lint a.is-eerst{background:var(--c-brand-fill, #1D2B53);border-color:var(--c-brand-fill, #1D2B53);color:#fff;font-weight:600}
-        .hero-lint a.is-eerst:hover{color:#fff;opacity:.92}
-        @media(max-width:480px){.hero-lint a{font-size:.82rem;padding:9px 12px}}
-        </style>
-        <!-- Okt 2026: één knop. Morgen, aanbieders en batterij staan in het menu en
-             verderop bij hun eigen blok; de rekentool staat niet in het menu. -->
-        <nav class="hero-lint" aria-label="Snel naar">
-          <a class="is-eerst" href="/dynamisch-berekenen">Is dynamisch iets voor jou?</a>
-        </nav>
         <div class="mode-toggle" role="group" aria-label="Prijsweergave kiezen">
           <span class="mode-toggle-label">Toon prijzen</span>
           <div class="mode-toggle-buttons">
@@ -294,6 +281,23 @@
             <label class="situation-chip"><input type="checkbox" id="profile-battery-inline"><span class="situation-box" aria-hidden="true"></span><span>Thuisbatterij</span></label>
           </div>
         </div>
+
+        <!-- Nov 2026 (UX-analyse): de rekentool-link stond als gevulde knop boven de prijzen en
+             trok de aandacht weg van de hoofdtaak. Nu onder de nu-kaart, licht gestyled, met een
+             contextregel zodat alleen twijfelaars zich aangesproken voelen. De rekentool staat
+             niet in het menu, dus deze link blijft de ingang vanaf de homepage. -->
+        <style>
+        .hero-lint{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:14px 0 4px}
+        .hero-lint-context{font-size:.88rem;color:var(--c-text-soft)}
+        .hero-lint a{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:22px;border:1px solid var(--c-brand);background:transparent;color:var(--c-brand);font-size:.88rem;font-weight:600;text-decoration:none;line-height:1.2}
+        .hero-lint a:hover{background:var(--c-brand-fill);border-color:var(--c-brand-fill);color:#fff}
+        .hero-lint a:focus-visible{outline:2px solid var(--c-brand);outline-offset:2px}
+        @media(max-width:480px){.hero-lint a{font-size:.85rem;padding:0 14px}}
+        </style>
+        <nav class="hero-lint" aria-label="Contractkeuze">
+          <span class="hero-lint-context">Nog geen dynamisch contract?</span>
+          <a href="/dynamisch-berekenen">Check of het bij je past <span aria-hidden="true">→</span></a>
+        </nav>
 
         <!-- Scroll-nudge: subtiele ↓ richting grafiek, alleen mobiel (#61) -->
         <div class="scroll-nudge" aria-hidden="true">
