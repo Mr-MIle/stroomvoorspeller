@@ -38,7 +38,7 @@ const Q = [
     ['1', '🙂', '1 persoon'], ['2', '👫', '2 personen'], ['3', '👨‍👩‍👦', '3 personen'], ['4', '👨‍👩‍👧‍👦', '4 of meer'] ] },
   { key: 'v', step: 'Je huis', title: 'Hoe verwarm je je huis?', opts: [
     ['cv', '🔥', 'Cv-ketel op gas'], ['hyb', '🌗', 'Hybride warmtepomp', 'Warmtepomp + cv-ketel'], ['wp', '🌀', 'Warmtepomp', 'Helemaal zonder gas'], ['sv', '🏭', 'Stadsverwarming'] ] },
-  { key: 'h', multi: true, step: 'Wat heb je al?', title: 'Wat heb je al?', sub: 'Vink alles aan wat klopt. Niets? Ook prima.', opts: [
+  { key: 'h', multi: true, step: 'Wat heb je al?', title: 'Wat heb je al?', sub: 'Niets hiervan? Ook prima, dan ga je gewoon verder.', opts: [
     ['led', '💡', 'Overal LED'], ['spouw', '🧱', 'Spouwmuur geïsoleerd'], ['dak', '🏠', 'Dak geïsoleerd'], ['vloer', '⬇️', 'Vloer geïsoleerd'], ['glas', '🪟', 'HR++ of triple glas'], ['enkel', '🥶', 'Nog (deels) enkel glas'],
     ['zp', '☀️', 'Zonnepanelen'], ['bat', '🔋', 'Thuisbatterij'], ['ev', '🚗', 'Elektrische auto'], ['p1', '📟', 'Energiemeter op P1-poort'], ['dyn', '📈', 'Dynamisch contract'] ] },
   { key: 'n', nums: true, step: 'Wat heb je al?', title: 'Hoeveel gebruik je per jaar?', sub: 'Dat staat op je jaarafrekening. Weet je het niet? Sla over, dan schatten we het.' },
@@ -111,9 +111,9 @@ function renderQ(focus) {
     </div><p class="bp-hint">Heb je zonnepanelen? Vul dan je stroom ván het net in, zoals op de afrekening.</p>
     <div class="bp-actions"><button type="button" class="bp-btn ghost" data-skip>Weet ik niet, schat het</button><button type="button" class="bp-btn prim" data-next>Verder →</button></div>`;
   } else {
-    body = `<div class="bp-opts" role="group" aria-label="${q.title}">` + q.opts.map(([v, ic, l, s]) => {
+    body = `<p class="bp-howto">${q.multi ? 'Kies alles wat klopt' : 'Kies één antwoord'}</p><div class="bp-opts${q.multi ? ' is-multi' : ''}" role="group" aria-label="${q.title}">` + q.opts.map(([v, ic, l, s]) => {
       const on = q.multi ? st.h.has(v) : st[q.key] === v;
-      return `<button type="button" class="bp-opt" data-v="${v}" aria-pressed="${on}"><span class="ic" aria-hidden="true">${ic}</span><span><b>${l}</b>${s ? `<small>${s}</small>` : ''}</span>${q.multi ? '<span class="tick" aria-hidden="true"></span>' : ''}</button>`;
+      return `<button type="button" class="bp-opt" data-v="${v}" aria-pressed="${on}"><span class="ic" aria-hidden="true">${ic}</span><span class="txt"><b>${l}</b>${s ? `<small>${s}</small>` : ''}</span><span class="mark" aria-hidden="true"></span></button>`;
     }).join('') + '</div>';
     if (q.multi) body += `<div class="bp-actions"><span></span><button type="button" class="bp-btn prim" data-next>${st.h.size ? 'Verder →' : 'Niets hiervan, verder →'}</button></div>`;
   }
