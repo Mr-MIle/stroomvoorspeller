@@ -112,6 +112,7 @@ def main():
         f"- [Thuisbatterij berekenen]({BASIS}/batterij-berekenen): opbrengst en terugverdientijd op echte uurprijzen.",
         f"- [Opbrengst van een echte thuisbatterij]({BASIS}/batterij): dag voor dag, uit een eigen installatie.",
         f"- [ERE-certificaten vergelijken]({BASIS}/ere-vergelijken): tien inboekers op netto opbrengst bij thuisladen.",
+        f"- [Bespaarplan]({BASIS}/bespaarplan): keuzehulp in 9 vragen, met per maatregel kosten, opbrengst, subsidie en waar je het regelt.",
         "",
         "## Koppelingen",
         "",

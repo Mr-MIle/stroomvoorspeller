@@ -23,6 +23,7 @@ const TOOLS = {
   ha: { href: "/home-assistant", titel: "Home Assistant koppelen", tekst: "Laat apparaten zelf schakelen op de uurprijs. Gratis feed, kant-en-klare sensor." },
   mijnbatterij: { href: "/batterij", titel: "Mijn eigen thuisbatterij, dag voor dag", tekst: "Echte meetdata: wat mijn batterij laadt, levert en opbrengt." },
   archief: { href: "/over/voorspelarchief", titel: "Wat voorspelde het model vooraf?", tekst: "Kies een dag en vergelijk de voorspelling met de echte prijs." },
+  bespaarplan: { href: "/bespaarplan", titel: "Waar begin ik met besparen?", tekst: "Negen vragen, dan zie je welke maatregelen bij jouw huis passen, met kosten, subsidie en waar je het regelt." },
   nauwkeurigheid: { href: "/over/performance", titel: "Hoe nauwkeurig is de voorspelling?", tekst: "De gemeten afwijking over de laatste 30 dagen, per horizon." },
 };
 
@@ -45,6 +46,7 @@ const KOPPELING = {
   "energiebelasting-2027": ["dynamisch", "aanbieders"],
   "energiebelasting-vaste-kosten-uitgelegd": ["aanbieders", "dynamisch"],
   "ere-certificaten-laadpaal": ["ere", "morgen"],
+  "gas-besparen-zonder-investeren": ["bespaarplan", "dynamisch"],
   "groepenkast-warmtepomp-laadpaal-batterij": ["batterijen", "batterij"],
   "hoe-wordt-de-stroomprijs-bepaald": ["prijzen", "historisch"],
   "hoeveel-bespaar-je-dynamisch-contract": ["dynamisch", "aanbieders"],
@@ -85,6 +87,7 @@ const KOPPELING = {
   "waarom-is-stroom-nu-zo-duur": ["prijzen", "historisch"],
   "waarom-stroomprijzen-moeilijk-te-voorspellen": ["archief", "nauwkeurigheid"],
   "warmtepomp-bij-vorst": ["dynamisch", "morgen"],
+  "led-en-sluipverbruik": ["bespaarplan", "ha"],
   "warmtepomp-dynamisch-contract": ["dynamisch", "ha"],
   "warmtepomp-of-cv-ketel": ["dynamisch", "aanbieders"],
   "wateraccu": ["batterij", "dynamisch"],

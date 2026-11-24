@@ -16,6 +16,7 @@
     ] },
     { href: "/aanbieders", label: "Aanbieders" },
     { href: "/kennisbank/", label: "Kennisbank" },
+    { href: "/bespaarplan", label: "Bespaarplan" },
     { label: "Slim thuis", children: [
       { href: "/batterij", label: "Thuisbatterij" },
       { href: "/batterij-berekenen", label: "Batterij berekenen" },
