@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-27T12:22:46Z",
-  "model_version": "5.3",
+  "generated_at": "2026-11-27T23:29:12Z",
+  "model_version": "5.4",
   "evaluation_window_days": 30,
   "window_days_actual": 30,
   "horizon_min_days": 2,
   "horizon_max_days": 7,
   "horizon_note": "Horizon 2 tot 7 dagen. Dag 1 telt hier niet mee: op het moment van de dagelijkse meting staan de prijzen van morgen al vast bij EPEX, dus dat zou geen voorspelling zijn. Zie d1_preauction voor de losse D+1-meting.",
   "d1_preauction": {
-    "n_hours": 720,
-    "n_days": 30,
+    "n_hours": 744,
+    "n_days": 31,
     "first_date": "2026-10-29",
-    "last_date": "2026-11-27",
-    "mae_eur_mwh": 47.84,
-    "mae_vs_naive_pct": -6.3,
-    "within_band_pct": 0.656
+    "last_date": "2026-11-28",
+    "mae_eur_mwh": 46.91,
+    "mae_vs_naive_pct": -6.8,
+    "within_band_pct": 0.667
   },
   "first_date": "2026-10-30",
   "last_date": "2026-11-28",
@@ -549,6 +549,7 @@
     "mae_v51_eur_mwh": 52.61,
     "mae_v50_eur_mwh": 47.48
   },
+  "shadow_v53": null,
   "benchmark": {
     "naam": "EpexPredictor (github.com/b3nn0/EpexPredictor)",
     "n_hours": 3779,
@@ -718,6 +719,12 @@
       "date": "2026-11-10",
       "mae_eur_mwh": null,
       "notes": "Gas-ankering: basisprijs schuift mee met TTF t.o.v. 28 dagen (sterker bij weinig wind/zon); lab 22,56 -> 22,49, stijgend gas + weinig wind/zon 34,0 -> 31,6"
+    },
+    {
+      "version": "5.4",
+      "date": "2026-11-27",
+      "mae_eur_mwh": null,
+      "notes": "Fundamentmodel (beslisbomen op weer, gas en kalender, zonder prijzen) telt voor een derde mee; walk-forward jan 2025 - nov 2026 21,13 -> 20,65"
     }
   ]
 }
