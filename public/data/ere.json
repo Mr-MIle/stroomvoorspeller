@@ -1,5 +1,5 @@
 {
-  "_comment": "Bron voor /ere-vergelijken. Tien inboekdienstverleners voor particulieren met een eigen laadpaal thuis. Netto per kWh wordt NIET hier opgeslagen maar berekend: ere_prijs x ere_per_kwh x (1 - commissie), met een bodem als de inboeker een garantie geeft. Zo blijft er een getal en een rekenregel, niet een overgeschreven claim. Werk dit bestand bij en draai daarna 'node build-ere.js'.",
+  "_comment": "Bron voor /ere-vergelijken. Elf inboekdienstverleners voor particulieren met een eigen laadpaal thuis. Netto per kWh wordt NIET hier opgeslagen maar berekend: ere_prijs x ere_per_kwh x (1 - commissie), met een bodem als de inboeker een garantie geeft. Zo blijft er een getal en een rekenregel, niet een overgeschreven claim. Werk dit bestand bij en draai daarna 'node build-ere.js'.",
   "versie": 1,
   "bijgewerkt": "2026-11-01",
   "volgende_controle": "2026-12-01",
@@ -54,8 +54,8 @@
 
   "kort": {
     "_comment": "Vaste zinnen bij het korte antwoord bovenaan /ere-vergelijken. Een noot verschijnt alleen zolang id nog nummer 1 (hoogste) of de laagste commissie is; anders waarschuwt build-ere.js en moet de zin opnieuw bekeken worden.",
-    "hoogste": { "id": "zeres", "noot": "Dat rust op 13 cent per kWh die Zeres aankondigt, maar niet in de voorwaarden vastlegt." },
-    "laagste_commissie": { "id": "laadbeloning", "noot": "Alleen als je voor 3 jaar tekent; voor 1 jaar is het 15 procent." }
+    "hoogste": { "id": "eevy", "noot": "Dat rekent met de 4,9 procent die EEVY alleen in het eerste jaar vraagt; daarna is het 9,9 procent. EEVY is nog niet erkend door de NEa en heeft nog niets uitbetaald." },
+    "laagste_commissie": { "id": "eevy", "noot": "Alleen in het eerste jaar, daarna 9,9 procent. Nog niet erkend door de NEa." }
   },
 
   "inboekers": [
@@ -101,7 +101,7 @@
       "laadpalen": "Laadpaal met ingebouwde MID-meter, particulier en zakelijk.",
       "klanten": null,
       "uitbetaald": [],
-      "sterk": "Laagste commissie van de tien.",
+      "sterk": "Laagste commissie van de erkende inboekers.",
       "let_op": "De 10 procent van Compleet koop je met een machtiging van drie jaar; bij één jaar is het 15 procent. Laadbeloning noemt zelf een gemiddelde van ongeveer 10 cent per kilowattuur, met een bandbreedte van 5 tot 30 cent, en heeft nog geen uitbetaling gemeld.",
       "bron": "https://laadbeloning.nl/",
       "gecontroleerd": "2026-11-01"
@@ -288,6 +288,30 @@
       "let_op": "Eneco noemt tot ongeveer 10 cent per kilowattuur maar maakt de servicekosten niet bekend en wacht naar eigen zeggen nog op de laatste regelgeving. Zonder percentage valt er niets te vergelijken, dus deze staat onderaan.",
       "bron": "https://www.eneco-emobility.com/thuis/kennis-en-tips/verdien-geld-met-thuisladen",
       "gecontroleerd": "2026-11-01"
+    },
+    {
+      "id": "eevy",
+      "naam": "EEVY",
+      "url": "https://www.eevy.nl/",
+      "commissie": 0.049,
+      "commissie_daarna": 0.099,
+      "commissie_tekst": "4,9% in het eerste jaar, daarna 9,9%",
+      "commissie_detail": "De 4,9 procent geldt alleen in het eerste kalenderjaar per aansluiting en heet op de site tijdelijk. Elk jaar daarna is het 9,9 procent. Particulier inclusief btw. Geen abonnement, geen opstartkosten en geen opzegkosten. De opbrengst op deze pagina rekent met 4,9 procent.",
+      "vaste_kosten": 0,
+      "prijsmodel": "markt",
+      "garantie_per_kwh": null,
+      "erkenning": "aangevraagd",
+      "uitbetaling": "na elke verkoop",
+      "uitbetaling_detail": "90 procent direct na elke verkoop, de laatste 10 procent na de jaarlijkse controle. De eerste uitbetaling verwacht EEVY in het voorjaar van 2027.",
+      "contract": "Per kalenderjaar, zonder stilzwijgende verlenging. Je kiest zelf voor welke jaren je tekent.",
+      "eis_klant": null,
+      "laadpalen": "Laadpaal met MID-meter.",
+      "klanten": null,
+      "uitbetaald": [],
+      "sterk": "Laagste servicekosten in het eerste jaar, en ook de 9,9 procent daarna is lager dan bij de andere inboekers. Geen vaste kosten.",
+      "let_op": "Nog niet erkend door de NEa en nog niets uitbetaald. Stop je halverwege een jaar, dan gaan de kilowatturen die EEVY dat jaar al heeft ingeboekt niet mee naar een andere inboeker (voorwaarden, artikel 18.3). EEVY is een handelsnaam van Panoptis B.V. in Amsterdam.",
+      "bron": "https://www.eevy.nl/tarieven",
+      "gecontroleerd": "2026-11-27"
     }
   ],
 

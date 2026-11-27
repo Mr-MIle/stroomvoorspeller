@@ -31,6 +31,10 @@
   function esc(t) {
     return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
+  function pct(v) {
+    var x = Math.round(v * 1000) / 10;
+    return (x % 1 ? komma(x, 1) : String(x)) + "%";
+  }
   function ct(v) { return (v * 100).toFixed(1).replace(".", ",") + " ct"; }
   function getal(v) { return String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
   function eur0(v) { return "€ " + getal(v); }
@@ -90,9 +94,20 @@
     });
   }
 
+  // Nog niet erkend als inboekdienstverlener door de NEa.
+  function nietErkend(inb) { return inb.erkenning === "aangevraagd"; }
+  function erkenningUitleg(inb) {
+    var n = esc(inb.naam);
+    return "Wie laadstroom wil laten inboeken, heeft een inboekdienstverlener nodig die de Nederlandse Emissieautoriteit (NEa) daarvoor heeft erkend. " +
+      n + " heeft die erkenning aangevraagd, maar heeft haar nog niet. Zolang dat zo is, kan " + n + " niets voor je inboeken, en dus ook geen ERE's verkopen of uitbetalen. " +
+      "Aanmelden en de machtiging tekenen kan al wel. Wordt de aanvraag afgewezen of duurt ze lang, dan moet je alsnog naar een andere inboeker. " +
+      "De opbrengst hierboven is een rekensom met de servicekosten van " + n + ", geen bedrag dat al is waargemaakt.";
+  }
+
   // ── kenmerken (rondjes) ─────────────────────────────────────────────
   function badges(inb) {
     var b = "";
+    if (nietErkend(inb)) b += '<span class="ere-badge badge-aangekondigd" title="Aanvraag bij de NEa loopt nog">nog niet erkend door de NEa</span>';
     if (inb.garantie_per_kwh != null) b += (inb.garantie_label ? '<span class="ere-badge badge-aangekondigd">' + esc(inb.garantie_label) + " " : '<span class="ere-badge badge-garantie">bodem ') + ct(inb.garantie_per_kwh) + "</span>";
     if (inb.uitbetaald && inb.uitbetaald.length) b += '<span class="ere-badge badge-betaald">uitbetaald</span>';
     if (inb.eis_klant) b += '<span class="ere-badge badge-klant">alleen klanten</span>';
@@ -111,6 +126,7 @@
     var id = esc(inb.id);
     var h = '<div class="ere-details" id="ere-det-' + id + '" hidden>';
     if (verouderd(inb)) h += '<p class="ere-let">⚠ Laatst gecontroleerd op ' + esc(datumNL(inb.gecontroleerd)) + ', meer dan ' + VEROUDERD_DAGEN + ' dagen geleden. Servicekosten en bedragen kunnen inmiddels anders zijn; kijk ze na op de website van ' + esc(inb.naam) + '.</p>';
+    if (nietErkend(inb)) h += '<p class="ere-label">Nog niet erkend: wat betekent dat?</p><p class="ere-let">' + erkenningUitleg(inb) + "</p>";
     h += '<p class="ere-label" id="ere-det-' + id + '-kosten">Servicekosten</p><p>' + esc(inb.commissie_tekst) + (inb.commissie_detail ? " " + esc(inb.commissie_detail) : "") + "</p>";
     h += '<p class="ere-label" id="ere-det-' + id + '-uitbetaling">Uitbetaling</p><p>' + esc(hoofdletter(inb.uitbetaling)) + "." + (inb.uitbetaling_detail ? " " + esc(inb.uitbetaling_detail) : "") + "</p>";
     if (inb.uitbetaald && inb.uitbetaald.length) {
@@ -132,7 +148,8 @@
     var id = esc(inb.id), n = netto(d, inb), j = perJaar(d, inb, v);
     var badge = "", soort = "";
     if (nr === 1 && j != null) {
-      if (opAankondiging(d, inb)) { badge = "Hoogste bedrag, nog niet vastgelegd"; soort = " met-badge badge-voorzichtig"; }
+      if (nietErkend(inb)) { badge = "Hoogste bedrag, nog niet erkend door de NEa"; soort = " met-badge badge-voorzichtig"; }
+      else if (opAankondiging(d, inb)) { badge = "Hoogste bedrag, nog niet vastgelegd"; soort = " met-badge badge-voorzichtig"; }
       else { badge = "Hoogste opbrengst bij jouw laadgedrag"; soort = " met-badge"; }
     }
     var h = '<div class="ere-rij ere-kaart' + soort + '" data-id="' + id + '" id="' + id + '">';
@@ -141,7 +158,8 @@
     h += '<span class="ere-k-logo"><span class="ere-k-nr" aria-hidden="true">' + nr + "</span>" + logoHtml(inb, 44) + "</span>";
     h += '<span class="ere-naam"><span class="sr">' + nr + ". </span>" + esc(inb.naam) + "</span>";
     h += '<span class="ere-cellen">';
-    h += '<span class="ere-cel">servicekosten <b>' + (inb.commissie == null ? "niet openbaar" : Math.round(inb.commissie * 100) + "%") + "</b></span>";
+    h += '<span class="ere-cel">servicekosten <b>' + (inb.commissie == null ? "niet openbaar" : pct(inb.commissie)) + "</b>" +
+      (inb.commissie_daarna != null ? " in jaar 1, daarna <b>" + pct(inb.commissie_daarna) + "</b>" : "") + "</span>";
     h += '<span class="ere-cel">netto <b>' + (n == null ? "–" : ct(n)) + "</b> per kWh</span>";
     h += '<span class="ere-cel">uitbetaling <b>' + esc(inb.uitbetaling) + "</b></span>";
     h += "</span>";
@@ -230,7 +248,7 @@
     function noot(sleutel, inb) { return vast[sleutel] && vast[sleutel].id === inb.id ? " " + esc(vast[sleutel].noot) : ""; }
     var h = "<p><strong>Kort antwoord</strong> bij " + getal(v) + " kWh per jaar:</p><ul>";
     h += "<li><strong>Hoogste bedrag:</strong> " + esc(k.top.naam) + ", " + eur0(perJaar(d, k.top, v)) + "." + noot("hoogste", k.top) + "</li>";
-    h += "<li><strong>Laagste servicekosten:</strong> " + esc(k.laag.naam) + ", " + Math.round(k.laag.commissie * 100) + " procent." + noot("laagste_commissie", k.laag) + "</li>";
+    h += "<li><strong>Laagste servicekosten:</strong> " + esc(k.laag.naam) + ", " + pct(k.laag.commissie).replace("%", " procent") + "." + noot("laagste_commissie", k.laag) + "</li>";
     if (k.betaald.length) {
       h += "<li><strong>Al uitbetaald:</strong> " + esc(namen(k.betaald.map(function (i) { return i.naam; }))) + ", netto " +
         (k.min === k.max ? komma(k.min * 100, 1) : komma(k.min * 100, 1) + " tot " + komma(k.max * 100, 1)) + " cent per kWh.</li>";
@@ -277,6 +295,7 @@
   return {
     esc: esc, ct: ct, eur0: eur0, getal: getal, komma: komma, datumNL: datumNL,
     VEROUDERD_DAGEN: VEROUDERD_DAGEN, dagenOud: dagenOud, verouderd: verouderd,
+    pct: pct, nietErkend: nietErkend,
     marktPrijs: marktPrijs, netto: netto, perJaar: perJaar, opAankondiging: opAankondiging,
     filter: filter, sorteer: sorteer, lijstHtml: lijstHtml,
     standTekst: standTekst, kortStand: kortStand, verschilHtml: verschilHtml, kortHtml: kortHtml, hintTekst: hintTekst,
