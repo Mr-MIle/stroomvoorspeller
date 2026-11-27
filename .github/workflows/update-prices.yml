@@ -111,12 +111,10 @@ jobs:
           DATE=$(date -u +%Y-%m-%d)
           cp public/data/forecast.json data/forecast_archive/forecast_${DATE}.json
 
-      - name: Leg meetlatten vast (EpexPredictor, WattWanneer)
+      - name: Leg meetlat vast (EpexPredictor)
         # Zelfde moment als de snapshot hierboven, die deze workflow ook overschrijft.
-        # WattWanneer ververst rond 12:20 UTC; update-forecast draait in de praktijk
-        # alleen 's ochtends en check-prices slaat alles over als deze workflow de
-        # prijzen al had. Zonder deze stap kwam WattWanneer zelden in het archief.
-        # Alleen meten, mag nooit iets blokkeren.
+        # WattWanneer is per 26 nov 2026 gestopt (bestand afgeschermd, alleen nog
+        # betaalde API). Alleen meten, mag nooit iets blokkeren.
         continue-on-error: true
         run: python scripts/log_benchmark.py
 

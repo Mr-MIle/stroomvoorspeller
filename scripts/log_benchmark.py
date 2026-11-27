@@ -4,10 +4,12 @@ log_benchmark.py — legt de voorspellingen van andere modellen vast als meetlat
 
 - EpexPredictor (github.com/b3nn0/EpexPredictor, BSD-3): het open-source model
   achter dynamisch-tarief.nl.
-- WattWanneer (wattwanneer.nl): de openbare weekvoorspelling die hun eigen site
-  laadt (/public/week_forecast.json). Sinds 10 nov 2026.
+- WattWanneer (wattwanneer.nl): vastgelegd van 10 t/m 25 nov 2026. Sinds 26 nov
+  schermt WattWanneer het bestand af (403) en is de voorspelling alleen nog via
+  hun betaalde API te krijgen; op hun verzoek halen we niets meer op. De
+  bestaande wattwanneer_*.json in het archief blijven staan voor de vergelijking.
 
-Door ze elke dag op hetzelfde moment als onze eigen snapshot vast te leggen, kan
+Door de meetlat elke dag op hetzelfde moment als onze eigen snapshot vast te leggen, kan
 generate_performance.py de modellen op exact dezelfde uren vergelijken. Alleen
 meten: hun cijfers gaan nooit ons model in.
 
@@ -24,15 +26,12 @@ import sys
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "data" / "benchmark_archive"
 UA = {"User-Agent": "stroomvoorspeller.nl/benchmark"}
-AMS = ZoneInfo("Europe/Amsterdam")
 
 EPEXPREDICTOR_URL = "https://epexpredictor.batzill.com/prices?region=NL&unit=EUR_PER_MWH"
-WATTWANNEER_URL = "https://wattwanneer.nl/public/week_forecast.json"
 
 
 def _get_json(url: str):
@@ -79,60 +78,8 @@ def log_epexpredictor() -> None:
                              "known_until": data.get("knownUntil")}, rows)
 
 
-def log_wattwanneer() -> None:
-    """WattWanneer ververst één keer per dag (rond 13:20 NL-tijd).
-
-    We bewaren alleen een run van vandaag: draait deze stap 's ochtends, dan staat
-    daar nog de run van gisteren, en die hoort niet onder de datum van vandaag. Een
-    latere stap op dezelfde dag overschrijft het bestand met de verse run.
-
-    "price" = hun modelwaarde (price_model_eur_kwh). Die tonen ze op de site voor
-    de uren zonder day-ahead prijs; voor de uren mét day-ahead tonen ze de echte
-    prijs, maar het model blijft dan staan als voorspelling. p50 en de
-    bias-gecorrigeerde variant gaan mee voor latere analyse.
-    """
-    try:
-        data = _get_json(WATTWANNEER_URL)
-    except Exception as exc:  # noqa: BLE001
-        print(f"[warn] WattWanneer niet bereikbaar: {exc}", file=sys.stderr)
-        return
-
-    entries = list(data.values()) if isinstance(data, dict) else list(data or [])
-    run = str(entries[0].get("generated_at", "")) if entries else ""
-    today = datetime.now(timezone.utc).strftime("%Y%m%d")
-    if not run.startswith(today):
-        print(f"[info] WattWanneer-run {run or '?'} is niet van vandaag; niets vastgelegd",
-              file=sys.stderr)
-        return
-
-    def eur_mwh(v):
-        return round(float(v) * 1000, 2) if v is not None else None
-
-    rows = []
-    for e in entries:
-        try:
-            t = datetime.strptime(e["datetime"], "%Y-%m-%d %H:%M").replace(tzinfo=AMS)
-            price = eur_mwh(e.get("price_model_eur_kwh"))
-        except (KeyError, ValueError, TypeError):
-            continue
-        if price is None:
-            continue
-        rows.append({
-            "time": t.isoformat(),
-            "price": price,
-            "p50": eur_mwh(e.get("predicted_price_p50")),
-            "corrected": eur_mwh(e.get("corrected_price_eur_kwh")),
-            "source": e.get("source"),
-        })
-    if not rows:
-        print("[warn] WattWanneer gaf geen bruikbare prijzen", file=sys.stderr)
-        return
-    _write("wattwanneer", {"bron": WATTWANNEER_URL, "run": run}, rows)
-
-
 def main() -> int:
     log_epexpredictor()
-    log_wattwanneer()
     return 0
 
 
