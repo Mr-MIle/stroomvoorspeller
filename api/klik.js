@@ -54,8 +54,14 @@ export default async function handler(req, res) {
         hits: [{ path: naam, title: titel, event: true, ip, user_agent: ua }],
       }),
     });
-    res.status(r.ok ? 204 : 502).end();
+    if (r.ok) {
+      res.status(204).end();
+      return;
+    }
+    // Melding van GoatCounter meegeven, zodat een fout (token, rechten) te zien is.
+    const tekst = (await r.text().catch(() => '')).slice(0, 300);
+    res.status(502).send(`goatcounter ${r.status}: ${tekst}`);
   } catch (e) {
-    res.status(502).end();
+    res.status(502).send('goatcounter onbereikbaar');
   }
 }
