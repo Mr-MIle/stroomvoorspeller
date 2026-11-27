@@ -24,7 +24,7 @@
   // Lekkerladen heeft er nog geen (lekkerladen.nl had op 15 nov 2026 een ongeldig certificaat).
   var LOGO = {
     zeres: "zeres.png", laadbeloning: "laadbeloning.png", stekker: "stekker.png", joulo: "joulo.png", laadloon: "laadloon.png",
-    zonneplan: "zonneplan.png", "50five": "50five.svg", vattenfall: "vattenfall.svg", eneco: "eneco.png"
+    zonneplan: "zonneplan.png", "50five": "50five.svg", vattenfall: "vattenfall.svg", eneco: "eneco.png", eevy: "eevy.png"
   };
 
   // ── opmaak-helpers ──────────────────────────────────────────────────
