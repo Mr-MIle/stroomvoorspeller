@@ -59,25 +59,16 @@ const eur = n => '€ ' + Math.round(n).toLocaleString('nl-NL');
 const r50 = n => n >= 1000 ? Math.round(n / 100) * 100 : Math.round(n / 10) * 10;   // geen schijnprecisie
 const range = ([a, b]) => r50(a) === r50(b) ? eur(r50(a)) : eur(r50(a)) + ' – ' + r50(b).toLocaleString('nl-NL');
 
-/* ---------- tellen (GoatCounter, zonder cookies) ---------- */
-const TELLER = 'https://stroomvoorspeller.goatcounter.com/count';
-const BRON = 'https://gc.zgo.at/count.js';
+/* ---------- tellen (GoatCounter via /api/klik, zonder cookies) ---------- */
 const geteld = new Set();
-let wacht = [], laden = false;
-function stuur(n) { try { window.goatcounter.count({ path: n, title: 'Bespaarplan: ' + n, event: true }); } catch (e) {} }
 function tel(naam) {
   if (geteld.has(naam)) return;
   geteld.add(naam);
-  if (window.goatcounter && window.goatcounter.count) return stuur(naam);
-  wacht.push(naam);
-  if (laden) return;
-  laden = true;
-  window.goatcounter = window.goatcounter || {};
-  window.goatcounter.no_onload = true;
-  const s = document.createElement('script');
-  s.async = true; s.src = BRON; s.setAttribute('data-goatcounter', TELLER);
-  s.onload = () => { const w = wacht; wacht = []; w.forEach(stuur); };
-  document.head.appendChild(s);
+  const body = JSON.stringify({ e: naam, t: 'Bespaarplan: ' + naam });
+  try {
+    if (navigator.sendBeacon && navigator.sendBeacon('/api/klik', body)) return;
+    fetch('/api/klik', { method: 'POST', body, keepalive: true }).catch(() => {});
+  } catch (e) {}
 }
 
 /* ---------- URL ---------- */

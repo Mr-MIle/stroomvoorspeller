@@ -5,9 +5,9 @@
  * eerste keer dat hij zelf een invoer wijzigt of een keuzeknop aantikt. Wie
  * alleen kijkt, telt niet mee. Wie twintig keer schuift, telt één keer.
  *
- * GoatCounter laadt pas op dat moment. Bezoekers die niets invullen, maken dus
- * geen enkele verbinding met GoatCounter. Paginaweergaven telt GoatCounter
- * bewust niet (no_onload); die komen uit Vercel en Cloudflare.
+ * Het seintje gaat naar /api/klik op onze eigen server, die het doorgeeft aan
+ * GoatCounter (zo houden adblockers het niet tegen). Bezoekers die niets
+ * invullen, sturen niets. Paginaweergaven komen uit Vercel en Cloudflare.
  *
  * Gebruik:  <script src="/tel.js" data-tool="batterij" defer></script>
  * Event in GoatCounter:  rekentool-<tool>
@@ -17,8 +17,6 @@
   var tool = script && script.getAttribute("data-tool");
   if (!tool) return;
 
-  var TELLER = "https://stroomvoorspeller.goatcounter.com/count";
-  var BRON = "https://gc.zgo.at/count.js";
   var KNOPPEN = "button[data-v], button[data-c], button[data-m], #crisisBtn";
   var BUITEN = "header, nav, footer, .partner-slot, .partner-card, .install-tip, [data-geen-tel]";
 
@@ -33,12 +31,10 @@
   }
 
   function stuur() {
+    var body = JSON.stringify({ e: "rekentool-" + tool, t: "Rekentool gebruikt: " + tool });
     try {
-      window.goatcounter.count({
-        path: "rekentool-" + tool,
-        title: "Rekentool gebruikt: " + tool,
-        event: true
-      });
+      if (navigator.sendBeacon && navigator.sendBeacon("/api/klik", body)) return;
+      fetch("/api/klik", { method: "POST", body: body, keepalive: true }).catch(function () {});
     } catch (e) {}
   }
 
@@ -51,15 +47,7 @@
     document.removeEventListener("change", tel, true);
     document.removeEventListener("click", tel, true);
 
-    if (window.goatcounter && window.goatcounter.count) { stuur(); return; }
-    window.goatcounter = window.goatcounter || {};
-    window.goatcounter.no_onload = true;
-    var s = document.createElement("script");
-    s.async = true;
-    s.src = BRON;
-    s.setAttribute("data-goatcounter", TELLER);
-    s.onload = stuur;
-    document.head.appendChild(s);
+    stuur();
   }
 
   document.addEventListener("input", tel, true);

@@ -5,8 +5,8 @@
  * niet bestaat. Er wordt niets opgeslagen behalve één vlag in localStorage, zodat
  * dezelfde browser niet twee keer telt en bij een volgend bezoek het bedankje ziet.
  *
- * GoatCounter laadt pas bij de klik. Wie niet klikt, maakt geen verbinding met
- * GoatCounter. Paginaweergaven telt het bewust niet (no_onload).
+ * Pas bij de klik gaat er een seintje naar /api/klik op onze eigen server, die
+ * het doorgeeft aan GoatCounter (zo houden adblockers het niet tegen).
  *
  * Gebruik:
  *   <div data-interesse="dagmail">
@@ -18,8 +18,6 @@
  * Event in GoatCounter:  interesse-<naam>
  */
 (function () {
-  var TELLER = "https://stroomvoorspeller.goatcounter.com/count";
-  var BRON = "https://gc.zgo.at/count.js";
   var SLEUTEL = "sv.interesse.";
 
   function al(naam) {
@@ -37,26 +35,12 @@
     if (bedankt) bedankt.hidden = false;
   }
 
-  function stuur(naam) {
-    try {
-      window.goatcounter.count({
-        path: "interesse-" + naam,
-        title: "Interesse: " + naam,
-        event: true
-      });
-    } catch (e) {}
-  }
-
   function tel(naam) {
-    if (window.goatcounter && window.goatcounter.count) { stuur(naam); return; }
-    window.goatcounter = window.goatcounter || {};
-    window.goatcounter.no_onload = true;
-    var s = document.createElement("script");
-    s.async = true;
-    s.src = BRON;
-    s.setAttribute("data-goatcounter", TELLER);
-    s.onload = function () { stuur(naam); };
-    document.head.appendChild(s);
+    var body = JSON.stringify({ e: "interesse-" + naam, t: "Interesse: " + naam });
+    try {
+      if (navigator.sendBeacon && navigator.sendBeacon("/api/klik", body)) return;
+      fetch("/api/klik", { method: "POST", body: body, keepalive: true }).catch(function () {});
+    } catch (e) {}
   }
 
   var blokken = document.querySelectorAll("[data-interesse]");
