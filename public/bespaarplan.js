@@ -66,7 +66,6 @@ function tel(naam) {
   geteld.add(naam);
   const body = JSON.stringify({ e: naam, t: 'Bespaarplan: ' + naam });
   try {
-    if (navigator.sendBeacon && navigator.sendBeacon('/api/klik', body)) return;
     fetch('/api/klik', { method: 'POST', body, keepalive: true }).catch(() => {});
   } catch (e) {}
 }

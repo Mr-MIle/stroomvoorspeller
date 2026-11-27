@@ -38,7 +38,6 @@
   function tel(naam) {
     var body = JSON.stringify({ e: "interesse-" + naam, t: "Interesse: " + naam });
     try {
-      if (navigator.sendBeacon && navigator.sendBeacon("/api/klik", body)) return;
       fetch("/api/klik", { method: "POST", body: body, keepalive: true }).catch(function () {});
     } catch (e) {}
   }
