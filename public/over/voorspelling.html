@@ -72,7 +72,7 @@
           "@id": "https://stroomvoorspeller.nl/#organization"
         },
         "datePublished": "2026-04-29",
-        "dateModified": "2026-10-14",
+        "dateModified": "2026-11-27",
         "inLanguage": "nl-NL",
         "image": "https://stroomvoorspeller.nl/og-image.png",
         "mainEntityOfPage": "https://stroomvoorspeller.nl/over/voorspelling",
@@ -105,7 +105,7 @@
   <main class="legal-page container">
     <p class="legal-breadcrumb"><a href="/">← terug naar de homepage</a></p>
     <h1>Over de voorspelling</h1>
-    <p class="legal-meta">Modelversie 5.3 · Bijgewerkt: 10 november 2026</p>
+    <p class="legal-meta">Modelversie 5.4 · Bijgewerkt: 27 november 2026</p>
 
     <section>
       <h2>Kort samengevat</h2>
@@ -289,6 +289,27 @@ Op 9 en 10 oktober had versie 5.1 13,5 en 10,5 cent gezegd. Beter, maar nog stee
 zulke dagen blijven lastig.
 </p>
 <p>Klik op de homepage in de voorspelgrafiek op een uur. Onder de grafiek zie je dan per onderdeel hoeveel cent het bijdraagt. Het tweede model staat daar als <em>patroonmodel</em>: hoeveel het de uitkomst van stap 3 omhoog of omlaag haalt.</p>
+      <h3>Stap 5 — Een derde model kijkt niet naar de prijzen</h3>
+<p>
+De eerste twee modellen beginnen bij de prijzen van de afgelopen weken. Als de markt hard
+omslaat, lopen ze daardoor achter. Tussen 17 en 25 november 2026 lag de voorspelling eerst
+gemiddeld 3 cent te hoog en een week later 5 tot 7 cent te laag.
+</p>
+<p>
+Sinds versie 5.4 (27 november 2026) rekent daarom een derde model mee. Het zijn ook
+beslisbomen, maar ze krijgen geen enkele prijs te zien: alleen het verwachte weer, de
+gasprijs, het tekort aan wind en zon, het uur, de dag en de tijd van het jaar. Daaruit
+schatten ze de prijs zelf. Dat model alleen zit er gemiddeld iets vaker naast dan de eerste
+twee, maar het maakt andere fouten. Samen worden ze beter.
+</p>
+<p class="legal-formula">
+voorspelling = ⅔ × uitkomst stap 4 + ⅓ × derde model
+</p>
+<p>
+Teruggerekend over januari 2025 tot november 2026, met het weer zoals het toen vooraf verwacht
+werd, zakt de gemiddelde afwijking van 2,11 naar 2,07 cent per kWh. In 19 van de 23 maanden
+is het beter. Het derde model staat in de opbouw per uur als <em>fundamentmodel</em>.
+</p>
     </section>
 
     <section>

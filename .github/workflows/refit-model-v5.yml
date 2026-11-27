@@ -3,7 +3,8 @@ name: Model v5 — gewichten opnieuw schatten
 # Wekelijks (zondag 04:17 UTC) en op verzoek. Haalt het weer op zoals het 1-7
 # dagen vooraf verwacht werd (Open-Meteo Previous Runs, sinds januari 2024), de
 # prijzen uit het archief en de TTF-gasprijs, en schat per uur van de dag de
-# gewichten van het correctiemodel opnieuw. Resultaat: public/data/model_v5.json.
+# gewichten van het correctiemodel opnieuw. Resultaat: public/data/model_v5.json,
+# plus de bomen van het patroonmodel en (v5.4) het fundamentmodel in data/.
 # Mislukt iets, dan blijft het oude bestand staan en draait de voorspelling door.
 
 on:
@@ -47,6 +48,7 @@ jobs:
           git config user.email "bot@stroomvoorspeller.nl"
           git add public/data/model_v5.json
           git add data/model_v5_gbm.json 2>/dev/null || true
+          git add data/model_v5_fund.json 2>/dev/null || true
           git add data/ttf_daily.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "Geen wijziging."

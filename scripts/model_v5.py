@@ -43,6 +43,14 @@ Backtest juli 2024 - sept 2026 (01-documenten/ab-model-v5-uitkomst.md): MAE 25,2
 (v4-baseline) -> 21,1 EUR/MWh; in het live-venster van v4 (20 aug - 1 okt 2026)
 34,1 -> 28,1. v5.1 (01-documenten/ab-model-v5-1-uitkomst.md), jan 2025 - okt 2026:
 21,0 -> 19,7.
+
+v5.4 (27 nov 2026, 01-documenten/ab-fundamentmodel-uitkomst.md): een derde rekenmodel,
+het fundamentmodel, telt voor een derde mee. Dat zijn beslisbomen op de absolute prijs
+met alleen weer, gas, tekort en kalender, zonder enige prijsinformatie (zoals
+EpexPredictor). Daardoor hangt het niet aan het niveau van de laatste weken en vangt
+het een deel van de fouten van 5.3 op. Bomen in data/model_v5_fund.json, zelfde formaat.
+Walk-forward jan 2025 - nov 2026, wekelijks herschat: 21,13 -> 20,65 EUR/MWh, beter in
+19 van 23 maanden. Ontbreken de bomen, dan rekent 5.3 ongewijzigd.
 """
 
 from __future__ import annotations
@@ -54,7 +62,8 @@ from typing import Optional
 from forecast import dagtype, is_crossborder_feestdag
 from weather_points import (WIND_POINTS, SOLAR_POINTS, TEMP_POINTS, capacity_factor)
 
-MODEL_VERSION = "5.3"
+MODEL_VERSION = "5.4"
+MODEL_VERSION_NO_FUND = "5.3"          # versie als het fundamentmodel ontbreekt
 MODEL_VERSION_LINEAR = "5.3-lineair"   # versie als het patroonmodel ontbreekt
 
 REF_DAYS = 28            # referentievenster weer (zelfde lengte als de lange mediaan)
@@ -124,6 +133,13 @@ GBM_FEATURES = [
     "ref_wind", "ref_zon_uur", "ref_temp",
     "tekort", "gaskloof", "tekort_gaskloof",   # v5.2; gaskloof = gaskosten - basis
 ]
+# v5.4: fundamentmodel. Alleen de kenmerken van het patroonmodel zonder prijsinformatie,
+# plus dag van het jaar en gaskosten. Aandeel in de eindvoorspelling.
+FUND_MIX = 1 / 3
+FUND_FROM_GBM = ["uur", "lead", "weekdag", "feestdag",
+                 "wind_uur", "wind_dag", "windsnelheid_uur", "zon_uur", "zon_dag",
+                 "temp_uur", "temp_dag", "stookgraad", "ttf", "tekort"]
+FUND_FEATURES = FUND_FROM_GBM + ["jaar_sin", "jaar_cos", "gaskosten", "tekort_gaskosten"]
 # Instellingen van het schatten (refit_model_v5.py); backtest in het A/B-rapport.
 GBM_PARAMS = dict(objective="l1", n_estimators=600, learning_rate=0.03, num_leaves=31,
                   min_child_samples=40, subsample=0.8, subsample_freq=1,
@@ -471,9 +487,26 @@ def gbm_predict(gbm: dict, x: list) -> float:
     return total
 
 
-def gbm_usable(gbm: Optional[dict]) -> bool:
+_FUND_IDX = [GBM_FEATURES.index(n) for n in FUND_FROM_GBM]
+_I_TTF = GBM_FEATURES.index("ttf")
+_I_TEKORT = GBM_FEATURES.index("tekort")
+
+
+def fund_features(G: list, target: date) -> list:
+    """24 invoervectoren van het fundamentmodel (FUND_FEATURES) uit die van het
+    patroonmodel: de prijskenmerken vallen weg, dag van het jaar en gaskosten erbij."""
+    doy = target.timetuple().tm_yday
+    js, jc = math.sin(2 * math.pi * doy / 365.25), math.cos(2 * math.pi * doy / 365.25)
+    out = []
+    for g in G:
+        gc = gas_costs(g[_I_TTF])
+        out.append([g[i] for i in _FUND_IDX] + [js, jc, gc, g[_I_TEKORT] * gc])
+    return out
+
+
+def gbm_usable(gbm: Optional[dict], features: Optional[list] = None) -> bool:
     """Controleer formaat en de meegeleverde testgevallen (zelfde uitkomst als lightgbm)."""
-    if not gbm or gbm.get("features") != GBM_FEATURES or not gbm.get("trees"):
+    if not gbm or gbm.get("features") != (features or GBM_FEATURES) or not gbm.get("trees"):
         return False
     try:
         for case in gbm.get("selftest", []):
@@ -496,14 +529,18 @@ def band_half(pred: float, L: int) -> float:
 def forecast_day(P: dict, obs: dict, fc_day: dict, k: date, target: date, gas: float,
                  coefs: Optional[dict], gbm: Optional[dict] = None,
                  ttf_level: Optional[float] = None,
-                 ttf28: Optional[float] = None) -> Optional[dict]:
+                 ttf28: Optional[float] = None,
+                 fund: Optional[dict] = None) -> Optional[dict]:
     """
     Voorspelling voor één doeldag. P = prijzen t/m k, obs = waargenomen weerindices,
     fc_day = verwacht weer voor de doeldag {"w","s","t"}, coefs = model_v5.json,
     gbm = data/model_v5_gbm.json (al gecontroleerd met gbm_usable), ttf_level =
     laatste TTF-slotkoers vóór k, ttf28 = gemiddelde TTF over 28 dagen vóór k
     (ttf_mean_before). Zonder gbm is pred het lineaire model alleen.
-    Return dict met per uur: base, b4, analog, delta, linear, gbm, pred, contrib-groepen.
+    fund = data/model_v5_fund.json (al gecontroleerd met gbm_usable(fund, FUND_FEATURES));
+    alleen samen met gbm: pred = (1 - FUND_MIX) x 5.3 + FUND_MIX x fundamentmodel.
+    Return dict met per uur: base, b4, analog, delta, linear, gbm, p53, fund, pred,
+    contrib-groepen.
     """
     L = (target - k).days
     b4 = baseline_v4(P, k, target)
@@ -520,6 +557,7 @@ def forecast_day(P: dict, obs: dict, fc_day: dict, k: date, target: date, gas: f
     X = hour_features(target, fc_day, ref, gas, ttf_level, ttf28, base)
     G = (gbm_features(P, k, target, fc_day, ref, ttf_level, b4, an, base)
          if gbm and coefs else None)
+    F = fund_features(G, target) if (G is not None and fund) else None
     alpha = lead_alpha(L)
     hours = []
     for h in range(24):
@@ -543,12 +581,19 @@ def forecast_day(P: dict, obs: dict, fc_day: dict, k: date, target: date, gas: f
             g_pred = max(linear - DELTA_CLIP, min(linear + DELTA_CLIP, g_pred))
             groups["patroon"] = GBM_MIX * (g_pred - linear)
             pred = linear + groups["patroon"]
+        p53, f_pred = pred, None
+        if F is not None:
+            f_pred = gbm_predict(fund, F[h])
+            f_pred = max(p53 - DELTA_CLIP, min(p53 + DELTA_CLIP, f_pred))
+            groups["fundament"] = FUND_MIX * (f_pred - p53)
+            pred = p53 + groups["fundament"]
         hours.append({"hour": h, "b4": b4[h], "analog": an[h] if an else None,
                       "base": base[h], "anchor": anchor[h], "delta": alpha * delta, "linear": linear,
-                      "gbm": g_pred, "pred": pred,
+                      "gbm": g_pred, "p53": p53, "fund": f_pred, "pred": pred,
                       "groups": groups, "x": X[h], "lead": L})
     return {"lead": L, "alpha": alpha, "ref": ref, "hours": hours, "gas": gas,
-            "model": MODEL_VERSION if G is not None else MODEL_VERSION_LINEAR,
+            "model": (MODEL_VERSION if F is not None else
+                      MODEL_VERSION_NO_FUND if G is not None else MODEL_VERSION_LINEAR),
             "target": target, "w_mean": w_mean, "s_mean": s_mean,
             "t_mean": sum(fc_day["t"]) / 24,
             "ws_mean": (sum(fc_day["ws"]) / 24) if fc_day.get("ws") else None,
@@ -638,5 +683,9 @@ def explain_hour(day: dict, h: int) -> list[dict]:
         items.append(("patroonmodel", g["patroon"],
                       "tweede rekenmodel dat wind, zon, gasprijs en recente prijzen samen "
                       "bekijkt; telt voor de helft mee"))
+    if "fundament" in g:
+        items.append(("fundamentmodel", g["fundament"],
+                      "derde rekenmodel dat de prijs alleen uit weer, gasprijs en kalender "
+                      "schat, zonder de prijzen van de afgelopen weken; telt voor een derde mee"))
     return [{"name": n, "eur": round(v, 2), "points": int(round(v / 10.0)), "reason": r}
             for n, v, r in items]

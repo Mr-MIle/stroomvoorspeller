@@ -46,9 +46,10 @@ MODEL_HISTORY = [
     {"version": "5.1", "date": "2026-10-14", "mae_eur_mwh": None,  "notes": "Patroonmodel (beslisbomen op weer, gas- en prijsniveau) telt voor de helft mee; backtest jan 2025 - okt 2026 21,0 -> 19,7"},
     {"version": "5.2", "date": "2026-11-10", "mae_eur_mwh": None,  "notes": "Gas en schaarste: gaskosten en het tekort aan wind en zon per uur in beide rekenmodellen; lab sep 2025 - nov 2026 22,9 -> 22,6, duur gas + weinig wind/zon 38,8 -> 34,0"},
     {"version": "5.3", "date": "2026-11-10", "mae_eur_mwh": None,  "notes": "Gas-ankering: basisprijs schuift mee met TTF t.o.v. 28 dagen (sterker bij weinig wind/zon); lab 22,56 -> 22,49, stijgend gas + weinig wind/zon 34,0 -> 31,6"},
+    {"version": "5.4", "date": "2026-11-27", "mae_eur_mwh": None,  "notes": "Fundamentmodel (beslisbomen op weer, gas en kalender, zonder prijzen) telt voor een derde mee; walk-forward jan 2025 - nov 2026 21,13 -> 20,65"},
 ]
 
-CURRENT_MODEL_VERSION = "5.3"
+CURRENT_MODEL_VERSION = "5.4"
 
 # Evaluatievenster: afgelopen N dagen
 EVAL_WINDOW_DAYS = 30
@@ -140,12 +141,14 @@ def load_archive(prefix="forecast", directory=None):
                     dt = datetime.fromisoformat(hour_str.replace("Z", "+00:00"))
                     key = dt.strftime("%Y-%m-%dT%H:00:00Z")
                     v50 = entry.get("predicted_v50")
+                    v53 = entry.get("predicted_v53")
                     fc_dict[key] = {
                         "forecast": float(fc_val),
                         "band_low": float(band_low) if band_low is not None else None,
                         "band_high": float(band_high) if band_high is not None else None,
                         "model": str(entry.get("model") or snap_model),
                         "forecast_v50": float(v50) if v50 is not None else None,
+                        "forecast_v53": float(v53) if v53 is not None else None,
                     }
                 except ValueError:
                     pass
@@ -276,6 +279,7 @@ def compute_performance():
                 "signed_error": forecast - actual,
                 "model": fc_entry.get("model", ""),
                 "forecast_v50": fc_entry.get("forecast_v50"),
+                "forecast_v53": fc_entry.get("forecast_v53"),
                 "snap": snap_date,
                 "key": hour_str,
             })
@@ -521,6 +525,16 @@ def compute_performance():
             "mae_v50_eur_mwh": round(sum(abs(p["forecast_v50"] - p["actual"]) for p in sh50) / len(sh50), 2),
         }
 
+    # v5.4: zelfde uren, met en zonder fundamentmodel.
+    sh53 = [p for p in pairs if p.get("forecast_v53") is not None]
+    shadow_v53 = None
+    if sh53:
+        shadow_v53 = {
+            "n_hours": len(sh53),
+            "mae_v54_eur_mwh": mae(sh53),
+            "mae_v53_eur_mwh": round(sum(abs(p["forecast_v53"] - p["actual"]) for p in sh53) / len(sh53), 2),
+        }
+
     # Andere modellen als meetlat: dezelfde snapshotdag, hetzelfde doeluur,
     # dezelfde werkelijke prijs. Alleen uren die beide modellen voorspelden tellen.
     def compare_benchmark(prefix, naam):
@@ -589,6 +603,7 @@ def compute_performance():
         "daily_series": daily_series,
         "by_model": by_model,
         "shadow_v50": shadow_v50,
+        "shadow_v53": shadow_v53,
         "benchmark": benchmark,
         "benchmark_wattwanneer": benchmark_wattwanneer,
         "naive_note": ("Naïef = mediaan van hetzelfde uur over de laatste 7 (weekend: 14) "

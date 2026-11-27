@@ -19,6 +19,11 @@ run_forecast.py controleert dat de pure-Python-uitvoering hetzelfde uitkomt. Is
 lightgbm niet geïnstalleerd of mislukt het schatten, dan blijft het oude bestand
 staan (of draait het lineaire model alleen).
 
+v5.4: schat ook het fundamentmodel (LightGBM op de absolute prijs, zonder
+prijskenmerken; model_v5.FUND_FEATURES) op dezelfde rijen en schrijft het naar
+data/model_v5_fund.json, met dezelfde zelftest. Mislukt dat, dan blijft het oude
+bestand staan (of rekent 5.3 zonder fundamentmodel).
+
 Gebruik:
     python scripts/refit_model_v5.py                 # haalt alles zelf op
     python scripts/refit_model_v5.py --lab exp-data/lab_v5.json.gz   # offline
@@ -42,6 +47,7 @@ import model_v5 as m5  # noqa: E402
 ROOT = SCRIPT_DIR.parent
 OUT = ROOT / "public" / "data" / "model_v5.json"
 OUT_GBM = ROOT / "data" / "model_v5_gbm.json"
+OUT_FUND = ROOT / "data" / "model_v5_fund.json"
 PRICES_JSON = ROOT / "public" / "data" / "prices.json"
 TRAIN_FROM = date(2024, 2, 1)
 
@@ -148,31 +154,38 @@ def export_trees(booster) -> list:
     return out
 
 
-def fit_gbm(rows: list) -> dict | None:
-    """Schat het patroonmodel; None als lightgbm ontbreekt of er te weinig rijen zijn."""
+def fit_gbm(rows: list, fund: bool = False) -> dict | None:
+    """Schat het patroonmodel (fund=False) of het fundamentmodel (fund=True, v5.4);
+    None als lightgbm ontbreekt of er te weinig rijen zijn."""
+    naam = "fundamentmodel" if fund else "patroonmodel"
+    features = m5.FUND_FEATURES if fund else m5.GBM_FEATURES
     try:
         import lightgbm as lgb
         import numpy as np
     except ImportError as exc:
-        print(f"[warn] patroonmodel overgeslagen: {exc}", file=sys.stderr)
+        print(f"[warn] {naam} overgeslagen: {exc}", file=sys.stderr)
         return None
     use = [r for r in rows if r["G"] is not None]
     if len(use) < 500:
-        print(f"[warn] patroonmodel: te weinig rijen ({len(use)})", file=sys.stderr)
+        print(f"[warn] {naam}: te weinig rijen ({len(use)})", file=sys.stderr)
         return None
-    X = np.array([g for r in use for g in r["G"]], dtype=float)
+    if fund:
+        X = np.array([f for r in use for f in m5.fund_features(r["G"], r["target"])],
+                     dtype=float)
+    else:
+        X = np.array([g for r in use for g in r["G"]], dtype=float)
     y = np.array([v for r in use for v in r["actual"]], dtype=float)
     model = lgb.LGBMRegressor(verbose=-1, **m5.GBM_PARAMS)
     model.fit(X, y)
     trees = export_trees(model.booster_)
-    gbm = {"features": m5.GBM_FEATURES, "trees": trees}
+    gbm = {"features": features, "trees": trees}
     # Testgevallen: de pure-Python-uitvoering moet hetzelfde uitkomen als lightgbm.
     picks = [0, len(X) // 3, 2 * len(X) // 3, len(X) - 1]
     ref_pred = model.predict(X[picks])
     gbm["selftest"] = [{"x": [float(v) for v in X[i]], "y": float(p)}
                        for i, p in zip(picks, ref_pred)]
-    if not m5.gbm_usable(gbm):
-        print("[err] patroonmodel: pure-Python-uitvoering wijkt af van lightgbm; "
+    if not m5.gbm_usable(gbm, features):
+        print(f"[err] {naam}: pure-Python-uitvoering wijkt af van lightgbm; "
               "niet opgeslagen", file=sys.stderr)
         return None
     pred = model.predict(X)
@@ -209,6 +222,7 @@ def main() -> int:
     ap.add_argument("--lab", default="", help="gebruik een labbestand i.p.v. ophalen")
     ap.add_argument("--out", default=str(OUT))
     ap.add_argument("--out-gbm", default=str(OUT_GBM))
+    ap.add_argument("--out-fund", default=str(OUT_FUND))
     ap.add_argument("--no-gbm", action="store_true", help="patroonmodel niet schatten")
     a = ap.parse_args()
 
@@ -277,6 +291,12 @@ def main() -> int:
             Path(a.out_gbm).write_text(json.dumps(gbm, separators=(",", ":")), encoding="utf-8")
             print(f"[ok] {a.out_gbm}: {len(gbm['trees'])} bomen op {gbm['n_rows']} rijen, "
                   f"in-sample MAE {gbm['in_sample_mae']}", file=sys.stderr)
+        fund = fit_gbm(rows, fund=True)
+        if fund is not None:
+            Path(a.out_fund).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out_fund).write_text(json.dumps(fund, separators=(",", ":")), encoding="utf-8")
+            print(f"[ok] {a.out_fund}: {len(fund['trees'])} bomen op {fund['n_rows']} rijen, "
+                  f"in-sample MAE {fund['in_sample_mae']}", file=sys.stderr)
     return 0
 
 

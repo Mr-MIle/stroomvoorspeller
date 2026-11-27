@@ -151,6 +151,12 @@ V5_HISTORY_DAYS = 40
 # weer: MAE 21,0 -> 19,7 EUR/MWh. Het lineaire model alleen (v5.0) rekent als schaduw
 # mee (veld predicted_v50). Kill-switch: False, dan draait v5.0 ongewijzigd.
 ENABLE_MODEL_V5_GBM = True
+# v5.4 (27 nov 2026, rapport 01-documenten/ab-fundamentmodel-uitkomst.md): een derde
+# komt uit het fundamentmodel (beslisbomen op weer, gas en kalender, zonder prijzen;
+# data/model_v5_fund.json). Walk-forward jan 2025 - nov 2026: 21,13 -> 20,65 EUR/MWh.
+# 5.3 alleen rekent als schaduw mee (veld predicted_v53). Kill-switch: False, dan
+# draait 5.3 ongewijzigd.
+ENABLE_MODEL_V5_FUND = True
 
 # ---------------------------------------------------------------------------
 # Paden
@@ -162,6 +168,7 @@ PREDICTION_LOG_FILE    = PROJECT_ROOT / "03-data" / "prediction_log.json"
 BIAS_CORRECTIONS_FILE  = PROJECT_ROOT / "03-data" / "bias_corrections.json"
 MODEL_V5_FILE          = PROJECT_ROOT / "public" / "data" / "model_v5.json"
 MODEL_V5_GBM_FILE      = PROJECT_ROOT / "data" / "model_v5_gbm.json"
+MODEL_V5_FUND_FILE     = PROJECT_ROOT / "data" / "model_v5_fund.json"
 
 # Hoeveel dagen we prediction-log bewaren (voor bias-correctie en analog search)
 PREDICTION_LOG_MAX_DAYS = 90
@@ -368,6 +375,25 @@ def load_v5_gbm():
     print(f"[info] v5.1: patroonmodel met {len(gbm['trees'])} bomen van "
           f"{gbm.get('fitted_at')}.", file=sys.stderr)
     return gbm
+
+
+def load_v5_fund():
+    """Bomen van het fundamentmodel (v5.4), of None: dan rekent 5.3 alleen."""
+    if _m5 is None or not ENABLE_MODEL_V5_FUND:
+        return None
+    try:
+        fund = json.loads(MODEL_V5_FUND_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        print(f"[warn] v5.4: {MODEL_V5_FUND_FILE.name} niet bruikbaar ({exc}); "
+              f"5.3 zonder fundamentmodel.", file=sys.stderr)
+        return None
+    if not _m5.gbm_usable(fund, _m5.FUND_FEATURES):
+        print("[warn] v5.4: fundamentmodel faalt de zelftest; 5.3 zonder fundamentmodel.",
+              file=sys.stderr)
+        return None
+    print(f"[info] v5.4: fundamentmodel met {len(fund['trees'])} bomen van "
+          f"{fund.get('fitted_at')}.", file=sys.stderr)
+    return fund
 
 
 def load_v5_inputs(history: list, now_ams: datetime):
@@ -776,6 +802,7 @@ def main() -> int:
     v5_inputs = load_v5_inputs(history, now_ams)
     v5_gas = ttf_ratio - 1.0
     v5_gbm = load_v5_gbm() if v5_inputs is not None else None
+    v5_fund = load_v5_fund() if v5_gbm is not None else None
     v5_used = 0
     v5_models: set = set()
 
@@ -847,7 +874,8 @@ def main() -> int:
                     v5_day = _m5.forecast_day(P5, idx5, fc_day, k_eff, cursor.date(),
                                               v5_gas, coefs5, v5_gbm,
                                               _m5.ttf_level_before(ttf_series, k_eff),
-                                              _m5.ttf_mean_before(ttf_series, k_eff))
+                                              _m5.ttf_mean_before(ttf_series, k_eff),
+                                              v5_fund)
                 except Exception as exc:  # noqa: BLE001
                     print(f"[warn] v5 {day_key}: {exc}; v4 voor deze dag.", file=sys.stderr)
             else:
@@ -942,6 +970,9 @@ def main() -> int:
                 if hr5.get("gbm") is not None:
                     # v5.1: wat het lineaire model alleen (v5.0) zei (schaduwmeting)
                     fc_dict["predicted_v50"] = round(hr5["linear"], 2)
+                if hr5.get("fund") is not None:
+                    # v5.4: wat 5.3 zonder fundamentmodel zei (schaduwmeting)
+                    fc_dict["predicted_v53"] = round(hr5["p53"], 2)
                 v5_used += 1
                 v5_models.add(v5_day["model"])
 
